@@ -4,7 +4,8 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 
 <img src="https://raw.githubusercontent.com/deltorobarba/support/main/science_000.png" alt="science">
 
-[Natural Science](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🎨 🍃 Code & notes on Chemistry, Biology, Physics and Mathematics
+**Natural Science** 🎨
+* [Natural Science](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Code & notes on Chemistry, Biology, Physics and Mathematics
 
 **Quantum Computing** 🔭🧬
 * [Alice & Bob Quantum](https://github.com/deltorobarba/science/blob/main/alicebob.ipynb) - Measure bit-flip probability of single qubit after a 1ms delay
