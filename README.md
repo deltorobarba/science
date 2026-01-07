@@ -14,7 +14,6 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 * [IonQ Quantum](https://github.com/deltorobarba/science/blob/main/ionq.ipynb) - Two-Qubit Entangled Bell State Preparation $|\Phi^+\rangle$
 * [IBM Quantum](https://github.com/deltorobarba/science/blob/main/ibm.ipynb) - Asymmetric State Evolution with Unequal Superposition
 * [Pasqal Quantum](https://github.com/deltorobarba/science/blob/main/pasqal.ipynb) - Implement Grover's algorithm to search for state $|10\rangle$
-* [Google Quantum](https://github.com/deltorobarba/science/blob/main/google.ipynb) - Noisy and noiseless simulations of Willow quantum chip
 * [Alice & Bob Quantum](https://github.com/deltorobarba/science/blob/main/alicebob.ipynb) - Simulation of 1ms delay bit-flip probability measurement
 
 **Quantum Publication** 🎓
