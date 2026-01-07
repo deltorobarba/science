@@ -11,11 +11,11 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 * [Natural Science](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Code & notes on Chemistry, Biology, Physics and Mathematics
 
 **Quantum Computing** 🔭🧬
-* [Alice & Bob Quantum](https://github.com/deltorobarba/science/blob/main/alicebob.ipynb) - Measure bit-flip probability of single qubit after a 1ms delay
 * [IonQ Quantum](https://github.com/deltorobarba/science/blob/main/ionq.ipynb) - Two-Qubit Entangled Bell State Preparation $|\Phi^+\rangle$
 * [IBM Quantum](https://github.com/deltorobarba/science/blob/main/ibm.ipynb) - Asymmetric State Evolution with Unequal Superposition
 * [Pasqal Quantum](https://github.com/deltorobarba/science/blob/main/pasqal.ipynb) - Implement Grover's algorithm to search for state $|10\rangle$
 * [Google Quantum](https://github.com/deltorobarba/science/blob/main/google.ipynb) - Noisy and noiseless simulations of Willow quantum chip
+* [Alice & Bob Quantum](https://github.com/deltorobarba/science/blob/main/alicebob.ipynb) - Simulation of bit-flip probability measurement of single qubit after a 1ms delay
 
 **Quantum Publication** 🎓
 * [Analyzing Prospects for Quantum Advantage in Topological Data Analysis](https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.5.010319), `PRX Quantum` (2024)
