@@ -8,8 +8,9 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 <img src="https://raw.githubusercontent.com/deltorobarba/support/main/science_000.png" alt="science">
 
 **Natural Science** 🎨
-* [Natural Science](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Code & notes on Chemistry, Biology, Physics and Mathematics
+* [Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Code & notes on Chemistry, Biology, Physics and Mathematics
 * [Exoplanet](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) 🪐 Transit Detection and Orbital Period Calculation
+* [Gravitation](https://github.com/deltorobarba/science/blob/main/gravitation.ipynb) 📡 Gravitational Waves Research
 
 
 **Quantum Computing** 🔭🧬
