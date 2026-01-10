@@ -9,6 +9,8 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 
 **Natural Science** 🎨
 * [Natural Science](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Code & notes on Chemistry, Biology, Physics and Mathematics
+* [Exoplanet](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) 🪐 Transit Detection and Orbital Period Calculation
+
 
 **Quantum Computing** 🔭🧬
 * [IonQ Quantum](https://github.com/deltorobarba/science/blob/main/ionq.ipynb) - Two-Qubit Entangled Bell State Preparation $|\Phi^+\rangle$
