@@ -5,7 +5,7 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 [Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/)
 
 
-<img src="https://raw.githubusercontent.com/deltorobarba/support/main/science_000.png" alt="science">
+<img src="https://raw.githubusercontent.com/deltorobarba/science/main/nature_000.png" alt="science">
 
 **Natural Science** 🎨
 * [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Code & notes on Chemistry, Biology, Physics and Mathematics
