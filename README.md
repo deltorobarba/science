@@ -15,6 +15,10 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 * [Galaxies & Nebulae](https://github.com/deltorobarba/science/blob/main/galaxy.ipynb) 🛸 Infrared Data from IRSA and SDSS. Multiwavelength from MAST.
 
 **Quantum Computing**
+* [IonQ Quantum](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) (Cirq)
+* [IBM Quantum](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) (Qiskit)
+* [Alice & Bob](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) (Cirq)
+
   
 **Quantum Publication** 🎓 
 * [Analyzing Prospects for Quantum Advantage in Topological Data Analysis](https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.5.010319), `PRX Quantum` (2024)
