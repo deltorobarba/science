@@ -9,9 +9,11 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 
 [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃🎨 Code & notes on Chemistry, Biology, Physics and Mathematics
 
-* [Quantum Chemistry](https://github.com/deltorobarba/science/blob/main/chemistry.ipynb) 🔬🧬 Approximations for time-independent Schrödinger Equation $\hat{H}\psi = E\psi$
+**Quantum Research**
+* [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🔬 Conjugate Pairs $\rho \otimes \rho*$ for learning displacement amplitudes $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
+* [Quantum Chemistry](https://github.com/deltorobarba/science/blob/main/chemistry.ipynb) 🧪🧬 Approximations for time-independent Schrödinger Equation $\hat{H}\psi = E\psi$
 
-**Natural Sciences** 🍃🎨
+**Astronomy & Astrophysics** 🍃🎨
 * [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) 🪐 Transit Detection and Orbital Period Calculation
 * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitation.ipynb) 📡 Signal Analysis from Hanford and Livingston (LIGO)
 * [Galaxies & Nebulae](https://github.com/deltorobarba/science/blob/main/galaxy.ipynb) 🛸 Infrared Data from IRSA and SDSS. Multiwavelength from MAST.
