@@ -7,27 +7,5 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 
 <img src="https://raw.githubusercontent.com/deltorobarba/science/main/nature.png" alt="science">
 
-[Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Physics, Mathematics, Chemistry and Biology notes with focus on Quantum
-
-**Quantum Research** 🔬
-* [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🎨 Shadow Tomography on Conjugate Pairs $\rho \otimes \rho*$ for learning displacement states $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
-* [Quantum Chemistry](https://github.com/deltorobarba/science/blob/main/chemistry.ipynb) 🧬 Approximations for time-independent Schrödinger Equation $\hat{H}\psi = E\psi$
-* [Quantum Simulation](https://github.com/deltorobarba/science/blob/main/simulation.ipynb) 🕳️ Time-dependent Schrödinger $\hat{H}\psi = E\psi$ (Trotter, Qubitization, Quantum Walks)
-
-**Astronomy & Astrophysics** 🔭
-* [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) 🪐 Transit Detection and Orbital Period Calculation
-* [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitation.ipynb) 📡 Signal Analysis from Hanford and Livingston (LIGO)
-* [Galaxies & Nebulae](https://github.com/deltorobarba/science/blob/main/galaxy.ipynb) 🛰️ Infrared Data from IRSA and SDSS. Multiwavelength from MAST.
-
-**Quantum Computing** 💎
-* [IonQ Quantum](https://github.com/deltorobarba/science/blob/main/ionq.ipynb) Two-Qubit Entangled Bell State Preparation $|\Phi^+\rangle$ (Cirq)
-* [IBM Quantum](https://github.com/deltorobarba/science/blob/main/ibm.ipynb) Create unequal superposition with rotation gates $R_y(\pi\ 3)$ (Qiskit)
-* [Alice & Bob](https://github.com/deltorobarba/science/blob/main/alicebob.ipynb) Measure bit-flip probability of a single qubit after a 1ms delay (Qiskit)
-
-  
-**Quantum Publication** 🎓 
-* [Analyzing Prospects for Quantum Advantage in Topological Data Analysis](https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.5.010319), `PRX Quantum` (2024)
-
-<br>
 
 
