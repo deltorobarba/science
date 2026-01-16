@@ -12,7 +12,7 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 **Quantum Research** 🔬
 * [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🎨 Conjugate Pairs $\rho \otimes \rho*$ for learning displacement amplitudes $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
 * [Quantum Chemistry](https://github.com/deltorobarba/science/blob/main/chemistry.ipynb) 🧬 Approximations for time-independent Schrödinger Equation $\hat{H}\psi = E\psi$
-* [Quantum Simulation](https://github.com/deltorobarba/science/blob/main/simulation.ipynb) 🕳️ Time-dependent Schrödinger Equation $\hat{H}\psi = E\psi$ (Trotter, LCU, Qubitization with Quantum Walks
+* [Quantum Simulation](https://github.com/deltorobarba/science/blob/main/simulation.ipynb) 🕳️ Time-dependent Schrödinger Equation $\hat{H}\psi = E\psi$ (Trotter, Qubitization, Quantum Walks
 
 **Astronomy & Astrophysics** 🔭
 * [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) 🪐 Transit Detection and Orbital Period Calculation
