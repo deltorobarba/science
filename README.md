@@ -9,7 +9,15 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 
 [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃🎨 Code & notes on Chemistry, Biology, Physics and Mathematics
 
-Quantum Publication 🎓  [Analyzing Prospects for Quantum Advantage in Topological Data Analysis](https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.5.010319), `PRX Quantum` (2024)
+**Natural Sciences** 🍃🎨
+* [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) 🪐 Transit Detection and Orbital Period Calculation
+* [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitation.ipynb) 📡 Signal Analysis from Hanford and Livingston (LIGO)
+* [Galaxies & Nebulae](https://github.com/deltorobarba/science/blob/main/galaxy.ipynb) 🛸 Infrared Data from IRSA and SDSS. Multiwavelength from MAST.
+
+**Quantum Computing**
+  
+**Quantum Publication** 🎓 
+* [Analyzing Prospects for Quantum Advantage in Topological Data Analysis](https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.5.010319), `PRX Quantum` (2024)
 
 <br>
 
