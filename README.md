@@ -8,15 +8,15 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 <img src="https://raw.githubusercontent.com/deltorobarba/science/main/nature.png" alt="science">
 
 
-**Quantum Research** 🕳️
+**Quantum Research** 🔬
 * [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃🎨 Physics, Mathematics, Chemistry and Biology notes with focus on Quantum
-* [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🔬 Conjugate Pairs $\rho \otimes \rho*$ for learning displacement amplitudes $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
+* [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🔭 Conjugate Pairs $\rho \otimes \rho*$ for learning displacement amplitudes $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
 * [Quantum Chemistry](https://github.com/deltorobarba/science/blob/main/chemistry.ipynb) 🧪🧬 Approximations for time-independent Schrödinger Equation $\hat{H}\psi = E\psi$
 
-**Astronomy & Astrophysics** 🔭🛰️
+**Astronomy & Astrophysics** 🔭
 * [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) 🪐 Transit Detection and Orbital Period Calculation
 * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitation.ipynb) 📡 Signal Analysis from Hanford and Livingston (LIGO)
-* [Galaxies & Nebulae](https://github.com/deltorobarba/science/blob/main/galaxy.ipynb) 🛸 Infrared Data from IRSA and SDSS. Multiwavelength from MAST.
+* [Galaxies & Nebulae](https://github.com/deltorobarba/science/blob/main/galaxy.ipynb) 🛰️ Infrared Data from IRSA and SDSS. Multiwavelength from MAST.
 
 **Quantum Computing** 💎
 * [IonQ Quantum](https://github.com/deltorobarba/science/blob/main/ionq.ipynb) Two-Qubit Entangled Bell State Preparation $|\Phi^+\rangle$ (Cirq)
