@@ -9,7 +9,7 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 
 
 **Quantum Research**
-* [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃🎨 Notes on Chemistry, Biology, Physics and Mathematics with focus on Quantum
+* [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃🎨 Physics, Mathematics, Chemistry and Biology notes with focus on Quantum
 * [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🔬 Conjugate Pairs $\rho \otimes \rho*$ for learning displacement amplitudes $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
 * [Quantum Chemistry](https://github.com/deltorobarba/science/blob/main/chemistry.ipynb) 🧪🧬 Approximations for time-independent Schrödinger Equation $\hat{H}\psi = E\psi$
 
