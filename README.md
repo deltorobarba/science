@@ -15,9 +15,9 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 * [Galaxies & Nebulae](https://github.com/deltorobarba/science/blob/main/galaxy.ipynb) 🛸 Infrared Data from IRSA and SDSS. Multiwavelength from MAST.
 
 **Quantum Computing**
-* [IonQ Quantum](https://github.com/deltorobarba/science/blob/main/ionq.ipynb) (Cirq)
-* [IBM Quantum](https://github.com/deltorobarba/science/blob/main/ibm.ipynb) (Qiskit)
-* [Alice & Bob](https://github.com/deltorobarba/science/blob/main/alicebob.ipynb) (Cirq)
+* [IonQ Quantum](https://github.com/deltorobarba/science/blob/main/ionq.ipynb) - Two-Qubit Entangled Bell State Preparation $|\Phi^+\rangle$ (Cirq)
+* [IBM Quantum](https://github.com/deltorobarba/science/blob/main/ibm.ipynb) - (Qiskit)
+* [Alice & Bob](https://github.com/deltorobarba/science/blob/main/alicebob.ipynb) - (Cirq)
 
   
 **Quantum Publication** 🎓 
