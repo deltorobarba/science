@@ -21,7 +21,7 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 **Quantum Computing** 💎
 * [IonQ Quantum](https://github.com/deltorobarba/science/blob/main/ionq.ipynb) Two-Qubit Entangled Bell State Preparation $|\Phi^+\rangle$ (Cirq)
 * [IBM Quantum](https://github.com/deltorobarba/science/blob/main/ibm.ipynb) (Qiskit)
-* [Alice & Bob](https://github.com/deltorobarba/science/blob/main/alicebob.ipynb) (Cirq)
+* [Alice & Bob](https://github.com/deltorobarba/science/blob/main/alicebob.ipynb) Measure bit-flip probability of a single qubit after a 1ms delay (Qiskit)
 
   
 **Quantum Publication** 🎓 
