@@ -10,9 +10,9 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Physics, Mathematics, Chemistry and Biology notes with focus on Quantum
 
 **Quantum Research** 🔬
-* [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🎨 Shadow Tomography on Conjugate Pairs $\rho \otimes \rho*$ for learning displacement states $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
+* [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🎨 Shadow Tomography with $\rho \otimes \rho*$ for learning displacement states $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
 * [Quantum Chemistry](https://github.com/deltorobarba/science/blob/main/chemistry.ipynb) 🧬 Approximations for time-independent Schrödinger Equation $\hat{H}\psi = E\psi$
-* [Quantum Simulation](https://github.com/deltorobarba/science/blob/main/simulation.ipynb) 🕳️ Time-dependent Schrödinger $\hat{H}\psi = E\psi$ (Trotter, Qubitization, Quantum Walks)
+* [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/dynamics.ipynb) 🕳️ Simulation of Time-dependent Schrödinger $\hat{H}\psi = E\psi$
 
 **Astronomy & Astrophysics** 🔭
 * [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) 🪐 Transit Detection and Orbital Period Calculation
