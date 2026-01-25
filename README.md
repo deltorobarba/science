@@ -7,7 +7,7 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 
 <img src="https://raw.githubusercontent.com/deltorobarba/science/main/nature.png" alt="science">
 
-**Quantum Research** 🧬🔬
+**Quantum Research** 🔬
 * [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Physics, Mathematics, Chemistry and Biology notes with focus on Quantum
 * [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🎨 Shadow Tomography with $\rho \otimes \rho*$ for learning displacement states $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
 * [Black Hole Physics](https://github.com/deltorobarba/science/blob/main/blackhole.ipynb) 🕳️ Simulating OTOC and Light Cone of Information Scrambling from $|\psi(t)\rangle = e^{-iHt} |\psi(0)\rangle$
