@@ -10,7 +10,7 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 **Quantum Research** 🔬
 * [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Physics, Mathematics, Chemistry and Biology notes with focus on Quantum
 * [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🎨 Shadow Tomography with $\rho \otimes \rho*$ for learning displacement states $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
-* [Schrödinger Equation](https://github.com/deltorobarba/science/blob/main/schroedinger.ipynb) 🧬 Simulating OTOC and Light Cone of Information Scrambling from $|\psi(t)\rangle = e^{-iHt} |\psi(0)\rangle$
+* [Black Hole Physics](https://github.com/deltorobarba/science/blob/main/schroedinger.ipynb) 🧬 Simulating OTOC and Light Cone of Information Scrambling from $|\psi(t)\rangle = e^{-iHt} |\psi(0)\rangle$
 
 **Astronomy & Astrophysics** 🔭
 * [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanet.ipynb) 🪐 Transit Detection and Orbital Period Calculation
