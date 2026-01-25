@@ -11,7 +11,7 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 * [Natural Sciences](https://github.com/deltorobarba/science/blob/main/science.ipynb) 🍃 Physics, Mathematics, Chemistry and Biology notes with focus on Quantum
 * [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🎨 Shadow Tomography with $\rho \otimes \rho*$ for learning displacement states $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
 * [Schrödinger Equation](https://github.com/deltorobarba/science/blob/main/schroedinger.ipynb) 🧬 Simulating Quantum Evolution with Time-Dependent Schrödinger $|\psi(t)\rangle = e^{-iHt} |\psi(0)\rangle$
-* [OTOC and Quantum Chaos](https://github.com/deltorobarba/science/blob/main/otoc.ipynb) 🕳️ Scrambling of information in quantum dynamics $C(t) = \langle Nhat‹Wr(t), \hat {V}(0)]^dagger (\hat{W}(t), \hat {V} (0)]
+* [Quantum Chaos](https://github.com/deltorobarba/science/blob/main/otoc.ipynb) 🕳️ Scrambling of information in quantum dynamics (OTOC) $C(t) = \langle Nhat‹Wr(t), \hat {V}(0)]^dagger (\hat{W}(t), \hat {V} (0)]
 \ rangle$
 
 **Astronomy & Astrophysics** 🔭
