@@ -8,7 +8,7 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 <img src="https://raw.githubusercontent.com/deltorobarba/science/main/nature.png" alt="science">
 
 **Quantum Research** 🔬
-* [Quantum Physics](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) 🍃 Quantum Harmonic Oscillator and Schrödinger Equation $|\psi(t)\rangle = e^{-iHt} |\psi(0)\rangle$
+* [Quantum Science](https://github.com/deltorobarba/science/blob/main/sciences.ipynb) 🍃 Quantum Harmonic Oscillator and Schrödinger Equation $|\psi(t)\rangle = e^{-iHt} |\psi(0)\rangle$
 * [Quantum Sensing](https://github.com/deltorobarba/science/blob/main/sensing.ipynb) 🎨 Shadow Tomography with $\rho \otimes \rho*$ for learning displacement states $y_{q,p} = \text{Tr}(D_{q,p} \rho)$
 
 **Astronomy & Astrophysics** 🔭
