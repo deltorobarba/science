@@ -10,7 +10,8 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 **Research** 🔬
 * [Sciences](https://github.com/deltorobarba/science/blob/main/sciences.ipynb) 🍃 Quantum Harmonic Oscillator and Schrödinger Equation
 * [Quantum](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) 💎 Quantum Computing with IonQ, IBM and Alice & Bob
-* [Astronomy](https://github.com/deltorobarba/science/blob/main/astronomy.ipynb) 🪐🔭📡🛰️ Exoplanets, Gravitational Waves, Galaxies & Nebula
+* [Astronomy](https://github.com/deltorobarba/science/blob/main/astronomy.ipynb) 🔭 Exoplanets, Gravitational Waves, Galaxies & Nebula#
+* [ADK Agents](https://github.com/deltorobarba/science/blob/main/adk.ipynb) 🧠 Multi-Agent Pipeline with MCP, A2A and Genmedia
   
 **Quantum Publication** 🎓 
 * [Analyzing Prospects for Quantum Advantage in Topological Data Analysis](https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.5.010319), `PRX Quantum` (2024)
