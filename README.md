@@ -5,7 +5,7 @@ Machine learning and quantum computing specialist at Google Cloud. I ❤️ Scie
 [Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/)
 
 
-<img src="https://raw.githubusercontent.com/deltorobarba/science/main/nature.png" alt="science">
+<img src="https://raw.githubusercontent.com/deltorobarba/science/main/nature.JPG" alt="science">
 
 **Research** 🔬
 * [Sciences](https://github.com/deltorobarba/science/blob/main/sciences.ipynb) 🍃 Quantum Harmonic Oscillator and Schrödinger Equation
