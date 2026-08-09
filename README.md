@@ -1,6 +1,6 @@
 ## Alexander Del Toro Barba, PhD
 
-AI and Quantum Computing at Google. I ❤️ Maths & Sciences
+AI and Quantum Computing at Google. I ❤️ Maths
 
 [Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/)
 
