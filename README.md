@@ -8,7 +8,6 @@ AI and Quantum Computing at Google. I ❤️ Maths
 <img src="https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG" alt="science"> 
 
 * [Mathematics](https://github.com/deltorobarba/science/blob/main/maths.ipynb) 🌸 Tensor Algebra and Quantum
-* [Astronomy](https://github.com/deltorobarba/science/blob/main/astronomy.ipynb) 🔭 Exoplanets, Nebulae and Galaxies
 
 **Publications** 🎓 
 
