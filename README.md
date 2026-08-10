@@ -7,8 +7,4 @@ AI and Quantum Computing at Google. I ❤️ Maths
 
 <img src="https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG" alt="science"> 
 
-[Mathematics](https://github.com/deltorobarba/science/blob/main/maths.ipynb) 🌸 Tensor Algebra and Quantum
-
-**Publications** 🎓 
-
-[Analyzing Prospects for Quantum Advantage in Topological Data Analysis](https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.5.010319) (American Physical Society, 2024)
+[Mathematics](https://github.com/deltorobarba/science/blob/main/maths.ipynb) 🎓 Tensor Algebra and Quantum
