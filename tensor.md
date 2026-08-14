@@ -2,6 +2,8 @@
 
 <br>
 
+$\mathrm{Sym}(V)$
+
 | Parität der Fundamentalen Form | **Symmetrisch** (Metrik) | **Antisymmetrisch** (Symplektische Form) |
 | :--- | :--- | :--- |
 | **Klassische Algebra** ($\hbar \to 0$) <br>(undeformiert, d.h. $Q=0$ bzw. $\omega=0$)|  <font color="blue">**Äußere Algebra** $\Lambda(V)$</font> <br>(Differentialformen mit $Q=0$) |  <font color="blue">**Symmetrische Algebra** $\mathrm{Sym}(V)$</font><br>(Polynome / klassischer Phasenraum mit $\omega=0$) |
