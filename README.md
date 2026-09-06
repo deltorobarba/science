@@ -7,6 +7,7 @@ AI and Quantum Computing at Google. I ❤️ Maths
 
 <img src="https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG" alt="science"> 
 
-[Mathematics](https://github.com/deltorobarba/science/blob/main/maths.ipynb) 🎓 Quantum Simulation & Quatum Dynamics
-
-[Astrophysics](https://github.com/deltorobarba/science/blob/main/astrophysics.ipynb) 🔭 Gravitational Waves & Exoplanets
+* [Mathematics](https://github.com/deltorobarba/science/blob/main/maths.ipynb) 🎓 Quantum Simulation & Quatum Dynamics
+* [Astrophysics](https://github.com/deltorobarba/science/blob/main/astrophysics.ipynb) 🔭 Gravitational Waves & Exoplanets
+* [Google](https://github.com/deltorobarba/science/blob/main/google.ipynb) 🔭 Building AI Agents and Evaluate
+* [HuggingFace](https://github.com/deltorobarba/science/blob/main/huggingface.ipynb) 🔭 Tuning and Inference of LLMs
