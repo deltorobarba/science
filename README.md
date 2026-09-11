@@ -240,7 +240,7 @@ $$P \;\sim\; \frac{|\langle\bar\psi|P|\psi\rangle|^2}{2^n}$$
 
 ## Bell Basis Measurements
 
-### Technical Summary of Conjugate Pairs Paper
+**Technical Summary of Conjugate Pairs Paper**
 
 In [arXiv:2403.03469](https://arxiv.org/abs/2403.03469) they compute: $y_{q,p}^2$ $\approx \sum_{a,b} $ $p_{a,b}$ $e^{i \frac{2\pi}{d} (a p - b q)}$ (from Fourier-like inversion over Bell measurement statistics)
 
@@ -263,7 +263,8 @@ In [arXiv:2403.03469](https://arxiv.org/abs/2403.03469) they compute: $y_{q,p}^2
 * $e^{i \frac{2\pi}{d} (a p - b q)}$ = $\chi_{q,p}(a,b)$ is the character (Fourier phase factor or fourier transform kernel) to turn our characteristic function details back into a Wigner-like $y_{q,p}^2$ position and momentum information.
 
 
-*Displacement Operators $D_{q,p} \otimes D_{-q,p}$ and Conjugate Pair States $\rho \otimes \rho^*$*
+## Displacement Operators $D_{q,p} \otimes D_{-q,p}$ and Conjugate Pair States $\rho \otimes \rho^*$
+
 * $\rho$ is single-copy quantum state whose displacement amplitudes $y_{q,p} = \text{Tr}(D_{q,p}\rho)$ we want to know
 * $D_{q,p}$ is displacement operator
   * **Problem 1**: $D_{q,p}$ non-Hermitian for $d>2$, so complex Eigenvalues $→$ cannot be directly measured on single copy $\rho$.
@@ -276,7 +277,7 @@ In [arXiv:2403.03469](https://arxiv.org/abs/2403.03469) they compute: $y_{q,p}^2
 
 $\begin{array}{rcl} E & = & \text{Tr}(D_{q,p}\rho) \cdot \text{Tr}(D_{-q,p}\rho^*) & \quad \text{(Separation of Trace)} \\ & = & \text{Tr}(D_{q,p}\rho) \cdot \text{Tr}(D_{q,p}^T\rho^*) & \quad \text{(Using transpose of} D_{q,p}: D_{q,p}^T = D_{-q,p} \text{ (operator identity)} \\ & = & \text{Tr}(D_{q,p}\rho) \cdot \text{Tr}(D_{q,p}\rho) & \quad \text{(Using } \text{Tr}(A^T B^*) = \text{Tr}(AB) \text{ (matrix identity)} \\ & = & (\text{Tr}(D_{q,p}\rho))^2 = (y_{q,p})^2 & \quad \text{(Symmetry at (q, p) and (-q, -p) due to $D_{q,p}^\dagger = D_{-q,-p}$)} \end{array}$
 
-### Displacement Operators
+## Displacement Operators
 
 * Commutation relations: $D_{q',p'} D_{q,p} = e^{i 2\pi (qp' - q'p)/d} D_{q,p} D_{q',p'}$
 * $\{D_{q,p} \otimes D_{-q,p}\}$ mutually commute
@@ -331,11 +332,10 @@ $
 D_{q,p} = e^{i\pi qp/d} X^q Z^p
 $
 
-
 * Video: [Exponential learning advantages with conjugate states and minimal | King, Wan and McClean | TQC 2024](https://www.youtube.com/watch?v=koyFydFJiFQ$0)
 * Video: [Complex conjugates | Imaginary and complex numbers | Precalculus | Khan Academy](https://www.youtube.com/watch?v=BZxZ_eEuJBM$0)
 
-### Displacement Operators for Signal Detection (Magnitude and Sign)
+## Displacement Operators for Signal Detection (Magnitude and Sign)
 
 * **Goal**: We want to use this to test at which fundamental frequency the molecule (quantum state) mainly resonates
 * **What**: Resonance in each frequency is built from oscillations of different energy levels $n$ (quantum number) in molecule or state:
