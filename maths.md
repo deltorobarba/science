@@ -2,7 +2,7 @@
 
 ![science](https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG)
 
-##### <font color="blue">*Heisenberg-Weyl*
+## <font color="blue">*Heisenberg-Weyl*
 
 <font color="blue">**Physics: Quantum Operators from Quantum Harmonic Oscillator (via Exponentiation of Generators $\hat{Q}$, $\hat{P}$ and its Degree)**</font>
 
@@ -104,7 +104,7 @@
 * **Hierarchy & simulability:** $\mathcal{C}_k = \{U : U\mathcal{P}U^\dagger \subset \mathcal{C}_{k-1}\}$ — ⚠️ for $k \ge 3$ these are no longer groups under multiplication. Clifford $+$ $T$ generates a dense subgroup of $U(2^n)$ (**universal quantum computing**), no longer efficiently simulable classically. **Magic states and quantum advantage start here.**
 * **Fermionic mirror — degree 3 is missing:** parity superselection forbids cubic fermionic interactions, so genuine non-simulability begins on that side only at **degree 4** (quartic, e.g. the Hubbard $U$ term $n_\uparrow n_\downarrow$). And no $2\times2$ grid is needed there: for $n$ modes the Clifford algebra is finite-dimensional by nature ($\cong M_{2^n}(\mathbb{C})$ via Jordan–Wigner) — no trace problem for anticommutators.
 
-<font color="blue">**Tensor Algebra $T(V)$ as the Source of Four Algebras: $\Lambda$, $\mathrm{Sym}$ (classical) and $\mathrm{Cl}$, $W$ (quantized) — Fermions vs. Bosons**</font>
+## Tensor Algebra $T(V)$ as the Source of Four Algebras: $\Lambda$, $\mathrm{Sym}$ (classical) and $\mathrm{Cl}$, $W$ (quantized) — Fermions vs. Bosons
 
 *One recipe, one knob. The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** you put into that ideal — symmetric ($g$, $Q$) or antisymmetric ($\omega$) — plus whether you switch its value on at all. Four combinations, four algebras:*
 
