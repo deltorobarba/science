@@ -1,6 +1,6 @@
 # Quantum Learning
 
-Alexander Del Toro Barba, PhD, AI and Quantum Computing at Google. I ❤️ Maths
+Alexander Del Toro Barba, PhD
 
 [Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/)
 
