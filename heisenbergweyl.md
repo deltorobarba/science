@@ -1,15 +1,10 @@
-# <font color="blue">**Heisenberg-Weyl**
+# Heisenberg-Weyl
 
-![science](https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG)
-
-
-## <font color="blue">Heisenberg-Weyl
-
-<font color="blue">**Physics: Quantum Operators from Quantum Harmonic Oscillator (via Exponentiation of Generators $\hat{Q}$, $\hat{P}$ and its Degree)**</font>
+## Physics: Quantum Operators from Quantum Harmonic Oscillator (via Exponentiation of Generators $\hat{Q}$, $\hat{P}$ and its Degree)
 
 ![Quantum Harmonic Oscillator](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/HarmOsziFunktionen.png/330px-HarmOsziFunktionen.png)
 
-<font color="blue">***Quantum Harmonic Oscillator*** *and the Hamiltonian $\hat{H}$*</font>
+### Quantum Harmonic Oscillator and the Hamiltonian $\hat{H}$
 
 * $\hat{H} \propto \hat{P}^2 + \hat{Q}^2 = \hbar\omega\left(\hat{a}^\dagger\hat{a} + \tfrac12\right) = \hbar\omega(\hat n + \tfrac12)$ — generator of basis-state rotations in phase space ($Q/P$).
 * **Why the harmonic oscillator is *the* starting point** — two reasons, both structural:
@@ -21,13 +16,13 @@
 * ⚠️ **Position basis = computational basis.** The identification the whole dictionary hangs on: $|k\rangle$ are the eigenstates of $\hat Q$ — which is why $Z$ (diagonal) is a function of position and $X$ (permutation) a function of momentum.
 * **In QM, time is an angle.** In $e^{-i\theta}$, $\theta$ must be dimensionless (radians); in $\hat U(t) = e^{-i\hat Ht/\hbar}$ the quantity $\hat Ht/\hbar$ plays that role. States don't move along a trajectory like a baseball — their complex phase rotates. **In an energy eigenstate (stationary state) with energy $E$ the state stays put, but its phase spins at frequency $\omega = E/\hbar$.**
 
-<font color="blue">***Unit Circle*** *(Why Complex Numbers?)*</font>
+### Unit Circle (Why Complex Numbers?)
 
 * A [harmonic oscillator](https://en.wikipedia.org/wiki/Simple_harmonic_motion) moves back and forth, $x(t) = \cos\omega t$, described by two real numbers (position $x$, velocity $v$) — combined into one complex amplitude $\alpha = x + ip$. Rotation preserves the structure (unitary): it turns without changing magnitude.
 * The annihilation operator does the same for operators: $\hat a \propto \hat Q + i\hat P$. Real axis = position $\cos\omega t$, imaginary axis = momentum $i\sin\omega t$, rotation = time $e^{i\omega t}$ — oscillation between $Q$ and $P$.
 * Multiplying $\hat a$ by $e^{-i\omega t}$ rotates the vector in the complex plane: horizontal (real) = maximum position $Q$, vertical (imaginary) = maximum momentum $P$. **The 90° switch from $X$ to $Z$ is the QFT.**
 
-<font color="blue">***Exponentiation:*** *raise $e$ to the power of position and momentum, $e^{-i\hat G\theta}$, to get from the QHO to quantum operators*</font>
+### Exponentiation: raise $e$ to the power of position and momentum, $e^{-i\hat G\theta}$, to get from the QHO to quantum operators
 
 * $\hat U = e^{-i\hat G\theta}$ is the general form describing how a state moves in terms of the fundamental operators $\hat Q,\hat P$:
   * $e^{i\theta}$ is a point on the unit circle and keeps it unitary ($U^\dagger U = I$);
@@ -38,12 +33,14 @@
 * **Non-linear (non-Gaussian) transformations** — generator of degree $\ge 3$. The Heisenberg action itself becomes nonlinear ($\hat p \to \hat p - 3\gamma t\hat q^2$) and the Wigner function goes negative.
 * ⚠️ **Don't confuse this with the two families of *states*:** coherent states $|\alpha\rangle = \hat D(\alpha)|0\rangle$ are eigenstates of $\hat a$, non-orthogonal and overcomplete (the displaced vacuum — degree-1 output); Fock states $|n\rangle$ are eigenstates of $\hat n = \hat a^\dagger\hat a$ and orthonormal (the eigenbasis of the degree-2 generator).
 
-<font color="blue">***Conjugate relation:*** *an operator generates the translation of its conjugate variable — this is what allows the basis change $X \leftrightarrow Z$*</font>
+### Conjugate relation: an operator generates the translation of its conjugate variable — this is what allows the basis change $X \leftrightarrow Z$
 
 * Connected via the **Fourier transform**, used in $D_{q,p} = \tau^{qp}X^qZ^p$; based on the commutation relation $[\hat x,\hat p] = i\hbar$ (continuous) resp. the Weyl relation $ZX = \zeta_d XZ$ with $\zeta_d = e^{2\pi i/d}$ (discrete — ⚠️ note $\zeta_d$ rather than $\omega$, which is already the oscillator frequency here). Same mechanism in: characteristic function $\chi(\xi)$ $\leftrightarrow$ Wigner function.
 * **Note on notation:** $\zeta_d = e^{2\pi i/d}$ is a primitive $d$-th **root of unity** — the discrete phase appearing in $ZX = \zeta_d XZ$ and $Z|k\rangle = \zeta_d^{\,k}|k\rangle$. ⚠️ Many texts write $\omega$ for this, but $\omega$ is already taken twice here: oscillator frequency ($\hbar\omega$, $\cos\omega t$) and symplectic form ($W(V,\omega)$). The half-phase in $D_{q,p}$ is $\tau = e^{i\pi/d}$, so $\tau^2 = \zeta_d$.
 
-<font color="blue">***Kinetic Energy:*** *$\hat{P}^2$ $\rightarrow$ momentum $\hat{P} = \frac{i}{\sqrt2}(\hat a^\dagger - \hat a)$ $\rightarrow$ shift operator $X = e^{-i\hat P\delta}$ $\rightarrow$ bit flip / Pauli $X$. The energy term is quadratic, but the **gate** exponentiates the linear part $\hat P$*</font>
+### Kinetic Energy
+
+$\hat{P}^2$ $\rightarrow$ momentum $\hat{P} = \frac{i}{\sqrt2}(\hat a^\dagger - \hat a)$ $\rightarrow$ shift operator $X = e^{-i\hat P\delta}$ $\rightarrow$ bit flip / Pauli $X$. The energy term is quadratic, but the **gate** exponentiates the linear part $\hat P$
 
 * **Kinetic energy $\hat P^2$** corresponds to the hopping term / Laplacian $\approx (X + X^\dagger)$ (real, symmetric) — as used in Google's OTOC.
 * **Gaussian: momentum** $\hat P = \frac{i}{\sqrt2}(\hat a^\dagger - \hat a)$ corresponds to the derivative $\approx i(X^\dagger - X)$ (complex/imaginary, antisymmetric).
@@ -51,18 +48,20 @@
 * **Clifford (qubit): Pauli $X$** $\sigma_x|j\rangle = |j+1 \bmod 2\rangle$ swaps $0\leftrightarrow1$; $ZX = -XZ$ since $\zeta_2 = e^{i2\pi/2} = -1$; eigenvalues $\pm1$.
 * **Conjugation:** the shift $X$ *represents* momentum (kinetic) but *generates* a position shift — $D_{q,0}\sim X^q$ moves to a new position. The matrix $X$ is real and off-diagonal (a permutation matrix of 0s and 1s). Shift = exponentiated momentum, $X \approx e^{-i\hat P\delta_x}$.
 
-<font color="blue">***Potential Energy:*** *$\hat{Q}^2$ $\rightarrow$ position $\hat{Q} = \frac{1}{\sqrt2}(\hat a + \hat a^\dagger)$ $\rightarrow$ clock operator $Z = e^{i\hat Q\delta}$ $\rightarrow$ phase flip / Pauli $Z$. Again: quadratic energy, but the **gate** exponentiates the linear part $\hat Q$*</font>
+### Potential Energy
+
+$\hat{Q}^2$ $\rightarrow$ position $\hat{Q} = \frac{1}{\sqrt2}(\hat a + \hat a^\dagger)$ $\rightarrow$ clock operator $Z = e^{i\hat Q\delta}$ $\rightarrow$ phase flip / Pauli $Z$. Again: quadratic energy, but the **gate** exponentiates the linear part $\hat Q$
 
 * **Gaussian: position** $\hat Q = \frac{1}{\sqrt2}(\hat a + \hat a^\dagger)$ is an observable with real eigenvalues (the location index $k$).
 * **Clifford (qudit): clock** $\hat Z^b|k\rangle = \zeta_d^{\,bk}|k\rangle$ with $\zeta_d = e^{2\pi i/d}$ — a phase gradient built from the primitive $d$-th root of unity (which supplies the eigenvalues). Its powers $\zeta_d^0,\zeta_d^1,\dots,\zeta_d^{\,d-1}$ tag each basis state $k$ with a phase on the unit circle. For $d = 3$: $\zeta_3 = e^{i2\pi/3}$ (unitary but *not* Hermitian).
 * **Clifford (qubit): phase flip / Pauli $Z$.** For $d = 2$ the primitive root is $\zeta_2 = e^{i\pi} = -1$, so $\sigma_z|j\rangle = (-1)^j|j\rangle$ — the mod-2 version of the Weyl relation, $ZX = -XZ$. It leaves $|0\rangle$ alone and flips the sign of $|1\rangle$. ⚠️ Pauli $Z$ is both unitary (preserves probabilities) **and** Hermitian (its own conjugate) — so it can be observed directly.
 * **Conjugation:** the clock $Z$ *represents* position (potential) but *generates* a momentum kick — $D_{0,p}\sim Z^p$ makes it move faster. The matrix $Z$ is diagonal with complex eigenvalues (phases on the unit circle), whereas the operator $\hat Q$ has real eigenvalues (location).
 
-<font color="blue">**Groups: From Heisenberg–Weyl Algebra to Quantum Gates (by Degree of the Generator $\hat{H}$)**</font>
+## Groups: From Heisenberg–Weyl Algebra to Quantum Gates (by Degree of the Generator $\hat{H}$)
 
 > Every quantum gate is a time evolution $U = e^{-i\hat{H}t}$. The physical and information-theoretic complexity of the gate is completely determined by the **polynomial degree of the generator $\hat{H}$ in the phase-space operators** — and the criterion behind the ladder is whether that degree still **closes under the commutator**.
 
-<font color="blue">***Degree 1 (linear): Displacements*** — *generator $\hat{H} = q\hat{P} - p\hat{Q}$; the base lattice of phase space*</font>
+### Degree 1 (linear): Displacements — Generator $\hat{H} = q\hat{P} - p\hat{Q}$; the base lattice of phase space
 
 * **Lie algebra ✅ closes trivially:** the $(2n+1)$-dimensional **Heisenberg algebra $\mathfrak{h}_n$**; $[\hat Q,\hat P] = i\hbar\mathbf{1}$ is central (commutes with everything).
 * **Action:** pure displacements — the state is *slid* to a new location $(q,p)$, not rotated about the origin and not changed in shape. $H \propto \hat P$ generates a shift in $Q$; $H \propto \hat Q$ generates a shift in $P$.
@@ -72,7 +71,7 @@
 * **Hierarchy & simulability:** level $\mathcal{C}_1$. Pure lattice displacements, serving as an orthogonal basis for the entire operator space.
 * **Fermionic mirror: there is no fermionic analogue of a displacement gate.** Algebraically degree $\le 1$ does not close under the commutator ($[\gamma_i,\gamma_j] = 2\gamma_i\gamma_j$ lands in degree 2); only the *anti*commutator closes ($\{\gamma_i,\gamma_j\} = 2\delta_{ij}\mathbf{1}$ — a Lie superalgebra). Physically, parity superselection forbids odd Hamiltonians; fermionic coherent states exist only formally, over anticommuting Grassmann numbers.
 
-<font color="blue">***Degree 2 (quadratic): Rotations, Shears, Entanglement*** — *generator $\hat{H} \propto \hat{Q}^2 + \hat{P}^2$, $\hat{Q}^2 - \hat{P}^2$, $\hat{Q}_1\hat{P}_2$; symmetries that map the lattice onto itself*</font>
+### Degree 2 (quadratic): Rotations, Shears, Entanglement - Generator $\hat{H} \propto \hat{Q}^2 + \hat{P}^2$, $\hat{Q}^2 - \hat{P}^2$, $\hat{Q}_1\hat{P}_2$; symmetries that map the lattice onto itself
 
 * **Lie algebra ✅ closes:** the commutator of two quadratic terms stays quadratic ($[\hat Q^2,\hat P^2] \propto \hat Q\hat P + \hat P\hat Q$) → **symplectic algebra $\mathfrak{sp}(2n,\mathbb{R})$**; together with degree $\le 1$ the semidirect product $\mathfrak{sp}(2n)\ltimes\mathfrak{h}_n$ (Gaussian operations).
 * **Action:** a strictly **linear transformation of the coordinates**, $U^\dagger\hat rU = S\hat r$ with $S \in \mathrm{Sp}(2n)$ — rotations around the origin of phase space, shears, and entanglement. The structure of phase space is not bent, only mapped onto itself.
@@ -90,7 +89,7 @@
 * **Hierarchy & simulability:** level $\mathcal{C}_2$. **Gottesman–Knill / Gaussian simulation** — classically efficient in polynomial time, since one only tracks the $2n\times2n$ symplectic matrix $S$ instead of $2^n$ complex amplitudes.
 * **Fermionic mirror — free fermions & matchgates:** quadratic fermionic Hamiltonians close under the commutator onto $\mathfrak{so}(2n) \cong \Lambda^2V$, exponentiating to $\mathrm{Spin}(2n)$. **Matchgates (Valiant) are the exact fermionic counterpart of Gottesman–Knill** — $SO(2n)$/Spin instead of $\mathrm{Sp}(2n)$/Mp, orthogonal rotors instead of symplectic shears. Via Jordan–Wigner they can be written as Pauli matrices, but the *reason* for their simulability is spinorial, not symplectic.
 
-<font color="blue">***Degree $\geq$ 3 (cubic & higher): Nonlinear Distortion and Quantum Advantage*** — *generator $\hat{H} \propto \hat{Q}^3$, $\hat{n}^2 \sim (\hat{Q}^2+\hat{P}^2)^2$, or many-body interactions*</font>
+### Degree $\geq$ 3 (cubic & higher): Nonlinear Distortion and Quantum Advantage - Generator $\hat{H} \propto \hat{Q}^3$, $\hat{n}^2 \sim (\hat{Q}^2+\hat{P}^2)^2$, or many-body interactions
 
 * **Lie algebra ❌ does NOT close:** commutators climb indefinitely — $[\text{cubic},\text{cubic}]$ generates degree 4, that generates degree 5, and so on. No finite-dimensional Lie algebra; the generated group is infinite-dimensional.
 * **Action:** phase space is **curved nonlinearly** — the Heisenberg evolution becomes $\hat p \to \hat p - 3\gamma t\hat q^2$. One falls out of $\mathrm{Sp}(2n)$; the construction is no longer structure-preserving. ⚠️ The HW language stays formally valid but loses its usefulness: one *can* write $T$ as a Pauli sum, but the number of terms grows under nesting — and that is precisely where classical simulation breaks down.
@@ -168,14 +167,14 @@ Tensor Algebra $T(V)$ as the Source of Four Algebras: $\Lambda$, $\mathrm{Sym}$ 
 * **Multiplicative / discrete — HW algebra $M_d(\mathbb{C}) \cong \mathbb{C}_\omega[\mathbb{Z}_d\times\mathbb{Z}_d]$**, spanned by the $d^2$ shift–clock matrices $X^qZ^p$. ⚠️ **Why exponentiating rescues what the additive box forbids — trace vs. determinant:** at group level the test uses $\det$, and $\det(ZXZ^{-1}X^{-1}) = 1$ must equal $\det(\zeta_d\mathbf 1) = \zeta_d^{\,d} = 1$ ✓. The additive constraint is *unsatisfiable*, the multiplicative one *automatically satisfied* — which is why $ZX = \zeta_d XZ$ exists in exact $d\times d$ matrices. **That is the whole route from Weyl algebra to Heisenberg–Weyl.**
 * **Moving between the boxes:** upward $\mathfrak{h}_n \xrightarrow{\exp} H_n$ (BCH terminates because $[\hat Q,\hat P]$ is central — the additive bracket becomes a multiplicative phase); back down by differentiating at the identity; sideways $G \xrightarrow{\mathrm{span}} M_d(\mathbb{C})$ (group algebra, *not* $\exp$ — ⚠️ **algebras are not exponentiated**); and $d\to\infty$ turns $ZX = \zeta_d XZ$ back into $[\hat Q,\hat P] = i\hbar\mathbf 1$.
 
-<font color="blue">*Differential Forms and the Symplectic Form*</font>
+## Differential Forms and the Symplectic Form
 
 * **Forms vs. Maps:** While general maps output vectors or functions, a **form evaluates to a scalar**. A $k$-form is a multilinear map ($0$-form = function, $1$-form = covector, $2$-form = bilinear form).
 * **Differential Forms:** Smooth sections of the exterior algebra bundle, $\Omega^k(M) = \Gamma(\Lambda^k T^*M)$, assigning an alternating form to each point's tangent space via the wedge product ($\alpha \wedge \beta = -\beta \wedge \alpha$). Forms naturally integrate over oriented geometric submanifolds without coordinates—$1$-forms over curves (work), $2$-forms over surfaces (flux/oriented area), and $n$-forms over volumes.
 * **The Symplectic Form ($\omega$):** A $2$-form defined by three core properties: **Alternating:** Pointwise antisymmetric bilinear form. **Closed ($d\omega = 0$):** Eliminates local curvature invariants (Darboux). **Non-degenerate ($\omega(v,w)=0 \ \forall w \implies v=0$):** Forces an **even dimension** ($2n$, matching positions and momenta) and yields the non-vanishing **Liouville volume form** $\omega^n$.
 
 
-<font color="blue">*Riemannian vs. Symplectic Geometry on Manifolds: Can a geometric field be made locally "flat" through a choice of coordinates?*</font>
+## Riemannian vs. Symplectic Geometry on Manifolds: Can a geometric field be made locally "flat" through a choice of coordinates?
 
 * **Riemannian Geometry: Local Information (Gravity / GR) and local curvature (tensors)**
   * **Riemannian:** $g$ becomes $g_{\mu\nu}(x)$; comparing tangent spaces needs a connection, curvature is its non-commutativity → **local curvature exists, information is local** → tensor analysis.
