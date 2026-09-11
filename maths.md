@@ -103,3 +103,83 @@
   * ⚠️ They lie in $M_d(\mathbb{C})$ as matrices, but belong neither to the discrete HW group nor to the Clifford group.
 * **Hierarchy & simulability:** $\mathcal{C}_k = \{U : U\mathcal{P}U^\dagger \subset \mathcal{C}_{k-1}\}$ — ⚠️ for $k \ge 3$ these are no longer groups under multiplication. Clifford $+$ $T$ generates a dense subgroup of $U(2^n)$ (**universal quantum computing**), no longer efficiently simulable classically. **Magic states and quantum advantage start here.**
 * **Fermionic mirror — degree 3 is missing:** parity superselection forbids cubic fermionic interactions, so genuine non-simulability begins on that side only at **degree 4** (quartic, e.g. the Hubbard $U$ term $n_\uparrow n_\downarrow$). And no $2\times2$ grid is needed there: for $n$ modes the Clifford algebra is finite-dimensional by nature ($\cong M_{2^n}(\mathbb{C})$ via Jordan–Wigner) — no trace problem for anticommutators.
+
+<font color="blue">**Tensor Algebra $T(V)$ as the Source of Four Algebras: $\Lambda$, $\mathrm{Sym}$ (classical) and $\mathrm{Cl}$, $W$ (quantized) — Fermions vs. Bosons**</font>
+
+*One recipe, one knob. The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** you put into that ideal — symmetric ($g$, $Q$) or antisymmetric ($\omega$) — plus whether you switch its value on at all. Four combinations, four algebras:*
+
+| | **Symmetric form $Q$** | **Antisymmetric form $\omega$** |
+| :--- | :--- | :--- |
+| **Form off** (classical) | $\Lambda(V)$ — exterior | $\mathrm{Sym}(V)$ — symmetric |
+| **Form on** (quantized) | $\mathrm{Cl}(V,Q)$ — **fermions**, CAR | $W(V,\omega)$ — **bosons**, CCR |
+
+<font color="blue">***Step 0 — the common source:*** *$T(V) = \bigoplus_k V^{\otimes k}$, associative and non-commutative, with no relations at all*</font>
+
+* Nothing is identified in $T(V)$: $v\otimes w$ and $w\otimes v$ are simply different elements. **Every relation below is introduced by hand, as the generator of an ideal.** That is the entire mechanism — all four algebras are $T(V)/I$ and differ only in $I$.
+
+<font color="blue">***Step 1 — homogeneous ideal ⇒ the two classical algebras*** *(degree 2 = 0, nothing else)*</font>
+
+* **$\Lambda(V) = T(V)/\langle v\otimes v\rangle \;\Rightarrow\; v\wedge w = -\,w\wedge v$.** Demand that squares vanish; polarization does the rest: $0 = (v+w)\wedge(v+w) = v\wedge w + w\wedge v$. Antisymmetry — hence orientation, differential forms, cohomology.
+* **$\mathrm{Sym}(V) = T(V)/\langle v\otimes w - w\otimes v\rangle \;\Rightarrow\; vw = wv$.** Demand that order be irrelevant. Polynomials — the classical observables, functions on phase space.
+* ⚠️ **Both ideals are homogeneous** (pure degree 2, right-hand side $= 0$), so the quotient keeps the $\mathbb{Z}$-grading. These are the *undeformed* algebras: $\Lambda = \mathrm{Cl}$ with $Q = 0$, $\mathrm{Sym} = W$ with $\omega = 0$.
+
+<font color="blue">***Step 2 — switch the bilinear form on ⇒ the two quantized algebras*** *(the right-hand side becomes a number — this is quantization)*</font>
+
+* **$\mathrm{Cl}(V,Q) = T(V)/\langle v\otimes v - Q(v)\mathbf{1}\rangle \;\Rightarrow\; vw + wv = 2Q(v,w)$.** A vector squares to its own length, $v^2 = \lVert v\rVert^2$.
+* **$W(V,\omega) = T(V)/\langle v\otimes w - w\otimes v - \omega(v,w)\mathbf{1}\rangle \;\Rightarrow\; [v,w] = \omega(v,w)$.** The commutator is no longer zero but a number — the Poisson bracket of the linear functions: $[\hat q,\hat p] = i\hbar\mathbf{1}$.
+* ⚠️ **The one mechanism behind both:** the ideal becomes **inhomogeneous** (it mixes degree 2 with degree 0), so the $\mathbb{Z}$-grading collapses to a **filtration** ($\mathbb{Z}_2$-grading survives; on the bosonic side: Bernstein filtration). *Grading → filtration is exactly what "quantization" means algebraically.*
+* ⚠️ **The deformation changes the product, not the space.** Check with $\dim V = 2$: both $\Lambda(\mathbb{R}^2)$ and $\mathrm{Cl}(\mathbb{R}^2,Q)$ have dimension 4, basis $\{1,e_1,e_2,e_1e_2\}$ — same skeleton, different multiplication table ($e_1\wedge e_1 = 0$ vs. $e_1e_1 = Q(e_1)$). No subset relation. Same on the right: PBW monomials $\hat q^a\hat p^b$ are a basis of $W$ just as they are of $\mathrm{Sym}$.
+
+<font color="blue">***⚠️ The Twist — parity flips between input and output*** *(the least intuitive and most important line in the whole table)*</font>
+
+* **Symmetric input $\to$ anticommuting output:** $g \in \mathrm{Sym}^2V^*$ builds $\mathrm{Cl}(V,g)$, whose degree-2 part is the **exterior** square, $\mathfrak{so}\cong\Lambda^2V$ (via $\tfrac14[e_i,e_j]$) → Spin → **fermions**, $\Lambda$-Fock.
+* **Antisymmetric input $\to$ commuting output:** $\omega \in \Lambda^2V^*$ builds $W(V,\omega)$, whose degree-2 part is the **symmetric** square, $\mathfrak{sp}\cong\mathrm{Sym}^2V$ (via $\tfrac12\{\hat r_i,\hat r_j\}$) → metaplectic → **bosons**, $\mathrm{Sym}$-Fock.
+* So the labels cross: the *fermionic* algebra is built from a *symmetric* form and its symmetry algebra is the *exterior* square, and vice versa. In supersymmetry both are one construction on $\mathbb{Z}_2$-graded spaces.
+
+<font color="blue">***Step 3 — the way back ($\mathrm{gr}$):*** *dequantization = keep only the top-degree part of each relation*</font>
+
+* $\mathrm{gr}\,\mathrm{Cl}(V,Q) \cong \Lambda(V)$ (**Chevalley**), classical limit $Q\to0$ · $\mathrm{gr}\,W(V,\omega)\cong\mathrm{Sym}(V)$ (**PBW**), classical limit $\hbar\to0$.
+* ⚠️ These are **one theorem**: super-PBW on $\mathbb{Z}_2$-graded spaces *is* Chevalley. Taking $\mathrm{gr}$ throws away exactly the inhomogeneous part of the ideal — i.e. it turns the knob back to zero.
+
+<font color="blue">***Second road to the same ideal — the Lie route*** *(both roads meet, which is why it's called a "PBW deformation")*</font>
+
+* $U(\mathfrak{g}) = T(\mathfrak{g})/\langle x\otimes y - y\otimes x - [x,y]\rangle$ — an enveloping algebra is *also* a tensor-algebra quotient, with the same shape of ideal.
+* **Fermionic:** Heisenberg *super*algebra $\mathfrak{h}^{\mathrm{super}}$ (odd part $V$, even centre $Z$, bracket = **anti**commutator $\{v,w\} = 2Q(v,w)Z$) → $\mathrm{Cl}(V,Q) = U(\mathfrak{h}^{\mathrm{super}})/(Z-1)$.
+* **Bosonic:** Heisenberg algebra $\mathfrak{h}_n$ ($[Q_i,P_j] = \delta_{ij}Z$, $Z$ central, $\dim = 2n+1$ — here one may not yet *multiply* $\hat Q\cdot\hat P$) → $U(\mathfrak{h}_n)$ supplies the products → $A_n = U(\mathfrak{h}_n)/(Z-1)$, the same ideal as the deformation route.
+
+<font color="blue">***What each side becomes — physics, symmetry, computing*** *(read the pairs across)*</font>
+
+* **Statistics:** CAR $\{a_i,a_j^\dagger\} = \delta_{ij}$, $\{\gamma_\mu,\gamma_\nu\} = 2g_{\mu\nu}$ ↔ CCR $[a_i,a_j^\dagger] = \delta_{ij}$, $[\hat x,\hat p] = i\hbar$.
+* **Size — the sharpest asymmetry:** $\dim\mathrm{Cl} = 2^n$ (the relation truncates powers, $v^2$ is a scalar) ↔ $\dim W = \infty$ (nothing truncates). Consequence: $W$ has **no finite-dimensional representation** ($\mathrm{tr}[A,B] = 0$ but $\mathrm{tr}(i\hbar\mathbf 1)\neq0$), so bosons need unbounded operators on an infinite-dimensional space, while $\mathrm{Cl}$ acts on a finite spinor space. *(This is the trace argument that later forbids a discrete additive Weyl algebra.)*
+* **Uniqueness:** unique spinor module ↔ **Stone–von Neumann** (unique irreducible rep for $\hbar\neq0$) — same statement on both sides.
+* **In analysis:** Dirac operator $\nabla = d+\delta$, $\nabla^2 = \Delta$ ↔ oscillator $H = \tfrac12(\hat p^2+\hat q^2) = \hbar(a^\dagger a+\tfrac12)$; each is the canonical degree-2 square of its branch (Moyal star product = the same deformation written on $\mathrm{Sym}$-functions).
+* **Symmetry tower** (group preserves the form; Lie algebra = degree-2 elements; double cover acts on Fock space): $\mathrm{O}(V,g) \supset \mathfrak{so}(n)$, $\dim\tfrac{n(n-1)}2$, series $B_n/D_n$, cover $\mathrm{Spin}(n)$ ↔ $\mathrm{Sp}(2n)\supset\mathfrak{sp}(2n)$, $\dim n(2n+1)$, series $C_n$, cover $\mathrm{Mp}(2n)$.
+* **QC bridge:** matchgates / free fermions (Valiant), degree 2 in $\mathrm{Cl}$ = rotor in $\mathrm{Spin}(2n)$; non-free only from **degree 4** (parity superselection allows only even degrees) ↔ Clifford / Gaussian (Gottesman–Knill), degree 2 in $W$ = symplectic action; magic from **degree 3**. ⚠️ **Structurally one theorem**, once for $SO$/Spin, once for $Sp$/Mp.
+
+<font color="blue">***From Weyl algebra to Heisenberg–Weyl:*** *how the bosonic side reaches actual qubits (additive → multiplicative, continuous → discrete)*</font>
+
+* **Additive / continuous — the Weyl algebra $A_n = W(V,\omega)$.** All polynomials in $\hat q,\hat p$, $\dim = \infty$; composition = addition + Lie bracket. This is the algebra built two steps above, the home of Hamiltonians and the degree filter.
+* **Additive / discrete — ⚠️ does not exist.** *Trace argument:* on $d\times d$ matrices $\mathrm{Tr}([\hat q,\hat p]) = 0$, but $\mathrm{Tr}(i\hbar\mathbf 1) = i\hbar d \neq 0$. So $[\hat q,\hat p] = i\hbar$ has no finite-dimensional realization — qubits cannot inherit the additive relation. This is the $\dim W = \infty$ bullet from above, now with consequences.
+* **Multiplicative / continuous — Heisenberg group $H_n$ / CCR $C^*$-algebra.** The exponentiated version: displacements $D(\alpha)$, composition = operator product, $W(z)W(z') = e^{-\frac i2\omega(z,z')}W(z+z')$. Linked back to $A_n$ by **Stone–von Neumann**.
+* **Multiplicative / discrete — HW algebra $M_d(\mathbb{C}) \cong \mathbb{C}_\omega[\mathbb{Z}_d\times\mathbb{Z}_d]$**, spanned by the $d^2$ shift–clock matrices $X^qZ^p$. ⚠️ **Why exponentiating rescues what the additive box forbids — trace vs. determinant:** at group level the test uses $\det$, and $\det(ZXZ^{-1}X^{-1}) = 1$ must equal $\det(\zeta_d\mathbf 1) = \zeta_d^{\,d} = 1$ ✓. The additive constraint is *unsatisfiable*, the multiplicative one *automatically satisfied* — which is why $ZX = \zeta_d XZ$ exists in exact $d\times d$ matrices. **That is the whole route from Weyl algebra to Heisenberg–Weyl.**
+* **Moving between the boxes:** upward $\mathfrak{h}_n \xrightarrow{\exp} H_n$ (BCH terminates because $[\hat Q,\hat P]$ is central — the additive bracket becomes a multiplicative phase); back down by differentiating at the identity; sideways $G \xrightarrow{\mathrm{span}} M_d(\mathbb{C})$ (group algebra, *not* $\exp$ — ⚠️ **algebras are not exponentiated**); and $d\to\infty$ turns $ZX = \zeta_d XZ$ back into $[\hat Q,\hat P] = i\hbar\mathbf 1$.
+
+<font color="blue">*Differential Forms and the Symplectic Form*</font>
+
+* **Forms vs. Maps:** While general maps output vectors or functions, a **form evaluates to a scalar**. A $k$-form is a multilinear map ($0$-form = function, $1$-form = covector, $2$-form = bilinear form).
+* **Differential Forms:** Smooth sections of the exterior algebra bundle, $\Omega^k(M) = \Gamma(\Lambda^k T^*M)$, assigning an alternating form to each point's tangent space via the wedge product ($\alpha \wedge \beta = -\beta \wedge \alpha$). Forms naturally integrate over oriented geometric submanifolds without coordinates—$1$-forms over curves (work), $2$-forms over surfaces (flux/oriented area), and $n$-forms over volumes.
+* **The Symplectic Form ($\omega$):** A $2$-form defined by three core properties: **Alternating:** Pointwise antisymmetric bilinear form. **Closed ($d\omega = 0$):** Eliminates local curvature invariants (Darboux). **Non-degenerate ($\omega(v,w)=0 \ \forall w \implies v=0$):** Forces an **even dimension** ($2n$, matching positions and momenta) and yields the non-vanishing **Liouville volume form** $\omega^n$.
+
+
+<font color="blue">*Riemannian vs. Symplectic Geometry on Manifolds: Can a geometric field be made locally "flat" through a choice of coordinates?*</font>
+
+* **Riemannian Geometry: Local Information (Gravity / GR) and local curvature (tensors)**
+  * **Riemannian:** $g$ becomes $g_{\mu\nu}(x)$; comparing tangent spaces needs a connection, curvature is its non-commutativity → **local curvature exists, information is local** → tensor analysis.
+  * **Setup:** The metric $g = g_{\mu\nu}(x) dx^\mu \otimes dx^\nu$ is a symmetric tensor field. Comparing different tangent spaces requires a connection $\nabla$.
+  * **Local Flatness:** In normal coordinates at a point $p$, $g_{\mu\nu}(p) = \delta_{\mu\nu}$ and $\partial_\lambda g_{\mu\nu}(p) = 0$, but the **second derivatives** $\partial^2 g$ cannot be eliminated.
+  * **Consequence:** Genuine, measurable **local curvature** exists (Riemann tensor $R^\rho_{\sigma\mu\nu}$). Physics is governed by **local field equations and tensor analysis** (e.g., Einstein equations).
+* **Symplectic Geometry: Global Information (Phase Space / Mechanics) and global topology (cohomology)**
+  * **Symplectic:** $\omega$ becomes a closed 2-form; by Darboux there are no local invariants → **information is global** → globalization runs into topology and quantization.
+  * **Setup:** The symplectic form $\omega = \frac{1}{2}\omega_{\mu\nu}(x) dx^\mu \wedge dx^\nu$ is alternating, non-degenerate, and **closed** ($d\omega = 0$).
+  * **Darboux's Theorem:** Because $d\omega = 0$, local coordinates always exist around any point such that $\omega = \sum dp_i \wedge dq^i$ holds across an entire neighborhood.
+  * **Consequence:** There are **no local invariants** (no analog to the Riemann tensor; every point looks locally like flat $\mathbb{R}^{2n}$). All meaningful geometric and physical features are **global and topological** (de Rham cohomology $[\omega] \in H^2_{\mathrm{dR}}(M)$, global quantization conditions $\frac{1}{2\pi\hbar}\int_\Sigma \omega \in \mathbb{Z}$).
