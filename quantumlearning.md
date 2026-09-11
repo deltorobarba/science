@@ -1,12 +1,10 @@
-# <font color="blue">**Quantum Learning**
+# Quantum Learning
 
 ![science](https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG)
 
-## Quantum Learning
+## Learning from Quantum Experiments
 
-<font color="blue">**Learning from Quantum Experiments**
-
-1. *Wie hängen Quantenmessung und Quantum Learning zusammen?*
+### 1. Wie hängen Quantenmessung und Quantum Learning zusammen?
 
 * Die kürzeste Fassung: Lerntheorie ist die Ressourcentheorie, die auf der Messtheorie aufsetzt.
   * Die **Messtheorie** (deine Teile I–II) beantwortet die Einzelschuss-Frage: Was tut eine Messung mit einem Zustand, welche Statistik erzeugt sie?
