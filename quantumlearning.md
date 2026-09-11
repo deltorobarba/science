@@ -4,19 +4,19 @@
 
 ## Learning from Quantum Experiments
 
-#### 1. Wie hängen Quantenmessung und Quantum Learning zusammen?
+### 1. Wie hängen Quantenmessung und Quantum Learning zusammen?
 
 * Die kürzeste Fassung: Lerntheorie ist die Ressourcentheorie, die auf der Messtheorie aufsetzt.
   * Die **Messtheorie** (deine Teile I–II) beantwortet die Einzelschuss-Frage: Was tut eine Messung mit einem Zustand, welche Statistik erzeugt sie?
   * Die **Lerntheorie** stellt die inverse, statistische Frage: *Was lässt sich aus vielen Messungen über ein unbekanntes ρ herausfinden — und zu welchen Kosten, optimal?*
 * Die Born-Regel verwandelt den Zustand in ein Sampling-Orakel; Lernen ist das Inversproblem dazu.
 
-#### 2. *Begriffsklärung: die Datenquelle entscheidet, nicht die Hardware*
+#### 2. Begriffsklärung: die Datenquelle entscheidet, nicht die Hardware
 
 * **Learning from quantum experiments** ist die Disziplin, die fragt: Gegeben Zugriff auf Kopien eines unbekannten Quantensystems — eines Zustands $\rho$, eines Prozesses/Kanals $\mathcal{E}$, einer Dynamik —, erzeugt von der Natur, einem Sensor oder einem Quantengerät: *welche* Eigenschaften kann ein Lerner extrahieren, zu *welchen* Kosten in Kopien, klassischer Zeit und klassischem Speicher, und wie verändern Quantenressourcen (Quantenspeicher, verschränkte Messungen, Adaptivität) diese Kosten?
 * *What properties of unknown state $\rho$, channel $\mathcal{E}$, Hamiltonian $H$ can be learned from physical copies — and at what Pareto-optimal budget in copies, classical runtime, and quantum memory?*
 
-#### 3. *Differentiations by Data and Learners*
+#### 3. Differentiations by Data and Learners
 
 * The quantum learing from experiments is strictly the **bottom row** of the data-vs-learner matrix (quantum data):
 
