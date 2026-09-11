@@ -43,7 +43,7 @@ $\begin{array}{rcl} E & = & \text{Tr}(D_{q,p}\rho) \cdot \text{Tr}(D_{-q,p}\rho^
 
 <br>
 
-> $
+$
 \begin{array}{ccc}
 D_{q,p}^T = D_{-q,p} & p & D_{q,p} \\
 \nwarrow & \uparrow & \nearrow \\
@@ -59,7 +59,7 @@ $
 * Hilbert space $\mathbb{C}^d$.
 * Unknown quantum state $\rho$.
 
-> $
+$
 X = \begin{pmatrix}
 0 & 0 & \dots & 0 & 1 \\
 1 & 0 & \dots & 0 & 0 \\
@@ -87,9 +87,9 @@ $
 \end{array}
 $
 
-$$
+$
 D_{q,p} = e^{i\pi qp/d} X^q Z^p
-$$
+$
 
 <br>
 
