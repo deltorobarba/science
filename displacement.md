@@ -77,7 +77,7 @@ $
 
 * Want $\text{Tr}(D_{q,p}\rho) \pm \varepsilon$ for every $q,p$.
 
-> $
+$
 \begin{array}{ccc}
  & p & \\
  & \uparrow & \Large{\color{red}\bullet} \normalsize \; D_{q,p} \\
@@ -87,9 +87,9 @@ $
 \end{array}
 $
 
-> $
+$$
 D_{q,p} = e^{i\pi qp/d} X^q Z^p
-$
+$$
 
 <br>
 
