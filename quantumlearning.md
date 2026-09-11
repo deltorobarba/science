@@ -2,9 +2,7 @@
 
 ![science](https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG)
 
-## <span style="color:#0000FF">Learning from Quantum Experiments</span>
-
-<h2 style="color:#0000FF">Learning from Quantum Experiments</h2>
+## Learning from Quantum Experiments
 
 ### 1. Wie hängen Quantenmessung und Quantum Learning zusammen?
 
