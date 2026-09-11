@@ -91,12 +91,12 @@ $
 D_{q,p} = e^{i\pi qp/d} X^q Z^p
 $
 
-<br>
 
 * Video: [Exponential learning advantages with conjugate states and minimal | King, Wan and McClean | TQC 2024](https://www.youtube.com/watch?v=koyFydFJiFQ$0)
 * Video: [Complex conjugates | Imaginary and complex numbers | Precalculus | Khan Academy](https://www.youtube.com/watch?v=BZxZ_eEuJBM$0)
 
-## <font color="blue">*Displacement Operators for Signal Detection (Magnitude and Sign)*</font>
+## Displacement Operators for Signal Detection (Magnitude and Sign)
+
 * **Goal**: We want to use this to test at which fundamental frequency the molecule (quantum state) mainly resonates
 * **What**: Resonance in each frequency is built from oscillations of different energy levels $n$ (quantum number) in molecule or state:
   * A **specific (q,p)** is one fundamental frequency. We check for all, where does the molecules resonate strongest?
