@@ -97,20 +97,6 @@ Drei Auflösungsstufen:
 * Sie kombinieren die Primitiven mit klassischer Nachverarbeitung, um Fragen über $\rho$ zu beantworten.
 * Die lerntheoretische Sicht sortiert sie entlang zweier Ressourcenachsen: **wie viele Kopien pro Schuss kohärent verarbeitet werden** ($1, 2, k$ — "Quantenspeicher") und **ob die Observablen Eingabe oder Ausgabe** des Protokolls sind (Schätzen vs. Suchen).
 
-### 6. Fünf Mehrwerte von Strukturlernen
-
-**Kernregel:** Die Pipeline liefert nie eine bestellte Observable, immer nur „die stärksten Stellen". Nützlich ist sie dort, wo die **Art** der Antwort vorher bekannt ist, aber nicht die **Adresse**. Struktureller Prior ja, Koordinaten-Prior nein. Fehlt der strukturelle Prior, ist das Ergebnis tatsächlich ein Überraschungsei.
-
-* **1. Hamiltonian-Lernen** (wissenschaftlich stärkster Fall). Hier ist H *unbekannt*. Bei nicht zu kalter Temperatur: ρ_β ≈ (1/d)(1 − βH), also **y_u ∝ h_u** mit Faktor −β/d. Der Träger des Zustands ist der Träger von H; die Rangfolge der |y_u| ist die Rangfolge der Kopplungsstärken; das Vorzeichen sagt ferro/antiferro. β geht nur als Gesamtfaktor ein → relative Kopplungen ohne Temperaturkenntnis. Zweite Ordnung: Kombinationstöne auf Summen u+v. Der Kompromiss: heiß = treu aber unter dem Rauschboden (M4/P2), kalt = groß aber nichtlinear; βΔE = 2,5 ist die Mitte → **physikalische Motivation der Gibbs-Klasse über „realistischer Testfall" hinaus**. Abgrenzung zur Literatur (Anshu et al., Haah et al.): Die setzen den Träger als bekannt voraus (Regime 1) und suchen nur Koeffizienten. Struktur-Lernen ist die Stufe darüber. Bild: Kommunikationsmuster im Ruhezustand = Organigramm.
-
-* **2. Verifikation, nicht Entdeckung.** Sollzustand bekannt, Istzustand gemessen. Fidelity ist eine Prüfsumme (verändert ja/nein), Struktur-Lernen ist ein Diff. Drei Befunde: alles ok / erwartete Linie fehlt (Dekohärenz) / **unerwartete Linie da** (kohärenter Fehler). Der dritte Fall ist für Listen-basierte Methoden prinzipiell unerreichbar. Die Adresse der Überraschung ist diagnostisch, weil Hardwarefehler selbst strukturiert sind (Crosstalk → ZZ auf dem Paar, Über-Rotation → bestimmte Leckage). Vgl. Hangleiter–Gullans. Fehlende Linien nutzen die *bewiesene* Hälfte der Pipeline (nur Präzision nötig), zusätzliche Linien die vermutete.
-
-* **3. Die Form des Supports.** Symplektische Constraint (lem:symplecticconstraint): D_v ρ D_v† = ρ ⟹ Träger ⊆ S(ρ)^⊥. Ein Träger, der in einem Komplement liegt, *ist* eine entdeckte Symmetrie/Erhaltungsgröße. Flaches Plateau auf einer Untergruppe ⟹ Stabilizer-Zustand, Untergruppe = Stabilisatorgruppe (Montanaro, fällt als Nebenprodukt ab). Kohärenz-Lesart: y_{q,p} = Σ_k ω^{pk} ρ_{k,k+q}, also q = Abstand zur Diagonalen, p = Fourier-Index darauf. Alles bei q=0 ⟹ klassisches Gemisch; Signal bei q≠0 ⟹ zertifizierte Kohärenz. Gewichtsprofil ⟹ Lokalität ohne Vorannahme.
-
-* **4. Leere Antwort als Ergebnis.** Parseval: Σ|y_u|² = d·Tr(ρ²), die Masse kann nicht verschwinden, nur verteilt werden. Mit einem Reinheitstest (SWAP, gleiche Hardware) unterscheidbar: Tr(ρ²) klein ⟹ gemischt/thermisch; Tr(ρ²) ≈ 1 ⟹ **gescrambelt**, alles bei |y| ~ 1/√d. Letzteres ist die Thermalisierungs-Signatur (ETH vs. integrabel vs. MBL). Dritter Fall, ehrlich zu nennen: M6/LWE — Struktur da, rechnerisch versteckt, von außen ununterscheidbar. Deshalb heißt das Ergebnis korrekt „nichts gefunden", nicht „nichts da".
-
-* **5. Der blinde Fleck gezielter Methoden.** Classical Shadows treffen einen Pauli-String vom Gewicht w nur mit Wahrscheinlichkeit 3^{−w} → 3^w/ε² Schüsse. Untere Schranke (Chen–Cotler–Huang–Li): *jedes* Einzelkopie-Protokoll braucht 2^{Ω(n)}, mit zwei Kopien genügen Θ(n). **Präzise Abgrenzung:** Für einen *bekannten* globalen Korrelator gilt das nicht (gezielte Basisrotation, O(1/ε²), gewichtsunabhängig). Die Schranke beißt genau im Schnittpunkt **global × unbekannte Lage**. Physikalische Beispiele: String-Ordnung der Haldane-Phase, Wilson-Schleifen, makroskopische Superpositionen mit unbekanntem Paar, unbekannte Symmetriesektoren.
-
 
 ## Typen von Lernprotokollen für Quantum Experiments
 
