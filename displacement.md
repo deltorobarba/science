@@ -36,7 +36,7 @@ In the paper [arXiv:2403.03469](https://arxiv.org/abs/2403.03469) they compute: 
 
 $\begin{array}{rcl} E & = & \text{Tr}(D_{q,p}\rho) \cdot \text{Tr}(D_{-q,p}\rho^*) & \quad \text{(Separation of Trace)} \\ & = & \text{Tr}(D_{q,p}\rho) \cdot \text{Tr}(D_{q,p}^T\rho^*) & \quad \text{(Using transpose of} D_{q,p}: D_{q,p}^T = D_{-q,p} \text{ (operator identity)} \\ & = & \text{Tr}(D_{q,p}\rho) \cdot \text{Tr}(D_{q,p}\rho) & \quad \text{(Using } \text{Tr}(A^T B^*) = \text{Tr}(AB) \text{ (matrix identity)} \\ & = & (\text{Tr}(D_{q,p}\rho))^2 = (y_{q,p})^2 & \quad \text{(Symmetry at (q, p) and (-q, -p) due to $D_{q,p}^\dagger = D_{-q,-p}$)} \end{array}$
 
-## <font color="blue">*Displacement operators*
+## Displacement operators
 
 * Commutation relations: $D_{q',p'} D_{q,p} = e^{i 2\pi (qp' - q'p)/d} D_{q,p} D_{q',p'}$
 * $\{D_{q,p} \otimes D_{-q,p}\}$ mutually commute
