@@ -4,6 +4,8 @@
 
 ## <span style="color:#0000FF">Learning from Quantum Experiments</span>
 
+<h2 style="color:#0000FF">Learning from Quantum Experiments</h2>
+
 ### 1. Wie hängen Quantenmessung und Quantum Learning zusammen?
 
 * Die kürzeste Fassung: Lerntheorie ist die Ressourcentheorie, die auf der Messtheorie aufsetzt.
