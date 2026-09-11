@@ -11,12 +11,12 @@
   * Die **Lerntheorie** stellt die inverse, statistische Frage: *Was lässt sich aus vielen Messungen über ein unbekanntes ρ herausfinden — und zu welchen Kosten, optimal?*
 * Die Born-Regel verwandelt den Zustand in ein Sampling-Orakel; Lernen ist das Inversproblem dazu.
 
-#### 2. Begriffsklärung: die Datenquelle entscheidet, nicht die Hardware
+### 2. Begriffsklärung: die Datenquelle entscheidet, nicht die Hardware
 
 * **Learning from quantum experiments** ist die Disziplin, die fragt: Gegeben Zugriff auf Kopien eines unbekannten Quantensystems — eines Zustands $\rho$, eines Prozesses/Kanals $\mathcal{E}$, einer Dynamik —, erzeugt von der Natur, einem Sensor oder einem Quantengerät: *welche* Eigenschaften kann ein Lerner extrahieren, zu *welchen* Kosten in Kopien, klassischer Zeit und klassischem Speicher, und wie verändern Quantenressourcen (Quantenspeicher, verschränkte Messungen, Adaptivität) diese Kosten?
 * *What properties of unknown state $\rho$, channel $\mathcal{E}$, Hamiltonian $H$ can be learned from physical copies — and at what Pareto-optimal budget in copies, classical runtime, and quantum memory?*
 
-#### 3. Differentiations by Data and Learners
+### 3. Differentiations by Data and Learners
 
 * The quantum learing from experiments is strictly the **bottom row** of the data-vs-learner matrix (quantum data):
 
@@ -38,7 +38,7 @@
   * (c) *Hybride:* Ein klassisches neuronales Netz, das Quantenmessdaten dekodiert, sitzt unten links — die Quantennatur steckt in den Daten, nicht im Lerner.
 
 
-#### 4. *Differentiations by Ressources*
+### 4. Differentiations by Ressources
 
 * Die Protokolle ordnen sich entlang weniger Achsen, auf denen die bewiesenen Separationen leben:
 
@@ -61,7 +61,7 @@
 
 <br>
 
-#### 5. *Differentiations by Task: Tomography vs Strukturlernen*
+### 5. Differentiations by Task: Tomography vs Strukturlernen
 
 * Die Aufgaben des Feldes trennt am schärfsten die Rolle der Observablen (vgl. Tabelle in Teil V):
   * Basis: **Full Tomography**: „Gib mir alle d² Parameter von ρ." Wie das komplette Genom sequenzieren. Danach kannst du jede beliebige Frage rechnerisch beantworten, ohne nochmal ins Labor zu gehen.
@@ -91,7 +91,7 @@ Drei Auflösungsstufen:
 * Sie kombinieren die Primitiven mit klassischer Nachverarbeitung, um Fragen über $\rho$ zu beantworten.
 * Die lerntheoretische Sicht sortiert sie entlang zweier Ressourcenachsen: **wie viele Kopien pro Schuss kohärent verarbeitet werden** ($1, 2, k$ — "Quantenspeicher") und **ob die Observablen Eingabe oder Ausgabe** des Protokolls sind (Schätzen vs. Suchen).
 
-#### 6. *Fünf Mehrwerte von Strukturlernen*
+### 6. Fünf Mehrwerte von Strukturlernen
 
 **Kernregel:** Die Pipeline liefert nie eine bestellte Observable, immer nur „die stärksten Stellen". Nützlich ist sie dort, wo die **Art** der Antwort vorher bekannt ist, aber nicht die **Adresse**. Struktureller Prior ja, Koordinaten-Prior nein. Fehlt der strukturelle Prior, ist das Ergebnis tatsächlich ein Überraschungsei.
 
@@ -109,7 +109,7 @@ Drei Auflösungsstufen:
 ## Typen von Lernprotokollen für Quantum Experiments
 
 
-#### 1. **Estimating: Tomography to Triple Efficiency (Observables as Input)**
+### 1. Estimating: Tomography to Triple Efficiency (Observables as Input)
 
 * **Full QST:** Reconstructs all $d^2$ parameters; bounded by $\Theta(d^2/\epsilon^2)$ (entangled) or $\Theta(d^3/\epsilon^2)$ (single-copy).
 * **Shadow Tomography:** Predicts $M$ target observables via gentle measurement / threshold search in $\mathrm{poly}(\log M)$ copies; compute- and memory-intensive.
@@ -122,7 +122,7 @@ Drei Auflösungsstufen:
   * **Chen et al. (2022):** $\Theta(d^3/\epsilon^2)$ single-copy lower bound proving the entangled-measurement gap.
   * **King, Gosset, Kothari, Babbush (2024):** Triply efficient shadow tomography for local fermionic & Pauli observables.
 
-#### 2. **Quantum Memory, Conjugate Access & Adaptivity**
+### 2. Quantum Memory, Conjugate Access & Adaptivity
 
 * **Two-copy mechanism:** Measuring across $\rho^{\otimes 2}$ in the $2n$-qubit Bell basis $\{(P\otimes\mathbb{1})\vert{}\Phi^+\rangle^{\otimes n}\}$ samples Pauli strings $P$ globally from a single shot.
 * **Conjugate pairs:** Access to $(\rho, \rho^*)$ isolates the clean product spectrum $\mathrm{Tr}(P\rho)^2/2^n$ with constant quantum memory.
@@ -134,7 +134,7 @@ Drei Auflösungsstufen:
   * **King, Wan, McClean (2024):** Exponential advantage via $(\rho, \rho^*)$ conjugate access with constant memory.
   * **Chen, Gong, Zhang (2024):** Exponential separations proven for adaptive multi-copy shadow tomography.
 
-#### 3. **Searching: Structure Learning & Agnostic Tomography (Observables as Output)**
+### 3. Searching: Structure Learning & Agnostic Tomography (Observables as Output)
 
 * **Task:** Discover the unknown sparse support of $\rho$ before estimating values (analogous to graphical model learning).
 * **Computational barrier:** While Bell sampling easily concentrates draws onto the support, reconstructing the generators without active queries is generically cryptographically hard (LWE-type). Subgroup/stabilizer symmetries form the primary tractable exception.
@@ -143,7 +143,7 @@ Drei Auflösungsstufen:
   * **Grewal, Iyer, Kretschmer, Liang (2023):** Bell difference sampling and learning states with few non-Clifford gates.
   * **Hangleiter, Gullans (PRL 2024):** Bell sampling as a universal diagnostic framework for quantum circuits.
 
-#### 4. **Computational Lens: Three Budgets & Hardness**
+### 4. Computational Lens: Three Budgets & Hardness
 
 * **Budget decoupling:** Copy complexity, classical time, and quantum memory scale independently. Sample-efficient protocols routinely hit exponential classical decoding barriers.
 * **Pseudorandomness:** Pseudorandom states (PRS) prove that quantum states can be statistically learnable yet computationally indistinguishable from Haar-random states.
@@ -153,7 +153,7 @@ Drei Auflösungsstufen:
   * **Kretschmer (TQC 2021):** Connecting quantum pseudorandomness to classical learning hardness.
   * **Huang, Broughton et al. (Nat. Commun. 2021):** *Power of data in quantum machine learning* — proves that access to classical data closes potential quantum speedups for learning classical functions, delineating classical vs. quantum data advantages.
 
-#### 5. **Learning Dynamics: Hamiltonians, Channels & Circuits**
+### 5. Learning Dynamics: Hamiltonians, Channels & Circuits
 
 * **Hamiltonians:** Learning unknown terms and coupling graphs from thermal Gibbs states or real-time dynamics up to the Heisenberg limit.
 * **Circuits & Channels:** Bounding Pauli channel noise; learning constant-depth shallow circuits in polynomial time.
@@ -163,7 +163,7 @@ Drei Auflösungsstufen:
   * **Huang et al. (PRL 2023):** Heisenberg-limited Hamiltonian learning from real-time evolution.
   * **Huang et al. (STOC 2024):** Polynomial-time reconstruction of shallow quantum circuits.
 
-#### 6. **Machine-Learned Decoders (ML on Quantum Data)**
+### 6. Machine-Learned Decoders (ML on Quantum Data)
 
 * **Role:** Classical neural decoders processing shadow data (bottom-left matrix quadrant) act as empirical heuristics for classically hard decoding tasks.
 * *Key Literature:*
@@ -171,7 +171,7 @@ Drei Auflösungsstufen:
   * **Huang, Kueng, Torlai, Albert, Preskill (Science 2022):** Provable generalization bounds for classical ML trained on quantum shadow data.
   * **Huang, Preskill, Soleimanifar (2024):** Rigorous state certification via single-qubit shadow relaxations.
 
-#### 7. **Surveys & Timeline**
+### 7. Surveys & Timeline
 
 * **Anshu, Arunachalam (Nat. Rev. Phys. 2024):** Canonical survey on state learning complexity.
 * **Gebhart et al. (Nat. Rev. Phys. 2023):** Comprehensive review on learning quantum dynamics in experimental setups.
@@ -184,7 +184,7 @@ Drei Auflösungsstufen:
 * **2023–2024:** Heisenberg Hamiltonian learning · Triply efficient shadows · Conjugate-pair advantages · Agnostic tomography
 * **2025–mid 2026:** Agnostic tomography consolidation · Noise-robust 2-copy hardware protocols · Physical average-case decodability
 
-#### 8. **Open Frontiers**
+### 8. Open Frontiers
 
 * **Tractable Islands:** Delineating the boundary between subgroup-tractable classes and cryptographically hard spectra under varying noise: **Kartierung der dekodierbaren Klassen - Zwischen „Subgruppen-leicht" (lineare Algebra) und „LWE-hart" liegt ein unvermessenes Gebiet**; derselbe Zustand wandert durch bloßes Aufdrehen eines Rauschparameters vom leichten ins harte Regime — ein Übergang, der nach systematischer Vermessung verlangt. Offen ist auch, ob die Härte-Reduktion von der Tensor-Produkt-Basis auf die zyklische Ein-Qudit-Basis übertragbar ist.
 * **Was gelernte Decoder implizit finden.** Funktioniert ein trainierter Decoder auf einer Klasse ohne bekannten effizienten Algorithmus, hat er möglicherweise einen gefunden — ML als Werkzeug der Algorithmen-Entdeckung, mit der offenen Frage nach einer Metrik, die Generalisierung über Zustandsverteilungen vorhersagt.
@@ -194,7 +194,7 @@ Drei Auflösungsstufen:
 ## Entwicklung der Lernprotokolle für Quantum Experiment
 
 
-#### 1. Zustandsdiskriminierung: Helstrom vs. USD
+### 1. Zustandsdiskriminierung: Helstrom vs. USD
 
 Gegeben eine von zwei bekannten Präparationen $\rho_0, \rho_1$ (a priori $p_0, p_1$) — welche liegt vor? Da nicht-orthogonale Zustände nicht perfekt unterscheidbar sind (Abschnitt 4), gibt es zwei kanonische Strategien mit unterschiedlichem Fehlerbegriff:
 
@@ -206,11 +206,11 @@ für reine Zustände mit gleichen Prioren $P_{\text{err}}^{\min} = \frac{1}{2}\b
 
 **Unambiguous State Discrimination (USD).** Erlaube einen dritten Ausgang "unentschieden" und verlange, dass die entschiedenen Antworten *nie* falsch sind. Für nicht-orthogonale Zustände erzwingt das eine echte POVM (drei Effekte auf einem Qubit — mit Projektoren unmöglich); der Preis ist die Enthaltungswahrscheinlichkeit, minimal $|\langle\psi_0|\psi_1\rangle|$ bei gleichen Prioren. Fehlerfreiheit gegen Auskunftsverweigerung — die komplementäre Währung zu Helstrom.
 
-#### 2. Tomographie: die exponentielle Basislinie
+### 2. Tomographie: die exponentielle Basislinie
 
 **Quantum State Tomography (QST)** rekonstruiert alle $d^2$ Parameter von $\rho$ aus einem *informationsvollständigen* Messsatz. Bei DV: alle $3^n$ Pauli-Basen (rotate-then-read in jeder Kombination) oder eine einzige SIC-POVM. Bei CV: Homodyn-Messungen der Quadratur-Randverteilungen $p(x_\theta)$ über einen Scan der LO-Phase $\theta$, aus denen die **Wigner-Funktion** $W(x,p)$ per inverser Radon-Transformation rekonstruiert wird (die Heterodyn-Statistik liefert direkt die glattere $Q$-Funktion). Die Sample-Komplexität ist das Problem: $\Theta(d^2/\epsilon^2) = \Theta(4^n/\epsilon^2)$ Kopien *selbst mit* kollektiven (verschränkten) Messungen über viele Kopien — exponentiell in $n$. Alles Weitere in diesem Teil existiert, um dieser Skalierung zu entkommen, wenn man gar nicht ganz $\rho$ braucht.
 
-#### 3. Shadow-Tomographie und Classical Shadows
+### 3. Shadow-Tomographie und Classical Shadows
 
 **Shadow-Tomographie (Aaronson).** Aufgabenstellung: Gegeben $M$ Zwei-Ausgangs-Observablen, gib alle $\mathrm{Tr}(E_i\rho)$ auf $\pm\epsilon$ genau aus — mit nur $\mathrm{poly}(\log M, n, 1/\epsilon)$ Kopien, wobei $M$ exponentiell sein darf. Der Motor ist das Gentle-Measurement-Lemma (Abschnitt 6): Jede fast-deterministische Schätzung beschädigt den Zustand nur $O(\sqrt{\epsilon})$, also können *dieselben* Kopien viele Fragen beantworten. Sample-effizient — aber die Originalprotokolle sind rechenintensiv und brauchen großen kohärenten Quantenspeicher: Die drei Budgets (Kopien / Zeit / Speicher) fallen hier auseinander.
 
@@ -220,7 +220,7 @@ $$\hat\rho = \mathcal{M}^{-1}\big(U^\dagger|b\rangle\langle b|U\big)$$
 
 speichern. Der invertierte Messkanal $\mathcal{M}^{-1}$ (für zufällige Pauli-Basen pro Qubit: $\hat\rho_q = 3\,U^\dagger|b\rangle\langle b|U - \mathbb{1}$) macht den Schätzer unverzerrt, $\mathbb{E}[\hat\rho] = \rho$ — Schüsse in der "falschen" Basis mitteln sich heraus. *Danach* beliebige Observablen mit kleiner Shadow-Norm per Median-of-Means schätzen: $O(\log M \cdot 3^k/\epsilon^2)$ Schüsse für $k$-lokale Paulis (Pauli-Ensemble), $O(\mathrm{Tr}\,O^2)$-artige Kosten für Fidelitäten (Clifford-Ensemble). Single-copy, kein Quantenspeicher, NISQ-tauglich — der Arbeitsgaul der Praxis. Die Lücke: *globale* Observablen ($k \sim n$, z. B. beliebige Pauli-Strings) kosten $3^n$ Schüsse — exponentiell. Genau diese Lücke schließen Zwei-Kopien-Messungen.
 
-#### 4. Zwei-Kopien-Messungen: Bell-Sampling, konjugierte Paare, Struktur-Lernen
+### 4. Zwei-Kopien-Messungen: Bell-Sampling, konjugierte Paare, Struktur-Lernen
 
 **Mechanismus.** Die $2n$-Qubit-Bell-Basis $\{(P\otimes\mathbb{1})|\Phi^+\rangle^{\otimes n}\}$ ist die gemeinsame Eigenbasis aller kommutierenden Operatoren $P\otimes\bar P$ (mit $\bar P$ der komplex konjugierten Pauli). Eine transversale Bell-Messung (BSM auf jedem Qubit-Paar) über *zwei Kopien* des Zustands zieht daher pro Schuss einen Pauli-String
 
