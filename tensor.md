@@ -22,7 +22,9 @@
 * The annihilation operator does the same for operators: $\hat a \propto \hat Q + i\hat P$. Real axis = position $\cos\omega t$, imaginary axis = momentum $i\sin\omega t$, rotation = time $e^{i\omega t}$ — oscillation between $Q$ and $P$.
 * Multiplying $\hat a$ by $e^{-i\omega t}$ rotates the vector in the complex plane: horizontal (real) = maximum position $Q$, vertical (imaginary) = maximum momentum $P$. **The 90° switch from $X$ to $Z$ is the QFT.**
 
-### Exponentiation: raise $e$ to the power of position and momentum, $e^{-i\hat G\theta}$, to get from the QHO to quantum operators
+### Exponentiation
+
+> Raise $e$ to the power of position and momentum, $e^{-i\hat G\theta}$, to get from the QHO to quantum operators
 
 * $\hat U = e^{-i\hat G\theta}$ is the general form describing how a state moves in terms of the fundamental operators $\hat Q,\hat P$:
   * $e^{i\theta}$ is a point on the unit circle and keeps it unitary ($U^\dagger U = I$);
