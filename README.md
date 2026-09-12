@@ -1,40 +1,39 @@
-# Quantum Learning
+# Quantum Information Theory
 
 Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/)
 
 <img src="https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG" alt="science">
 
 
-## 1. Was ist „Learning from Quantum Experiments"?
+## Quantum Learning (Learning from Quantum Experiments)
 
-**Messtheorie vs. Lerntheorie.** Die Messtheorie beantwortet die Einzelschuss-Frage: Was tut eine Messung mit einem Zustand, welche Statistik erzeugt sie? Die Lerntheorie stellt die inverse, statistische Frage: *Was lässt sich aus vielen Messungen über ein unbekanntes $\rho$ herausfinden, und zu welchen Kosten?* Die Born-Regel macht den Zustand zum Sampling-Orakel; Lernen ist das Inversproblem dazu.
+**Measurement theory vs. learning theory.** Measurement theory answers the single-shot question: What does a measurement do to a state, and which statistics does it produce? Learning theory asks the inverse, statistical question: *What can be learned about an unknown $\rho$ from many measurements, and at what cost?* The Born rule turns the state into a sampling oracle; learning is the inverse problem.
 
-**Definition.** Gegeben Zugriff auf Kopien eines unbekannten Quantenobjekts (Zustand $\rho$, Kanal $\mathcal{E}$, Hamiltonian $H$), erzeugt von der Natur, einem Sensor oder einem Quantengerät: *Welche* Eigenschaften kann ein Lerner extrahieren, zu *welchen* Kosten in Kopien, klassischer Zeit und Speicher, und wie verändern Quantenressourcen (Quantenspeicher, verschränkte Messungen, Adaptivität) diese Kosten?
+**Definition.** Given access to copies of an unknown quantum object (state $\rho$, channel $\mathcal{E}$, Hamiltonian $H$), produced by nature, a sensor, or a quantum device: *Which* properties can a learner extract, at *what* cost in copies, classical time, and memory, and how do quantum resources (quantum memory, entangled measurements, adaptivity) change these costs?
 
-### Die Datenquelle entscheidet, nicht die Hardware
+### The data source decides, not the hardware
 
-Das Feld ist die **untere Zeile** der Daten-vs-Lerner-Matrix:
+The field is the **bottom row** of the data-vs-learner matrix:
 
 | | Classical Learners | Quantum Enhanced Learners |
 | --- | --- | --- |
-| **Klassische Daten** | klassisches ML | „QML on classical data": Feature Maps, variationelle Klassifikatoren, Quantum Kernels |
-| **Quantendaten** (Kopien von $\rho$ / Kanälen) | **Messprotokoll + klassische Statistik: Shadows, Bell-Sampling + klassische Decoder** | Quantenspeicher-Protokolle: kohärente Zwei-/Multi-Kopien-Messungen |
+| **Classical data** | classical ML | "QML on classical data": feature maps, variational classifiers, quantum kernels |
+| **Quantum data** (copies of $\rho$ / channels) | **Measurement protocol + classical statistics: shadows, Bell sampling + classical decoders** | Quantum-memory protocols: coherent two-/multi-copy measurements |
 
-Drei Lackmustests trennen die Zeilen scharf:
+Three litmus tests separate the rows sharply:
 
-1. **Wo lebt das Unbekannte?** Dichteoperator/Kanal vs. klassischer Datensatz.
-2. **Ist „Anzahl der Kopien" eine sinnvolle Kostengröße?** Quantendaten sind nicht klonbar, jede Kopie kostet. Klassische Daten sind beliebig kopierbar.
-3. **Binden die Informationsgrenzen?** No-Cloning, Holevo und Gentle Measurement machen Lernen aus Quantendaten nichttrivial. Auf ein CSV-File greifen sie nicht.
+1. **Where does the unknown live?** Density operator/channel vs. classical dataset.
+2. **Is "number of copies" a meaningful cost?** Quantum data cannot be cloned, every copy costs. Classical data can be copied at will.
+3. **Do the information bounds bind?** No-cloning, Holevo, and gentle measurement are what make learning from quantum data nontrivial. They do not apply to a CSV file.
 
-**Warum die Trennung wichtig ist (Power of Data).** In der oberen Zeile sind Vorteilsbehauptungen fragil: klassisches ML mit genügend Trainingsdaten holt Quantenmodelle auf klassischen Aufgaben ein (Huang et al., Nat. Commun. 2021). In der unteren Zeile stehen die *bewiesenen* exponentiellen Separationen, inklusive Hardware-Demonstration.
+**Why the separation matters (Power of Data).** In the top row, advantage claims are fragile: classical ML with enough training data catches up with quantum models on classical tasks (Huang et al., Nat. Commun. 2021). In the bottom row stand the *proven* exponential separations, including hardware demonstration.
 
-**Grauzonen.** (a) *Engineerte Zustände:* Ob $\rho$ von einem Molekül oder einem Prozessor stammt, ist egal; Gerätecharakterisierung und Rauschlernen gehören nativ zum Feld. (b) *Simulatoren:* Das Zugriffsmodell bleibt das eines Quantenexperiments; die Sample-Komplexität ist simulator-invariant. (c) *Hybride:* Ein neuronales Netz, das Quantenmessdaten dekodiert, sitzt unten links.
+**Gray zones.** (a) *Engineered states:* Whether $\rho$ comes from a molecule or a processor is irrelevant; device characterization and noise learning belong natively to the field. (b) *Simulators:* The access model remains that of a quantum experiment; sample complexity is simulator-invariant. (c) *Hybrids:* A neural network that decodes quantum measurement data sits bottom-left.
 
----
 
-## 2. Perspektiven auf das Feld
+## 2. Perspectives on the Field
 
-### 2.1 Nach Ressourcen
+### 2.1 By resources
 
 | Axis | Spectrum | Key Separation / Benchmark |
 | --- | --- | --- |
@@ -44,20 +43,20 @@ Drei Lackmustests trennen die Zeilen scharf:
 | **Budgets** | Samples / Time / Memory | Sample-efficient with exponential classical decoders is the default |
 | **Data Access** | i.i.d. draws $\leftrightarrow$ active queries | LWE-hardness: states can be sample-learnable but computationally hidden |
 
-Die letzten beiden Achsen sind die aktuelle Front: Fast alle Separationen sind *Sample*-Aussagen. Ob die Daten auch *effizient verarbeitbar* sind, ist weit weniger kartiert. Die Sample-vs-Query-Lücke ist fundamental, nicht technisch: Unter Standard-Kryptoannahmen gibt es keine generische Konversion.
+The last two axes are the current frontier: Almost all separations are *sample* statements. Whether the data can also be *processed efficiently* is far less charted. The sample-vs-query gap is fundamental, not technical: Under standard cryptographic assumptions there is no generic conversion.
 
-| Zugriffstyp | Status bei LWE | Ursache |
+| Access type | Status under LWE | Cause |
 | --- | --- | --- |
-| **Sampling Access** | **Hard (Post-Quantum)** | Keine Kontrolle über $\mathbf{a}_i$; algebraische Elimination führt zu Fehleranhäufung, die das Signal zerstört |
-| **Query Access (Superposition)** | **Easy (Bernstein-Vazirani / QFT)** | Gezielte Superpositionen ermöglichen Interferenz via QFT; Rauschen bleibt isoliert |
+| **Sampling Access** | **Hard (Post-Quantum)** | No control over $\mathbf{a}_i$; algebraic elimination leads to error accumulation that destroys the signal |
+| **Query Access (Superposition)** | **Easy (Bernstein-Vazirani / QFT)** | Targeted superpositions enable interference via QFT; noise stays isolated |
 
-### 2.2 Nach Aufgabe: Schätzen vs. Suchen
+### 2.2 By task: estimating vs. searching
 
-Die Rolle der Observablen trennt die Aufgaben am schärfsten:
+The role of the observables separates the tasks most sharply:
 
-* **Full Tomography:** „Gib mir alle $d^2$ Parameter." Wie das ganze Genom sequenzieren.
-* **Schätzen** (Observablen sind *Eingabe*): „Gib mir die Werte dieser $M$ Observablen." Wie ein Panel vordefinierter SNPs.
-* **Suchen** (Observablen sind *Ausgabe*): „Finde, welche Observablen überhaupt relevant sind, dann ihre Werte." Wie eine GWAS. Echt schwerer: Die Schätz-Garantien decken das nicht, und hier sitzt die LWE-Härte.
+* **Full Tomography:** "Give me all $d^2$ parameters." Like sequencing the whole genome.
+* **Estimating** (observables are *input*): "Give me the values of these $M$ observables." Like a panel of predefined SNPs.
+* **Searching** (observables are *output*): "Find which observables are relevant at all, then their values." Like a GWAS. Genuinely harder: The estimation guarantees do not cover it, and this is where LWE hardness sits.
 
 | Task | Observables | Target Output | Sample Complexity ($n$ qubits, $d=2^n$) |
 | --- | --- | --- | --- |
@@ -67,203 +66,632 @@ Die Rolle der Observablen trennt die Aufgaben am schärfsten:
 | **Bell / Pauli Sampling** | Sampled dynamically | Draws $P \sim \vert{}\langle\bar\psi\vert{}P\vert{}\psi\rangle\vert{}^2/2^n$ | $O(n)$ two-copy shots (stabilizer support) |
 | **Structure Learning** | Discovered (output) | Support + values of sparse spectrum | $\mathrm{poly}(n)$ samples; classical decoding often hard |
 | **State Discrimination** | 2 candidates $(\rho_0, \rho_1)$ | Identity index | Helstrom (min error) vs. USD (zero error + abort) |
-| **Hypothesen-Selektion** | Liste gegeben | ein Index | $O(\log M)$ Kopien |
+| **Hypothesis Selection** | List given | One index | $O(\log M)$ copies |
 
-### 2.3 Drei Budgets, immer getrennt
+### 2.3 Three budgets, always separate
 
-Kopien (Sample-Komplexität), klassische Zeit, klassischer Speicher skalieren unabhängig. Sample-effiziente Protokolle mit exponentiellen Decodern sind die Norm; **dreifache Effizienz** ist die Ausnahme.
+Copies (sample complexity), classical time, and classical memory scale independently. Sample-efficient protocols with exponential decoders are the norm; **triple efficiency** is the exception.
 
-### 2.4 Einordnung des eigenen Projekts
+### 2.4 Positioning of the own project
 
-* **Feld:** Quantenvorteile beim Lernen physikalischer Systeme aus Messdaten, mit minimalem Quantenspeicher (nie mehr als zwei Kopien).
-* **Ansatz:** *Machine-learned decoders for quantum measurement data.* Ein trainiertes Modell ersetzt handgebaute Kombinatorik (Graph-Coloring, Matrix Multiplicative Weights) und nutzt die Struktur der Zustandsklasse. Überträgt sich auf Hamiltonian Learning, Rauschcharakterisierung, Fehlerkorrektur-Decoder.
-* **Beitrag:** Computationally efficient **structure learning** dünner Displacement-Spektren aus Zwei-Kopien-Bell-Messungen. Triply efficient, als Promise-Problem, mit beweisbaren Instanzen (Dictionary-, Subgruppen-Klassen) und beweisbarer Grenze (LWE-Härte der generischen Lokalisierung).
-* **Struktur:** Jedes Protokoll zerfällt in *Quantenfrontend* (welche Messung auf wie vielen Kopien) und *klassischen Decoder*. Der Fehler faktorisiert in Lokalisierung und Schätzung. Vorn konjugierte Bell-Paare, hinten gelernter CNN-Decoder plus sequentieller Vorzeichen-Integrator.
+* **Field:** Quantum advantages in learning physical systems from measurement data, with minimal quantum memory (never more than two copies).
+* **Approach:** *Machine-learned decoders for quantum measurement data.* A trained model replaces hand-built combinatorics (graph coloring, matrix multiplicative weights) and exploits the structure of the state class. Transfers to Hamiltonian learning, noise characterization, error-correction decoders.
+* **Contribution:** Computationally efficient **structure learning** of sparse displacement spectra from two-copy Bell measurements. Triply efficient, posed as a promise problem, with provable instances (dictionary and subgroup classes) and a provable limit (LWE hardness of generic localization).
+* **Structure:** Every protocol splits into a *quantum frontend* (which measurement on how many copies) and a *classical decoder*. The error factorizes into localization and estimation. Conjugate Bell pairs in front, learned CNN decoder plus sequential sign integrator behind.
 
----
 
-## 3. Die Protokolle: Technik und Literatur
+## 3. The Protocols: Technique and Literature
 
-Alles hier sind *Protokolle über Messungen*, keine neuen Messtypen. Sie sortieren sich entlang zweier Achsen: Kopien pro Schuss ($1, 2, k$) und Observablen als Eingabe oder Ausgabe.
+Everything here is a *protocol over measurements*, not a new measurement type. They sort along two axes: copies per shot ($1, 2, k$) and observables as input or output.
 
-### 3.1 Zustandsdiskriminierung: Helstrom vs. USD
+### 3.1 State discrimination: Helstrom vs. USD
 
-Gegeben $\rho_0, \rho_1$ mit Prioren $p_0, p_1$: Welche liegt vor? Zwei Strategien mit unterschiedlichem Fehlerbegriff.
+Given $\rho_0, \rho_1$ with priors $p_0, p_1$: Which one is present? Two strategies with different notions of error.
 
-* **Helstrom (Minimum-Error):** Antwort in jedem Durchlauf, mittlerer Fehler minimiert. Projektive Messung auf das Vorzeichenspektrum von $p_0\rho_0 - p_1\rho_1$:
+* **Helstrom (minimum error):** Answer in every run, average error minimized. Projective measurement onto the sign spectrum of $p_0\rho_0 - p_1\rho_1$:
 
 $$P_{\text{err}}^{\min} = \tfrac{1}{2}\Big(1 - \big\|p_0\rho_0 - p_1\rho_1\big\|_1\Big)$$
 
-* **USD (Unambiguous):** Dritter Ausgang „unentschieden", entschiedene Antworten nie falsch. Erfordert eine echte POVM; Preis ist die Enthaltungswahrscheinlichkeit, minimal $|\langle\psi_0|\psi_1\rangle|$.
+* **USD (unambiguous):** Third outcome "undecided", decided answers never wrong. Requires a genuine POVM; the price is the abstention probability, minimally $|\langle\psi_0|\psi_1\rangle|$.
 
-### 3.2 Full QST: die exponentielle Basislinie
+### 3.2 Full QST: the exponential baseline
 
-Rekonstruiert alle $d^2$ Parameter aus einem informationsvollständigen Messsatz (DV: alle $3^n$ Pauli-Basen oder eine SIC-POVM; CV: Homodyn-Scan und inverse Radon-Transformation zur Wigner-Funktion). Kosten $\Theta(d^2/\epsilon^2) = \Theta(4^n/\epsilon^2)$ selbst mit verschränkten Messungen. Alles Weitere existiert, um dieser Skalierung zu entkommen.
+Reconstructs all $d^2$ parameters from an informationally complete measurement set (DV: all $3^n$ Pauli bases or a single SIC-POVM; CV: homodyne scan and inverse Radon transform to the Wigner function). Cost $\Theta(d^2/\epsilon^2) = \Theta(4^n/\epsilon^2)$ even with entangled measurements. Everything else exists to escape this scaling.
 
-* **Haah et al. / O'Donnell–Wright (STOC 2016):** $\Theta(d^2/\epsilon^2)$ optimale verschränkte Tomographie.
-* **Chen et al. (2022):** $\Theta(d^3/\epsilon^2)$ Single-Copy-Untergrenze, beweist die Lücke zu verschränkten Messungen.
+* **Haah et al. / O'Donnell–Wright (STOC 2016):** $\Theta(d^2/\epsilon^2)$ optimal entangled tomography.
+* **Chen et al. (2022):** $\Theta(d^3/\epsilon^2)$ single-copy lower bound, proves the gap to entangled measurements.
 
-### 3.3 Shadow-Tomographie und Classical Shadows (Observablen als Eingabe)
+### 3.3 Shadow tomography and classical shadows (observables as input)
 
-* **Shadow-Tomographie (Aaronson):** $M$ Observablen auf $\pm\epsilon$ mit $\mathrm{poly}(\log M, n, 1/\epsilon)$ Kopien, $M$ darf exponentiell sein. Motor ist das Gentle-Measurement-Lemma: Fast-deterministische Schätzungen beschädigen den Zustand nur $O(\sqrt{\epsilon})$, dieselben Kopien beantworten viele Fragen. Sample-effizient, aber rechen- und speicherintensiv.
-* **Classical Shadows (Huang–Kueng–Preskill):** „Randomisiere zuerst, frage später." Pro Kopie zufälliges $U$ (Pauli-Basis pro Qubit oder Clifford), messen, Schnappschuss speichern:
+* **Shadow tomography (Aaronson):** $M$ observables to $\pm\epsilon$ with $\mathrm{poly}(\log M, n, 1/\epsilon)$ copies, $M$ may be exponential. The engine is the gentle-measurement lemma: Near-deterministic estimates damage the state only by $O(\sqrt{\epsilon})$, so the same copies answer many questions. Sample-efficient, but compute- and memory-intensive.
+* **Classical shadows (Huang–Kueng–Preskill):** "Randomize first, ask later." Per copy, draw a random $U$ (Pauli basis per qubit or Clifford), measure, store the snapshot:
 
 $$\hat\rho = \mathcal{M}^{-1}\big(U^\dagger|b\rangle\langle b|U\big), \qquad \mathbb{E}[\hat\rho] = \rho$$
 
-  Danach beliebige Observablen per Median-of-Means: $O(\log M \cdot 3^k/\epsilon^2)$ Schüsse für $k$-lokale Paulis. Single-copy, NISQ-tauglich, der Arbeitsgaul der Praxis. Lücke: *globale* Observablen ($k \sim n$) kosten $3^n$ Schüsse. Genau die schließen Zwei-Kopien-Messungen.
-* **Triple Efficiency:** Sample- *und* Zeiteffizienz mit $O(1)$-Kopien-Quantenspeicher.
+  Afterwards estimate arbitrary observables via median-of-means: $O(\log M \cdot 3^k/\epsilon^2)$ shots for $k$-local Paulis. Single-copy, NISQ-ready, the workhorse of practice. The gap: *global* observables ($k \sim n$) cost $3^n$ shots. Exactly this gap is closed by two-copy measurements.
+* **Triple efficiency:** Sample *and* time efficiency with $O(1)$-copy quantum memory.
 
-Literatur:
-* **Aaronson (STOC 2018):** Shadow tomography via Gentle Measurements, $\tilde{O}(\log^4 M)$ Kopien.
-* **Huang, Kueng, Preskill (Nat. Phys. 2020):** Classical Shadows.
-* **King, Gosset, Kothari, Babbush (2024):** Triply efficient shadow tomography für lokale fermionische und Pauli-Observablen.
+Literature:
+* **Aaronson (STOC 2018):** Shadow tomography via gentle measurements, $\tilde{O}(\log^4 M)$ copies.
+* **Huang, Kueng, Preskill (Nat. Phys. 2020):** Classical shadows.
+* **King, Gosset, Kothari, Babbush (2024):** Triply efficient shadow tomography for local fermionic and Pauli observables.
 
-### 3.4 Zwei Kopien: Bell-Sampling, konjugierte Paare, Quantenspeicher
+### 3.4 Two copies: Bell sampling, conjugate pairs, quantum memory
 
-**Mechanismus.** Die $2n$-Qubit-Bell-Basis $\{(P\otimes\mathbb{1})|\Phi^+\rangle^{\otimes n}\}$ ist die gemeinsame Eigenbasis aller kommutierenden $P\otimes\bar P$. Eine transversale Bell-Messung über zwei Kopien zieht pro Schuss einen Pauli-String
+**Mechanism.** The $2n$-qubit Bell basis $\{(P\otimes\mathbb{1})|\Phi^+\rangle^{\otimes n}\}$ is the joint eigenbasis of all commuting $P\otimes\bar P$. A transversal Bell measurement across two copies draws one Pauli string per shot
 
 $$P \sim \frac{|\langle\bar\psi|P|\psi\rangle|^2}{2^n}$$
 
-Ein Schuss trägt Information über das *gesamte* Pauli-Spektrum. **Subtilität:** Auf $\psi\otimes\psi$ sampelt man gegen den *konjugierten* Zustand $\bar\psi$. Das saubere Spektrum $\mathrm{Tr}(P\rho)^2/2^n$ erfordert das Paar $(\rho, \bar\rho)$. Für reelle Amplituden fallen beide zusammen (deshalb nehmen Demos gern GHZ-Zustände).
+A single shot carries information about the *entire* Pauli spectrum. **Subtlety:** On $\psi\otimes\psi$ one samples against the *conjugate* state $\bar\psi$. The clean spectrum $\mathrm{Tr}(P\rho)^2/2^n$ requires the pair $(\rho, \bar\rho)$. For real amplitudes both coincide (which is why demos like GHZ states).
 
-**Konsequenzen.** Reinheit und Überlapp $\mathrm{Tr}(\rho\sigma)$ via SWAP-Tests ohne Tomographie. Stabilizer-Zustände aus $O(n)$ Bell-Samples lernbar. Vor allem: **Pauli-Shadow-Tomographie mit $\Theta(n)$ Kopien bei Zwei-Kopien-Speicher vs. $2^{\Omega(n)}$ ohne.** Einer der stärksten bewiesenen exponentiellen Quantenvorteile, in Hardware demonstriert. Zwei ist der Sweet Spot: Fast der gesamte bekannte Gewinn kommt schon bei $k=2$.
+**Consequences.** Purity and overlap $\mathrm{Tr}(\rho\sigma)$ via SWAP tests without tomography. Stabilizer states learnable from $O(n)$ Bell samples. Above all: **Pauli shadow tomography with $\Theta(n)$ copies given two-copy memory vs. $2^{\Omega(n)}$ without.** One of the strongest proven exponential quantum advantages, demonstrated in hardware. Two is the sweet spot: Almost all known gain arrives already at $k=2$.
 
-Literatur:
-* **Bubeck, Chen, Li (FOCS 2020):** Verschränkung notwendig für optimales Property Testing.
-* **Chen, Cotler, Huang, Li (FOCS 2021):** $\Theta(n)$ vs. $2^{\Omega(n)}$ Separation mit Quantenspeicher.
-* **Huang et al. (Science 2022):** Flagship-Separationen und Sycamore-Demo mit 40 Qubits.
-* **King, Wan, McClean (2024):** Exponentieller Vorteil via $(\rho, \rho^*)$ mit konstantem Speicher.
-* **Chen, Gong, Zhang (2024):** Separationen für adaptive Multi-Copy-Shadow-Tomographie.
+Literature:
+* **Bubeck, Chen, Li (FOCS 2020):** Entanglement necessary for optimal property testing.
+* **Chen, Cotler, Huang, Li (FOCS 2021):** $\Theta(n)$ vs. $2^{\Omega(n)}$ separation with quantum memory.
+* **Huang et al. (Science 2022):** Flagship separations and Sycamore demo with 40 qubits.
+* **King, Wan, McClean (2024):** Exponential advantage via $(\rho, \rho^*)$ with constant memory.
+* **Chen, Gong, Zhang (2024):** Separations for adaptive multi-copy shadow tomography.
 
-### 3.5 Struktur-Lernen (Observablen als Ausgabe)
+### 3.5 Structure learning (observables as output)
 
-**Aufgabeninversion:** Erst die wenigen Observablen *finden*, die den Support eines dünnen Pauli-/Displacement-Spektrums tragen, dann ihre Werte schätzen (erst die Kanten, dann die Gewichte, wie beim Lernen graphischer Modelle). Das Sampling ist die leichte Hälfte: Bell-Sampling konzentriert die Züge auf den Support. **Die Decodierung ist die harte Hälfte:** i.i.d.-Samples in den Support zu verwandeln ist Sparse Recovery *ohne wählbare Queries*, generisch kryptographisch hart (LWE-artig). Subgruppen-/Stabilizer-Symmetrien sind die tractable Ausnahme.
+**Task inversion:** First *find* the few observables that carry the support of a sparse Pauli/displacement spectrum, then estimate their values (first the edges, then the weights, as in learning graphical models). Sampling is the easy half: Bell sampling concentrates the draws on the support. **Decoding is the hard half:** Turning i.i.d. samples into the support is sparse recovery *without choosable queries*, generically cryptographically hard (LWE-type). Subgroup/stabilizer symmetries are the tractable exception.
 
-* **Montanaro (2017):** Stabilizer-Zustände aus $O(n)$ Bell-Samples via lineare Algebra.
-* **Grewal, Iyer, Kretschmer, Liang (2023):** Bell difference sampling, Zustände mit wenigen Non-Clifford-Gates.
-* **Hangleiter, Gullans (PRL 2024):** Bell-Sampling als universelles Diagnostik-Framework.
+* **Montanaro (2017):** Stabilizer states from $O(n)$ Bell samples via linear algebra.
+* **Grewal, Iyer, Kretschmer, Liang (2023):** Bell difference sampling, states with few non-Clifford gates.
+* **Hangleiter, Gullans (PRL 2024):** Bell sampling as a universal diagnostic framework.
 
-### 3.6 Computational Lens: Härte und Pseudozufall
+### 3.6 Computational lens: hardness and pseudorandomness
 
-Pseudorandom States (PRS) zeigen: Zustände können statistisch lernbar, aber rechnerisch nicht von Haar-zufälligen unterscheidbar sein.
+Pseudorandom states (PRS) show: States can be statistically learnable yet computationally indistinguishable from Haar-random ones.
 
-* **Regev (2005):** Learning With Errors, Fundament der Average-Case-Härte.
-* **Ji, Liu, Song (CRYPTO 2018):** Pseudorandom Quantum States.
-* **Kretschmer (TQC 2021):** Quanten-Pseudozufall und klassische Lernhärte.
-* **Huang, Broughton et al. (Nat. Commun. 2021):** *Power of data*: klassische Daten schließen Quantenvorteile beim Lernen klassischer Funktionen.
+* **Regev (2005):** Learning With Errors, foundation of average-case hardness.
+* **Ji, Liu, Song (CRYPTO 2018):** Pseudorandom quantum states.
+* **Kretschmer (TQC 2021):** Quantum pseudorandomness and classical learning hardness.
+* **Huang, Broughton et al. (Nat. Commun. 2021):** *Power of data*: classical data closes quantum advantages in learning classical functions.
 
-### 3.7 Dynamik lernen: Hamiltonians, Kanäle, Schaltkreise
+### 3.7 Learning dynamics: Hamiltonians, channels, circuits
 
-Unbekannte Terme und Kopplungsgraphen aus Gibbs-Zuständen oder Echtzeit-Dynamik bis zum Heisenberg-Limit; Pauli-Rauschen in Kanälen; Shallow Circuits in Polynomialzeit.
+Unknown terms and coupling graphs from Gibbs states or real-time dynamics up to the Heisenberg limit; Pauli noise in channels; shallow circuits in polynomial time.
 
-* **Flammia, Wallman (TQC 2020):** Effiziente Pauli-Kanal-Schätzung.
-* **Anshu et al. (Nat. Phys. 2021) / Haah et al. (FOCS 2022):** Optimale Sample-Komplexität für Gibbs-State-Hamiltonian-Learning.
-* **Huang et al. (PRL 2023):** Heisenberg-limitiertes Hamiltonian Learning aus Echtzeit-Evolution.
-* **Huang et al. (STOC 2024):** Polynomialzeit-Rekonstruktion flacher Schaltkreise.
+* **Flammia, Wallman (TQC 2020):** Efficient Pauli channel estimation.
+* **Anshu et al. (Nat. Phys. 2021) / Haah et al. (FOCS 2022):** Optimal sample complexity for Gibbs-state Hamiltonian learning.
+* **Huang et al. (PRL 2023):** Heisenberg-limited Hamiltonian learning from real-time evolution.
+* **Huang et al. (STOC 2024):** Polynomial-time reconstruction of shallow circuits.
 
-### 3.8 Machine-Learned Decoders
+### 3.8 Machine-learned decoders
 
-Klassische neuronale Decoder auf Shadow-Daten (Quadrant unten links) als empirische Heuristik für klassisch harte Decodier-Aufgaben.
+Classical neural decoders on shadow data (bottom-left quadrant) as empirical heuristics for classically hard decoding tasks.
 
 * **Torlai et al. (Nat. Phys. 2018):** Neural-network QST.
-* **Huang, Kueng, Torlai, Albert, Preskill (Science 2022):** Beweisbare Generalisierungsschranken für ML auf Shadow-Daten.
-* **Huang, Preskill, Soleimanifar (2024):** Zustandszertifizierung via Single-Qubit-Shadow-Relaxationen.
+* **Huang, Kueng, Torlai, Albert, Preskill (Science 2022):** Provable generalization bounds for ML on shadow data.
+* **Huang, Preskill, Soleimanifar (2024):** State certification via single-qubit shadow relaxations.
 
-### 3.9 Surveys und Timeline
+### 3.9 Surveys and timeline
 
-* **Anshu, Arunachalam (Nat. Rev. Phys. 2024):** Kanonischer Survey zur State-Learning-Komplexität.
-* **Gebhart et al. (Nat. Rev. Phys. 2023):** Review zum Lernen von Quantendynamik in Experimenten.
-* **Arunachalam, de Wolf (SIGACT 2017):** Quantum PAC Learning.
+* **Anshu, Arunachalam (Nat. Rev. Phys. 2024):** Canonical survey on state-learning complexity.
+* **Gebhart et al. (Nat. Rev. Phys. 2023):** Review on learning quantum dynamics in experiments.
+* **Arunachalam, de Wolf (SIGACT 2017):** Quantum PAC learning.
 
-| Zeitraum | Meilensteine |
+| Period | Milestones |
 | --- | --- |
 | 1998–2007 | Quantum PAC (Bshouty–Jackson) · LWE (Regev) · State PAC learnability (Aaronson) |
-| 2016 | Sample-optimale Tomographie $\Theta(d^2/\epsilon^2)$ |
+| 2016 | Sample-optimal tomography $\Theta(d^2/\epsilon^2)$ |
 | 2017–2018 | Shadow tomography · Stabilizer Bell sampling · PRS |
 | 2020 | Classical shadows · Entanglement lower bounds |
-| 2021–2022 | Memory-Separationen · Sycamore-Demo · Shallow circuit learning |
+| 2021–2022 | Memory separations · Sycamore demo · Shallow circuit learning |
 | 2023–2024 | Heisenberg Hamiltonian learning · Triply efficient shadows · Conjugate pairs · Agnostic tomography |
 | 2025–2026 | Agnostic tomography · Noise-robust 2-copy hardware · Physical average-case decodability |
 
----
 
-## 4. Offene Fronten
+## 4. Open Frontiers
 
-* **Kartierung der dekodierbaren Klassen.** Zwischen „Subgruppen-leicht" (lineare Algebra) und „LWE-hart" liegt unvermessenes Gebiet. Derselbe Zustand wandert durch Aufdrehen eines Rauschparameters vom leichten ins harte Regime. Offen: Überträgt sich die Härte-Reduktion von der Tensor-Produkt-Basis auf die zyklische Ein-Qudit-Basis?
-* **Was gelernte Decoder implizit finden.** Funktioniert ein Decoder auf einer Klasse ohne bekannten effizienten Algorithmus, hat er möglicherweise einen gefunden. ML als Werkzeug der Algorithmen-Entdeckung; gesucht ist eine Metrik, die Generalisierung über Zustandsverteilungen vorhersagt.
-* **Hardware-Realismus bei zwei Kopien.** Approximate matched filters (Probe-Gain $\kappa < 1$, Mehrkosten $\kappa^{-2}$) machen Protokolle graceful gegenüber Präparations-, Crosstalk- und Messfehlern. Die praktisch relevanteste Achse.
-* **Average-Case statt Worst-Case.** Die Härte-Resultate sind adversarial. Natürliche Zustände (Grundzustände lokaler Hamiltonians, thermische Zustände) könnten generisch dekodierbar sein: von der Kryptographie- zur Physik-Perspektive.
+* **Mapping the decodable classes.** Between "subgroup-easy" (linear algebra) and "LWE-hard" lies uncharted territory. The same state moves from the easy to the hard regime by turning up a noise parameter. Open: Does the hardness reduction transfer from the tensor-product basis to the cyclic single-qudit basis?
+* **What learned decoders implicitly find.** If a decoder works on a class with no known efficient algorithm, it may have found one. ML as a tool for algorithm discovery; what is missing is a metric that predicts generalization across state distributions.
+* **Hardware realism with two copies.** Approximate matched filters (probe gain $\kappa < 1$, overhead $\kappa^{-2}$) make protocols graceful against preparation, crosstalk, and measurement errors. The practically most relevant axis.
+* **Average case instead of worst case.** The hardness results are adversarial. Natural states (ground states of local Hamiltonians, thermal states) could be generically decodable: from the cryptography perspective to the physics perspective.
 
----
 
-## 5. Technik: Displacement-Operatoren und konjugierte Paare
+## 5. Technique: Displacement Operators and Conjugate Pairs
 
-Kern des Papers [arXiv:2403.03469](https://arxiv.org/abs/2403.03469) (King, Wan, McClean): Shadow-Tomographie auf der Menge der **Displacement-Operatoren** eines Qudits, gewünscht $\mathrm{Tr}(D_{q,p}\rho) \pm \varepsilon$ für alle $(q,p)$.
+Core of the paper [arXiv:2403.03469](https://arxiv.org/abs/2403.03469) (King, Wan, McClean): shadow tomography on the set of **displacement operators** of a qudit, target $\mathrm{Tr}(D_{q,p}\rho) \pm \varepsilon$ for all $(q,p)$.
 
-### 5.1 Heisenberg-Weyl-Operatoren
+### 5.1 Heisenberg-Weyl operators
 
 $$D_{q,p} = e^{i\pi qp/d}\, X^q Z^p, \qquad X|k\rangle = |k+1\rangle, \quad Z|k\rangle = \omega^k|k\rangle, \quad \omega = e^{2\pi i/d}$$
 
-* Kommutation: $D_{q',p'} D_{q,p} = e^{i 2\pi (qp' - q'p)/d} D_{q,p} D_{q',p'}$
-* Symmetrien im Phasenraum: $D_{q,p}^T = D_{-q,p}$, $\;D_{q,p}^* = D_{q,-p}$, $\;D_{q,p}^\dagger = D_{q,p}^{-1} = D_{-q,-p}$
+* Commutation: $D_{q',p'} D_{q,p} = e^{i 2\pi (qp' - q'p)/d} D_{q,p} D_{q',p'}$
+* Phase-space symmetries: $D_{q,p}^T = D_{-q,p}$, $\;D_{q,p}^* = D_{q,-p}$, $\;D_{q,p}^\dagger = D_{q,p}^{-1} = D_{-q,-p}$
 
-### 5.2 Warum $\rho \otimes \rho^*$ und nicht $\rho \otimes \rho$
+### 5.2 Why $\rho \otimes \rho^*$ and not $\rho \otimes \rho$
 
-Zwei Probleme auf einer Kopie:
+Two problems on a single copy:
 
-1. $D_{q,p}$ ist für $d>2$ **nicht hermitesch**: komplexe Eigenwerte, nicht direkt messbar.
-2. Verschiedene $D_{q,p}$ **kommutieren nicht**: nicht simultan messbar.
+1. $D_{q,p}$ is **not Hermitian** for $d>2$: complex eigenvalues, not directly measurable.
+2. Different $D_{q,p}$ **do not commute**: not simultaneously measurable.
 
-Lösung: Der Joint-Operator $O_{q,p} = D_{q,p} \otimes D_{-q,p}$ ist hermitesch, und alle $O_{q,p}$ kommutieren untereinander. Ihre gemeinsame Eigenbasis ist die generalisierte Bell-Basis $\{|\Phi_{a,b}\rangle\}$. Auf dem konjugierten Paar liefert der Erwartungswert exakt das Quadrat:
+Solution: The joint operator $O_{q,p} = D_{q,p} \otimes D_{-q,p}$ is Hermitian, and all $O_{q,p}$ commute with each other. Their joint eigenbasis is the generalized Bell basis $\{|\Phi_{a,b}\rangle\}$. On the conjugate pair the expectation value yields exactly the square:
 
 $$E = \mathrm{Tr}(D_{q,p}\rho)\cdot\mathrm{Tr}(D_{-q,p}\rho^*) = \mathrm{Tr}(D_{q,p}\rho)\cdot\mathrm{Tr}(D_{q,p}^T\rho^*) = \mathrm{Tr}(D_{q,p}\rho)^2 = y_{q,p}^2$$
 
-**Der entscheidende Schritt** ist keine Eigenschaft von $D$, sondern von $\rho$: Weil $\rho$ hermitesch ist, gilt $\rho^* = (\rho^\dagger)^T = \rho^T$. Damit
+**The decisive step** is not a property of $D$ but of $\rho$: Because $\rho$ is Hermitian, $\rho^* = (\rho^\dagger)^T = \rho^T$. Hence
 
 $$\mathrm{Tr}(D^T\rho^*) = \mathrm{Tr}(D^T\rho^T) = \mathrm{Tr}((\rho D)^T) = \mathrm{Tr}(\rho D) = \mathrm{Tr}(D\rho)$$
 
-Mit zwei identischen Kopien $\rho\otimes\rho$ funktioniert das nicht: $\mathrm{Tr}(D_{-q,p}\rho) \neq \mathrm{Tr}(D_{q,p}\rho)$. Die komplexe Konjugation wird hier als **physikalische Ressource** genutzt: Statt $y_{q,p}$ zu schätzen und klassisch zu quadrieren (statistisch teuer), liefert die Hardware das Betragsquadrat direkt.
+With two identical copies $\rho\otimes\rho$ this fails: $\mathrm{Tr}(D_{-q,p}\rho) \neq \mathrm{Tr}(D_{q,p}\rho)$. Complex conjugation is used here as a **physical resource**: Instead of estimating $y_{q,p}$ and squaring classically (statistically expensive), the hardware delivers the squared modulus directly.
 
-### 5.3 Bell-Basis als Fourier-Zugang
+### 5.3 Bell basis as Fourier access
 
-Die Bell-Messung auf $\rho\otimes\rho^*$ liefert Wahrscheinlichkeiten $p_{a,b} = \mathrm{Tr}[\Pi_{a,b}(\rho\otimes\rho^*)]$. Jeder Bell-Zustand $|\Phi_{a,b}\rangle$ ist Eigenzustand von $D_{q,p}\otimes D_{-q,p}$ mit Eigenwert gleich dem **Fourier-Charakter** $\chi_{q,p}(a,b) = e^{i\frac{2\pi}{d}(ap - bq)}$. Die $(a,b)$ leben im Dualraum zu $(q,p)$, wie Zeit zu Frequenz. Fourier-Inversion gibt das Spektrum zurück:
+The Bell measurement on $\rho\otimes\rho^*$ yields probabilities $p_{a,b} = \mathrm{Tr}[\Pi_{a,b}(\rho\otimes\rho^*)]$. Every Bell state $|\Phi_{a,b}\rangle$ is an eigenstate of $D_{q,p}\otimes D_{-q,p}$ with eigenvalue equal to the **Fourier character** $\chi_{q,p}(a,b) = e^{i\frac{2\pi}{d}(ap - bq)}$. The $(a,b)$ live in the dual space to $(q,p)$, like time to frequency. Fourier inversion returns the spectrum:
 
 $$y_{q,p}^2 \approx \sum_{a,b} p_{a,b}\, e^{i\frac{2\pi}{d}(ap - bq)}$$
 
-Man misst in der Bell-Basis, weil sie Zugang zum Spektrum des versteckten Displacement-Operators gibt.
+One measures in the Bell basis because it gives access to the spectrum of the hidden displacement operator.
 
-### 5.4 Physikalische Lesart: Interferometer im Phasenraum
+### 5.4 Physical reading: interferometer in phase space
 
-* $D_{q,p}$ **verschiebt** den Zustand um $(q,p)$ im Phasenraum; $y_{q,p} = \langle\psi|D_{q,p}|\psi\rangle$ ist der **Überlapp** mit dem verschobenen Selbst (Autokorrelation). Hoher Überlapp heißt: der Zustand „resoniert" bei dieser Frequenz.
-* $y_{q,p} = r e^{i\theta}$ ist komplex. **Magnitude** $r$: Stärke der Selbstähnlichkeit. **Sign**: Vorzeichen des Realteils $\mathrm{Re}[y] = \mathrm{Tr}(A\rho)$ mit $A = \tfrac12(D + D^\dagger) \sim \cos(q\hat P - p\hat Q)$. Konstruktiv oder destruktiv?
-* Die Karte $(q,p) \mapsto y_{q,p}$ ist die **charakteristische Funktion** $\chi(q,p)$ des Zustands. Ihre Fourier-Transformierte ist die **Wigner-Funktion**. Eine Displacement-Map ist also eine Korrelationskarte, keine räumliche Karte.
-* Für Energie-Eigenzustände gilt $\langle n|D(\alpha)|n\rangle = L_n(|\alpha|^2)e^{-|\alpha|^2/2}$ mit **Laguerre-Polynomen**, die je nach Radius positiv oder negativ sind. Angeregte Zustände antworten anders als der Grundzustand.
-* **Analogie IR-Spektroskopie:** Vibrationsspektroskopie misst einzelne Übergänge ($v=0\to1$) auf einer 1D-Achse. Displacement-Operatoren messen die *Form* im 2D-Phasenraum, inklusive Wigner-Negativität, viele Moden simultan.
+* $D_{q,p}$ **displaces** the state by $(q,p)$ in phase space; $y_{q,p} = \langle\psi|D_{q,p}|\psi\rangle$ is the **overlap** with its displaced self (autocorrelation). High overlap means the state "resonates" at this frequency.
+* $y_{q,p} = r e^{i\theta}$ is complex. **Magnitude** $r$: strength of self-similarity. **Sign**: sign of the real part $\mathrm{Re}[y] = \mathrm{Tr}(A\rho)$ with $A = \tfrac12(D + D^\dagger) \sim \cos(q\hat P - p\hat Q)$. Constructive or destructive?
+* The map $(q,p) \mapsto y_{q,p}$ is the **characteristic function** $\chi(q,p)$ of the state. Its Fourier transform is the **Wigner function**. A displacement map is thus a correlation map, not a spatial map.
+* For energy eigenstates, $\langle n|D(\alpha)|n\rangle = L_n(|\alpha|^2)e^{-|\alpha|^2/2}$ with **Laguerre polynomials**, positive or negative depending on the radius. Excited states respond differently from the ground state.
+* **Analogy to IR spectroscopy:** Vibrational spectroscopy measures single transitions ($v=0\to1$) on a 1D axis. Displacement operators measure the *shape* in 2D phase space, including Wigner negativity, many modes simultaneously.
 
-### 5.5 Phasenraum als komplexe Ebene
+### 5.5 Phase space as the complex plane
 
-Die $q$-Achse spielt den Realteil, die $p$-Achse den Imaginärteil ($z = q + ip$). Komplexe Konjugation des Operators ist eine Spiegelung an der $q$-Achse: $X$ ist eine reelle Permutationsmatrix ($X^* = X$), $Z$ trägt die Einheitswurzeln ($Z^* = Z^{-1}$), also
+The $q$-axis plays the real part, the $p$-axis the imaginary part ($z = q + ip$). Complex conjugation of the operator is a reflection across the $q$-axis: $X$ is a real permutation matrix ($X^* = X$), $Z$ carries the roots of unity ($Z^* = Z^{-1}$), hence
 
 $$D_{q,p}^* \propto X^q (Z^{-1})^p = X^q Z^{-p} \propto D_{q,-p}$$
 
-Physikalisch ist das **Zeitumkehr**: Ort bleibt, Impuls dreht um (das $i$ steckt in $\hat p = -i\hbar\,\partial_q$). Der Zustand $\rho^*$ ist der „Zeitumkehr-Zwilling". Weil $D_{q,p}\otimes D_{q,p}^*$ kommutieren, umgeht die Paarung die Heisenberg-Unschärfe zwischen $q$ und $p$.
+Physically this is **time reversal**: position stays, momentum flips (the $i$ sits in $\hat p = -i\hbar\,\partial_q$). The state $\rho^*$ is the "time-reversed twin". Because $D_{q,p}\otimes D_{q,p}^*$ commute, the pairing circumvents the Heisenberg uncertainty between $q$ and $p$.
 
----
 
-## 6. Exkurs: Drei Arten von Konjugation
+## Excursus: Types of Conjugation
 
-| Typ | Abbildung | Idee | Rolle im Projekt |
+| Type | Map | Idea | Role in the project |
 | --- | --- | --- | --- |
-| **A: Gruppen-Konjugation** | $x \mapsto gxg^{-1}$ | Basiswechsel, innerer Automorphismus. Spur, Determinante, Spektrum invariant | Clifford-Gruppe $UPU^\dagger = P'$; Rotoren $RvR^\dagger$ |
-| **B: Komplexe Konjugation / Adjunktion** | $z\mapsto\bar z$, $A\mapsto A^\dagger$ | Spiegelung, Involution, Zeitumkehr, kontravarianter Funktor | **Das Conjugate-Pairs-Paper:** $\rho^*$ als physikalische Ressource |
-| **C: Kanonische Konjugation** | $[\hat Q,\hat P] = i\hbar$, $ZX = \omega XZ$ | Dualität, Fourier-Paarung, Pontryagin-Dualität, Stone–von Neumann | Ort/Impuls, Clock/Shift der Qudits |
+| **A: Group conjugation** | $x \mapsto gxg^{-1}$ | Change of basis, inner automorphism. Trace, determinant, spectrum invariant | Clifford group $UPU^\dagger = P'$; rotors $RvR^\dagger$ |
+| **B: Complex conjugation / adjoint** | $z\mapsto\bar z$, $A\mapsto A^\dagger$ | Reflection, involution, time reversal, contravariant functor | **The conjugate-pairs paper:** $\rho^*$ as physical resource |
+| **C: Canonical conjugation** | $[\hat Q,\hat P] = i\hbar$, $ZX = \omega XZ$ | Duality, Fourier pairing, Pontryagin duality, Stone–von Neumann | Position/momentum, clock/shift of qudits |
 
-Alle drei treffen sich in der Quanten-Fourier-Transformation $W$:
+All three meet in the quantum Fourier transform $W$:
 
 $$W X W^\dagger = Z^\dagger$$
 
-Typ C (links $X$, rechts $Z$ als kanonisches Paar), Typ A (die Konjugation $W(\cdot)W^\dagger$ dreht den Phasenraum um $90^\circ$), Typ B (das Dagger spiegelt die Eigenwerte entlang der komplexen Achse).
+Type C ($X$ on the left, $Z$ on the right as canonical pair), type A (the conjugation $W(\cdot)W^\dagger$ rotates phase space by $90^\circ$), type B (the dagger reflects the eigenvalues along the complex axis).
 
-**Warum „Clifford-Gruppe"?** Historischer Zufall plus strukturelle Analogie (Gottesman, 1990er). In der Mathematik ist die Clifford-/Lipschitz-Gruppe der Normalisator der Erzeuger-Vektoren innerhalb der Clifford-Algebra; die Quanten-Clifford-Gruppe ist der Normalisator der Pauli-Gruppe. Gleiche Definitionsfigur, gleicher Name. Bei einem Qubit passt es sogar geometrisch ($SU(2)\cong\mathrm{Spin}(3)$). Bei mehreren Qubits ist die richtige Strukturgruppe $Sp(2n,\mathbb{Z}_d)$, symplektisch. Keine Clifford-Algebra im Spiel.
+**Why "Clifford group"?** Historical accident plus structural analogy (Gottesman, 1990s). In mathematics the Clifford/Lipschitz group is the normalizer of the generating vectors inside the Clifford algebra; the quantum Clifford group is the normalizer of the Pauli group. Same defining figure, same name. For a single qubit it even fits geometrically ($SU(2)\cong\mathrm{Spin}(3)$). For several qubits the correct structure group is $Sp(2n,\mathbb{Z}_d)$, symplectic. No Clifford algebra involved.
 
----
+
+# Heisenberg-Weyl
+
+> **Core message.** Every quantum gate is a time evolution $U = e^{-i\hat Ht}$. The physical and information-theoretic complexity of the gate is determined by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
+
+
+## 1. Physics: the Quantum Harmonic Oscillator as Source of All Operators
+
+![Quantum Harmonic Oscillator](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/HarmOsziFunktionen.png/330px-HarmOsziFunktionen.png)
+
+$$\hat H \propto \hat P^2 + \hat Q^2 = \hbar\omega\left(\hat a^\dagger\hat a + \tfrac12\right) = \hbar\omega(\hat n + \tfrac12)$$
+
+**Why the QHO is *the* starting point.** Analytically, every smooth potential near a minimum is quadratic (Taylor), so the QHO is the universal local model of any bound system. Algebraically, $\hat Q^2 + \hat P^2$ is *the* canonical degree-2 element of the Weyl algebra ($\mathrm{Sym}^2 V \cong \mathfrak{sp}$), the bosonic counterpart of the Dirac operator. Everything below is this one generator, read at different degrees.
+
+* **Time evolution = swap kinetic $\leftrightarrow$ potential.** At $t=0$ the state sits in $Q$; after $t = \frac{\pi}{2\omega}$ it has rotated $90°$ into $P$. **That quarter turn is the QFT.**
+* **Why complex numbers.** $\hat a \propto \hat Q + i\hat P$: real axis = position, imaginary axis = momentum, rotation $e^{i\omega t}$ = time. Two real numbers become one complex amplitude $\alpha = x + ip$; rotation preserves magnitude (unitary).
+* ⚠️ **Position basis = computational basis.** $|k\rangle$ are eigenstates of $\hat Q$. Hence $Z$ (diagonal) is a function of position, $X$ (permutation) a function of momentum.
+* **Time is an angle.** In $\hat U(t) = e^{-i\hat Ht/\hbar}$ the exponent is dimensionless. States do not move along trajectories; their phase rotates, in an eigenstate at $\omega = E/\hbar$.
+* ⚠️ **Two families of *states*, not gates:** coherent states $|\alpha\rangle = \hat D(\alpha)|0\rangle$ (eigenstates of $\hat a$, overcomplete, degree-1 output) vs. Fock states $|n\rangle$ (eigenstates of $\hat n$, orthonormal, eigenbasis of the degree-2 generator).
+
+### Exponentiation produces the gates
+
+$$\hat U = e^{-i\hat G\theta}$$
+
+$e^{i\theta}$ keeps it unitary, $\hat G$ is the transformation, $\theta$ scales it. If $\hat G = \hat H$, then $\theta = t/\hbar$: $\hat H$ *is* time evolution. The generator is built from $\hat Q, \hat P$ for CV, or from $X, Z$ mod $d$ for qudits, on top of the CCR $[\hat x,\hat p] = i\hbar$.
+
+* **Gaussian (linear)**: generator of degree $\leq 2$. ⚠️ "Linear" refers to the *Heisenberg action* $U^\dagger \hat r U = S\hat r + d$, not to the generator. Symplectic structure preserved.
+* **Non-Gaussian (non-linear)**: degree $\geq 3$. The Heisenberg action itself becomes nonlinear ($\hat p \to \hat p - 3\gamma t \hat q^2$), the Wigner function goes negative.
+
+### The conjugate relation
+
+An operator generates the translation of its conjugate variable. This is what allows the basis change $X \leftrightarrow Z$ via Fourier transform, and underlies $D_{q,p} = \tau^{qp} X^q Z^p$. Continuous: $[\hat x, \hat p] = i\hbar$. Discrete: Weyl relation $ZX = \zeta_d XZ$.
+
+**Notation.** $\zeta_d = e^{2\pi i/d}$ is the primitive $d$-th root of unity; $\tau = e^{i\pi/d}$ is the half-phase, $\tau^2 = \zeta_d$. ⚠️ Many texts write $\omega$ for $\zeta_d$, but $\omega$ is already the oscillator frequency and the symplectic form here.
+
+### Dictionary: from energy term to gate
+
+The energy terms are quadratic, but the **gates** exponentiate the *linear* parts $\hat P$ and $\hat Q$.
+
+| | **Kinetic energy $\hat P^2$** | **Potential energy $\hat Q^2$** |
+| --- | --- | --- |
+| **CV observable** | $\hat P = \frac{i}{\sqrt2}(\hat a^\dagger - \hat a)$, derivative $\approx i(X^\dagger - X)$ | $\hat Q = \frac{1}{\sqrt2}(\hat a + \hat a^\dagger)$, real eigenvalues (location $k$) |
+| **Lattice term** | Hopping / Laplacian $\approx X + X^\dagger$ (Google OTOC) | On-site potential (diagonal) |
+| **Qudit gate** | **Shift** $X^a\vert{}j\rangle = \vert{}j+a \bmod d\rangle$, eigenvalues powers of $\zeta_d$ | **Clock** $Z^b\vert{}k\rangle = \zeta_d^{bk}\vert{}k\rangle$, phase gradient on the unit circle |
+| **Qubit gate** | **Pauli $X$**, bit flip, $\zeta_2 = -1$ | **Pauli $Z$**, phase flip, $(-1)^j$. Unitary *and* Hermitian, so directly observable |
+| **Matrix** | Real, off-diagonal permutation of 0s and 1s | Diagonal, complex phases; for $d>2$ unitary but not Hermitian |
+| **Gate as exponential** | $X \approx e^{-i\hat P\delta}$ | $Z \approx e^{i\hat Q\delta}$ |
+| **Conjugation twist** | $X$ *represents* momentum but *generates* a position shift: $D_{q,0} \sim X^q$ | $Z$ *represents* position but *generates* a momentum kick: $D_{0,p} \sim Z^p$ |
+
+$X = \mathrm{DFT}^\dagger\, Z\, \mathrm{DFT}$: in the momentum basis the shift is diagonal and looks like the clock.
+
+
+## 2. Groups: the Degree Ladder from Heisenberg-Weyl Algebra to Quantum Gates
+
+| | **Degree 1: Displacements** | **Degree 2: Gaussian / Clifford** | **Degree $\geq 3$: Non-Gaussian / Non-Clifford** |
+| --- | --- | --- | --- |
+| **Generator** | $\hat H = q\hat P - p\hat Q$ | $\hat Q^2 + \hat P^2$, $\hat Q^2 - \hat P^2$, $\hat Q_1\hat P_2$ | $\hat Q^3$, $\hat n^2 \sim (\hat Q^2 + \hat P^2)^2$, many-body |
+| **Lie algebra** | ✅ Heisenberg $\mathfrak{h}_n$, $\dim 2n+1$, $[\hat Q,\hat P]$ central | ✅ Symplectic $\mathfrak{sp}(2n,\mathbb{R})$, with degree 1: $\mathfrak{sp}(2n) \ltimes \mathfrak{h}_n$ | ❌ Does not close: cubic $\to$ quartic $\to$ quintic $\to \dots$, infinite-dimensional |
+| **Action on phase space** | *Slide* to $(q,p)$, no rotation, no shape change | *Linear* map $U^\dagger \hat r U = S\hat r$, $S \in \mathrm{Sp}(2n)$: rotations, shears, entanglement | *Curved* nonlinearly, falls out of $\mathrm{Sp}(2n)$ |
+| **CV** | $\hat D(\alpha) = e^{\alpha\hat a^\dagger - \alpha^*\hat a}$ | Metaplectic $\mathrm{Mp}(2n)$: rotator, squeezer, beam splitter, shear | Cubic phase $e^{i\gamma\hat Q^3}$, Kerr $e^{i\chi\hat n^2}$ |
+| **Discrete** | HW group: $D_{q,p} = \tau^{qp}X^qZ^p$; $d=2$: Pauli group $\mathcal{P}$ | Clifford $\mathcal{C} = \{U : U\mathcal{P}U^\dagger = \mathcal{P}\}$, $\mathcal{C}/\mathcal{P} \cong \mathrm{Sp}(2n,\mathbb{Z}_d)$: QFT, Hadamard, $S$, C-SUM/CNOT | $T$, qudit $T_d$, Toffoli, CS. In $M_d(\mathbb{C})$ but in neither HW nor Clifford |
+| **Hierarchy** | $\mathcal{C}_1$, orthogonal basis of operator space | $\mathcal{C}_2$, **Gottesman–Knill**: track $2n\times 2n$ symplectic $S$ instead of $2^n$ amplitudes | $\mathcal{C}_k$ for $k\geq 3$ no longer groups; Clifford $+T$ dense in $U(2^n)$: **universal, magic starts here** |
+| **Fermionic mirror** | **None.** Degree 1 closes only under the *anti*commutator; parity superselection forbids odd Hamiltonians | **Free fermions / matchgates** (Valiant): $\mathfrak{so}(2n) \to \mathrm{Spin}(2n)$, same theorem as Gottesman–Knill with $SO$/Spin instead of $Sp$/Mp | **Degree 3 missing** (parity). Non-simulability starts at **degree 4**, e.g. Hubbard $n_\uparrow n_\downarrow$ |
+
+### Degree 1 notes
+
+* The phase factor $\tau^{qp}$ in $D_{q,p}$ is required because $X$ and $Z$ do not commute (Aharonov–Bohm effect in phase space).
+* ⚠️ **Pauli $Y$ is not independent**: $\sigma_y = i\sigma_x\sigma_z$, the $(1,1)$ point on the grid. For $d=3$ none of $XZ, XZ^2, X^2Z, \dots$ is uniquely "$Y$"; they are just the $D_{q,p}$ with $q,p \neq 0$.
+
+### Degree 2 notes
+
+| CV (Gaussian) | Generator | Action | Discrete (Clifford) |
+| --- | --- | --- | --- |
+| **Rotator** $R(\theta) = e^{-i\theta\hat n}$ | $\hat Q^2 + \hat P^2$ | Rotation; at $\theta = \pi/2$ **is** the Fourier transform | **QFT** $\vert{}j\rangle \to \frac{1}{\sqrt d}\sum_k \zeta_d^{jk}\vert{}k\rangle$, $WXW^\dagger = Z$; **Hadamard** for $d=2$ |
+| **Squeezer** $\hat S(r)$ | $\hat Q^2 - \hat P^2$ | $Q \to e^{-r}Q$, $P \to e^{r}P$ | |
+| **Shear** | $\hat Q^2$ | $P \to P + Q$ | **Phase gate $S$** $= \mathrm{diag}(1,i,\dots)$: $X \to Y \sim XZ$, quadratic phase $k^2$ |
+| **Beam splitter** $\hat B(\theta)$ | $\hat Q_1\hat P_2 - \hat Q_2\hat P_1$ | Passive rotation between modes; $\pi/4$ = 50:50 | |
+| **Squeezer + beam splitter** | | Ellipse rotated $45°$: noise correlated between axes = **entanglement** | **C-SUM / CNOT** $= e^{-i\hat Q_1\hat P_2}$: $\vert{}c\rangle\vert{}t\rangle \to \vert{}c\rangle\vert{}t\oplus c\rangle$ |
+
+### Degree $\geq 3$ notes
+
+* **Cubic phase** turns a coherent-state circle into a "banana" with negative Wigner regions, the signature of non-classicality. **Kerr** (quartic) builds cat states, the basis of bosonic codes.
+* **$T$ gate** $= e^{-i\frac{\pi}{8}\hat Z}$ is the cubic phase mod 2. Qudit analogue $T_d|k\rangle = \zeta_d^{k^3}|k\rangle$, exactly like $V(\gamma) = e^{i\gamma\hat x^3}$.
+* ⚠️ The HW language stays formally valid (one *can* write $T$ as a Pauli sum), but the number of terms grows under nesting. That is precisely where classical simulation breaks down.
+
+
+## 3. Tensor Algebra $T(V)$: One Recipe, Four Algebras
+
+*The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** in that ideal (symmetric $Q$ or antisymmetric $\omega$), plus whether you switch its value on at all.*
+
+| | **Symmetric form $Q$** | **Antisymmetric form $\omega$** |
+| :--- | :--- | :--- |
+| **Form off** (classical) | $\Lambda(V)$, exterior | $\mathrm{Sym}(V)$, symmetric |
+| **Form on** (quantized) | $\mathrm{Cl}(V,Q)$, **fermions**, CAR | $W(V,\omega)$, **bosons**, CCR |
+
+**Step 0, the source.** $T(V) = \bigoplus_k V^{\otimes k}$, associative, non-commutative, no relations. Every relation below is introduced by hand as the generator of an ideal; all four algebras are $T(V)/I$ and differ only in $I$.
+
+**Step 1, homogeneous ideal (degree 2 $= 0$).**
+* $\Lambda(V) = T(V)/\langle v\otimes v\rangle \Rightarrow v\wedge w = -w\wedge v$: differential forms, cohomology.
+* $\mathrm{Sym}(V) = T(V)/\langle v\otimes w - w\otimes v\rangle \Rightarrow vw = wv$: polynomials, classical observables on phase space.
+* The $\mathbb{Z}$-grading survives; these are $\mathrm{Cl}$ with $Q=0$ and $W$ with $\omega = 0$.
+
+**Step 2, switch the form on (right-hand side becomes a number: this is quantization).**
+* $\mathrm{Cl}(V,Q) = T(V)/\langle v\otimes v - Q(v)\mathbf{1}\rangle \Rightarrow vw + wv = 2Q(v,w)$: a vector squares to its length.
+* $W(V,\omega) = T(V)/\langle v\otimes w - w\otimes v - \omega(v,w)\mathbf{1}\rangle \Rightarrow [v,w] = \omega(v,w)$: the commutator is a number, $[\hat q,\hat p] = i\hbar\mathbf{1}$.
+* ⚠️ The ideal is now **inhomogeneous** (degree 2 mixed with degree 0), so the $\mathbb{Z}$-grading collapses to a **filtration**. *Grading $\to$ filtration is what quantization means algebraically.*
+* ⚠️ The deformation changes the product, not the space: $\Lambda(\mathbb{R}^2)$ and $\mathrm{Cl}(\mathbb{R}^2,Q)$ share the basis $\{1, e_1, e_2, e_1e_2\}$ with different multiplication tables; PBW monomials $\hat q^a\hat p^b$ are a basis of both $\mathrm{Sym}$ and $W$.
+
+**⚠️ The twist: parity flips between input and output.**
+* Symmetric input $g$ builds $\mathrm{Cl}(V,g)$, whose degree-2 part is the **exterior** square $\mathfrak{so} \cong \Lambda^2 V$ (via $\frac14[e_i,e_j]$) $\to$ Spin $\to$ **fermions**.
+* Antisymmetric input $\omega$ builds $W(V,\omega)$, whose degree-2 part is the **symmetric** square $\mathfrak{sp} \cong \mathrm{Sym}^2 V$ (via $\frac12\{\hat r_i,\hat r_j\}$) $\to$ metaplectic $\to$ **bosons**.
+* The labels cross. In supersymmetry both are one construction on $\mathbb{Z}_2$-graded spaces.
+
+**Step 3, the way back ($\mathrm{gr}$): dequantization keeps only the top-degree part of each relation.** $\mathrm{gr}\,\mathrm{Cl}(V,Q) \cong \Lambda(V)$ (**Chevalley**, $Q \to 0$) and $\mathrm{gr}\,W(V,\omega) \cong \mathrm{Sym}(V)$ (**PBW**, $\hbar \to 0$). ⚠️ These are **one theorem**: super-PBW on $\mathbb{Z}_2$-graded spaces *is* Chevalley.
+
+**Second road, the Lie route.** $U(\mathfrak{g}) = T(\mathfrak{g})/\langle x\otimes y - y\otimes x - [x,y]\rangle$ has the same shape of ideal (hence "PBW deformation"). Bosonic: $A_n = U(\mathfrak{h}_n)/(Z-1)$, where $U(\mathfrak{h}_n)$ supplies the products that the Lie algebra $\mathfrak{h}_n$ alone lacks. Fermionic: $\mathrm{Cl}(V,Q) = U(\mathfrak{h}^{\mathrm{super}})/(Z-1)$ with anticommutator bracket.
+
+### What each side becomes
+
+| | **Fermions: $\mathrm{Cl}(V,Q)$** | **Bosons: $W(V,\omega)$** |
+| --- | --- | --- |
+| **Statistics** | CAR $\{a_i,a_j^\dagger\} = \delta_{ij}$, $\{\gamma_\mu,\gamma_\nu\} = 2g_{\mu\nu}$ | CCR $[a_i,a_j^\dagger] = \delta_{ij}$, $[\hat x,\hat p] = i\hbar$ |
+| **Size** | $\dim = 2^n$, the relation truncates powers | $\dim = \infty$, nothing truncates. **No finite-dimensional rep**: $\mathrm{tr}[A,B] = 0$ but $\mathrm{tr}(i\hbar\mathbf{1}) \neq 0$ |
+| **Uniqueness** | Unique spinor module | **Stone–von Neumann** |
+| **Canonical degree-2 square** | Dirac $\nabla = d + \delta$, $\nabla^2 = \Delta$ | Oscillator $H = \frac12(\hat p^2 + \hat q^2)$; Moyal star product |
+| **Symmetry tower** | $\mathrm{O}(V,g) \supset \mathfrak{so}(n)$, $\dim \frac{n(n-1)}{2}$, $B_n/D_n$, cover $\mathrm{Spin}(n)$ | $\mathrm{Sp}(2n) \supset \mathfrak{sp}(2n)$, $\dim n(2n+1)$, $C_n$, cover $\mathrm{Mp}(2n)$ |
+| **QC bridge** | Matchgates / free fermions = rotor in $\mathrm{Spin}(2n)$; non-free from **degree 4** | Clifford / Gaussian = symplectic action; magic from **degree 3** |
+
+⚠️ The QC bridge is **structurally one theorem**, once for $SO$/Spin, once for $Sp$/Mp. The size asymmetry is the sharpest difference: bosons need unbounded operators on infinite-dimensional space, fermions act on a finite spinor space.
+
+
+
+## 4. From Weyl Algebra to Heisenberg-Weyl: How Bosons Reach Actual Qubits
+
+| | **Continuous** | **Discrete** |
+| --- | --- | --- |
+| **Additive** (Lie bracket) | Weyl algebra $A_n = W(V,\omega)$: all polynomials in $\hat q,\hat p$, home of Hamiltonians and the degree filter | ⚠️ **Does not exist.** Trace argument: $\mathrm{Tr}([\hat q,\hat p]) = 0$ but $\mathrm{Tr}(i\hbar\mathbf{1}) = i\hbar d \neq 0$ |
+| **Multiplicative** (operator product) | Heisenberg group $H_n$ / CCR $C^*$-algebra: $W(z)W(z') = e^{-\frac{i}{2}\omega(z,z')}W(z+z')$, linked to $A_n$ by Stone–von Neumann | HW algebra $M_d(\mathbb{C}) \cong \mathbb{C}_\omega[\mathbb{Z}_d \times \mathbb{Z}_d]$, spanned by the $d^2$ matrices $X^qZ^p$ |
+
+**Why exponentiating rescues what the additive box forbids: trace vs. determinant.** At group level the test uses $\det$: $\det(ZXZ^{-1}X^{-1}) = 1$ must equal $\det(\zeta_d\mathbf{1}) = \zeta_d^d = 1$ ✓. The additive constraint is *unsatisfiable*, the multiplicative one *automatically satisfied*. That is why $ZX = \zeta_d XZ$ exists in exact $d\times d$ matrices, and that is the whole route from Weyl algebra to Heisenberg-Weyl.
+
+**Moving between the boxes.** Up: $\mathfrak{h}_n \xrightarrow{\exp} H_n$ (BCH terminates because $[\hat Q,\hat P]$ is central; the additive bracket becomes a multiplicative phase). Down: differentiate at the identity. Sideways: $G \xrightarrow{\mathrm{span}} M_d(\mathbb{C})$ (group algebra, *not* $\exp$; ⚠️ algebras are not exponentiated). Limit $d \to \infty$ turns $ZX = \zeta_d XZ$ back into $[\hat Q,\hat P] = i\hbar\mathbf{1}$.
+
+
+## 5. The Symplectic Form
+
+A **form** evaluates to a scalar: $0$-form = function, $1$-form = covector, $2$-form = bilinear form. Differential forms $\Omega^k(M) = \Gamma(\Lambda^k T^*M)$ integrate over oriented submanifolds without coordinates ($1$-forms over curves: work; $2$-forms over surfaces: flux).
+
+The **symplectic form $\omega$** is a $2$-form with three properties. **Alternating**: pointwise antisymmetric. **Closed** ($d\omega = 0$): no local curvature invariants (Darboux). **Non-degenerate**: forces **even dimension** $2n$ (positions paired with momenta) and yields the non-vanishing **Liouville volume form** $\omega^n$.
+
+# Quantum Dynamics (Simulation)
+
+> **Core message.** Every simulation technique in chemistry and physics sits on three axes: **Model** (classical vs. quantum), **Type** (static vs. dynamic), **Computing** (classical vs. quantum). *Quantum dynamics* is the cell "quantum model, dynamic type", and its hard core is propagating $|\psi(t)\rangle = e^{-iHt}|\psi(0)\rangle$ in a $2^n$-dimensional Hilbert space. Static problems are **optimized** (variational principle); dynamic problems must be **propagated** (no forward theorem). On a quantum computer, propagation follows one of three structural strategies: decompose *time* (Trotter), transform the *spectrum* (Qubitization / QSVT), or shrink the *space* (Shadow Simulation).
+
+
+
+## 1. The Map: Three Axes
+
+* **Model:** Classical models ignore electrons and treat atoms as spheres connected by springs (force fields). Quantum models bring electrons, orbitals, and correlation into play.
+* **Type:** Static (ground state, eigenvalue problem $\hat H|\psi\rangle = E|\psi\rangle$) vs. dynamic (time evolution $i\hbar\,\partial_t\Psi = \hat H\Psi$).
+* **Computing:** Classical hardware vs. quantum hardware.
+
+| Model / Computing | **Static** (state, ground state) | **Dynamic** (time evolution) |
+| --- | --- | --- |
+| **Classical / Classical** | **Docking, energy minimization:** geometric fitting (AutoDock, Rosetta) | **Molecular dynamics:** $F = ma$, atoms as mass points with force fields (GROMACS, NAMD, AMBER) |
+| **Quantum / Classical** | **HF, DFT, Post-HF:** $\hat H\vert{}\psi\rangle = E\vert{}\psi\rangle$. HF ignores correlation, DFT approximates it via density $\rho$, Post-HF (CC, CI) is exact but exponential in $N$ | **TD-DFT:** excitations, spectra, fluorescence. Exact $e^{-i\hat Ht/\hbar}\vert{}\Psi(0)\rangle$ scales exponentially in $N$ |
+| **Quantum / Quantum** | **VQE (NISQ):** correlation energy via entanglement, $\delta\langle H\rangle = 0$ | **Hamiltonian simulation:** exponentiation in $2^n$-dim Hilbert space via Trotter, Qubitization/QSVT, or Shadow Simulation |
+
+*Perspective, not part of quantum dynamics:* quantum computers for *classical* dynamics, e.g. Navier–Stokes via HHL for linear systems, weather on a 100 m grid. Same hardware, different application.
+
+### Static vs. dynamic: the core difference
+
+* **Static = energy optimization.** If $\psi$ is an eigenstate of $\hat H$, time evolution is trivial, $\Psi(t) = \psi e^{-iEt/\hbar}$, and $|\Psi(t)|^2$ is constant. Finding binding energies is a search for global minima in an energy landscape (Rayleigh–Ritz, VQE).
+* **Dynamic = propagation.** No variational principle, no forward theorem. Required for reaction dynamics, bond breaking during collisions, excitations, quantum chaos. One cannot optimize, one must propagate $e^{-iHt}$.
+* **Fundamental axiom.** In static problems the quantum computer *stores* information. In full dynamical evolution it stores nothing: **it *is* the Hilbert space.**
+
+
+## 2. Static Quantum Chemistry: the Approximation Stack
+
+**Why only tiny systems are solvable analytically.** The Schrödinger equation is exactly solvable only for the one-electron hydrogen atom. A second electron adds Coulomb repulsion, a non-integrable three-body problem. Everything else is an approximation stack:
+
+1. **Born–Oppenheimer:** nuclei fixed on electronic timescales, giving the potential energy surface.
+2. **Rayleigh–Ritz:** minimize $\langle\psi|H|\psi\rangle$ for the ground-state energy.
+3. **Correlation energy**, the actual difficulty:
+
+| Method | Correlation | Cost |
+| --- | --- | --- |
+| **Hartree–Fock** | Mean field, ignores correlation | Cheap |
+| **DFT** | Approximated via functionals of the electron density $\rho$ (correct functional must be assumed) | Cheap |
+| **Post-HF** (Coupled Cluster, CI) | Exact | Exponential in $N$, small systems only |
+| **VQE** (quantum, NISQ) | Found directly through entanglement | Central role for larger molecules where classical cost explodes |
+
+**Chemical model frameworks.** Valence Bond (hybridization, localized pair bonds) vs. Molecular Orbital theory (delocalization, HOMO/LUMO, LCAO). Spin $m_s = \pm\frac12$ does not come from the Schrödinger equation (only $n, l, m_l$) but from combining QM with special relativity (Dirac, 1928).
+
+
+## 3. Dynamic Quantum Simulation on a Quantum Computer
+
+**The problem.** The physical system evolves under all its forces (kinetic + potential) simultaneously, but hardware applies a discrete set of gates sequentially. Since $[A,B] \neq 0$, $e^{-i(A+B)t} \neq e^{-iAt}e^{-iBt}$.
+
+| Strategy | Method | What is decomposed | Regime |
+| --- | --- | --- | --- |
+| **Decompose time** | Trotter–Suzuki | $t$ into $r$ slices | NISQ |
+| **Transform spectrum** | Qubitization / QSVT | Energy into angle, $E_k = \lambda\cos\theta_k$ | Fault-tolerant |
+| **Shrink space** | Shadow Simulation | $2^n$ amplitudes into $M$ expectation values | Both |
+
+### 3.1 Trotterization: walk through time
+
+$$e^{-iHt} \approx \Big(\prod_j e^{-iH_j t/r}\Big)^r$$
+
+* Split $H = \sum_j H_j$ into easily exponentiable terms, interleave in $r$ small slices.
+* **Error is a commutator.** First order leaves $\mathcal{O}(t^2/r)$, bounded by $\sum_{j<k}\|[H_j,H_k]\|$. Non-commutativity literally defines the error budget. Higher-order Suzuki formulas suppress it at the price of deeper circuits.
+* **Profile.** Hardware-native, no ancillas, no oracles. Weakness: polynomial scaling in $1/\epsilon$.
+
+### 3.2 Qubitization: walk through the eigenvalues
+
+* **LCU → Block Encoding.** Write $H = \sum_l \alpha_l U_l$ with 1-norm $\lambda = \sum_l|\alpha_l|$, embed $H/\lambda$ as the top-left block of a unitary $U_H$ via PREPARE and SELECT oracles.
+* **Quantum walk, energy → angle.** Adding a reflection $R$ turns $W = R\cdot U_H$ into a 2D rotation on invariant subspaces with eigenvalues $e^{\pm i\arccos(E_k/\lambda)}$:
+
+$$E_k = \lambda\cos\theta_k$$
+
+  Scalar energy becomes phase information. Time evolution is then a polynomial in these angles via **QSP / QSVT** (Chebyshev, Jacobi–Anger), not a slicing of time.
+* **Profile.** Optimal $\mathcal{O}(\lambda t + \log(1/\epsilon))$. Price: ancilla registers, controlled oracle calls, normalization $\lambda$ in the gate count.
+* **OTOC.** Reversing the walk (invert reflections and oracles) measures scrambling directly via phase shifts.
+
+### 3.3 Shadow Simulation: shrink the space (Somma et al. 2024/25)
+
+Instead of evolving $|\psi(t)\rangle$ in $2^n$ dimensions, evolve a compressed **shadow state** whose amplitudes are the expectation values of an operator set $S = \{O_1,\dots,O_M\}$ (1-RDM, 2-RDM, Pauli strings):
+
+$$|\rho(t);S\rangle = \frac{1}{\sqrt A}\sum_{m=1}^M \langle O_m(t)\rangle\,|m\rangle$$
+
+* **Invariance property (Theorem 1).** If $H$ and $S$ satisfy the closed Lie-algebra condition $[H, O_m] = -\sum_{m'} h_{mm'}O_{m'}$, the shadow state **itself obeys a Schrödinger equation** with an effective matrix $H_S$: $\frac{d}{dt}|\rho(t);S\rangle = -iH_S|\rho(t);S\rangle$.
+* **Where the condition holds** (the same degree-2 algebras as in the operator ladder):
+
+| System | Algebra | Operator set $S$ | Gain |
+| --- | --- | --- | --- |
+| Free fermions | $\mathfrak{so}(2n)$ | Majorana pairs $c_jc_k$ | $N = 2^r$ modes on $\mathcal{O}(\log N)$ qubits |
+| Free bosons | $\mathfrak{sp}(2n)$ | $P_j, Q_j$ | $2^n$ coupled oscillators (generalizes Babbush et al., BQP-complete) |
+| Qubits | Pauli strings, Clifford hierarchy | All $P_{ij}$ | $\vert{}\rho;S\rangle = V_S(\vert{}\psi\rangle\otimes\vert{}\bar\psi\rangle)$ via Bell-basis rotation |
+
+* **Efficiency.** $H_S$ is evolved with QSP / block encoding. Since $\dim H_S \ll 2^n$ and $H_S$ is often very sparse, its block encoding is exponentially more compact than for $H$.
+* **Heisenberg picture for free.** Two-time correlators $\langle O_1(t)O_2(t')\rangle$ encode as amplitude tensors (Theorem 2). An operator $Z(t) = \sum_m z_m(t)O_m$ becomes a state $|Z(t)\rangle \propto \sum_m z_m(t)|m\rangle$, and Hamming weights $\langle Z(t)|W|Z(t)\rangle$ give **operator spreading / OTOCs** without ever instantiating the $2^n$ space.
+
+### 3.4 Open systems: non-unitary dynamics
+
+Coupling to a bath or measurement apparatus dissipates energy and destroys phase coherence (**decoherence**). Evolution on $\mathcal{H}_S$ is no longer unitary but a **CPTP channel** ($\mathcal{E}\otimes\mathcal{I}_n \geq 0$). Under Born–Markov:
+
+$$\frac{d\rho}{dt} = -i[H,\rho] + \sum_k \gamma_k\Big(L_k\rho L_k^\dagger - \tfrac12\{L_k^\dagger L_k,\rho\}\Big)$$
+
+The first term is coherent dynamics, the dissipator carries **jump operators** $L_k$ for spin flips, photon loss, dephasing ($T_1$ amplitude damping, $T_2$ phase damping). On hardware: NISQ via Monte-Carlo wavefunction / quantum trajectories (stochastic collapses, mid-circuit resets); fault-tolerant via non-unitary block encoding, LCU, or Stinespring dilation ($U$ on system + environment).
+
+
+## 4. Chaos, Scrambling and OTOCs
+
+> A local operator under chaotic dynamics in the Heisenberg picture, $W(t) = e^{iHt}We^{-iHt}$, grows in three directions, each with its own metric and its own bound: **rate** $\lambda_L$ (time), **reach** $v_B$ (space), **depth** $K(t)$ (operator space). Without the Schrödinger solution $e^{-iHt}$ there is no $W(t)$ and no OTOC: chaos diagnostics *are* quantum dynamics.
+
+**Model system.** Mixed-field Ising $H = \sum Z_iZ_{i+1} + h_x\sum X_i + h_z\sum Z_i$. The longitudinal field $h_z$ breaks integrability: $h_z = 0$ gives Poincaré recurrence and ballistic echoes, $h_z \neq 0$ gives scrambling.
+
+### 4.1 The object: OTOC as four-point function
+
+$$C(t) = \big\langle[W(t),V(0)]^\dagger[W(t),V(0)]\big\rangle = 2\big(1 - \mathrm{Re}\,F(t)\big), \qquad F(t) = \langle W^\dagger(t)V^\dagger W(t)V\rangle$$
+
+* Measures how strongly two initially commuting operators **fail to commute** after time $t$. Scrambling means $F(t) \to 0$.
+* **Mechanism.** $W(t)$ starts local, grows into a non-local Pauli string, reaches the site of $V$, and the commutator lifts off zero.
+* **Why out-of-time-order.** The contour runs $t \to 0 \to t \to 0$. Ordinary two-point functions decay at $t_{\text{therm}}$ and are blind to scrambling.
+* **Measurement (Loschmidt echo).** Forward $e^{-iHt}$, butterfly perturbation $V$ (an $X$ gate), backward $e^{+iHt}$, overlap with probe $W$. On fault-tolerant hardware: forward walk, $X$, inverse walk, since time is an angle. Verified in NMR, ion traps, superconducting chips; **Google "Quantum Echoes" (2025)** measured a second-order OTOC on Willow as verifiable quantum advantage.
+
+### 4.2 Three directions of growth
+
+| Direction | Metric | Growth law | Bound / universality |
+| --- | --- | --- | --- |
+| **Rate** (time) | Lyapunov exponent $\lambda_L$ | $C(t) \sim \frac{1}{N}e^{\lambda_L t}$; operator size $n(t) \sim e^{\lambda_L t}$ | **MSS:** $\lambda_L \leq 2\pi/\beta$ |
+| **Reach** (space) | Butterfly velocity $v_B$ | Light cone $C(t,x) \sim \frac1N\exp[\lambda_L(t - x/v_B)]$ | **Lieb–Robinson:** $\|[A(t),B]\| \leq Ce^{-\mu(d - v_{LR}t)}$, $v_B \leq v_{LR}$ |
+| **Depth** (operator space) | Krylov complexity $K(t)$ | Free: $K \sim t$; integrable: $K \sim t^2$; chaotic: $K \sim e^{2\alpha t}$ | **UOGH:** $b_n \sim \alpha n$, $\alpha \leq \pi/\beta$ |
+
+**Rate.** Semiclassical origin (Larkin–Ovchinnikov): commutator → Poisson bracket, $-\langle[x(t),p]^2\rangle \to \hbar^2 e^{2\lambda_{cl}t}$, so $\lambda_L$ is the quantum descendant of the classical Lyapunov exponent. Time scales: $t_{\text{therm}} \sim \mathcal{O}(1) < t_* \sim \lambda_L^{-1}\ln N$ (fast scrambling) $< t_K \sim e^S$ (recurrence). ⚠️ A clean exponential window needs $N \gg 1$; in short qubit chains $v_B$ is far more reliably extracted than $\lambda_L$.
+
+**Reach.** $v_{LR}$ is a state-independent operator-norm bound; $v_B$ is state- and temperature-dependent. The speed limit shows up as the OTOC light-cone slope, as minimal circuit depth for global entanglement ($d \sim n$ in 1D, $\sqrt n$ in 2D, $\log n$ all-to-all), and in random circuits (Nahum–Vijay–Haah): ballistic front with KPZ broadening $\sigma(t) \sim t^{1/3}$, entanglement $S(t) = v_E t$ with $v_E \leq v_B$ (Mezei–Stanford).
+
+**Depth.** Liouville–Lanczos tridiagonalizes $\mathcal{L} = [H,\cdot]$ on the Krylov chain $\mathrm{span}\{W, [H,W], [H,[H,W]],\dots\}$, $\mathcal{L}|O_n) = b_{n+1}|O_{n+1}) + b_n|O_{n-1})$; $K(t) = \sum_n n|\varphi_n(t)|^2$ is the mean position on the chain.
+
+### 4.3 The logical stack of bounds: KMS ⇒ UOGH ⇒ MSS
+
+$$\text{KMS analyticity in } 0 \leq \mathrm{Im}(t) \leq \beta \;\implies\; \alpha \leq \frac{\pi}{\beta} \;\implies\; \lambda_L \leq \frac{2\pi k_BT}{\hbar}$$
+
+The **SYK model** ($N$ Majorana fermions, random four-body coupling) is solvable at large $N$, dual to JT gravity, and **saturates** the MSS bound. Black holes are the fastest scramblers in nature.
+
+### 4.4 Static fingerprints: ETH and spectral statistics
+
+* **ETH (Srednicki):** $A_{mn} = \mathcal{A}(\bar E)\delta_{mn} + e^{-S(\bar E)/2}f_A(\bar E,\omega)R_{mn}$. A *single* chaotic eigenstate looks locally thermal; the system thermalizes locally while staying globally pure. Classification: chaotic → ETH, integrable → GGE, many-body localized → no thermalization.
+* **Random matrix theory (BGS conjecture):** chaotic spectra show Wigner–Dyson level repulsion ($\langle r\rangle \approx 0.53$), integrable ones Poisson ($\langle r\rangle \approx 0.39$). The **spectral form factor** shows dip–ramp–plateau at late times $t > t_*$, where the OTOC has already saturated.
+
+### 4.5 Scrambling vs. decoherence
+
+| | **Unitary scrambling** | **Lindblad decoherence** |
+| --- | --- | --- |
+| Information | Delocalized reversibly into non-local entanglement, globally reconstructible | Dissipated irreversibly into the environment |
+| Entropy | Local entropy grows, global state pure | $S_{\text{vN}}(\rho)$ grows non-unitarily |
+| OTOC | $F(t) \to 0$ from genuine chaos | $F(t)$ also decays: can fake a **false $\lambda_L$** |
+
+Error-mitigated protocols and damping corrections are essential for quantitative diagnostics. Open front: quantifying CPTP effects on OTOC measurements, and fault-tolerant simulation of Lindblad dynamics.
+
+### 4.6 Consequences: black holes ↔ quantum computing
+
+* **Scrambling as resource (Hayden–Preskill).** Information thrown into a scrambler can be decoded from few early radiation qubits in time $\mathcal{O}(\ln N)$. The **Yoshida–Kitaev decoder** has fidelity $\propto$ OTOC and works optimally at maximal scrambling (supported by two-copy Bell sampling).
+* **Scrambling as obstacle (barren plateaus).** Full scrambling produces $t$-designs on $U(2^n)$, flattening the gradient landscape to $\mathrm{Var}[\partial_\theta E] \sim 2^{-n}$ (McClean et al.): untrained VQAs become unoptimizable. It also bounds Hamiltonian simulation at $\mathcal{O}(nt\cdot\mathrm{polylog}(1/\epsilon))$.
+* **Random circuit sampling.** The Porter–Thomas distribution $P(p) \approx Ne^{-Np}$ is the static fingerprint of Haar-random unitaries. The depth to reach it is exactly the geometric scrambling time ($d \sim n$ in 1D, $\sqrt n$ on 2D chips): the Lieb–Robinson light cone traversing the processor.
+
+
+
+# Dequantization vs. Genuine Quantum Advantage
+
+*Core theses of a map for QML on classical data. Status September 2026.*
+
+> **Guiding principle.** Quantum advantage survives exactly when no efficient classical representation captures the computation. There are several mutually independent places where a classical shortcut can lurk: in input access, in precision, in problem hardness, in circuit structure. "Dequantization" means the same thing everywhere, namely finding that shortcut.
+
+**Scope.** The map covers the *top row* of the data-vs-learner matrix: classical data processed by classical or quantum-enhanced learners. Learning from quantum data (copies of $\rho$, channels, dynamics) lies outside; that is where the proven exponential separations live (see the Quantum Learning notes). The boundary is the access model, not the technique: A paper belongs to the top row if the unknown is classical, copies are free, and no-cloning/Holevo do not bind as learning limits. Classical shadows or Bell measurements on a *self-prepared* state are readout of one's own model and shift nothing.
+
+
+## 1. Tang's Finding: The Speedup Sat in the Input Model
+
+Wherever a quantum algorithm exploits low-rank structure under QRAM access, a classical algorithm with sample-and-query access (SQ, the classical analogue of QRAM) can do the same in polynomial time. The QRAM-based QML speedups (recommendation, PCA, SVM, SDP, low-rank inversion) were artifacts of the input gift. Sparsity-based methods (HHL) are a different story.
+
+* **Tang 2019:** Dequantization of Kerenidis–Prakash (recommendation), the breakthrough.
+* **Tang 2021:** Quantum PCA and clustering owe their speedup only to the state-preparation assumptions.
+* **Chia, Gilyén, Li, Lin, Tang, Wang (STOC 2020):** Classical analogue of the QSVT, dequantizes the entire low-rank QSVT class at once.
+* **Bakshi–Tang (SODA 2024):** The quantitatively sharp version up to small polynomial overhead.
+
+
+## 2. The Four Axes: Where the Shortcut Can Lurk
+
+| Axis | dequantizable / simulable | resistant / genuine advantage | Tool or limit | Status of resistance |
+| --- | --- | --- | --- | --- |
+| **1 Access model** (QSVT) | low-rank + SQ access | high effective rank (sparse HHL) | $\ell^2$-sampling (Tang, CGLLTW) | unconditional (theorem) |
+| **2 Precision** (QSVT) | coarse relative precision | inverse-poly precision, BQP-complete (guided local Hamiltonian) | Monte Carlo (Gharibian–Le Gall) | unconditional (BQP-completeness) |
+| **3 Hardness assumption** (Fourier) | decoding classically solvable or no structure | structure plus hard decoding (Shor, DQI) | coding theory, lattices | **conditional** (cryptographic conjecture) |
+| **4 Circuit structure** | Clifford / Gaussian / free (degree $\leq 2$) | magic plus entanglement (degree $\geq 3$) | stabilizer, matchgate (Gottesman–Knill, Valiant) | unconditional (theorem) |
+
+Axes 1 and 2 belong to linear algebra (QSVT family), axis 3 to the Fourier family, axis 4 to the circuit itself.
+
+**Necessary and sufficient (axes 1 and 2).** High rank is necessary but not sufficient (sparse plus coarse precision stays classical). Fine precision is necessary but not sufficient (with low rank it is cheap). Only the **conjunction** of high rank *and* fine precision is sufficient, and in the guided-local-Hamiltonian problem even BQP-complete. Gharibian–Le Gall: The hardness persists for 2-local Hamiltonians and for overlap up to $1 - 1/\mathrm{poly}(n)$. Even a nearly perfect guiding state does not rescue the classical side. The quantum core sits not in state preparation but in the fine spectral transformation.
+
+**Axis 3 is different.** Shor and DQI share the same skeleton: A representation-theoretic transformation (QFT) maps a globally hidden algebraic invariant onto a samplable dual support (hidden subgroup, Pontryagin duality for Shor; a code for DQI). The advantage hinges solely on the classical hardness of decoding. Two differences from magic: Axis 3 is **not monotone** (Goldilocks: too much structure becomes classically easy, "DQI requires structure") and **conditional** rather than unconditional. This is why DQI's status shifts while a Clifford circuit stays simulable forever.
+
+
+## 3. Two Levels: Circuit vs. Problem
+
+* **Level 1, circuit-internal:** simulation-based dequantization, simulate the circuit itself (stabilizer tableau, Gaussian covariance, matchgate Pfaffian). Three pillars of quantumness: **entanglement** (Schmidt rank, Schrödinger language), **magic** (stabilizer rank, Heisenberg language), and **fermionic magic** (non-Gaussianity). Magic and fermionic magic follow the same degree knob from the operator notes: quadratic core free, degree $\geq 3$ is the resource. Entanglement is the exception (tensor structure, no degree filter), which is why there is no single quantumness scalar.
+* **Level 2, problem interface:** algorithmic dequantization, solve the problem differently (Tang's $\ell^2$-sampling never simulates the circuit).
+
+The levels are **complementary, not nested.** QRAM-QML circuits are high in entanglement and magic, yet Tang dequantized the *problems*. Low on any pillar ⇒ simulable ⇒ no advantage. High on all ⇒ still no advantage.
+
+
+## 4. The Unification: Tractability Is Low Rank
+
+| Framework | Rank | low rank ⇒ easy (theorem) |
+| --- | --- | --- |
+| Axis 1 / Tang | matrix rank (SVD) | $\ell^2$-sampling, CGLLTW |
+| Magic / axis 4 | stabilizer rank $\chi$ | Bravyi–Gosset |
+| Entanglement | Schmidt rank, bond dimension | Jozsa, Vidal |
+| Fermionic magic | fermionic Gaussian rank (Pfaffian) | Valiant |
+
+The obstructions are independent because they measure high rank in different bases. QRAM-QML is low in matrix rank but high in stabilizer rank; all four cells of the 2×2 matrix "magic × sketchability" are occupied. **The direction "low rank ⇒ easy" is a theorem everywhere. The direction "high rank in all decompositions ⇒ advantage" is not a theorem**, because an unknown decomposition could exist. That is the open frontier.
+
+
+## 5. Three Resources, Three Knobs
+
+The recent works (2021, 2026) show that "advantage" is resource-relative. The discriminator changes with the resource.
+
+| Resource | Discriminator | Regime of advantage | Status | Reference |
+| --- | --- | --- | --- | --- |
+| **Time** | matrix rank | high rank plus fine precision (batch, queryable) | theorem | Tang, CGLLTW, Gharibian–Le Gall |
+| **Memory** | output dimension | streaming, high-dimensional coherent object | theorem, unconditional | Zhao, Zlokapa, Neven, Babbush, Preskill, McClean, Huang 2026 |
+| **Samples / Prediction** | geometric difference $g_{CQ}$, effective dimension $d$ | large $g$, small $N$; shrinks as $N \to \infty$ | empirical, kernel-theoretic | Huang et al., *Power of Data* 2021 |
+
+**Time vs. memory (resolving the apparent contradiction "Tang kills PCA, Preskill gives PCA an advantage").** Tang dequantizes *time* in the queryable model; Zhao et al. give a *memory* advantage in the streaming model. Same task, different resource. In memory, quantum wins even at low rank, because amplitude encoding packs an $N$-dimensional vector into $\log N$ qubits: a statement about dimension, not rank. The symmetry: In time the question is "does an $\ell^2$-sample suffice?", in memory "does a classical linear sketch (Johnson–Lindenstrauss) suffice?". Zhao et al. conclude that every super-quadratic query separation implies an exponential memory advantage, which is why the algorithms Tang dequantized in time are "worth revisiting" under the space lens.
+
+**Memory advantage has two sources.** (A) *State complexity*: classically exponential memory for entangled or magic states; that is quantum simulation, axis 4, Feynman 1981. (B) *Data compression*: sketching streaming classical data coherently into a small state (oracle sketching, replaces QRAM; the machine never stores the dataset, so the Holevo objection does not apply). Axis 3 has no memory lever: Shor needs only $O(n)$ qubits.
+
+**Samples vs. memory (the sharpest cross-connection).** *Power of Data* says: With enough classical training data, classical ML catches up with quantum models on classical tasks, even when the label generator is not classically simulable (BPP/samp). The advantage had to be forced via engineered labels and shrinks with $N$. *Massive Classical Data* says: This convergence tacitly assumes unbounded classical memory. Classical machines below the required size need *superpolynomially* more samples and time, on natural data (IMDb, PBMC scRNA-seq), and the gap does not close with more data. **The fragility statement of the top row therefore holds for the sample and time lenses, not for the memory lens.**
+
+| | *Power of Data* (2021) | *Massive Classical Data* (2026) |
+| --- | --- | --- |
+| Measured | prediction error at fixed $N$ | machine size at fixed performance |
+| Model | batch | streaming |
+| Separation | empirical, engineered labels | theorem, unconditional, natural data |
+| $N \to \infty$ | advantage shrinks | advantage persists |
+
+
+## 6. What Remains for QML?
+
+| Door | Status |
+| --- | --- |
+| Exponential time speedup for low-rank ML via QRAM | **closed** (Tang, CGLLTW). The 2026 QRAM hardware result does not revive it either: Tang already matches in the idealized QRAM regime |
+| Hidden structure (axis 3) | provable time advantage in the QSQ model for structured function classes (Lewis–Gilboa–McClean 2026), not generic ML |
+| Memory in streaming | exponential memory advantage, unconditional, on real data (Zhao et al. 2026); time remains classical $\tilde O(N)$ |
+| Learning from quantum data | proven separation (Huang et al., Science 2022), but outside the map |
+
+**LLMs on quantum computers.** Three hurdles bite even without dequantization: I/O and readout bottleneck, nonlinearity (softmax, activations), generically high-rank matrices. Every QML advantage must pass three tests: input not cheaply samplable, output not destroyed by readout, structure genuinely classically hard. The readout test bites for the time advantage, not the memory advantage.
+
+
+## 7. Core Principles
+
+1. **Quantum advantage survives exactly when no efficient classical representation captures the computation.** Four independent places for the shortcut: input access, precision, hardness, circuit structure.
+2. **Tractability = low rank in some decomposition.** Advantage = irreducibly high rank across all known decompositions, an open program, not a theorem.
+3. **Axis-1/2/4 resistance is unconditional, axis-3 resistance is conditional.** This is why DQI's status shifts while Clifford stays simulable forever.
+4. **Resource and model are separate dimensions.** The time knob is rank, the memory knob is output dimension, the sample knob is geometric difference. Memory advantage has two sources; for axis 3 memory plays no role.
+5. **For ML:** The exponential time speedup for low-rank problems via QRAM is dead. Provable advantages exist in structured learning (time) and in memory (streaming). The critique is sharpened, not refuted.
+6. **The fragility of the top row is precisely scoped:** It holds for sample and time advantages, not for memory advantages.
+7. **The map's boundary is the access model, not the technique.** Bottom-row tools in top-row problems are the rule.
+
+
+## Open Frontiers (Selection)
+
+* **Bridge matrix rank ↔ stabilizer rank:** a framework that puts SVD sketchability and circuit simulability on the same stage. Sits at the intersection of the two levels, apparently unexplored.
+* **Guided-local-Hamiltonian phase diagram** in (precision, overlap, locality), in particular constant additive precision (chemical accuracy) in the high-rank regime.
+* **Dequantized algorithms under the space lens:** Which of the time-dequantized algorithms (PCA, SVM, recommendation) retain an exponential memory separation in streaming, and which fall to a classical linear sketch?
+* **Memory-bounded Power of Data:** Kernel generalization theory (2021) and query/communication hardness (2026) speak two languages about the same task; a bridge is missing.
+
+
+## References (Core)
+
+* E. Tang, "A quantum-inspired classical algorithm for recommendation systems", STOC 2019. arXiv:1807.04271.
+* E. Tang, "Quantum PCA only achieves an exponential speedup because of its state preparation assumptions", PRL 127, 060503 (2021). arXiv:1811.00414.
+* N.-H. Chia, A. Gilyén, T. Li, H.-H. Lin, E. Tang, C. Wang, "Sampling-based sublinear low-rank matrix arithmetic framework for dequantizing QML", STOC 2020 / JACM 2022. arXiv:1910.06151.
+* A. Bakshi, E. Tang, "An improved classical singular value transformation for QML", SODA 2024. arXiv:2303.01492.
+* S. Gharibian, F. Le Gall, "Dequantizing the QSVT: hardness and applications to quantum chemistry and the quantum PCP conjecture", STOC 2022. arXiv:2111.09079.
+* S. Jordan et al., "Optimization by Decoded Quantum Interferometry", Nature (2025). arXiv:2408.08292. Critique: Anschuetz–Gamarnik–Lu, "DQI requires structure", arXiv:2509.14509.
+* S. Bravyi, D. Gosset, "Improved classical simulation of quantum circuits dominated by Clifford gates", PRL 116, 250501 (2016).
+* L. G. Valiant, "Quantum circuits that can be simulated classically in polynomial time", SIAM J. Comput. (2002).
+* S. Aaronson, A. Ambainis, "Forrelation", STOC 2015. The provable oracle skeleton of axis 3.
+* H.-Y. Huang, M. Broughton, M. Mohseni, R. Babbush, S. Boixo, H. Neven, J. R. McClean, "Power of data in quantum machine learning", Nat. Commun. 12, 2631 (2021). arXiv:2011.01938.
+* H. Zhao, A. Zlokapa, H. Neven, R. Babbush, J. Preskill, J. R. McClean, H.-Y. Huang, "Exponential quantum advantage in processing massive classical data", arXiv:2604.07639 (2026).
+* L. Lewis, D. Gilboa, J. R. McClean, "Quantum advantage for learning shallow neural networks with natural data distributions", Nat. Commun. 17, 1341 (2026). arXiv:2503.20879.
+* J. Cotler, H.-Y. Huang, J. R. McClean, "Revisiting dequantization and quantum advantage in learning tasks", arXiv:2112.00811 (2021).
