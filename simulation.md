@@ -8,17 +8,9 @@
 Quantum systems in chemistry and physics can be described and computed with either classical and quantum methods:
 
 * **Model**: Classical (Newton Mechanics) vs Quantum (Schrödinger equation)
-
-
   * Classical models ignore electrons and treat atoms as spheres connected by springs (force fields).
-
-
   * Quantum models bring electrons, orbitals, and correlation into play.
-
-
 * **Type**: Static (State / Ground State) vs Dynamical (Evolution / Propagation)
-
-
 * **Computing**: Classical Computing vs Quantum Computing
 
 
@@ -30,7 +22,7 @@ Quantum systems in chemistry and physics can be described and computed with eith
 
 <br>
 
-1. *Baseline: Classical Simulation based on (Newtonian) Mechanics (**Static and Dynamic**): $F = m \cdot a$*
+###  1. Baseline: Classical Simulation based on (Newtonian) Mechanics (Static and Dynamic): $F = m \cdot a$
 
 * Ignores electrons and considers atoms as spheres connected by springs (force fields).
 
@@ -44,7 +36,7 @@ Quantum systems in chemistry and physics can be described and computed with eith
 * **Quantum computing methods for classical dynamics (Perspective):** Future: Navier-Stokes (fluid dynamics) with HHL algorithm to solve linear systems and differential equations exponentially faster than classical computers. For weather and climate: simulate weather on a much finer grid (e.g. 100 m). *(Note: Different application of the same hardware, not part of quantum dynamics itself.)*
 
 
-2. *Quantum Mechanics (**Static**): Time-independent Schrödinger Equation $\hat{H}\vert{}\psi\rangle = E\vert{}\psi\rangle$*
+###  2. Quantum Mechanics (Static): Time-independent Schrödinger Equation $\hat{H}\vert{}\psi\rangle = E\vert{}\psi\rangle$
 
 * Includes electrons. **Approximates Ground State via optimization** with variation $\delta \langle H \rangle = 0$ to find the global optimum in the energy landscape. Stationary state is crucial for calculating binding energies: If $\psi$ is an eigenstate of $\hat{H}$, time evolution is trivial, $\Psi(t) = \psi e^{-iEt/\hbar}$, and probability density $\vert{}\Psi(t)\vert{}^2$ remains constant over time (= stationary state).
 
@@ -64,7 +56,7 @@ Quantum systems in chemistry and physics can be described and computed with eith
 * **Quantum computing (NISQ)**: Variational Quantum Eigensolver (VQE). Quantum Advantage: Finds correlation energy directly through quantum entanglement. For classical computers, complexity grows exponentially, which is why quantum computers play a central role for analyzing larger, more complex molecular systems.
 
 
-3. *Quantum Mechanics (**Dynamic**): Time-dependent Schrödinger Equation $i\hbar \frac{\partial}{\partial t} \Psi(\mathbf{r}, t) = \hat{H} \Psi(\mathbf{r}, t)$ — Standard (Full) Simulation*
+###  3. Quantum Mechanics (Dynamic): Time-dependent Schrödinger Equation $i\hbar \frac{\partial}{\partial t} \Psi(\mathbf{r}, t) = \hat{H} \Psi(\mathbf{r}, t)$ — Standard (Full) Simulation
 
 * **Simulate Time Evolution** $e^{-i\hat{H}t}$ of the full quantum state $\vert{}\Psi(t)\rangle = e^{-i\hat{H}t/\hbar} \vert{}\Psi(0)\rangle$ via Unitary Transformation in $2^n$-dimensional Hilbert space. Required for reaction dynamics, bond breaking and reforming during collisions, excitations, and quantum chaos. No forward theorem / no optimization possible — one must propagate!
 
@@ -92,7 +84,7 @@ Quantum systems in chemistry and physics can be described and computed with eith
 
 <br>
 
-4. *Quantum Mechanics (**Dynamic**): Time-dependent Schrödinger Equation — Shadow Simulation*
+### 4. Quantum Mechanics (Dynamic): Time-dependent Schrödinger Equation — Shadow Simulation
 
 * **Simulate a compressed shadow state $\vert{}\rho(t); S\rangle$** (Shadow Hamiltonian Simulation, Somma et al. 2024/2025).
 
@@ -140,7 +132,7 @@ $$\frac{d}{dt}\vert{}\rho(t); S\rangle = -i H_S \vert{}\rho(t); S\rangle$$
 
 
 
-5. *Quantum Mechanics (**Dynamic**): Open Systems & Non-Unitary Dynamics (Lindblad & CPTP)*
+### 5. Quantum Mechanics (Dynamic): Open Systems & Non-Unitary Dynamics (Lindblad & CPTP)
 
 * **Fundamental Problem (Open Systems):** Coupling to a thermal environment or measurement apparatus leads to energy dissipation and irreversible loss of phase coherence (**decoherence**). Time evolution is no longer unitary on $\mathcal{H}_S$, but a linear trace-preserving completely positive map (**CPTP channel**, $\mathcal{E} \otimes \mathcal{I}_n \ge 0$).
 
@@ -163,11 +155,11 @@ $$\frac{d\rho}{dt} = \mathcal{L}[\rho] = -i[H, \rho] + \sum_k \gamma_k \left( L_
   * *NISQ:* Monte-Carlo Wavefunction (MCWF / Quantum Trajectories) using stochastic collapses and mid-circuit resets.
 
 
-  * *Fault-Tolerant:* Non-unitary block-encoding / LCU or Stinespring dilation ($U$ on system + environment).
+  * *Fault-Tolerant: Non-unitary block-encoding / LCU or Stinespring dilation ($U$ on system + environment)
 
 
 
-6. *Trotterization (Trotter–Suzuki): Splitting the Hamiltonian (NISQ-Suited Route)*
+### 6. Trotterization (Trotter–Suzuki): Splitting the Hamiltonian (NISQ-Suited Route)*
 
 * **Principle:** A molecule evolves under all its forces at once, but hardware applies gates sequentially. Because $[A,B] \neq 0$, $e^{-i(A+B)t} \neq e^{-iAt}e^{-iBt}$. $H = \sum_j H_j$ is split into easily exponentiable terms and interleaved into $r$ small time slices:
 
@@ -183,7 +175,7 @@ $$e^{-iHt} \approx \left(\prod_j e^{-iH_j t/r}\right)^r$$
 * **Hardware Profile:** Hardware-native, no ancillas, no oracles, no block encodings. The weakness is polynomial scaling in $1/\epsilon$ — high precision requires many time slices.
 
 
-7. *Qubitization (LCU $\to$ Block Encoding $\to$ Quantum Walk): The Fault-Tolerant Route*
+### 7. Qubitization (LCU $\to$ Block Encoding $\to$ Quantum Walk): The Fault-Tolerant Route
 
 * **Algebraic Principle:** Instead of walking through *time*, walk through the *eigenvalues* of the operator. Decompose $H$ as a Linear Combination of Unitaries (LCU), $H = \sum_l \alpha_l U_l$ with 1-norm $\lambda = \sum_l\vert{}\alpha_l\vert{}$. Embed $H/\lambda$ as the top-left block of a unitary $U_H$ (**Block Encoding**) via $\mathrm{PREPARE}$ and $\mathrm{SELECT}$ oracles:
 
@@ -211,7 +203,7 @@ $$E_k = \lambda\cos\theta_k$$
 
 
 
-8. *Why We Can Solve the Schrödinger Equation Analytically Only for Very Small Systems (Quantum Chemistry)*
+### 8. Why We Can Solve the Schrödinger Equation Analytically Only for Very Small Systems (Quantum Chemistry)
 
 * **Analytical Limits:** Schrödinger equation is analytically solvable only for the 1-electron Hydrogen atom. A second electron adds electron-electron Coulomb repulsion — a non-integrable three-body problem.
 
@@ -249,7 +241,7 @@ $$E_k = \lambda\cos\theta_k$$
 
 
 
-9. *Core Difference: Static vs. Dynamical*
+### 9. Core Difference: Static vs. Dynamical
 
 * **Static = Energy Optimization:** Eigenstates have trivial time evolution ($\Psi(t) = \psi e^{-iEt/\hbar}$) with constant $\vert{}\Psi(t)\vert{}^2$. Finding binding energies is a search for global minima in energy landscapes (variational algorithms, VQE).
 
@@ -260,11 +252,11 @@ $$E_k = \lambda\cos\theta_k$$
 * **Fundamental Axiom:** In static problems, the quantum computer *stores* information. In full dynamical time evolution, it stores nothing — **it *is* the Hilbert space.**
 
 
-## <font color="blue">**Quantum Dynamics: Chaos, Scrambling & OTOCs (Physics)**
+## Quantum Dynamics: Chaos, Scrambling & OTOCs (Physics)
 
-*A local operator under chaotic dynamics in the Heisenberg picture $W(t) = e^{iHt} W e^{-iHt}$ grows in three directions, each with its own metric: **rate** ($\lambda_L$), **reach** ($v_B$), **depth** ($K(t)$). Model system: mixed-field Ising $H = \sum Z_iZ_{i+1} + h_x\sum X_i + h_z\sum Z_i$ — the longitudinal field $h_z$ breaks integrability and makes it chaotic ($h_z = 0$: Poincaré recurrence, ballistic echoes; $h_z \neq 0$: scrambling).*
+A local operator under chaotic dynamics in the Heisenberg picture $W(t) = e^{iHt} W e^{-iHt}$ grows in three directions, each with its own metric: **rate** ($\lambda_L$), **reach** ($v_B$), **depth** ($K(t)$). Model system: mixed-field Ising $H = \sum Z_iZ_{i+1} + h_x\sum X_i + h_z\sum Z_i$ — the longitudinal field $h_z$ breaks integrability and makes it chaotic ($h_z = 0$: Poincaré recurrence, ballistic echoes; $h_z \neq 0$: scrambling).
 
-1. **Definition & Diagnostik:** *the OTOC as a four-point function — the quantum butterfly effect*
+### 1. Definition & Diagnostik: the OTOC as a four-point function — the quantum butterfly effect
 
 * **The object (Vier-Punkt-Funktion):** $C(t) = \langle[\hat W(t),\hat V(0)]^\dagger[\hat W(t),\hat V(0)]\rangle$ — measures how strongly two initially commuting operators **fail to commute** after time $t$. For unitary Hermitian $W,V$: $C(t) = 2(1 - \mathrm{Re}\,F(t))$ with $F(t) = \langle W^\dagger(t)V^\dagger W(t)V\rangle$; scrambling means $F(t) \to 0$.
 
@@ -286,7 +278,7 @@ $$E_k = \lambda\cos\theta_k$$
 
 
 
-2. **Rate (Zeit) — Quantum Lyapunov Exponent $\lambda_L$** *(temporal growth)*
+### 2. Rate (Zeit) — Quantum Lyapunov Exponent $\lambda_L$ (temporal growth)
 
 * **Chaotic growth window:** $C(t) \simeq \frac{2K}{N}e^{\lambda_Lt}$ bzw. $C(t) \sim \frac{1}{N} e^{\lambda_L t}$; equivalently the **operator size** $n(t)$ (number of non-trivial Pauli factors in $W(t)$) obeys $\dot n = \lambda_L n$, so $n(t)\sim e^{\lambda_Lt}$ and $C(t)\propto\langle n(t)\rangle/N$.
 
@@ -304,7 +296,7 @@ $$\text{Thermalisierung } t_{\text{therm}}\sim\mathcal{O}(1) < \text{Fast Scramb
 
 
 
-3. **Reach (Raum) — Butterfly Velocity $v_B$ and the Light Cone** *(spatial growth)*
+### 3. Reach (Raum) — Butterfly Velocity $v_B$ and the Light Cone (spatial growth)
 
 * **Lichtkegel:** $C(t,x)\sim\frac1N \exp\left[\lambda_L(t-x/v_B)\right]$ — $v_B$ ist die Steigung der V-förmigen Scrambling-Front. Stärkere Kopplung $J$ $\to$ steilere Steigung.
 
@@ -332,7 +324,7 @@ $$\lVert[A(t),B]\rVert \le Ce^{-\mu(d - v_{LR}t)}$$
 * **Random Unitary Circuits (Nahum–Vijay–Haah):** Ballistische Front mit diffusiver Kardar-Parisi-Zhang-(KPZ)-Verbreiterung: $\langle x_{\text{front}}\rangle = v_Bt$, $\sigma(t)\sim t^{1/3}$. Das Verschränkungswachstum skaliert als $S(t) = v_Et$ mit der Mezei–Stanford-Schranke $v_E \le v_B$.
 
 
-4. **Depth (Operatorraum) — Krylov Complexity, ETH & Spectral Statistics**
+### 4. Depth (Operatorraum) — Krylov Complexity, ETH & Spectral Statistics
 
 * **Krylov-Kette & Liouville-Lanczos:** Der Liouvillian $\mathcal{L} = [H,\cdot]$ wird auf dem Operatorraum $\mathcal{K} = \mathrm{span}\{W, [H, W], [H, [H, W]], \dots\}$ tridiagonalisiert:
 
@@ -379,7 +371,7 @@ $$A_{mn} = \mathcal{A}(\bar E)\delta_{mn} + e^{-S(\bar E)/2}f_A(\bar E,\omega)R_
 
 
 
-5. **Bounds — The Logical Stack: KMS $\Rightarrow$ UOGH $\Rightarrow$ MSS**
+### 5. Bounds — The Logical Stack: KMS $\Rightarrow$ UOGH $\Rightarrow$ MSS
 
 * **Kubo-Martin-Schwinger-(KMS)-Bedingung:** $\langle A(t)B(0)\rangle_\beta = \langle B(0)A(t+i\beta)\rangle_\beta$ — thermische Korrelatoren sind holomorph/analytisch im Streifen $0\le\mathrm{Im}(t)\le\beta$.
 
@@ -393,7 +385,7 @@ $$\text{KMS-Analytizität} \implies \alpha \le \frac{\pi}{\beta} \implies \textb
 * **Maximales Scrambling & SYK-Modell:** Das Sachdev-Ye-Kitaev-(SYK)-Modell ($N$ Majorana-Fermionen mit zufälliger Vier-Körper-Kopplung) ist bei großem $N$ exakt lösbar, holographisch dual zu Jackiw-Teitelboim-(JT)-Gravitation und **sättigt** die MSS-Schranke $\lambda_L = 2\pi/\beta$. Schwarze Löcher gelten als die schnellsten Scrambler der Natur.
 
 
-6. **Scrambling vs. Dekohärenz (Unitäre Dynamik vs. Offene Systeme)**
+### 6. Scrambling vs. Dekohärenz (Unitäre Dynamik vs. Offene Systeme)
 
 * **Unitäres Scrambling $\neq$ Informationsverlust:** Die Evolution ist strikt unitär — Information geht nicht verloren, sondern wird reversibel aus lokalen Observablen in hochgradig nicht-lokale Verschränkung delokalisiert (lokal unsichtbar, global vollständig rekonstruierbar).
 
@@ -408,7 +400,7 @@ $$\text{KMS-Analytizität} \implies \alpha \le \frac{\pi}{\beta} \implies \textb
 
 
 
-7. **Consequences — Black Holes $\leftrightarrow$ Quantum Computing**
+### 7. Consequences — Black Holes $\leftrightarrow$ Quantum Computing
 
 * **Scrambling als Ressource (Hayden–Preskill & Decoders):** In einen Scrambler geworfene Quanteninformation kann aus wenigen frühen Strahlungsqubits in Zeit $\mathcal{O}(\ln N)$ dekodiert werden; der **Yoshida–Kitaev-Decoder** besitzt eine Rekonstruktions-Fidelität $\propto$ OTOC und arbeitet **optimal bei maximalem Scrambling** (unterstützt durch 2-Kopien-Messungen / Bell-Sampling).
 
@@ -421,13 +413,13 @@ $$\text{KMS-Analytizität} \implies \alpha \le \frac{\pi}{\beta} \implies \textb
 
 
 
-## <font color="blue">**Mathematische Grundlagen der Quantendynamik**
+## Mathematische Grundlagen der Quantendynamik
 
 *Quantendynamik ist die Geometrie, Algebra und Approximation von Propagatoren. Jeder Quantenalgorithmus zur Simulation ist die kontrollierte Einbettung und polynomiale Approximation von Lie-Gruppen-Elementen.*
 
 $$\text{Lie-Algebren} \xrightarrow{\exp} \text{Funktionalanalysis} \xrightarrow{\text{QSVT}} \text{Approximationstheorie} \xrightarrow{\text{OTOCs}} \text{Krylov-Geometrie \& RMT}$$
 
-1. Lie-Theorie & Darstellungstheorie *(Die Struktur der Generatoren & Invarianz-Algebren)*
+### 1. Lie-Theorie & Darstellungstheorie *(Die Struktur der Generatoren & Invarianz-Algebren)*
 
 * **Der Kern (Generatoren als Lie-Algebren):** Dynamik ist die Exponentiation einer Lie-Algebra. Ein Hamiltonian $H$ ist kein „physikalisches Objekt“, sondern der selbstadjungierte Generator einer einparametrigen unitären Lie-Gruppe $U(t) = e^{-iHt/\hbar}$ (Satz von Stone).
 
@@ -452,7 +444,7 @@ $$\text{Lie-Algebren} \xrightarrow{\exp} \text{Funktionalanalysis} \xrightarrow{
 
 
 
-2. Funktionalanalysis, Spektraltheorie & Propagatoren *(Geschlossene unitäre Evolution)*
+### 2. Funktionalanalysis, Spektraltheorie & Propagatoren *(Geschlossene unitäre Evolution)*
 
 * **Satz von Stone über einparametrige unitäre Gruppen:** Exakte mathematische Bijektion zwischen selbstadjungierten Operatoren ($H = H^\dagger$) und stark stetigen einparametrigen unitären Gruppen $U(t) = e^{-iHt/\hbar}$ auf dem Hilbertraum $\mathcal{H}$.
 
@@ -481,7 +473,7 @@ $$e^{-i(A+B)t} = \lim_{r\to\infty}\left(e^{-iAt/r}e^{-iBt/r}\right)^r$$
 * **Kato-Störungstheorie & Adiabatensatz:** Analytische Kontrolle der zeitabhängigen Dynamik $H(t)$, spektrale Lücken (Spectral Gap) und geometrische Phasen entlang glatter Spektralpfade.
 
 
-3. Operatoralgebren & Halbgruppentheorie *(Offene & Dissipative Quantendynamik)*
+### 3. Operatoralgebren & Halbgruppentheorie *(Offene & Dissipative Quantendynamik)*
 
 * **GKLS- / Lindblad-Mastergleichung:** Markov'sche Zeitentwicklung offener Systeme als lineare Generatoren $\mathcal{L}$ auf der Banach-Algebra der Spurklasse-Operatoren $\mathcal{T}(\mathcal{H})$:
 
@@ -507,7 +499,7 @@ $$\mathcal{E}(\rho) = \mathrm{Tr}_E \left[ U (\rho \otimes \vert{}0\rangle\langl
 
 
 
-4. Approximationstheorie & Orthogonale Polynome *(Moderne Quantenalgorithmen: QSP & QSVT)*
+### 4. Approximationstheorie & Orthogonale Polynome *(Moderne Quantenalgorithmen: QSP & QSVT)*
 
 * **Qubitization, LCU & Block-Encoding:** Einbettung nicht-unitärer Matrizen $A/\alpha$ (z. B. Hamiltonians $H/\lambda$ oder vektorisierte Lindbladians $\mathcal{L}/\alpha$) als oberer linker Block einer größeren unitären Matrix $U_A$ via PREPARE- und SELECT-Orakeln:
 
@@ -530,7 +522,7 @@ $$e^{-ixt} = J_0(t) + 2\sum_{k=1}^\infty (-i)^k J_k(t) T_k(x)$$
 * Das exponentielle Abfallen der Bessel-Koeffizienten $J_k(t)$ für $k \gtrsim t$ liefert die mathematische Basis für die Phasenwinkelberechnung und ist der eigentliche Grund für die optimale asymptotische Skalierung in Laufzeit und Genauigkeit: $\mathcal{O}\left(\alpha t + \log(1/\epsilon)\right)$ bzw. $\mathcal{O}\left(\lambda t + \log(1/\epsilon)\right)$.
 
 
-5. Krylov-Räume, Orthogonale Polynome & Quantenchaos *(Operatorraum-Geometrie)*
+### 5. Krylov-Räume, Orthogonale Polynome & Quantenchaos *(Operatorraum-Geometrie)*
 
 * **Krylov-Kette & Liouville-Raum:** Zeitentwicklung von Operatoren im Heisenberg-Bild $W(t) = e^{iHt} W e^{-iHt}$ induziert den Liouvillian-Superoperator $\mathcal{L}_H = [H, \cdot]$. Die Dynamik spannt den Krylov-Unterraum im Operatorraum auf:
 
@@ -560,7 +552,7 @@ $$\mathcal{K}_K = \mathrm{span}\{W, \mathcal{L}_H W, \mathcal{L}_H^2 W, \dots\}$
 
 
 
-6. Symplektische Geometrie & Phasenraum-Dynamik *(Differentialformen)*
+### 6. Symplektische Geometrie & Phasenraum-Dynamik *(Differentialformen)*
 
 * **Symplektischer Fluss (Darboux- & Liouville-Theorem):** Klassische und gauß'sche Quantenzeitentwicklung sind Flüsse, die die geschlossene, nicht-degenerierte symplektische 2-Form $\omega = \sum dp_i \wedge dq_i$ erhalten. Phasenraum-Information ist global und topologisch.
 
@@ -580,7 +572,7 @@ $$\frac{\partial W}{\partial t} = \{\{H, W\}\}_{\mathrm{mb}} = \frac{2}{\hbar} H
 
 
 
-7. Stochastische Analysis & kontinuierliche Messdynamik
+### 7. Stochastische Analysis & kontinuierliche Messdynamik
 
 
 
@@ -597,7 +589,7 @@ $$d\vert{}\psi\rangle = \left[ -iH_{\mathrm{eff}} dt + \sum_k \left( \frac{\lang
 * **Measurement-Induced Phase Transitions (MIPT):** Phasenübergänge in der Verschränkungsentropie (Area-Law vs. Volume-Law) getrieben durch die dynamische Konkurrenz zwischen unitärem Scrambling und projektivem Messkollaps.
 
 
-8. Komplexitätstheorie, Pseudozufall & LWE-Hardness *(Die Brücke zu PQC)*
+### 8. Komplexitätstheorie, Pseudozufall & LWE-Hardness *(Die Brücke zu PQC)*
 
 * **Haar-Maß & Unitäre $t$-Designs:** Chaotische Dynamik approximiert Ensembles unitärer Operatoren, deren statistische Momente bis zur Ordnung $t$ mit dem invarianten Haar-Maß auf $\mathrm{U}(2^n)$ übereinstimmen. Direkte Konsequenz des vollständigen Scramblings sind Barren Plateaus ($\mathrm{Var}[\partial_\theta E] \sim 2^{-n}$) in Variationsalgorithmen.
 
