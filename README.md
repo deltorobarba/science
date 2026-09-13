@@ -6,8 +6,6 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 ## Contents
 
-Sections marked **➕** and the Mermaid diagrams were added in September 2026 as annotations to the original notes; everything else is the original text.
-
 **Part I · Quantum Learning**
 
 - [Quantum Learning (Learning from Quantum Experiments)](#quantum-learning-learning-from-quantum-experiments)
