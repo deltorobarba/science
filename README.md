@@ -34,7 +34,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
   - [5.5 Phase space as the complex plane](#55-phase-space-as-the-complex-plane)
 - [Excursus: Types of Conjugation](#excursus-types-of-conjugation)
 
-**Part II · [Heisenberg-Weyl](#heisenberg-weyl)**
+**Part II · Heisenberg-Weyl**
 
 - [1. Physics: the Quantum Harmonic Oscillator as Source of All Operators](#1-physics-the-quantum-harmonic-oscillator-as-source-of-all-operators)
   - [Exponentiation produces the gates](#exponentiation-produces-the-gates)
@@ -49,7 +49,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 - [4. From Weyl Algebra to Heisenberg-Weyl: How Bosons Reach Actual Qubits](#4-from-weyl-algebra-to-heisenberg-weyl-how-bosons-reach-actual-qubits)
 - [5. The Symplectic Form](#5-the-symplectic-form)
 
-**Part III · [Quantum Dynamics (Simulation)](#quantum-dynamics-simulation)**
+**Part III · Quantum Dynamics (Simulation)**
 
 - [1. The Map: Three Axes](#1-the-map-three-axes)
   - [Static vs. dynamic: the core difference](#static-vs-dynamic-the-core-difference)
@@ -67,7 +67,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
   - [4.5 Scrambling vs. decoherence](#45-scrambling-vs-decoherence)
   - [4.6 Consequences: black holes ↔ quantum computing](#46-consequences-black-holes--quantum-computing)
 
-**Part IV · [Dequantization vs. Genuine Quantum Advantage](#dequantization-vs-genuine-quantum-advantage)**
+**Part IV · Dequantization vs. Genuine Quantum Advantage**
 
 - [1. Tang's Finding: The Speedup Sat in the Input Model](#1-tangs-finding-the-speedup-sat-in-the-input-model)
 - [2. The Four Axes: Where the Shortcut Can Lurk](#2-the-four-axes-where-the-shortcut-can-lurk)
