@@ -2,5 +2,5 @@
 __pycache__/
 .DS_Store
 .env
-/vulnerability_demo.py
+/google/vulnerability_demo.py
 claude/
