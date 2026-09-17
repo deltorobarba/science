@@ -2,7 +2,7 @@
 
 Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/)
 
-<img src="https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG" alt="science">
+<img src="https://raw.githubusercontent.com/deltorobarba/science/main/science.JPG" alt="sciences">
 
 ## Contents
 
