@@ -8,7 +8,81 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
-## 1. Heisenberg-Weyl and Tensor Algebra
+1. Heisenberg-Weyl
+> Every quantum gate is a time evolution U = e^{-i\hat Ht}. The physical and information-theoretic complexity of the gate is determined by the polynomial degree of the generator \hat H in the phase-space operators \hat Q, \hat P, and the criterion behind the ladder is whether that degree still closes under the commutator. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree \geq 3: non-Gaussian / non-Clifford, universal, quantum advantage.
+> 
+1.1 The Quantum Harmonic Oscillator as Source of All Operators
+Why the QHO is the starting point. Analytically, every smooth potential near a minimum is quadratic (Taylor expansion), so the QHO is the universal local model of any bound physical system. Algebraically, \hat Q^2 + \hat P^2 is the canonical degree-2 element of the Weyl algebra (\mathrm{Sym}^2 V \cong \mathfrak{sp}), the bosonic counterpart of the Dirac operator. Everything below is this one single generator, read at different polynomial degrees.
+ * Time evolution = swap kinetic \leftrightarrow potential. At t=0 the state sits in Q; after a quarter period t = \frac{\pi}{2\omega} it has rotated 90° into P. That quarter turn is the QFT. In \hat U(t) = e^{-i\hat Ht/\hbar} the exponent is dimensionless: time is fundamentally an angle. States do not move along classical trajectories; their phase rotates, in an energy eigenstate at the angular frequency \omega = E/\hbar.
+ * Why complex numbers. \hat a \propto \hat Q + i\hat P: the real axis represents position, the imaginary axis represents momentum, and the rotation e^{i\omega t} represents time evolution. Two real canonical coordinates merge into one complex amplitude \alpha = x + ip; unitary phase rotation preserves its magnitude.
+ * ⚠️ Position basis = computational basis. \vert{}k\rangle are eigenstates of \hat Q. Hence Z (diagonal phase) is a function of position, while X (permutation / shift) is a function of momentum.
+ * ⚠️ Two families of states, not gates:
+   * Coherent states \vert{}\alpha\rangle = \hat D(\alpha)\vert{}0\rangle (eigenstates of the annihilation operator \hat a, overcomplete, generated as a degree-1 output).
+   * Fock states \vert{}n\rangle (eigenstates of the number operator \hat n, orthonormal, forming the eigenbasis of the quadratic degree-2 generator).
+Exponentiation produces the gates. Every unitary gate takes the form:
+Here, e^{-i\theta} guarantees unitarity, \hat G is the Hermitian generator of the transformation, and \theta scales it. If \hat G = \hat H, then \theta = t/\hbar, meaning \hat H is time evolution itself. The generator is built directly from \hat Q, \hat P for continuous variables (CV) or from X, Z \pmod d for discrete qudits, grounded on the canonical commutation relations (CCR) [\hat x,\hat p] = i\hbar.
+ * Gaussian (linear): Generator of degree \leq 2. ⚠️ "Linear" refers strictly to the Heisenberg action U^\dagger \hat r U = S\hat r + d, not to the generator itself. Symplectic phase-space structure is preserved.
+ * Non-Gaussian (non-linear): Generator of degree \geq 3. The Heisenberg action itself becomes nonlinear (e.g., \hat p \to \hat p - 3\gamma t \hat q^2), and the Wigner function develops negative regions.
+The conjugate relation. An operator generates the translation of its canonically conjugate variable. This mechanism enables the reciprocal basis change X \leftrightarrow Z via Fourier transform and underlies the Weyl displacement operator D_{q,p} = \tau^{qp} X^q Z^p.
+ * Continuous: [\hat x, \hat p] = i\hbar.
+ * Discrete: Weyl relation ZX = \zeta_d XZ.
+Notation: \zeta_d = e^{2\pi i/d} is the primitive d-th root of unity; \tau = e^{i\pi/d} is the half-phase satisfying \tau^2 = \zeta_d. ⚠️ Many texts write \omega for \zeta_d, but here \omega is reserved exclusively for the oscillator frequency and the symplectic form.
+Dictionary: from energy term to gate. The physical energy terms are quadratic, but the elementary gates exponentiate the linear field operators \hat P and \hat Q.
+| Feature | Kinetic energy \hat P^2 | Potential energy \hat Q^2 |
+|---|---|---|
+| CV observable | \hat P = \frac{i}{\sqrt2}(\hat a^\dagger - \hat a), derivative \approx i(X^\dagger - X) | \hat Q = \frac{1}{\sqrt2}(\hat a + \hat a^\dagger), real eigenvalues (location k) |
+| Lattice term | Hopping / Laplacian \approx X + X^\dagger (Google OTOC) | On-site potential (diagonal) |
+| Qudit gate | Shift X^a\vert{}j\rangle = \vert{}j+a \bmod d\rangle, real off-diagonal permutation of 0s and 1s, eigenvalues powers of \zeta_d | Clock Z^b\vert{}k\rangle = \zeta_d^{bk}\vert{}k\rangle, diagonal phase gradient on the unit circle; for d>2 unitary but not Hermitian |
+| Qubit gate | Pauli X, bit flip, \zeta_2 = -1 | Pauli Z, phase flip, (-1)^j; unitary and Hermitian, so directly observable |
+| Matrix form | Real, off-diagonal permutation matrix | Diagonal matrix of complex phases |
+| Gate as exponential | X \approx e^{-i\hat P\delta} | Z \approx e^{i\hat Q\delta} |
+| Conjugation twist | X represents momentum but generates a position shift: D_{q,0} \sim X^q | Z represents position but generates a momentum kick: D_{0,p} \sim Z^p |
+In the momentum basis, the spatial shift operator becomes diagonal and acts identically to the clock operator.
+1.2 The Degree Ladder: from Heisenberg-Weyl Algebra to Quantum Gates
+| Property | Degree 1: Displacements | Degree 2: Gaussian / Clifford | Degree \geq 3: Non-Gaussian / Non-Clifford |
+|---|---|---|---|
+| Generator | \hat H = q\hat P - p\hat Q | \hat Q^2 + \hat P^2, \hat Q^2 - \hat P^2, \hat Q_1\hat P_2 | \hat Q^3, \hat n^2 \sim (\hat Q^2 + \hat P^2)^2, many-body interactions |
+| Lie algebra | ✅ Heisenberg \mathfrak{h}_n, \dim 2n+1, [\hat Q,\hat P] is central | ✅ Symplectic \mathfrak{sp}(2n,\mathbb{R}); combined with degree 1: semidirect product \mathfrak{sp}(2n) \ltimes \mathfrak{h}_n | ❌ Does not close: cubic \to quartic \to quintic \to \dots, generating an infinite-dimensional algebra |
+| Action on phase space | Rigid slide to (q,p): no rotation, no volume/shape deformation | Linear symplectic map U^\dagger \hat r U = S\hat r with S \in \mathrm{Sp}(2n): rotations, shears, squeezing, entanglement | Phase space is curved nonlinearly; falls completely out of \mathrm{Sp}(2n) |
+| Continuous variables (CV) | Displacement operator \hat D(\alpha) = e^{\alpha\hat a^\dagger - \alpha^*\hat a} | Metaplectic group \mathrm{Mp}(2n): phase rotator, squeezer, beam splitter, shear | Cubic phase gate e^{i\gamma\hat Q^3}, Kerr non-linearity e^{i\chi\hat n^2} |
+| Discrete systems | Heisenberg-Weyl group: D_{q,p} = \tau^{qp}X^qZ^p; for d=2: Pauli group \mathcal{P} | Clifford group \mathcal{C} = \{U : U\mathcal{P}U^\dagger = \mathcal{P}\}, quotient \mathcal{C}/\mathcal{P} \cong \mathrm{Sp}(2n,\mathbb{Z}_d): QFT, Hadamard, S, C-SUM/CNOT | T, qudit T_d, Toffoli, CS. Contained in M_d(\mathbb{C}), but lies outside both HW and Clifford groups |
+| Hierarchy classification | Level \mathcal{C}_1: forms an orthogonal operator basis of state space | Level \mathcal{C}_2: Gottesman–Knill theorem applies; efficient tracking of 2n\times 2n symplectic S instead of 2^n amplitudes | Levels \mathcal{C}_k for k\geq 3 are no longer groups; Clifford +T is dense in U(2^n): universal, magic begins here |
+| Fermionic mirror | None. Degree 1 closes only under the anticommutator; fermionic parity superselection forbids odd Hamiltonians | Free fermions / matchgates (Valiant): \mathfrak{so}(2n) \to \mathrm{Spin}(2n), same theorem as Gottesman–Knill with SO/Spin in place of Sp/Mp | Degree 3 missing due to parity constraints; classical non-simulability begins strictly at degree 4 (e.g. Hubbard interaction n_\uparrow n_\downarrow) |
+Degree 1 Notes
+ * The phase factor \tau^{qp} in D_{q,p} = \tau^{qp}X^qZ^p is required because X and Z do not commute; it represents an Aharonov–Bohm geometric phase effect directly on discrete phase space.
+ * ⚠️ Pauli Y is not independent: \sigma_y = i\sigma_x\sigma_z is merely the (1,1) grid point on the discrete phase space. For d=3, none of XZ, XZ^2, X^2Z, \dots is uniquely "Y"; they simply represent the generic displacement operators D_{q,p} with q,p \neq 0.
+Degree 2 Notes
+Gaussian continuous gates and discrete Clifford gates represent the exact same algebraic generators viewed through continuous versus discrete lenses:
+| CV (Gaussian) | Generator | Action | Discrete (Clifford) |
+|---|---|---|---|
+| Rotator R(\theta) = e^{-i\theta\hat n} | \hat Q^2 + \hat P^2 | Phase rotation; at \theta = \pi/2 this is the Fourier transform | QFT \vert{}j\rangle \to \frac{1}{\sqrt d}\sum_k \zeta_d^{jk}\vert{}k\rangle, fulfilling WXW^\dagger = Z; Hadamard for d=2 |
+| Squeezer \hat S(r) | \hat Q^2 - \hat P^2 | Anisotropic scaling: Q \to e^{-r}Q, P \to e^{r}P | — |
+| Shear | \hat Q^2 | Momentum translation dependent on position: P \to P + Q | Phase gate S = \mathrm{diag}(1,i,\dots): maps X \to Y \sim XZ, imparts quadratic phase k^2 |
+| Beam splitter \hat B(\theta) | \hat Q_1\hat P_2 - \hat Q_2\hat P_1 | Passive energy-preserving mode rotation; \theta = \pi/4 yields 50:50 ratio | — |
+| Squeezer + beam splitter | — | Ellipse rotated by 45°: noise correlated across canonical axes = entanglement | C-SUM / CNOT = e^{-i\hat Q_1\hat P_2}: maps \vert{}c\rangle\vert{}t\rangle \to \vert{}c\rangle\vert{}t\oplus c\rangle |
+ * ➕ Gottesman–Knill, quantitatively: A stabilizer state on n qubits is uniquely specified by n independent, commuting Pauli operators. This state is represented by an n\times 2n binary tableau plus phases. The CHP simulator (Aaronson, Gottesman, PRA 2004) updates this structure in O(n) time per Clifford gate and O(n^2) time per measurement. The underlying tracked group is strictly finite:
+   Contrasting this with an \epsilon-net covering the full unitary space U(2^n) of size \exp(\Theta(4^n\log(1/\epsilon))), that polynomial-to-double-exponential ratio is the formal simulability statement: only polynomially many classical bits are needed to characterize the entire reachable Clifford sub-manifold.
+Degree \geq 3 Notes
+ * Cubic phase transforms a circular Gaussian coherent state into a non-Gaussian "banana" distribution exhibiting negative Wigner quasi-probability regions—the canonical signature of quantum non-classicality.
+ * Kerr non-linearity (quartic, degree 4) creates superposition cat states, serving as the physical foundation for continuous-variable bosonic quantum error-correcting codes.
+ * T gate (e^{-i\frac{\pi}{8}\hat Z}) is the discrete cubic phase mod 2. Its qudit analogue T_d\vert{}k\rangle = \zeta_d^{k^3}\vert{}k\rangle matches the continuous cubic potential V(\gamma) = e^{i\gamma\hat x^3}.
+ * ⚠️ The Heisenberg-Weyl operator basis remains formally valid (a T gate can be expressed as a linear combination of Pauli operators), but the number of operator terms blows up exponentially under nested commutators/conjugations. This branching expansion is the exact mathematical locus where efficient classical simulation breaks down.
+ * ➕ The Clifford hierarchy, defined:
+   The T gate belongs to level \mathcal{C}_3. Operationally, any gate residing in \mathcal{C}_k can be implemented via gate teleportation utilizing a dedicated resource state accompanied solely by feed-forward Clifford corrections drawn from level k-1. This inductive property is why the T gate is the canonical "one step beyond" stabilizer circuits. For k\geq 3, the sets \mathcal{C}_k are no longer groups (closure under operator products fails), mirroring the non-closing Lie brackets of degree \geq 3 generators.
+ * ➕ Classical simulation overhead of magic: The stabilizer rank \chi of \vert{}T\rangle^{\otimes t} is defined as the minimal number of pure stabilizer states required to express that tensor product state. Bravyi & Gosset (PRL 2016) established \chi \lesssim 2^{0.47t}, refined to \approx 2^{0.396t} by Bravyi, Browne, Calpin, Campbell, Gosset, and Howard (Quantum 2019). The simulation runtime scale is strictly polynomial in the qubit count n and linear/polynomial in \chi, meaning the simulation cost is exponential only in the count of non-Clifford magic gates, not in the physical qubit number.
+ * Continuous-variable mirror: Gaussian circuits are classically simulable in polynomial time (Bartlett, Sanders, Braunstein, Nemoto, PRL 2002). Classical simulation via quasiprobability sampling (Pashayan, Wallman, Bartlett, PRL 2015) scales exponentially with the total integrated Wigner negativity, which acts as the continuous non-Gaussian resource budget.
+ * Magic state distillation (Bravyi, Kitaev, PRA 2005) is the fault-tolerant inverse: consuming multiple noisy copies of magic states \vert{}T\rangle via strictly transversal Clifford operations purifies them into high-fidelity target states. Consequently, the T-count serves as the universal computational cost currency for fault-tolerant quantum compilers.
+Structural Trajectory of the Framework
+The polynomial degree of a generator in the phase-space operators \hat Q, \hat P (or X, Z \pmod d) serves as the unifying organizational principle across the theory:
+ * Degree \leq 2 closes under the commutator algebra, preserving symplectic phase space geometry and remaining efficiently simulable classically.
+ * Degree \geq 3 breaks algebraic closure, producing operator growth that unlocks universality, quantum magic, and genuine computational advantage.
+ * Chapter 1 derives this entire ladder from the quantum harmonic oscillator and the Weyl tensor algebra.
+ * Chapter 2 encounters this ladder again as the foundational exception enabling cheap Hamiltonian simulation (shadow simulation, fast-forwarding of linear/quadratic models) and identifies degree \geq 3 as the root driver of chaotic scrambling dynamics (out-of-time-ordered correlators, OTOCs).
+ * Chapter 3 leverages this hierarchy as the tunable magic dial for learnable quantum state classes, using the degree-1 Heisenberg-Weyl displacements D_{q,p} as the operator basis through which two-copy Bell measurements reconstruct unknown quantum spectra.
+
+<br><br>
+
+## 1. Heisenberg-Weyl
 
 > Every quantum gate is a time evolution $U = e^{-i\hat Ht}$. The physical and information-theoretic complexity of the gate is set by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
 
