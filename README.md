@@ -359,15 +359,7 @@ Three statements carry the synthesis. **Only one cell is hard, and it is hard in
 
 **Machine-learned decoders.** Neural-network tomography (Torlai et al., Nat. Phys. 2018), provable generalization bounds for ML on shadow data (Huang, Kueng, Torlai, Albert, Preskill, Science 2022), prediction of ground-state properties within a phase down to $O(\log n)$ training states (Lewis et al., Nat. Commun. 2024), and Google's **AlphaQubit** (Bausch et al., Nature 2024), a transformer decoder trained on syndrome data that outperforms matching decoders on surface-code hardware experiments: the existence proof that a learned decoder can beat hand-built combinatorics on real data.
 
-### 3.6 Positioning of the own project
-
-* **Field:** quantum advantages in learning physical systems from measurement data, with minimal quantum memory (never more than two copies).
-* **Approach:** *machine-learned decoders for quantum measurement data.* A trained model replaces hand-built combinatorics (graph coloring, matrix multiplicative weights) and exploits the structure of the state class. Transfers to Hamiltonian learning, noise characterization, error-correction decoders.
-* **Contribution:** computationally efficient **structure learning** of sparse displacement spectra from two-copy Bell measurements. Triply efficient, posed as a promise problem, with provable instances (dictionary and subgroup classes) and a provable limit (LWE hardness of generic localization).
-* **Structure:** every protocol splits into a *quantum frontend* (which measurement on how many copies) and a *classical decoder*; the error factorizes into localization and estimation. Conjugate Bell pairs in front, learned CNN decoder plus sequential sign integrator behind.
-* **Cell in the quadrant:** sampling access at rung 2, searching task, the hard corner. The provable instances are the two promises that make the corner decodable; the LWE limit says that sparsity alone is not a third one. The conjecture places a uniformly random top-$k$ support on the decodable side without proof, and the learned decoder is its empirical candidate.
-
-### 3.7 The boundary: dequantization on classical data
+## Dequantization & QML on classical data
 
 The top row of the matrix in 3.1 has its own map. **Guiding principle:** quantum advantage survives exactly when no efficient classical representation captures the computation, and there are four mutually independent places where a classical shortcut can lurk. "Dequantization" means the same thing everywhere, namely finding that shortcut.
 
