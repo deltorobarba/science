@@ -8,7 +8,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
-## 1. Heisenberg-Weyl
+## I. Heisenberg-Weyl
 
 > Every quantum gate is a time evolution $U = e^{-i\hat Ht}$. The physical and information-theoretic complexity of the gate is determined by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
 
@@ -18,10 +18,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 ![Quantum Harmonic Oscillator](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/HarmOsziFunktionen.png/330px-HarmOsziFunktionen.png)
 
-
-$$\hat H \propto \hat P^2 + \hat Q^2 = \hbar\omega\left(\hat a^\dagger\hat a + \tfrac12\right) = \hbar\omega(\hat n + \tfrac12)$$
-
-**Why the QHO is *the* starting point.** Analytically, every smooth potential near a minimum is quadratic (Taylor expansion), so the QHO is the universal local model of any bound physical system. Algebraically, $\hat Q^2 + \hat P^2$ is *the* canonical degree-2 element of the Weyl algebra ($\mathrm{Sym}^2 V \cong \mathfrak{sp}$), the bosonic counterpart of the Dirac operator. Everything below is this one single generator, read at different polynomial degrees.
+**Why the QHO $\hat H \propto \hat P^2 + \hat Q^2 = \hbar\omega\left(\hat a^\dagger\hat a + \tfrac12\right) = \hbar\omega(\hat n + \tfrac12)$ is *the* starting point.** Analytically, every smooth potential near a minimum is quadratic (Taylor expansion), so the QHO is the universal local model of any bound physical system. Algebraically, $\hat Q^2 + \hat P^2$ is *the* canonical degree-2 element of the Weyl algebra ($\mathrm{Sym}^2 V \cong \mathfrak{sp}$), the bosonic counterpart of the Dirac operator. Everything below is this one single generator, read at different polynomial degrees.
 
 * **Time evolution = swap kinetic $\leftrightarrow$ potential.** At $t=0$ the state sits in $Q$; after a quarter period $t = \frac{\pi}{2\omega}$ it has rotated $90°$ into $P$. **That quarter turn is the QFT.** In $\hat U(t) = e^{-i\hat Ht/\hbar}$ the exponent is dimensionless: time is fundamentally an angle. States do not move along classical trajectories; their phase rotates, in an energy eigenstate at the angular frequency $\omega = E/\hbar$.
 * **Why complex numbers.** $\hat a \propto \hat Q + i\hat P$: the real axis represents position, the imaginary axis represents momentum, and the rotation $e^{i\omega t}$ represents time evolution. Two real canonical coordinates merge into one complex amplitude $\alpha = x + ip$; unitary phase rotation preserves its magnitude.
@@ -30,11 +27,7 @@ $$\hat H \propto \hat P^2 + \hat Q^2 = \hbar\omega\left(\hat a^\dagger\hat a + \
 * Coherent states $\vert{}\alpha\rangle = \hat D(\alpha)\vert{}0\rangle$ (eigenstates of the annihilation operator $\hat a$, overcomplete, generated as a degree-1 output).
 * Fock states $\vert{}n\rangle$ (eigenstates of the number operator $\hat n$, orthonormal, forming the eigenbasis of the quadratic degree-2 generator).
 
-
-
-**Exponentiation produces the gates.** Every unitary gate takes the form:
-
-$$\hat U = e^{-i\hat G\theta}$$
+**Exponentiation produces the gates.** Every unitary gate takes the form: $\hat U = e^{-i\hat G\theta}$
 
 Here, $e^{-i\theta}$ guarantees unitarity, $\hat G$ is the Hermitian generator of the transformation, and $\theta$ scales it. If $\hat G = \hat H$, then $\theta = t/\hbar$, meaning $\hat H$ *is* time evolution itself. The generator is built directly from $\hat Q, \hat P$ for continuous variables (CV) or from $X, Z \pmod d$ for discrete qudits, grounded on the canonical commutation relations (CCR) $[\hat x,\hat p] = i\hbar$.
 
@@ -48,7 +41,7 @@ Here, $e^{-i\theta}$ guarantees unitarity, $\hat G$ is the Hermitian generator o
 
 *Notation:* $\zeta_d = e^{2\pi i/d}$ is the primitive $d$-th root of unity; $\tau = e^{i\pi/d}$ is the half-phase satisfying $\tau^2 = \zeta_d$. ⚠️ Many texts write $\omega$ for $\zeta_d$, but here $\omega$ is reserved exclusively for the oscillator frequency and the symplectic form.
 
-**Dictionary: from energy term to gate.** The physical energy terms are quadratic, but the **elementary gates** exponentiate the *linear* field operators $\hat P$ and $\hat Q$.
+**From energy term to gate.** The physical energy terms are quadratic, but the **elementary gates** exponentiate the *linear* field operators $\hat P$ and $\hat Q$.
 
 | Feature | Kinetic energy $\hat P^2$ | Potential energy $\hat Q^2$ |
 | --- | --- | --- |
@@ -60,13 +53,11 @@ Here, $e^{-i\theta}$ guarantees unitarity, $\hat G$ is the Hermitian generator o
 | **Gate as exponential** | $X \approx e^{-i\hat P\delta}$ | $Z \approx e^{i\hat Q\delta}$ |
 | **Conjugation twist** | $X$ *represents* momentum but *generates* a position shift: $D_{q,0} \sim X^q$ | $Z$ *represents* position but *generates* a momentum kick: $D_{0,p} \sim Z^p$ |
 
-$$X = \mathrm{DFT}^\dagger\, Z\, \mathrm{DFT}$$
-
-In the momentum basis, the spatial shift operator becomes diagonal and acts identically to the clock operator.
+> $X = \mathrm{DFT}^\dagger\, Z\, \mathrm{DFT}$ - In the momentum basis, the spatial shift operator becomes diagonal and acts identically to the clock operator.
 
 ---
 
-### 1.2 The Degree Ladder: from Heisenberg-Weyl Algebra to Quantum Gates
+### From Heisenberg-Weyl Algebra to Quantum Gates ( Degree Ladder)
 
 | Property | Degree 1: Displacements | Degree 2: Gaussian / Clifford | Degree $\geq 3$: Non-Gaussian / Non-Clifford |
 | --- | --- | --- | --- |
@@ -78,12 +69,12 @@ In the momentum basis, the spatial shift operator becomes diagonal and acts iden
 | **Hierarchy classification** | Level $\mathcal{C}_1$: forms an orthogonal operator basis of state space | Level $\mathcal{C}_2$: **Gottesman–Knill theorem** applies; efficient tracking of $2n\times 2n$ symplectic $S$ instead of $2^n$ amplitudes | Levels $\mathcal{C}_k$ for $k\geq 3$ are no longer groups; Clifford $+T$ is dense in $U(2^n)$: **universal, magic begins here** |
 | **Fermionic mirror** | **None.** Degree 1 closes only under the *anti*commutator; fermionic parity superselection forbids odd Hamiltonians | **Free fermions / matchgates** (Valiant): $\mathfrak{so}(2n) \to \mathrm{Spin}(2n)$, same theorem as Gottesman–Knill with $SO$/Spin in place of $Sp$/Mp | **Degree 3 missing** due to parity constraints; classical non-simulability begins strictly at **degree 4** (e.g. Hubbard interaction $n_\uparrow n_\downarrow$) |
 
-#### Degree 1 Notes
+#### Degree 1
 
 * The phase factor $\tau^{qp}$ in $D_{q,p} = \tau^{qp}X^qZ^p$ is required because $X$ and $Z$ do not commute; it represents an Aharonov–Bohm geometric phase effect directly on discrete phase space.
 * ⚠️ **Pauli $Y$ is not independent:** $\sigma_y = i\sigma_x\sigma_z$ is merely the $(1,1)$ grid point on the discrete phase space. For $d=3$, none of $XZ, XZ^2, X^2Z, \dots$ is uniquely "$Y$"; they simply represent the generic displacement operators $D_{q,p}$ with $q,p \neq 0$.
 
-#### Degree 2 Notes
+#### Degree 2
 
 Gaussian continuous gates and discrete Clifford gates represent the exact same algebraic generators viewed through continuous versus discrete lenses:
 
@@ -95,32 +86,28 @@ Gaussian continuous gates and discrete Clifford gates represent the exact same a
 | **Beam splitter** $\hat B(\theta)$ | $\hat Q_1\hat P_2 - \hat Q_2\hat P_1$ | Passive energy-preserving mode rotation; $\theta = \pi/4$ yields 50:50 ratio | — |
 | **Squeezer + beam splitter** | — | Ellipse rotated by $45°$: noise correlated across canonical axes = **entanglement** | **C-SUM / CNOT** $= e^{-i\hat Q_1\hat P_2}$: maps $\vert{}c\rangle\vert{}t\rangle \to \vert{}c\rangle\vert{}t\oplus c\rangle$ |
 
-* **➕ Gottesman–Knill, quantitatively:** A stabilizer state on $n$ qubits is uniquely specified by $n$ independent, commuting Pauli operators. This state is represented by an $n\times 2n$ binary tableau plus phases. The CHP simulator (Aaronson, Gottesman, PRA 2004) updates this structure in $O(n)$ time per Clifford gate and $O(n^2)$ time per measurement. The underlying tracked group is strictly finite:
+* **Gottesman–Knill, quantitatively:** A stabilizer state on $n$ qubits is uniquely specified by $n$ independent, commuting Pauli operators. This state is represented by an $n\times 2n$ binary tableau plus phases. The CHP simulator (Aaronson, Gottesman, PRA 2004) updates this structure in $O(n)$ time per Clifford gate and $O(n^2)$ time per measurement. The underlying tracked group is strictly finite:
 $$\vert{}\mathcal{C}_n/\mathcal{P}_n\vert{} = \vert{}\mathrm{Sp}(2n,\mathbb{Z}_2)\vert{} = 2^{n^2}\prod_{j=1}^n(4^j-1) \approx 2^{2n^2+n}$$
 
 
 Contrasting this with an $\epsilon$-net covering the full unitary space $U(2^n)$ of size $\exp(\Theta(4^n\log(1/\epsilon)))$, that polynomial-to-double-exponential ratio *is* the formal simulability statement: only polynomially many classical bits are needed to characterize the entire reachable Clifford sub-manifold.
 
-#### Degree $\geq 3$ Notes
+#### Degree $\geq 3$
 
 * **Cubic phase** transforms a circular Gaussian coherent state into a non-Gaussian "banana" distribution exhibiting negative Wigner quasi-probability regions—the canonical signature of quantum non-classicality.
 * **Kerr non-linearity** (quartic, degree 4) creates superposition cat states, serving as the physical foundation for continuous-variable bosonic quantum error-correcting codes.
 * **$T$ gate** ($e^{-i\frac{\pi}{8}\hat Z}$) is the discrete cubic phase mod 2. Its qudit analogue $T_d\vert{}k\rangle = \zeta_d^{k^3}\vert{}k\rangle$ matches the continuous cubic potential $V(\gamma) = e^{i\gamma\hat x^3}$.
 * ⚠️ The Heisenberg-Weyl operator basis remains formally valid (a $T$ gate *can* be expressed as a linear combination of Pauli operators), but the number of operator terms blows up exponentially under nested commutators/conjugations. This branching expansion is the exact mathematical locus where efficient classical simulation breaks down.
-* **➕ The Clifford hierarchy, defined:**
+* **The Clifford hierarchy, defined:**
 $$\mathcal{C}_1 = \mathcal{P}, \quad \mathcal{C}_k = \{U : U P U^\dagger \in \mathcal{C}_{k-1}\ \forall P\in\mathcal{P}\} \quad \text{(Gottesman, Chuang, Nature 1999)}$$
 
 
 The $T$ gate belongs to level $\mathcal{C}_3$. Operationally, any gate residing in $\mathcal{C}_k$ can be implemented via gate teleportation utilizing a dedicated resource state accompanied solely by feed-forward Clifford corrections drawn from level $k-1$. This inductive property is why the $T$ gate is the canonical "one step beyond" stabilizer circuits. For $k\geq 3$, the sets $\mathcal{C}_k$ are no longer groups (closure under operator products fails), mirroring the non-closing Lie brackets of degree $\geq 3$ generators.
-* **➕ Classical simulation overhead of magic:** The **stabilizer rank** $\chi$ of $\vert{}T\rangle^{\otimes t}$ is defined as the minimal number of pure stabilizer states required to express that tensor product state. Bravyi & Gosset (PRL 2016) established $\chi \lesssim 2^{0.47t}$, refined to $\approx 2^{0.396t}$ by Bravyi, Browne, Calpin, Campbell, Gosset, and Howard (Quantum 2019). The simulation runtime scale is strictly polynomial in the qubit count $n$ and linear/polynomial in $\chi$, meaning the simulation cost is exponential *only in the count of non-Clifford magic gates*, not in the physical qubit number.
+* **Classical simulation overhead of magic:** The **stabilizer rank** $\chi$ of $\vert{}T\rangle^{\otimes t}$ is defined as the minimal number of pure stabilizer states required to express that tensor product state. Bravyi & Gosset (PRL 2016) established $\chi \lesssim 2^{0.47t}$, refined to $\approx 2^{0.396t}$ by Bravyi, Browne, Calpin, Campbell, Gosset, and Howard (Quantum 2019). The simulation runtime scale is strictly polynomial in the qubit count $n$ and linear/polynomial in $\chi$, meaning the simulation cost is exponential *only in the count of non-Clifford magic gates*, not in the physical qubit number.
 * **Continuous-variable mirror:** Gaussian circuits are classically simulable in polynomial time (Bartlett, Sanders, Braunstein, Nemoto, PRL 2002). Classical simulation via quasiprobability sampling (Pashayan, Wallman, Bartlett, PRL 2015) scales exponentially with the total integrated Wigner negativity, which acts as the continuous non-Gaussian resource budget.
 * **Magic state distillation** (Bravyi, Kitaev, PRA 2005) is the fault-tolerant inverse: consuming multiple noisy copies of magic states $\vert{}T\rangle$ via strictly transversal Clifford operations purifies them into high-fidelity target states. Consequently, the **$T$-count** serves as the universal computational cost currency for fault-tolerant quantum compilers.
 
----
-
-### Structural Trajectory of the Framework
-
-The polynomial degree of a generator in the phase-space operators $\hat Q, \hat P$ (or $X, Z \pmod d$) serves as the unifying organizational principle across the theory:
+**Structural Trajectory of the Framework:** The polynomial degree of a generator in the phase-space operators $\hat Q, \hat P$ (or $X, Z \pmod d$) serves as the unifying organizational principle across the theory:
 
 * **Degree $\leq 2$** closes under the commutator algebra, preserving symplectic phase space geometry and remaining efficiently simulable classically.
 * **Degree $\geq 3$** breaks algebraic closure, producing operator growth that unlocks universality, quantum magic, and genuine computational advantage.
@@ -128,13 +115,7 @@ The polynomial degree of a generator in the phase-space operators $\hat Q, \hat 
 * **Chapter 2** encounters this ladder again as the foundational exception enabling cheap Hamiltonian simulation (shadow simulation, fast-forwarding of linear/quadratic models) and identifies degree $\geq 3$ as the root driver of chaotic scrambling dynamics (out-of-time-ordered correlators, OTOCs).
 * **Chapter 3** leverages this hierarchy as the tunable magic dial for learnable quantum state classes, using the degree-1 Heisenberg-Weyl displacements $D_{q,p}$ as the operator basis through which two-copy Bell measurements reconstruct unknown quantum spectra.
 
-<br><br>
-
-Hier ist die vollständige Zusammenführung beider Texte mit maximalem Informationsgehalt, ohne inhaltliche Kürzungen und ohne redundante Wiederholungen:
-
----
-
-### Tensor Algebra $T(V)$: One Recipe, Four Algebras
+## II. Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra
 
 *The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** in that ideal (symmetric $Q$ or antisymmetric $\omega$), plus whether you switch its value on at all.*
 
@@ -217,7 +198,7 @@ flowchart TD
 * **Sideways:** $G \xrightarrow{\mathrm{span}} M_d(\mathbb{C})$ via the group algebra (linear span of group elements, ⚠️ *not* by $\exp$; algebras themselves are not exponentiated).
 * **Limit:** The asymptotic regime $d \to \infty$ turns $ZX = \zeta_d XZ$ continuously back into $[\hat Q,\hat P] = i\hbar\mathbf{1}$.
 
-**➕ Stone–von Neumann, stated.** Every irreducible, strongly continuous unitary representation of the Weyl relations
+**Stone–von Neumann, stated.** Every irreducible, strongly continuous unitary representation of the Weyl relations
 
 $$W(z)W(z') = e^{-\frac i2\omega(z,z')}W(z+z')$$
 
@@ -247,19 +228,18 @@ The **symplectic form $\omega$** is a differential $2$-form defined by three pro
 * **Closed:** $d\omega = 0$, guaranteeing the absence of local curvature invariants (Darboux's theorem).
 * **Non-degenerate:** Forces an **even dimension** $2n$ (coordinates naturally pair into positions $q_i$ and momenta $p_i$) and produces the nowhere-vanishing **Liouville volume form** $\omega^n$.
 
-**➕ Two consequences used elsewhere in this document.**
+**Two consequences used elsewhere in this document.**
 
 * **Darboux's Theorem:** Locally, every symplectic manifold is symplectomorphic to standard phase space $(\mathbb{R}^{2n}, \sum_{i=1}^n dq_i \wedge dp_i)$. Because there are no local invariants, the only geometric structure a Gaussian/Clifford operation can preserve is $\omega$ itself. This is why $\mathrm{Sp}(2n)$ (continuous) and $\mathrm{Sp}(2n,\mathbb{Z}_d)$ (discrete, with symplectic product $\omega(z,z') = qp' - q'p \pmod d$) act as the universal structure groups of degree 2.
 * **Liouville's Theorem:** The phase-space volume $\omega^n$ is invariant under Hamiltonian flows, and its quantum shadow is unitarity. The Wigner function utilized in quantum learning is precisely a quasi-probability density evaluated against this Liouville volume form, and Hudson's theorem dictates that dynamics generated by Hamiltonians of degree $\leq 2$ preserve the non-negativity of Gaussian Wigner distributions.
 
-<br><br>
-## 2. Quantum Dynamics
+## III. Quantum Dynamics
 
 > Every simulation technique in chemistry and physics sits on three axes: **Model** (classical vs. quantum), **Type** (static vs. dynamic), and **Computing** (classical vs. quantum). *Quantum dynamics* is the cell "quantum model, dynamic type", and its hard core is propagating $\vert{}\psi(t)\rangle = e^{-iHt}\vert{}\psi(0)\rangle$ in a $2^n$-dimensional Hilbert space. Static problems are **optimized** (variational principle); dynamic problems must be **propagated** (no forward theorem). On a quantum computer, propagation follows one of three structural strategies: decompose *time* (Trotter), transform the *spectrum* (Qubitization / QSVT), or shrink the *space* (Shadow Simulation).
 
 ---
 
-### 2.1 The Map: Three Axes
+### Differentiation: Model, Computation and Type
 
 * **Model:** Classical models ignore electrons and treat atoms as spheres connected by springs (empirical force fields). Quantum models explicitly bring electrons, orbitals, and many-body correlation into play.
 * **Type:** Static (ground state, eigenvalue problem $\hat H\vert{}\psi\rangle = E\vert{}\psi\rangle$) vs. dynamic (time evolution $i\hbar\,\partial_t\Psi = \hat H\Psi$).
@@ -273,7 +253,7 @@ The **symplectic form $\omega$** is a differential $2$-form defined by three pro
 
 *Perspective, not part of quantum dynamics:* Quantum computers used for *classical* dynamics—such as solving the Navier–Stokes equations via the HHL algorithm for linear systems, or weather forecasting on a fine 100 m grid. Same quantum hardware, entirely different computational application.
 
-#### Static vs. Dynamic: The Core Difference
+#### Static vs. Dynamic
 
 * **Static = Energy optimization.** If $\psi$ is an eigenstate of $\hat H$, time evolution is strictly stationary: $\Psi(t) = \psi e^{-iEt/\hbar}$, and the probability density $\vert{}\Psi(t)\vert{}^2$ remains constant over time. Finding binding energies reduces to searching for global minima across an energy landscape using the Rayleigh–Ritz variational principle or NISQ-era VQE.
 * **Dynamic = Propagation.** Dynamical problems feature no general variational principle and no forward-in-time shortcut theorem. Simulating non-equilibrium chemical reaction dynamics, bond breaking during atomic collisions, non-adiabatic electronic excitations, and quantum chaotic scrambling cannot be framed as an optimization task; states must be explicitly propagated under $e^{-iHt}$.
@@ -281,7 +261,7 @@ The **symplectic form $\omega$** is a differential $2$-form defined by three pro
 
 ---
 
-### 2.2 Static Quantum Chemistry: The Approximation Stack
+### Static Quantum Chemistry: The Approximation Stack
 
 **Why only tiny systems are solvable analytically.** The Schrödinger equation is analytically solvable only for the one-electron hydrogen atom. Introducing a second electron adds Coulomb repulsion, producing a non-integrable quantum three-body problem. Every electronic structure method is an approximation stack built upon foundational simplifications:
 
@@ -297,7 +277,7 @@ The **symplectic form $\omega$** is a differential $2$-form defined by three pro
 | **Variational Quantum Eigensolver (VQE)** | Captured directly on hardware through multi-qubit entanglement | Central NISQ method targeting larger molecules where classical Post-HF methods fail |
 
 * **Chemical Model Frameworks:** Valence Bond Theory (orbital hybridization, localized electron-pair bonds) vs. Molecular Orbital (MO) Theory (spatial delocalization, HOMO/LUMO frontiers, Linear Combination of Atomic Orbitals / LCAO). Electron spin ($m_s = \pm\frac12$) does not emerge from the non-relativistic Schrödinger equation (which yields only quantum numbers $n, l, m_l$), but arises from unifying quantum mechanics with special relativity via the Dirac equation (1928).
-* **➕ Numbers and the Fault-Tolerant Counterpart:**
+* **Numbers and the Fault-Tolerant Counterpart:**
 * **Chemical Accuracy** is defined as $1\text{ kcal/mol} \approx 1.6\text{ mHa} \approx 43\text{ meV}$, the energetic precision required to predict room-temperature chemical reaction rates to within one order of magnitude. This threshold fixes the target error $\epsilon$ in all quantum resource estimates.
 * **Classical Scaling Limits:** Full Configuration Interaction (FCI) is numerically exact within a chosen basis set but scales combinatorially as $\binom{M}{N}$ in spin-orbitals $M$ and electrons $N$. Coupled Cluster with single, double, and perturbative triple excitations—$\text{CCSD(T)}$, the classical "gold standard"—scales as $O(N^7)$ and breaks down in strongly correlated, multi-reference systems (e.g., transition metal complexes, bond-breaking pathways), precisely the regime targeted for quantum advantage.
 * **Fault-Tolerant QPE:** The fault-tolerant successor to VQE is **Quantum Phase Estimation (QPE)** applied to a block-encoded Hamiltonian $H$. By preparing an initial guiding state with non-negligible ground-state overlap, $E_0$ is read out as an eigenvalue phase with Heisenberg-limited precision in oracle queries.
@@ -308,7 +288,7 @@ The **symplectic form $\omega$** is a differential $2$-form defined by three pro
 
 ---
 
-### 2.3 Dynamic Simulation on a Quantum Computer
+### Dynamic Simulation on a Quantum Computer
 
 **The Problem.** In nature, a physical system evolves under all governing Hamiltonian terms simultaneously. In contrast, quantum computing hardware executes discrete elementary quantum gates sequentially. Because non-commuting Hamiltonian terms satisfy $[A, B] \neq 0$, the Lie product formula does not factorize trivially:
 
@@ -336,7 +316,7 @@ flowchart TD
 
 ---
 
-#### 2.3.1 Trotterization: Walk Through Time
+### Trotterization
 
 $$e^{-iHt} \approx \Big(\prod_j e^{-iH_j t/r}\Big)^r$$
 
@@ -347,17 +327,16 @@ $$\epsilon \le \frac{t^2}{2r} \sum_{j < k} \Vert{}[H_j, H_k]\Vert{}$$
 
 Higher-order symmetric Suzuki formulas systematically eliminate lower-order error terms at the cost of increasing circuit depth.
 * **Hardware Profile:** Structurally native to hardware; requires zero ancilla qubits and no coherent oracle circuits. Its primary computational limitation is a polynomial error scaling in $1/\epsilon$.
-* **➕ Commutator Bounds and Randomized Product Formulas:**
+* **Commutator Bounds and Randomized Product Formulas:**
 * **Nested Commutator Scaling:** Childs, Su, Tran, Wiebe, and Zhu (PRX 2021) demonstrated that the asymptotic error of a $p$-th order formula is rigorously bounded by nested commutators of the form $\sum \Vert{}[H_{j_{p+1}}, \dots, [H_{j_2}, H_{j_1}]]\Vert{}$. For geometrically local lattice Hamiltonians, this bound scales as $O(n)$ with system size rather than the loose, naive scaling in the number of terms $L^{p+1}$. This explains why high-order product formulas remain competitive in realistic gate-level resource benchmarks (Childs, Maslov, Nam, Ross, Su, PNAS 2018).
 * **Randomized Compilation via qDRIFT:** Campbell (PRL 2019) introduced quantum Stochastic Drift Protocol (qDRIFT), which avoids deterministic term orderings by stochastically sampling individual terms $H_j$ with probability $p_j = \alpha_j / \lambda$ (where $\lambda = \sum_j \alpha_j$). The gate count scales as $O(\lambda^2 t^2 / \epsilon)$, completely independent of the total term count $L$ and free from operator commutators, though at the expense of an $\epsilon^{-1}$ error overhead.
 * **Application Rule of Thumb:** Hamiltonians with numerous small-norm interaction terms and modest precision targets favor qDRIFT; systems composed of fewer, dominant terms or demanding high precision favor high-order Suzuki product formulas.
 
-
-
 ---
 
-#### 2.3.2 Qubitization: Walk Through the Eigenvalues
+### Qubitization
 
+* Qubitization: Walk Through the Eigenvalues
 * **Linear Combinations of Unitaries (LCU) & Block Encoding:** Express the system Hamiltonian as a linear combination of unitaries:
 $$H = \sum_{l=1}^L \alpha_l U_l \quad \text{with 1-norm } \lambda = \sum_{l=1}^L \vert{}\alpha_l\vert{}$$
 
@@ -377,14 +356,14 @@ $$\mathcal{O}\left(\lambda t + \log(1/\epsilon)\right)$$
 
 The physical trade-off involves coherent ancilla registers, multi-qubit controlled oracle calls, and an algorithmic dependency on the Hamiltonian 1-norm $\lambda$.
 * **Scrambling & OTOC Diagnostics:** By inverting the quantum walk sequence (reversing the reflection operators and oracle circuits), operator scrambling and out-of-time-ordered correlators (OTOCs) can be measured directly via relative phase shifts on the ancilla register.
-* **➕ Fundamental Query Bounds & Fast-Forwarding:** The linear query dependence on time $t$ is tight and matches the fundamental **no-fast-forwarding theorem** for generic quantum Hamiltonians (Berry, Ahokas, Cleve, Sanders 2007; Atia & Aharonov, Nat. Commun. 2017). The additive $\log(1/\epsilon)$ term reflects the optimal polynomial degree required to approximate trigonometric time evolution functions.
+* **Fundamental Query Bounds & Fast-Forwarding:** The linear query dependence on time $t$ is tight and matches the fundamental **no-fast-forwarding theorem** for generic quantum Hamiltonians (Berry, Ahokas, Cleve, Sanders 2007; Atia & Aharonov, Nat. Commun. 2017). The additive $\log(1/\epsilon)$ term reflects the optimal polynomial degree required to approximate trigonometric time evolution functions.
 * ⚠️ **Fast-Forwarding Exceptions:** Sub-linear or constant-time fast-forwarding ($t \ll \Vert{}H\Vert{}t$) remains physically possible for specific structured Hamiltonians (e.g., mutually commuting terms, non-interacting quadratic fermionic systems belonging to degree $\leq 2$ of the operator ladder)—the exact algebraic exception enabling shadow simulation.
 
 ---
 
-#### 2.3.3 Shadow Simulation: Shrink the Space
+### Shadow Simulation: Shrink the Space
 
-Proposed by Somma et al. (2024/2025), shadow simulation circumvents the exponential $2^n$-dimensional Hilbert space by tracking the dynamics of an observable subspace. It maps the evolution of $\vert{}\psi(t)\rangle$ into a compressed **shadow quantum state** whose amplitudes correspond to the expectation values of an operator set $S = \{O_1, \dots, O_M\}$ (e.g., 1-RDMs, 2-RDMs, or structured Pauli strings):
+Shadow Simulation: Shrink the Space. Proposed by Somma et al. (2024/2025), shadow simulation circumvents the exponential $2^n$-dimensional Hilbert space by tracking the dynamics of an observable subspace. It maps the evolution of $\vert{}\psi(t)\rangle$ into a compressed **shadow quantum state** whose amplitudes correspond to the expectation values of an operator set $S = \{O_1, \dots, O_M\}$ (e.g., 1-RDMs, 2-RDMs, or structured Pauli strings):
 
 $$\vert{}\rho(t);S\rangle = \frac{1}{\sqrt A}\sum_{m=1}^M \langle O_m(t)\rangle\,\vert{}m\rangle$$
 
@@ -410,7 +389,7 @@ where $H_S$ is an effective $M \times M$ matrix governed by the structure coeffi
 
 ---
 
-#### 2.3.4 Open Systems: Non-Unitary Dynamics
+### Open Quantum Systems: Non-Unitary Dynamics
 
 Coupling a quantum system to an unobserved thermal environment or measurement apparatus introduces energy dissipation and phase decoherence. The state evolution on the primary Hilbert space $\mathcal{H}_S$ ceases to be unitary and is described by a completely positive trace-preserving (**CPTP**) dynamical map ($\mathcal{E} \otimes \mathcal{I}_n \geq 0$).
 
@@ -436,7 +415,7 @@ matching the optimal time scaling of closed-system Hamiltonian simulation up to 
 * ⚠️ **Non-Markovian Dynamics:** Environments exhibiting memory effects, structured environmental spectral densities, or strong system-bath entanglement fall completely outside the Lindblad framework and represent a primary frontier for quantum simulation algorithms.
 <br><br>
 
-### 2.4 Chaos, Scrambling and OTOCs
+## IV. Chaos, Scrambling and OTOCs
 
 > A local operator under chaotic dynamics in the Heisenberg picture, $W(t) = e^{iHt}We^{-iHt}$, grows in three directions, each with its own metric and its own bound: **rate** $\lambda_L$ (time), **reach** $v_B$ (space), and **depth** $K(t)$ (operator space). Without the Schrödinger solution $e^{-iHt}$ there is no $W(t)$ and no OTOC: chaos diagnostics *are* quantum dynamics.
 
@@ -452,7 +431,7 @@ The longitudinal field $h_z$ breaks integrability:
 
 ---
 
-#### 2.4.1 The Object: OTOC as a Four-Point Function
+#### Object: OTOC as a Four-Point Function
 
 $$C(t) = \big\langle[W(t),V(0)]^\dagger[W(t),V(0)]\big\rangle = 2\big(1 - \mathrm{Re}\,F(t)\big), \qquad F(t) = \langle W^\dagger(t)V^\dagger W(t)V\rangle$$
 
@@ -464,8 +443,6 @@ $$C(t) = \big\langle[W(t),V(0)]^\dagger[W(t),V(0)]\big\rangle = 2\big(1 - \mathr
 2. Butterfly perturbation $V$ (e.g., a local $X$ gate).
 3. Backward propagation under $e^{+iHt}$.
 4. Projective overlap measurement with probe observable $W$.
-
-
 
 ```mermaid
 flowchart LR
@@ -479,7 +456,7 @@ flowchart LR
 
 ---
 
-#### 2.4.2 Three Directions of Operator Growth
+#### Three Directions of Operator Growth
 
 | Direction | Metric | Growth Law | Bound / Universality |
 | --- | --- | --- | --- |
@@ -520,7 +497,7 @@ $$K(t) = \sum_{n} n\,\vert{}\varphi_n(t)\vert{}^2$$
 
 ---
 
-#### 2.4.3 The Logical Stack of Bounds: KMS $\implies$ UOGH $\implies$ MSS
+#### Logical Stack of Bounds: KMS $\implies$ UOGH $\implies$ MSS
 
 $$\text{KMS thermal analyticity in strip } 0 \leq \mathrm{Im}(t) \leq \beta \;\implies\; \alpha \leq \frac{\pi}{\beta} \;\implies\; \lambda_L \leq \frac{2\pi k_BT}{\hbar}$$
 
@@ -528,7 +505,7 @@ $$\text{KMS thermal analyticity in strip } 0 \leq \mathrm{Im}(t) \leq \beta \;\i
 * **Maldacena–Shenker–Stanford (MSS) Bound:** Analyticity of out-of-time-ordered four-point correlation functions under Kubo–Martin–Schwinger (KMS) thermal boundary conditions bounds the growth rate by $\lambda_L \leq 2\pi k_B T / \hbar$ (JHEP 2016).
 * **Sachdev–Ye–Kitaev (SYK) Model:** $N$ Majorana fermions with all-to-all random four-body interactions (Kitaev 2015; Maldacena & Stanford, PRD 2016). Exactly solvable in the large-$N$ limit and holographically dual to Jackiw–Teitelboim (JT) gravity in $\mathrm{AdS}_2$. It **saturates the MSS bound** ($\lambda_L = 2\pi/\beta$), demonstrating that black holes behave as the fastest and most efficient information scramblers in nature.
 
-**➕ Reference Stack:**
+**Reference Stack:**
 
 * Lieb–Robinson bound: Lieb, Robinson, *Commun. Math. Phys.* (1972).
 * Semiclassical OTOC foundation: Larkin, Ovchinnikov, *JETP* (1969).
@@ -543,7 +520,7 @@ $$\text{KMS thermal analyticity in strip } 0 \leq \mathrm{Im}(t) \leq \beta \;\i
 
 ---
 
-#### 2.4.4 Static Fingerprints: ETH and Spectral Statistics
+#### Static Fingerprints: ETH and Spectral Statistics
 
 * **Eigenstate Thermalization Hypothesis (ETH, Srednicki):**
 $$A_{mn} = \mathcal{A}(\bar E)\delta_{mn} + e^{-S(\bar E)/2}f_A(\bar E,\omega)R_{mn}$$
@@ -568,7 +545,7 @@ Exhibits a diagnostic **dip–ramp–plateau** profile at late times $t > t_*$, 
 
 ---
 
-#### 2.4.5 Scrambling vs. Decoherence
+#### Scrambling vs. Decoherence
 
 | Diagnostic Feature | Unitary Scrambling | Lindblad Open Decoherence |
 | --- | --- | --- |
@@ -581,7 +558,7 @@ Quantitative experimental extraction requires error-mitigated echo protocols and
 
 ---
 
-#### 2.4.6 Consequences: Black Holes $\longleftrightarrow$ Quantum Computing
+#### Consequences: Black Holes $\longleftrightarrow$ Quantum Computing
 
 * **Scrambling as a Resource (Hayden–Preskill Protocol):** A black hole acts as an optimal information mirror. An unknown quantum state thrown into a scrambling black hole after its Page time can be reconstructed from a few emitted Hawking radiation quanta collected alongside the historical radiation in time $\mathcal{O}(\ln N)$. The **Yoshida–Kitaev decoding circuit** achieves a state-reconstruction fidelity directly proportional to the OTOC value and operates with maximum efficiency at the theoretical chaos bound (experimentally verifiable via two-copy Bell state sampling).
 * **Scrambling as an Obstacle (Barren Plateaus):** Deep parametrized quantum circuits that scramble rapidly form approximate unitary $t$-designs on $U(2^n)$. Haar integration concentrates observable gradients exponentially with qubit count:
@@ -596,9 +573,9 @@ $$P(p) \approx N e^{-Np}$$
 acts as the static fingerprint of Haar-random state generation. The circuit depth required to enter the Porter–Thomas regime corresponds precisely to the geometric scrambling time ($d \sim n$ in 1D architectures, $d \sim \sqrt{n}$ on 2D planar chips), reflecting the time needed for the Lieb–Robinson light cone to traverse the physical processor.
 <br><br>
 
-## 3. Quantum Learning: Dequantization vs. Genuine Quantum Advantage
+## V. QML on Classical Data: Dequantization vs. Genuine Quantum Advantage
 
-### 3.1 Separation: Classical vs. Quantum Data
+### Separation: Classical vs. Quantum Data
 
 |  | Classical Learners | Quantum-Enhanced Learners |
 | --- | --- | --- |
@@ -619,15 +596,11 @@ acts as the static fingerprint of Haar-random state generation. The circuit dept
 * **Holevo's Theorem:** An $n$-qubit state can convey at most $n$ classical bits of accessible information to any measurement apparatus, strictly bounding what a single measurement shot can extract.
 * **Gentle Measurement Lemma** (Winter 1999; Aaronson 2004): An operation that accepts a quantum state with probability $\geq 1 - \epsilon$ perturbs the underlying state by at most $O(\sqrt{\epsilon})$ in trace distance. This allows an ensemble of near-deterministic questions to be evaluated sequentially on the same physical copies.
 
-
-
 None of these physical constraints bind classical datasets. Classical measurement theory addresses the single-shot physical perturbation of a measurement on a state; quantum learning theory solves the inverse statistical problem: the Born rule turns the quantum state into a sampling oracle, and learning is the reconstruction of the generator from measurement statistics.
 
 ---
 
-### 3.2 Dequantization vs. Genuine Advantage: A Decision Framework
-
-*Core theses on QML for classical data. Status: September 2026.*
+### Dequantization vs. Genuine Advantage: A Decision Framework
 
 > **Guiding Principle:** Quantum advantage survives exactly when no efficient classical representation captures the underlying computation. Classical shortcuts can emerge along four mutually independent axes: input access, numerical precision, cryptographic problem hardness, or circuit algebraic structure. "Dequantization" denotes finding that exact shortcut.
 
@@ -652,7 +625,7 @@ flowchart TD
 
 ---
 
-### 3.3 Tang's Finding: Speedups Rooted in the Input Model
+### Tang's Finding: Speedups Rooted in the Input Model
 
 Whenever a quantum algorithm achieves exponential speedup over classical algorithms by exploiting low-rank matrix structure under quantum RAM (QRAM) state preparation, an equivalent classical algorithm with **sample-and-query (SQ) access** (the classical analogue of QRAM data loading) can solve the problem in polynomial time. QRAM-based QML speedups (recommendation systems, PCA, SVMs, semidefinite programming, low-rank matrix inversion) were artifacts of the input loading model rather than quantum propagation:
 
@@ -660,11 +633,11 @@ Whenever a quantum algorithm achieves exponential speedup over classical algorit
 * **Tang (PRL 2021):** Demonstrated that quantum PCA and low-rank clustering owe their apparent exponential speedups entirely to state-preparation assumptions.
 * **Chia, Gilyén, Li, Lin, Tang, Wang / CGLLTW (STOC 2020 / JACM 2022):** Formulated a classical analogue of the Quantum Singular Value Transformation (QSVT) using randomized sublinear matrix arithmetic, dequantizing the entire low-rank QSVT class simultaneously.
 * **Bakshi & Tang (SODA 2024):** Derived the quantitatively optimal classical singular value transformation, reducing classical query and runtime bounds down to small polynomial overheads.
-* **➕ Precursors and Structural Roots:** The primary algorithm dequantized along this track is HHL (Harrow, Hassidim, Lloyd, PRL 2009) and its low-rank variant by Kerenidis & Prakash (ITCS 2017). Tang formalized the caveats identified in Aaronson's "Read the fine print" (Nat. Phys. 2015): state preparation, state readout, matrix condition number $\kappa$, and precision $\epsilon$ represent four loci where exponential speedups evaporate. Tang’s Axes 1 and 2 turn two of Aaronson’s four caveats into rigorous no-go theorems.
+* **Precursors and Structural Roots:** The primary algorithm dequantized along this track is HHL (Harrow, Hassidim, Lloyd, PRL 2009) and its low-rank variant by Kerenidis & Prakash (ITCS 2017). Tang formalized the caveats identified in Aaronson's "Read the fine print" (Nat. Phys. 2015): state preparation, state readout, matrix condition number $\kappa$, and precision $\epsilon$ represent four loci where exponential speedups evaporate. Tang’s Axes 1 and 2 turn two of Aaronson’s four caveats into rigorous no-go theorems.
 
 ---
 
-### 3.4 The Four Axes: Where the Shortcut Lurks
+### The Four Axes: Where the Shortcut Lurks
 
 | Axis | Dequantizable / Simulable Regime | Resistant / Genuine Advantage Regime | Primary Analytical Tool or Limit | Status of Resistance |
 | --- | --- | --- | --- | --- |
@@ -690,11 +663,11 @@ Unlike Circuit Magic (Axis 4), Axis 3 exhibits two distinguishing properties:
 1. **Non-Monotonicity (The Goldilocks Dilemma):** Too little algebraic structure yields unlearnable, featureless landscapes; excessive algebraic structure renders the problem classically decodable (Anschuetz, Gamarnik, Lu, *DQI requires structure*, 2025).
 2. **Conditional Hardness:** Advantage rests on computational complexity conjectures (e.g., hardness of discrete logarithms, Shortest Vector Problem) rather than unconditional structural theorems. Hence, while a Clifford circuit remains classically simulable under all circumstances, DQI's advantage fluctuates with classical decoding advances.
 
-* **➕ The QML Archetype of Axis 3:** Liu, Arunachalam, and Temme (Nat. Phys. 2021) constructed a supervised classification task based on the discrete logarithm problem. They designed an efficiently computable quantum kernel that classifies data provably faster than any classical learner (operating on data, without an oracle), unless the classical learner can efficiently compute discrete logs. This provides an existence proof for a top-row quantum learning advantage while illustrating the Goldilocks limitation: the algebraic symmetry is synthetically planted, and no natural dataset is known to exhibit this structure. Lewis, Gilboa, and McClean (Nat. Commun. 2026) initiated the transition from planted algebraic constructions to natural data distributions.
+* **The QML Archetype of Axis 3:** Liu, Arunachalam, and Temme (Nat. Phys. 2021) constructed a supervised classification task based on the discrete logarithm problem. They designed an efficiently computable quantum kernel that classifies data provably faster than any classical learner (operating on data, without an oracle), unless the classical learner can efficiently compute discrete logs. This provides an existence proof for a top-row quantum learning advantage while illustrating the Goldilocks limitation: the algebraic symmetry is synthetically planted, and no natural dataset is known to exhibit this structure. Lewis, Gilboa, and McClean (Nat. Commun. 2026) initiated the transition from planted algebraic constructions to natural data distributions.
 
 ---
 
-### 3.5 Two Levels of Analysis: Circuit vs. Problem Interface
+### Two Levels of Analysis: Circuit vs. Problem Interface
 
 * **Level 1: Circuit-Internal (Simulation-Based Dequantization):** Direct simulation of the unitary dynamics using structural representations (stabilizer binary tableaus, Gaussian covariance matrices, matchgate fermionic Pfaffians).
 *Three Pillars of Quantumness:*
@@ -724,7 +697,7 @@ Trainable variational quantum models on classical data are generally classically
 
 ---
 
-### 3.6 Unified Theory: Tractability as Low Rank
+### Unified Theory: Tractability as Low Rank
 
 | Theoretical Framework | Rank Metric | Low Rank $\implies$ Efficient Simulation (Theorem) |
 | --- | --- | --- |
@@ -743,7 +716,7 @@ The reverse direction is not a theorem because an unknown, efficiently contracti
 
 ---
 
-### 3.7 Three Physical Resources, Three Control Knobs
+### Three Physical Resources, Three Control Knobs
 
 Advantage is relative to the constrained resource:
 
@@ -784,7 +757,7 @@ $$\text{Top-Row Fragility Holds for Time and Sample Budgets} \quad \centernot\im
 
 ---
 
-### 3.8 Viable Pathways for QML on Classical Data
+### Viable Pathways for QML on Classical Data
 
 | Proposed Direction | Current Theoretical Status |
 | --- | --- |
@@ -809,7 +782,7 @@ The readout check constrains computational time speedups, but does not eliminate
 
 ---
 
-### 3.9 Summary of Core Principles
+### Summary of Core Principles
 
 1. **Computational Incompressibility:** Quantum advantage survives if and only if no efficient classical representation (tensor network, stabilizer tableau, or low-rank sketch) can model the system.
 2. **Tractability Equals Low Rank:** Efficient classical simulation is guaranteed by low rank in some representation (matrix rank, stabilizer rank, or Schmidt rank). Advantage requires irreducibly high rank across all compatible representations.
@@ -821,7 +794,7 @@ The readout check constrains computational time speedups, but does not eliminate
 
 ---
 
-### 3.10 Open Research Frontiers
+### Open Research Frontiers
 
 * **Matrix Rank vs. Stabilizer Rank Unified Algebra:** A unified mathematical framework connecting SVD matrix sketchability (Level 2) and stabilizer rank decompositions (Level 1).
 * **Guided Local Hamiltonian Phase Diagram:** Mapping the complexity boundaries of the guided local Hamiltonian problem across the parameter space of relative precision, guiding state overlap, and interaction locality, specifically targeting constant additive error (chemical accuracy) in high-rank domains.
@@ -830,7 +803,7 @@ The readout check constrains computational time speedups, but does not eliminate
 
 ---
 
-### 3.11 Key Literature
+### Key Literature
 
 * E. Tang, *"A quantum-inspired classical algorithm for recommendation systems"*, STOC 2019. [arXiv:1807.04271](https://arxiv.org/abs/1807.04271?utm_source=gemini).
 * E. Tang, *"Quantum PCA only achieves an exponential speedup because of its state preparation assumptions"*, PRL 127, 060503 (2021). [arXiv:1811.00414](https://arxiv.org/abs/1811.00414?utm_source=gemini).
@@ -854,20 +827,17 @@ The readout check constrains computational time speedups, but does not eliminate
 * M. Cerezo, M. Larocca, D. García-Martín et al., *"Does provable absence of barren plateaus imply classical simulability?"*, [arXiv:2312.09121](https://arxiv.org/abs/2312.09121?utm_source=gemini) (2023).
 * S. Bravyi, D. Browne, P. Calpin, E. Campbell, D. Gosset, M. Howard, *"Simulation of quantum circuits by low-rank stabilizer decompositions"*, Quantum 3, 181 (2019).
 
+<br>
 
-<br><br>
-
-# Quantum Learning: Learning from Quantum Experiments
-
-Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ&utm_source=gemini) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/?utm_source=gemini)
+# VI. Quantum Learning: Learning from Quantum Experiments
 
 > **Guiding Principle.** In quantum machine learning, the data source decides, not the hardware. When learning from classical data (top row), quantum speedups are fragile: classical models with sufficient data systematically catch up (*Power of Data*). When learning directly from **quantum data** (bottom row: physical copies of states $\rho$, channels $\mathcal{E}$, or Hamiltonians $H$), **unconditional exponential separations** exist and have been demonstrated in hardware. Here, quantum state copies cannot be cloned, information is capped by Holevo's bound, and the Born rule turns physical states into statistical sampling oracles.
 
 ---
 
-## 1. Foundations: Separation, Objectives & Measurement Primitives
+## Foundations: Separation, Objectives & Measurement Primitives
 
-### 1.1 The Data-vs-Learner Separation
+### Data-vs-Learner Separation
 
 |  | Classical Learners | Quantum-Enhanced Learners |
 | --- | --- | --- |
@@ -887,7 +857,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 
 
-### 1.2 The Triply Efficient Objective
+### Triply Efficient Objective
 
 Every learning protocol is charged against three independent budgets:
 
@@ -921,7 +891,7 @@ Every learning protocol is charged against three independent budgets:
 
 ---
 
-### 1.3 Four Measurement Primitives
+### Four Measurement Primitives
 
 1. **Single-Copy Randomized Measurements:** Random Pauli/Clifford basis draws per copy (the engine of classical shadows). Single-copy, NISQ-ready, but exponential in shot count for global observables.
 2. **Bell Sampling on Two Copies:** Transversal Bell basis measurements across $\rho \otimes \bar{\rho}$. A single shot samples the global Pauli spectrum with probability $P(P) \propto \vert{}\mathrm{Tr}(P\rho)\vert{}^2$. Resolves all $4^n$ Pauli expectations with $\Theta(n)$ copies instead of $2^{\Omega(n)}$.
@@ -930,7 +900,7 @@ Every learning protocol is charged against three independent budgets:
 
 ---
 
-## 2. The Three Learning Archetypes: Searching, Estimating & Identifying
+## Three Learning Archetypes: Searching, Estimating & Identifying
 
 The learning universe divides into three distinct tasks based on how observables and hypotheses are provided:
 
@@ -945,7 +915,7 @@ The learning universe divides into three distinct tasks based on how observables
 
 ```
 
-### 2.1 Searching (Observables are Output)
+### Searching (Observables are Output)
 
 * **Definition:** The learner receives copies of $\rho$ without a candidate list and must find the sparse addresses $(q,p)$ carrying spectral weight, followed by their values.
 * **The Normalization Bottleneck:** For unitaries $U = \sum_P u_P P$, the Pauli spectrum is unit-normalized ($\sum_P \vert{}u_P\vert{}^2 = 1$). Bell sampling on the Choi state yields heavy terms with probability $\ge \tau^2$ directly. For pure states $\rho$, $\sum_z \vert{}y_z\vert{}^2 = d$, meaning a magnitude-1 coefficient appears with probability $1/d$, rendering raw frequency detection invisible in $\mathrm{poly}(n)$ shots.
@@ -962,7 +932,7 @@ The learning universe divides into three distinct tasks based on how observables
 
 ---
 
-### 2.2 Estimating (Observables are Input)
+### Estimating (Observables are Input)
 
 * **Definition:** Given copies of $\rho$ and an input list of $M$ observables, estimate all expectation values $\mathrm{Tr}(O_i \rho)$ to precision $\pm\epsilon$.
 * **Full Tomography vs. Shadows:** Standard quantum state tomography requires $\Theta(4^n/\epsilon^2)$ copies. Shadow tomography avoids this by answering $M$ questions using $\mathrm{poly}(\log M, n, 1/\epsilon)$ copies via gentle measurement.
@@ -980,7 +950,7 @@ The learning universe divides into three distinct tasks based on how observables
 
 ---
 
-### 2.3 Identifying (Candidate States are Input)
+### Identifying (Candidate States are Input)
 
 * **Definition:** Given copies of $\rho$ and an ensemble of $M$ candidate states (or an algebraic class promise $\mathcal{C}$), output an index, matching state, or property verification bit.
 * **Discrimination vs. Class Testing:** Distinguishing two known states ($M=2$) is bounded by the Helstrom trace distance limit and the quantum Chernoff exponent ($\xi_{\mathrm{QCB}}$). Testing purity ($\rho$ pure vs. maximally mixed) requires $O(1)$ copies via a two-copy SWAP test, but requires $\Omega(2^{n/2})$ copies using single-copy measurements.
@@ -1000,9 +970,9 @@ The learning universe divides into three distinct tasks based on how observables
 
 ---
 
-## 3. Structural Synthesis & Research Positioning
+## Structural Synthesis
 
-### 3.1 Two Structural Ways Classical Algorithms Fail
+### Two Structural Ways Classical Algorithms Fail
 
 ```
   FAILURE MODE 1: Dense Hypothesis Size          FAILURE MODE 2: Classical Decoder Bottleneck
@@ -1018,7 +988,7 @@ The learning universe divides into three distinct tasks based on how observables
 
 ```
 
-### 3.2 The Access-by-Task Landscape
+### Access-by-Task Landscape
 
 ```
                       ESTIMATING / IDENTIFYING                SEARCHING
@@ -1047,7 +1017,7 @@ The learning universe divides into three distinct tasks based on how observables
 
 ---
 
-### 3.3 Strategic Positioning: Machine-Learned Decoders for Quantum Data
+### Strategic Positioning: Machine-Learned Decoders for Quantum Data
 
 * **Core Focus:** Establishing verifiable quantum learning advantages with minimal quantum resources—specifically operating at **rung 2 (two-copy quantum memory)**.
 * **Algorithmic Decoupling:** Every protocol decomposes into:
