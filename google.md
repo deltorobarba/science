@@ -66,6 +66,47 @@ Zwei Sätze, die du dir merken solltest:
 
 Diese 401/403-Unterscheidung taucht im Kurs mehrfach auf (Root-Agent → GitHub-Agent, Datastore-Import, Auth-Manager) und ist ein sehr zuverlässiges Diagnosewerkzeug.
 
+```mermaid
+flowchart LR
+    subgraph DEV["Entwickler (Cloud Shell)"]
+        U["User-Account<br/>gcloud auth login → CLI<br/>gcloud auth application-default login → ADC"]
+    end
+
+    subgraph GCP["Google Cloud"]
+        ROOT["code_assistant (Root)<br/>Agent Runtime<br/>Identität: service-NUM@gcp-sa-aiplatform-re"]
+        AR["github_agent<br/>Agent Runtime + Agent Identity<br/>Identität: SPIFFE principal://…"]
+        CR["salesforce_agent<br/>Cloud Run<br/>Identität: Service Account"]
+        SE["stackexchange_agent<br/>Cloud Run (public)"]
+        GKE["bq-agent<br/>GKE (public LB)<br/>Identität: Workload-SA"]
+        AM[("Agent Identity<br/>Auth Manager<br/>API-Key- / 2LO- / 3LO-Provider")]
+        GAPI["Google APIs<br/>Vertex AI · Discovery Engine · BigQuery"]
+        DE["Discovery Engine<br/>Service Agent"]
+    end
+
+    subgraph EXT["Extern"]
+        GH["GitHub MCP Server"]
+        SF["Salesforce REST/SOSL"]
+    end
+
+    U -- "Access Token<br/>(print-access-token)" --> GAPI
+    U -- "ID-Token<br/>(print-identity-token)" --> CR
+    U -- "ADC-Access-Token<br/>agents-cli run / deploy" --> ROOT
+
+    ROOT -- "A2A + OAuth Access Token (ADC)<br/>braucht roles/aiplatform.user" --> AR
+    ROOT -- "A2A ohne Token<br/>(allUsers run.invoker)<br/>Alternative privat: ID-Token + run.invoker" --> CR
+    ROOT -- "A2A ohne Token" --> SE
+    ROOT -- "A2A ohne Token" --> GKE
+    ROOT -- "ADC → roles/discoveryengine.viewer" --> GAPI
+
+    AR -- "SPIFFE-Principal<br/>roles/agentidentity.user" --> AM
+    CR -- "Service Account (ADC)<br/>roles/agentidentity.user" --> AM
+    AM -- "API-Key-Provider<br/>→ header_provider → Bearer PAT" --> GH
+    AM -- "2LO-Provider: client_credentials<br/>→ AuthenticatedFunctionTool → Bearer Token" --> SF
+
+    GKE -- "ADC → Workload-SA<br/>bigquery.jobUser + dataViewer" --> GAPI
+    DE -- "Agent Card lesen<br/>braucht roles/run.invoker" --> CR
+```
+
 ---
 
 ## 1. Die Credential-Typen im Überblick
