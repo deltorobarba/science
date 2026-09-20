@@ -4,11 +4,8 @@ __pycache__/
 .env
 /claude/
 /paper/
-/huggingface/
-/code.ipynb
-/conjecture.md
-/flow.pdf
-/instructions.md
-/objective.md
-/overleaf.txt
-/pipeline.md
+/research.ipynb
+/research_flow.pdf
+/research_instructions.md
+/research_objective.md
+/research_overleaf.txt
