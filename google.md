@@ -9,7 +9,11 @@
 
 ---
 
-## Contents
+## Security: Authorization and Authentification
+
+- [0. Das mentale Modell: drei Fragen, immer dieselben](#0.-Das-mentale-Modell:-drei-Fragen,-immer-dieselben)
+
+## AI for Software Engineering (SDLC)
 
 **Phase 0: The map**
 - [Module 0 · The development loop as a mental frame](#module-0--the-development-loop-as-a-mental-frame)
@@ -36,6 +40,744 @@
 - [Editor's notes: corrections and additions](#editors-notes-corrections-and-additions)
 
 ---
+
+<br>
+
+# Security: Authorization and Authentification
+
+*Lernmodul auf Basis der L400-Labs „Build Enterprise Agents“ (APEX012), „Agent Identity Foundations“ (APEX013) und „Observe and Secure a Multi-Agent System“ (APEX014) sowie der Gemini-Chats dazu.*
+
+---
+
+## 0. Das mentale Modell: drei Fragen, immer dieselben
+
+Jede Auth-Situation im Kurs – egal ob Entwickler → GCP, Agent → Agent, Agent → MCP-Server oder Agent → Salesforce – lässt sich auf drei Fragen reduzieren:
+
+| Frage | Fachbegriff | Beispiele aus dem Kurs |
+|---|---|---|
+| **Wer bin ich?** | *Principal / Identität* | dein User-Account, ein Service Account, ein Google-verwalteter *Service Agent*, eine SPIFFE-Agent-Identity |
+| **Wie beweise ich das?** | *Credential / Token* | OAuth-Access-Token, OIDC-ID-Token, API-Key/PAT, OAuth-Client-Credentials |
+| **Was darf ich?** | *Autorisierung (IAM)* | `roles/aiplatform.user`, `roles/run.invoker`, `roles/agentidentity.user`, `roles/bigquery.dataViewer` |
+
+Zwei Sätze, die du dir merken solltest:
+
+> **Authentifizierung beweist, wer du bist. Autorisierung entscheidet, was du aufrufen darfst.**
+> Fehlt das Token → **401 Unauthorized**. Token gültig, aber keine IAM-Berechtigung → **403 Permission Denied**.
+
+Diese 401/403-Unterscheidung taucht im Kurs mehrfach auf (Root-Agent → GitHub-Agent, Datastore-Import, Auth-Manager) und ist ein sehr zuverlässiges Diagnosewerkzeug.
+
+---
+
+## 1. Die Credential-Typen im Überblick
+
+### 1.1 Tabelle
+
+| Typ | Aussehen | Beweist… | Für wen ausgestellt / Empfänger | Lebensdauer | Im Kurs verwendet für |
+|---|---|---|---|---|---|
+| **OAuth 2.0 Access Token** | `ya29.a0Af…` (opak, kein JWT) | „Der Inhaber darf in *diesen Scopes* handeln“ | Google APIs (`aiplatform`, `discoveryengine`, `apphub`, …) | ~1 h | curl gegen Google APIs, A2A-Aufruf eines Agent-Runtime-Agents |
+| **OIDC Identity Token (ID-Token)** | `eyJhbGciOi…` (signiertes JWT mit `iss`, `sub`, `aud`, `exp`) | „Ich bin Identität X, und dieses Token ist für Empfänger `aud` gedacht“ | *ein bestimmter* Empfänger (Audience = Service-URL) | ~1 h | private Cloud-Run-Dienste, IAP, Agent-Card-Abruf beim Registrieren |
+| **API-Key / Personal Access Token** | `ghp_…` (GitHub), beliebiger String | nichts über *wen* – nur „wer den Key hat, darf“ | ein Dienst (GitHub MCP) | bis zur Rotation | GitHub MCP Server |
+| **OAuth Client Credentials (2LO)** | `client_id` + `client_secret` → Token-Endpoint → Access Token | „Diese *App* handelt als sie selbst“ (kein Endnutzer) | Salesforce REST/SOSL | Token ~ Stunden, Secret bis Rotation | Salesforce-Agent |
+| **OAuth Authorization Code (3LO)** | User-Consent im Browser → `code` → Access + Refresh Token | „Diese App handelt *im Namen eines Nutzers*“ | z. B. Jira, GitHub-User-Repos | Refresh Token lange | `gcloud auth login`, Antigravity-CLI-Login, 3LO-Auth-Provider |
+| **SPIFFE-Identität** | `principal://agents.global.org-ORG.system.id.goog/resources/aiplatform/…/reasoningEngines/ID` | „Ich bin *dieser* deployte Agent“ (X.509/SVID, mTLS) | Agent Identity Auth Manager, Agent Gateway | verwaltet | GitHub-Agent auf Agent Runtime mit Agent Identity |
+
+### 1.2 Was „Bearer“ eigentlich bedeutet
+
+`Authorization: Bearer <token>` heißt wörtlich: *„Der Überbringer dieses Tokens ist berechtigt.“* Das Token ist wie ein Konzertticket – niemand prüft, ob **du** es gekauft hast. Deshalb:
+
+- Access Tokens sind **kurzlebig** (~1 h) und werden nur über TLS übertragen.
+- ID-Tokens haben eine **Audience** – ein Token für `https://salesforce-agent-xyz.run.app` kann nicht bei einem anderen Dienst „wiederverwendet“ werden.
+- Für die härteste Stufe gibt es **DPoP** (Demonstrating Proof of Possession, RFC 9449): Der Client signiert jede Anfrage zusätzlich mit einem privaten Schlüssel, sodass ein gestohlenes Token allein wertlos ist. Genau das nutzt Agent Gateway („mutual TLS and DPoP for end-to-end proof“).
+
+### 1.3 Access Token vs. ID Token – der häufigste Verwechslungsfehler
+
+```bash
+# OAuth2 ACCESS Token: für Google-APIs (Autorisierung über Scopes)
+gcloud auth print-access-token
+# → ya29.a0AfB_...
+
+# OIDC IDENTITY Token: für Dienste, die *deine Identität* prüfen (Cloud Run private, IAP)
+gcloud auth print-identity-token
+# → eyJhbGciOiJSUzI1NiIs...   (JWT; dekodierbar auf jwt.io: iss, sub, email, aud, exp)
+```
+
+Im Lab „Observe and Secure“ siehst du beide direkt nebeneinander:
+
+```bash
+# Google-API (Vertex AI) → ACCESS Token
+curl -s -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  "https://${LOCATION}-aiplatform.googleapis.com/v1/projects/${PROJECT_ID}/locations/${LOCATION}/reasoningEngines"
+
+# Cloud-Run-Dienst (Agent Card abrufen) → IDENTITY Token
+export TOKEN=$(gcloud auth print-identity-token)
+curl -s -H "Authorization: Bearer ${TOKEN}" \
+  "${SF_URL}/a2a/app/.well-known/agent-card.json" -o salesforce_card.json
+```
+
+Merkregel: **Google-API → Access Token. Cloud Run / IAP → ID-Token.** Ein Access Token an einen privaten Cloud-Run-Dienst ergibt 401, ein ID-Token an eine Google-API ergibt 401.
+
+---
+
+## 2. Entwickler → GCP: `gcloud auth login` vs. Application Default Credentials (ADC)
+
+### 2.1 Zwei getrennte Credential-Speicher
+
+Das ist die Stolperfalle Nr. 1 in allen Labs („Deploy failing with an auth error?“):
+
+| Befehl | Wofür | Wo gespeichert |
+|---|---|---|
+| `gcloud auth login` | **nur die CLI** (`gcloud`, `gsutil`, `bq`) | gcloud-Credential-Store (`~/.config/gcloud/credentials.db`) |
+| `gcloud auth application-default login` | **Client-Bibliotheken** (google-auth in Python, agents-cli, ADK, Vertex-SDK) | `~/.config/gcloud/application_default_credentials.json` |
+
+Der Lab-Text sagt es wörtlich: *„`gcloud auth login` only authenticates the CLI, but the agents-cli deploys use Python client libraries, which need ADC.“* Fehlermeldung, wenn ADC fehlt/abgelaufen ist: **`service account info is missing 'email' field`** → `gcloud auth application-default login`. Fehlermeldung, wenn die CLI-Creds fehlen: *„no active account“* / reauthentication → `gcloud auth login`.
+
+### 2.2 Die ADC-Auflösungskette (warum derselbe Code lokal *und* deployed läuft)
+
+`google.auth.default()` sucht in dieser Reihenfolge:
+
+1. Umgebungsvariable `GOOGLE_APPLICATION_CREDENTIALS` (Pfad zu einer Service-Account-Keydatei – im Kurs bewusst **nicht** verwendet: „no key files“)
+2. Die ADC-Datei aus `gcloud auth application-default login` → **deine User-Identität** (lokal, Cloud Shell)
+3. Der **Metadata-Server** der Laufzeitumgebung → die **angehängte Service-Account-Identität** (Cloud Run, GKE, Compute Engine, Agent Runtime)
+
+Deshalb steht im Lab: *„Inside a deployed agent, ADC provides that token as the agent's runtime service account automatically. Locally, ADC resolves to your user credentials. The same code works in both places.“* – und deshalb funktioniert im Playground (Task 5) alles mit deinen Rechten, während nach dem Deploy (Task 6) plötzlich 403 kommt: **die Identität hat gewechselt, die IAM-Grants nicht.**
+
+```python
+import google.auth
+from google.auth.transport.requests import Request
+
+# Gibt lokal deine User-Creds zurück, in Cloud Run die des Service Accounts.
+creds, project_id = google.auth.default(
+    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+)
+creds.refresh(Request())        # holt bzw. erneuert ein Access Token
+print(creds.token[:12], "…", project_id)   # ya29.… qwiklabs-gcp-…
+```
+
+### 2.3 Quota-Projekt: `X-Goog-User-Project`
+
+Wenn du mit **User-Credentials** eine API aufrufst, weiß Google nicht automatisch, welchem Projekt die Quota belastet werden soll. Deshalb der Header im Lab:
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "X-Goog-User-Project: ${PROJECT_ID}" \
+  "https://discoveryengine.googleapis.com/v1/projects/${PROJECT_ID}/…/dataStores?dataStoreId=code-manuals-datastore"
+```
+
+Für Client-Bibliotheken setzt man das einmalig: `gcloud auth application-default set-quota-project $PROJECT_ID`. Service Accounts brauchen das nicht – ihr Projekt ist implizit.
+
+### 2.4 Gemini-Aufrufe: Vertex AI vs. Developer API
+
+In jeder `.env` des Kurses steht:
+
+```bash
+GOOGLE_GENAI_USE_VERTEXAI=True     # Gemini über Vertex AI → Auth per ADC/IAM, kein API-Key
+GOOGLE_CLOUD_PROJECT=…
+GOOGLE_CLOUD_LOCATION=global
+```
+
+Alternative (nicht im Kurs): `GOOGLE_GENAI_USE_VERTEXAI=False` + `GOOGLE_API_KEY=…` → Gemini Developer API mit API-Key. Enterprise-Agenten laufen über Vertex AI, weil dann IAM, Audit-Logs und VPC-SC greifen.
+
+### 2.5 Sonderfall: Antigravity-CLI-Login
+
+`agy` → „Use a Google Cloud project“ → Link im Browser öffnen → Authorization Code kopieren und in das Terminal einfügen. Das ist der klassische **OAuth Authorization-Code-Flow für „installed apps“** (gleiches Prinzip wie `gcloud auth login --no-launch-browser`): Browser-Consent → einmaliger Code → CLI tauscht ihn gegen Access-/Refresh-Token.
+
+---
+
+## 3. Welche Identität hat ein Agent? – abhängig von der Runtime
+
+Das ist laut Lab „the single most important idea“: **Die Runtime bestimmt, als wer der Agent auftritt – und damit, wem du IAM-Rechte gibst.**
+
+| Runtime | Identität des Agents (Principal) | IAM-Member-String | Beispiel aus dem Kurs |
+|---|---|---|---|
+| **Lokal / Cloud Shell** (`agents-cli playground`, `adk web`) | dein User-Account via ADC | `user:student@qwiklabs.net` | Playground-Test in Task 5 |
+| **Agent Runtime** (Standard) | Reasoning-Engine-*Service Agent* des Projekts | `serviceAccount:service-PROJECT_NUMBER@gcp-sa-aiplatform-re.iam.gserviceaccount.com` | Root-Agent `code_assistant`, `github_agent` in Lab 1 |
+| **Agent Runtime mit Agent Identity** | dedizierter **SPIFFE-Principal** pro Agent | `principal://agents.global.org-ORG_ID.system.id.goog/resources/aiplatform/projects/PROJECT_NUMBER/locations/REGION/reasoningEngines/ENGINE_ID` | `github_agent` in Lab 2 |
+| **Cloud Run** | der dem Dienst angehängte Service Account (Default: Compute-SA) | `serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com` | `salesforce_agent`, `stackexchange_agent` |
+| **GKE** (Workload Identity) | der dem Pod zugeordnete Kubernetes-SA ↔ Google-SA | `serviceAccount:bq-agent-app@PROJECT_ID.iam.gserviceaccount.com` | `bq-agent` |
+
+### 3.1 Service Account vs. Service Agent
+
+- **Service Account** (SA): legst du selbst an, hängst ihn an Cloud Run/GKE an, gibst ihm Rollen. Kein Key nötig – die Runtime liefert Tokens über den Metadata-Server.
+- **Service Agent**: von Google verwaltet, wird pro Dienst und Projekt automatisch erzeugt (Muster `service-PROJECT_NUMBER@gcp-sa-<dienst>.iam.gserviceaccount.com`). Manchmal existiert er in neuen Projekten noch nicht – dann:
+
+```bash
+# Reasoning-Engine-Service-Agent (Agent Runtime) provisionieren
+gcloud beta services identity create --service=aiplatform.googleapis.com --project=${PROJECT_ID}
+
+# Discovery-Engine-Service-Agent (Agent Registry / Gemini Enterprise) provisionieren
+gcloud beta services identity create --service=discoveryengine.googleapis.com --project=${PROJECT_ID}
+```
+
+### 3.2 Die Identität eines laufenden Dienstes auslesen
+
+```bash
+# Cloud Run: welcher SA hängt am Dienst?
+export SF_SA=$(gcloud run services describe salesforce-agent --region ${REGION} \
+  --format='value(spec.template.spec.serviceAccountName)')
+
+# Welche Rollen hat ein Principal im Projekt?
+gcloud projects get-iam-policy ${PROJECT_ID} \
+  --flatten="bindings[].members" \
+  --filter="bindings.members:serviceAccount:${SF_SA}" \
+  --format="value(bindings.role)"
+```
+
+### 3.3 IAM-Member-Präfixe (Gemini hat dich im Chat extra darauf hingewiesen)
+
+| Präfix | Bedeutung |
+|---|---|
+| `user:` | Google-Konto einer Person |
+| `serviceAccount:` | Service Account **oder** Service Agent |
+| `principal://` | Workload-Identity- / SPIFFE-Principal (Agent Identity) |
+| `group:`, `domain:` | Gruppen / Workspace-Domain |
+| `allUsers` | jeder im Internet, auch ohne Login (→ „public“) |
+| `allAuthenticatedUsers` | jeder mit *irgendeinem* Google-Konto |
+
+---
+
+## 4. Agent → Agent über A2A: gleiches Protokoll, andere Credentials je Ziel
+
+Jeder A2A-Aufruf hat zwei Schritte: **(1) Agent Card auflösen** (`/.well-known/agent-card.json` oder `/a2a/app/.well-known/agent-card.json`), **(2) JSON-RPC-Message senden**. Welches Credential der Aufrufer mitschicken muss, hängt vom **Ziel** ab:
+
+| Ziel-Runtime | Auth-Anforderung | Credential des Aufrufers | Nötige Rolle für den Aufrufer |
+|---|---|---|---|
+| **Agent Runtime** (github_agent, root) | *immer* authentifiziert | Google OAuth **Access Token** (via ADC) | `roles/aiplatform.user` (enthält `aiplatform.reasoningEngines.query`) |
+| **Cloud Run public** (stackexchange, salesforce im Kurs) | keine | keins | `allUsers` hat `roles/run.invoker` |
+| **Cloud Run private** (Produktions-Alternative) | Google-Identität | **ID-Token** mit `aud = Service-URL` | `roles/run.invoker` für den Aufrufer-SA |
+| **GKE public LoadBalancer** (bq-agent) | keine | keins | – |
+| **Agent Gateway / Agent Identity mode** (Produktions-Fleet) | SPIFFE X.509 + mTLS + DPoP | Agent-Identität | `roles/iap.egressor` auf dem Ziel im Agent Registry, optional CEL-Bedingungen |
+
+### 4.1 Ziel Agent Runtime: ADC-Access-Token in den httpx-Client hängen
+
+Das ist genau die `auth.py`-TODO aus Lab 1. `before_request()` erneuert das Token bei Bedarf **und** schreibt den `Authorization`-Header:
+
+```python
+# app/auth.py – Root-Agent authentifiziert sich gegenüber Agent Runtime
+import httpx
+import google.auth
+from google.auth.transport.requests import Request
+
+_SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
+
+
+class GoogleADCAuth(httpx.Auth):
+    """httpx-Auth-Hook: hängt an jede Anfrage das ADC-OAuth2-Access-Token."""
+
+    def __init__(self) -> None:
+        self._creds, _ = google.auth.default(scopes=_SCOPES)
+        self._request = Request()
+
+    def _apply(self, headers: dict[str, str], method: str, url: str) -> None:
+        # Refresht die Credentials falls abgelaufen und setzt
+        # headers["Authorization"] = "Bearer ya29...."
+        self._creds.before_request(self._request, method, url, headers)
+
+    def sync_auth_flow(self, request: httpx.Request):
+        headers = dict(request.headers)
+        self._apply(headers, request.method, str(request.url))
+        request.headers.update(headers)
+        yield request
+
+    async def async_auth_flow(self, request: httpx.Request):
+        headers = dict(request.headers)
+        self._apply(headers, request.method, str(request.url))
+        request.headers.update(headers)
+        yield request
+
+
+def google_authed_client() -> httpx.AsyncClient:
+    return httpx.AsyncClient(auth=GoogleADCAuth(), timeout=120.0)
+```
+
+Und die Verwendung im Root-Agent (`agent.py`):
+
+```python
+from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
+
+# Ziel läuft auf Agent Runtime → Access Token nötig, ADK-A2A-Extension erlaubt
+github_agent = RemoteA2aAgent(
+    name="github_agent",
+    description="GitHub specialist (repos, issues, PRs) via MCP",
+    agent_card=GITHUB_AGENT_URL,
+    httpx_client=google_authed_client(),      # ← Credential
+    use_legacy=False,                         # ← ADK-Extension (nur ADK↔ADK)
+    after_agent_callback=capture_response_to_state("github_findings"),
+)
+
+# Ziel ist ein public Cloud-Run-Dienst (LangGraph, a2a-sdk) → kein Token, Standard-A2A
+stackexchange_agent = CleanQueryRemoteA2aAgent(
+    name="stackexchange_agent",
+    description="Stack Exchange search",
+    agent_card=STACKEXCHANGE_AGENT_URL,       # kein httpx_client → unauthenticated
+    after_agent_callback=capture_response_to_state("stackexchange_findings"),
+)
+```
+
+Dann die **Autorisierung** – nach dem Deploy ruft der Root als Service Agent auf, nicht als du:
+
+```bash
+export PROJECT_NUMBER=$(gcloud projects describe ${PROJECT_ID} --format='value(projectNumber)')
+RE_SA="service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com"
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member="serviceAccount:${RE_SA}" --role="roles/aiplatform.user"        # GitHub-Agent aufrufen, Skill laden
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member="serviceAccount:${RE_SA}" --role="roles/discoveryengine.viewer" # Datastore abfragen
+```
+
+### 4.2 Ziel Cloud Run: public vs. private
+
+```bash
+# Variante "public" (im Kurs): jeder darf aufrufen → Root braucht kein Token
+gcloud run deploy stackexchange-agent --image … --allow-unauthenticated
+# oder nachträglich:
+gcloud run services add-iam-policy-binding salesforce-agent \
+  --region=${REGION} --member=allUsers --role=roles/run.invoker
+# Achtung (Lab-Hinweis): ein Redeploy mit agents-cli setzt die IAM-Policy zurück → Grant wiederholen.
+
+# Variante "private" (Produktion): nur bestimmte Principals
+gcloud run services add-iam-policy-binding salesforce-agent \
+  --region=${REGION} \
+  --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
+  --role=roles/run.invoker
+```
+
+Bei einem privaten Dienst muss der Aufrufer ein **ID-Token mit passender Audience** senden. Auf einer Google-Runtime (SA-Identität) geht das so:
+
+```python
+import google.auth.transport.requests
+import google.oauth2.id_token
+
+audience = "https://salesforce-agent-abc123-uc.a.run.app"   # exakt die Service-URL
+id_token = google.oauth2.id_token.fetch_id_token(
+    google.auth.transport.requests.Request(), audience
+)
+headers = {"Authorization": f"Bearer {id_token}"}
+```
+
+Lokal mit User-Credentials nimmst du stattdessen `gcloud auth print-identity-token` (Cloud Run akzeptiert das gcloud-User-ID-Token für Tests). Hinweis aus Lab 2: **IAP** vor einem Cloud-Run-Dienst blockiert dieses ID-Token („puts a Google sign-in in front of the service“) → für `agents-cli run` musste IAP mit `--no-iap` abgeschaltet werden.
+
+### 4.3 Identity Propagation ≠ Authentifizierung: die `user_id`-Weitergabe
+
+Ein unauthentifizierter A2A-Call transportiert **keine Nutzeridentität**. Damit Memory Bank pro Nutzer funktioniert, schickt der Root die `user_id` explizit als A2A-Metadaten mit, und der Spezialist liest sie aus:
+
+```python
+# Root (code-assistant/app/app_utils/a2a.py)
+def user_id_meta_provider(ctx) -> dict:
+    return {"user_id": ctx.user_id}     # wird in die A2A-Message-Metadaten geschrieben
+
+# Spezialist (salesforce-agent/app/app_utils/a2a.py)
+def _user_scoped_request_converter(request, part_converter):
+    run_request = convert_a2a_request_to_agent_run_request(request, part_converter)
+    # user_id aus den Metadaten übernehmen, sonst Fallback A2A_USER_{context_id}
+    …
+    return run_request
+```
+
+Wichtig für dein Verständnis: Das ist **Vertrauen, kein Beweis**. Der Spezialist glaubt dem Root die `user_id`. In einer echten Zero-Trust-Architektur würdest du das über ein signiertes ID-Token / Agent Gateway absichern.
+
+### 4.4 Agent Gateway: die „schwere“ Produktionsvariante
+
+Das Lab beschreibt sie nur konzeptionell:
+
+- Jeder Agent erhält eine **SPIFFE-X.509-Identität**; Verbindungen laufen über **mutual TLS**, Anfragen tragen **DPoP**-Beweise.
+- **Source-Agents sind Principals, Target-Services sind Agent-Registry-Ressourcen.**
+- Eine Allow-Policy gibt `roles/iap.egressor` auf dem Ziel, optional eingeschränkt mit **CEL-Bedingungen** (z. B. nur bestimmte Skills, nur bestimmte Zeiten).
+- Das Gateway prüft *vor* dem Ziel: „Darf Agent A überhaupt mit Agent B reden?“ – das ist die Fleet-Governance-Ebene, die das einfache Service-Account-Modell nicht hat.
+
+---
+
+## 5. Agent → externe Tools, Variante A: Secrets im Agent (Lab 1, „so nicht in Produktion“)
+
+### 5.1 GitHub: Personal Access Token als Bearer-Header an den MCP-Server
+
+Der GitHub-MCP-Server (`https://api.githubcopilot.com/mcp/`) erwartet auf **jedem** Tool-Call einen Bearer-Header. Ein *classic* PAT mit den Scopes `repo` und `read:org` reicht, weil nur Lese-Tools genutzt werden.
+
+```python
+# github-agent/app/agent.py (Lab 1)
+from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
+
+GITHUB_TOKEN = os.environ["GITHUB_PERSONAL_ACCESS_TOKEN"]   # ← Secret in .env
+GITHUB_TOOL_FILTER = ["search_repositories", "search_issues", "list_issues"]
+
+github_mcp_toolset = McpToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url=GITHUB_MCP_URL,
+        headers={"Authorization": f"Bearer {GITHUB_TOKEN}"},   # ← hart verdrahtet
+    ),
+    tool_filter=GITHUB_TOOL_FILTER,   # Least Privilege auch auf Tool-Ebene
+)
+```
+
+Der Lab-Text weist selbst darauf hin: GitHub Apps oder OAuth 2.0 wären sicherer als ein PAT.
+
+### 5.2 Salesforce: OAuth 2.0 Client-Credentials-Flow (2-legged, app-only)
+
+**Setup auf Salesforce-Seite** (External Client App – ersetzt die klassische Connected App):
+
+1. App Manager → *New External Client App* → **Enable OAuth**
+2. Callback URL `https://login.salesforce.com/services/oauth2/callback` (wird bei 2LO nicht benutzt, ist aber Pflichtfeld)
+3. Scopes: *Manage user data via APIs (api)* und *Perform requests at any time (refresh_token, offline_access)*
+4. Flow Enablement: **Enable Client Credentials Flow**
+5. In den *Policies*: erneut Client Credentials aktivieren, **Run-As User** setzen (die App handelt mit *dessen* Rechten!), IP Relaxation
+6. Consumer Key (= `client_id`) und Consumer Secret (= `client_secret`) auslesen, dazu die **My Domain**-Host-URL
+
+**Der Flow selbst** ist ein einziger POST:
+
+```python
+# salesforce-agent/app/salesforce_client.py (Lab 1) – authenticate()
+def authenticate(self) -> tuple[str, str]:
+    """Client-Credentials-Grant: App-Token ohne Endnutzer."""
+    resp = requests.post(
+        f"https://{self.domain}/services/oauth2/token",
+        data={
+            "grant_type": "client_credentials",
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+        },
+        timeout=_TIMEOUT_SECONDS,
+    )
+    resp.raise_for_status()
+    body = resp.json()
+    # Salesforce liefert zusätzlich instance_url (REST-Basis) mit
+    return body["access_token"], body["instance_url"]
+```
+
+Danach jede API-Anfrage mit `Authorization: Bearer <access_token>`. In `tools.py` wurde das Token im Session-State gecacht, bei Ablauf erneuert und bei `401` neu geholt – **alles Auth-Logik, die im Agent lebt**.
+
+### 5.3 Warum Variante A ein Problem ist
+
+- Das Secret reist mit dem Deployment (`--update-env-vars` liest die `.env` ein) → sichtbar für jeden, der die Konfiguration lesen darf.
+- Rotation = jede `.env` editieren **und** jeden Agent neu deployen.
+- Keine zentrale Kontrolle, *welcher* Agent *welches* Secret nutzen darf.
+
+---
+
+## 6. Agent → externe Tools, Variante B: Agent Identity Auth Manager (Lab 2)
+
+### 6.1 Zwei Konzepte sauber trennen
+
+| Konzept | Frage | Was es ist |
+|---|---|---|
+| **Agent Identity** | *Wer ist der Agent?* | Google-verwaltete Identität nach dem **SPIFFE**-Standard. Auf Agent Runtime ein dedizierter SPIFFE-Principal, auf Cloud Run der Service Account. Der Agent authentifiziert sich **als er selbst**, nicht mit einem geteilten Secret. |
+| **Auth Manager** | *Was darf der Agent lesen?* | Ein Google-verwalteter Credential-Tresor. Du legst pro externem Dienst einen **Auth Provider** an (API-Key, 2LO, 3LO). Zugriff auf jeden Provider ist per **IAM** geregelt. |
+
+Zur Laufzeit treffen sich beide im ADK: Der Agent ruft ein Tool → ADK fragt den Auth Manager (mit der Agent-Identität) nach dem Credential → Auth Manager liefert es (und erneuert OAuth-Tokens selbst) → ADK hängt es an die Anfrage. **Dein Code sieht das Roh-Secret nie.**
+
+### 6.2 Benötigte APIs und Rollen
+
+```bash
+gcloud services enable \
+  iam.googleapis.com \
+  agentidentity.googleapis.com \              # der Auth Manager
+  agentidentitycredentials.googleapis.com \   # Credential-Ausgabe an Agent-Identitäten
+  iamcredentials.googleapis.com \             # Token-Erzeugung
+  sts.googleapis.com \                        # Security Token Service: SPIFFE → Google-Token-Exchange (Workload Identity Federation)
+  aiplatform.googleapis.com
+```
+
+Rollen: **Admin** braucht `roles/agentidentity.admin` (Provider anlegen) + Project IAM Admin; **Agent** braucht `roles/agentidentity.user` **auf dem Auth Provider** und `roles/serviceusage.serviceUsageConsumer` im Projekt (um die API überhaupt aufrufen zu dürfen).
+
+### 6.3 Die drei Provider-Typen anlegen
+
+```bash
+# (a) API-Key-Provider – statisches Token, kein Endnutzer (GitHub MCP)
+read -rs GITHUB_PAT && echo        # Token nicht in der Shell-History
+gcloud alpha agent-identity auth-providers create github-mcp-auth-provider \
+  --project=${PROJECT_ID} --location=${LOCATION} \
+  --api-key="${GITHUB_PAT}"
+
+# (b) 2-legged-OAuth-Provider – Client-Credentials-Grant (Salesforce)
+read -rs SF_CLIENT_SECRET && echo
+gcloud alpha agent-identity auth-providers create salesforce-2lo-auth-provider \
+  --project=${PROJECT_ID} --location=${LOCATION} \
+  --two-legged-oauth-client-id="${SF_CLIENT_ID}" \
+  --two-legged-oauth-client-secret="${SF_CLIENT_SECRET}" \
+  --two-legged-oauth-token-url="https://${SF_DOMAIN}/services/oauth2/token"
+  # (ältere `connectors create`-Variante hieß --two-legged-oauth-token-endpoint)
+
+# (c) 3-legged-OAuth-Provider – user-delegiert, mit Consent (nicht im Lab, zur Vollständigkeit)
+gcloud alpha agent-identity auth-providers create jira-3lo-auth-provider \
+  --project=${PROJECT_ID} --location=${LOCATION} \
+  --three-legged-oauth-client-id="…" \
+  --three-legged-oauth-client-secret="…" \
+  --three-legged-oauth-authorization-url="https://auth.atlassian.com/authorize" \
+  --three-legged-oauth-token-url="https://auth.atlassian.com/oauth/token" \
+  --three-legged-oauth-enable-pkce
+
+gcloud alpha agent-identity auth-providers list --project=${PROJECT_ID} --location=${LOCATION}
+# → state: ENABLED
+
+export GITHUB_AUTH_PROVIDER_URI="projects/${PROJECT_ID}/locations/${LOCATION}/authProviders/github-mcp-auth-provider"
+```
+
+Entscheidungsregel: **API-Key**, wenn der Dienst nur ein statisches Token kennt. **2LO**, wenn die App als sie selbst handelt (kein Nutzer). **3LO**, wenn der Agent *im Namen eines Nutzers* handeln soll (dessen Jira-Tickets, dessen Repos).
+
+### 6.4 Zugriff gewähren – je Runtime ein anderer Member-String
+
+```bash
+# Agent Runtime mit Agent Identity → SPIFFE-Principal
+export GITHUB_AGENT_IDENTITY="principal://agents.global.org-${ORGANIZATION_ID}.system.id.goog/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${GITHUB_ENGINE_ID}"
+gcloud alpha agent-identity auth-providers add-iam-policy-binding github-mcp-auth-provider \
+  --project=${PROJECT_ID} --location=${LOCATION} \
+  --role="roles/agentidentity.user" \
+  --member="${GITHUB_AGENT_IDENTITY}"
+
+# Cloud Run → Service Account
+gcloud alpha agent-identity auth-providers add-iam-policy-binding salesforce-2lo-auth-provider \
+  --project=${PROJECT_ID} --location=${LOCATION} \
+  --role="roles/agentidentity.user" \
+  --member="serviceAccount:${SF_SA}"
+
+# Lokale Entwicklung → dein User
+gcloud alpha agent-identity auth-providers add-iam-policy-binding salesforce-2lo-auth-provider \
+  --project=${PROJECT_ID} --location=${LOCATION} \
+  --role="roles/agentidentity.user" \
+  --member="user:${EMAIL_ADDRESS}"
+```
+
+Gleiche Rolle, drei Member-Formen – das ist die Kernaussage von Lab 2.
+
+### 6.5 ADK-Code, Zustellweg 1: **MCP-Tool → Header** (GitHub)
+
+Bei einem entfernten MCP-Server bekommt dein Code das Credential *nicht* als Funktionsargument – du musst die ausgehende Anfrage abfangen und den Header selbst setzen. Drei Bausteine:
+
+```python
+# github-agent/agent/agent.py (Lab 2, TODOs gelöst)
+from google.adk.auth.credential_manager import CredentialManager
+from google.adk.integrations.agent_identity import GcpAuthProvider, GcpAuthProviderScheme
+from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
+
+GITHUB_AUTH_PROVIDER_URI = os.environ["GITHUB_AUTH_PROVIDER_URI"]
+GITHUB_TOOL_FILTER = ["search_repositories", "search_issues", "list_issues"]
+
+# TODO 1 – einmalig beim Import: ADK lernt, wie es mit dem Auth Manager spricht
+CredentialManager.register_auth_provider(GcpAuthProvider())
+
+# TODO 2 – *welcher* Provider soll vor dem Tool-Call aufgelöst werden?
+github_auth_scheme = GcpAuthProviderScheme(name=GITHUB_AUTH_PROVIDER_URI)
+
+
+def github_mcp_toolset() -> McpToolset:
+    toolset = None
+
+    def github_header_provider(readonly_ctx) -> dict[str, str]:
+        """Brücke: aufgelöstes Credential → Authorization-Header (kurz vor jedem MCP-Request)."""
+        if not toolset or not toolset.get_auth_config():
+            return {}
+        auth_config = toolset.get_auth_config()
+        cred = None
+        if readonly_ctx and hasattr(readonly_ctx, "get_credential"):
+            cred = readonly_ctx.get_credential(auth_config.credential_key)
+        if not cred:
+            cred = auth_config.exchanged_auth_credential
+        if not cred or not cred.http:
+            return {}
+        token = None
+        if cred.http.credentials and cred.http.credentials.token:
+            token = cred.http.credentials.token
+        elif cred.http.additional_headers:
+            token = (cred.http.additional_headers.get("X-API-Key")
+                     or cred.http.additional_headers.get("X-GOOG-API-KEY"))
+        return {"Authorization": f"Bearer {token}"} if token else {}
+
+    # TODO 3 – Toolset ohne PAT, ohne hart verdrahteten Header
+    toolset = McpToolset(
+        connection_params=StreamableHTTPConnectionParams(url=GITHUB_MCP_URL),
+        auth_scheme=github_auth_scheme,
+        tool_filter=GITHUB_TOOL_FILTER,
+        header_provider=github_header_provider,
+    )
+    return toolset
+```
+
+Ablauf pro Tool-Call: ADK sieht `auth_scheme` → tauscht die Agent-Identität beim Auth Manager gegen den API-Key → legt ihn in `toolset.auth_config` → ruft `header_provider` → MCP-Server erhält einen ganz normalen Bearer-Header.
+
+### 6.6 ADK-Code, Zustellweg 2: **Function-Tool → injiziertes Argument** (Salesforce)
+
+Bei einer eigenen Python-Funktion kann das ADK das Credential **direkt als Parameter** übergeben – keine Header-Klempnerei:
+
+```python
+# salesforce-agent/app/tools.py (Lab 2, TODOs gelöst)
+from google.adk.auth.auth_credential import AuthCredential
+from google.adk.auth.auth_tool import AuthConfig
+from google.adk.auth.credential_manager import CredentialManager
+from google.adk.integrations.agent_identity import GcpAuthProvider, GcpAuthProviderScheme
+from google.adk.tools.authenticated_function_tool import AuthenticatedFunctionTool
+
+SALESFORCE_AUTH_PROVIDER_URI = os.environ["SALESFORCE_AUTH_PROVIDER_URI"]
+
+# TODO 1 – Provider registrieren + AuthConfig, die den 2LO-Provider benennt (kein Scope bei Salesforce)
+CredentialManager.register_auth_provider(GcpAuthProvider())
+salesforce_auth_config = AuthConfig(
+    auth_scheme=GcpAuthProviderScheme(name=SALESFORCE_AUTH_PROVIDER_URI)
+)
+
+
+def _extract_token(credential: AuthCredential) -> str | None:
+    """Holt das Access Token aus dem vom Auth Manager aufgelösten Credential."""
+    if not credential:
+        return None
+    if credential.oauth2 and credential.oauth2.access_token:        # ← 2LO-Fall
+        return credential.oauth2.access_token
+    if credential.http and credential.http.credentials and credential.http.credentials.token:
+        return credential.http.credentials.token
+    if credential.http and credential.http.additional_headers:
+        h = credential.http.additional_headers
+        return (h.get("X-API-Key") or h.get("X-GOOG-API-KEY")
+                or h.get("Authorization", "").replace("Bearer ", "") or None)
+    return None
+
+
+def build_search_salesforce(client: SalesforceClient):
+    # TODO 2 – `credential` als Parameter: das Modell sieht nur `query`, ADK injiziert `credential`
+    def search_salesforce(query: str, credential: AuthCredential) -> dict:
+        """Searches the company's Salesforce document library (Files)."""
+        access_token = _extract_token(credential)
+        if not access_token:
+            return {"status": "error",
+                    "error_message": "Salesforce auth failed: no token from Auth Manager."}
+        try:
+            documents = client.search_files(access_token, query)
+        except Exception as e:
+            return {"status": "error", "error_message": f"Salesforce search failed: {e}"}
+        return {"status": "success", "query": query, "data": documents}
+
+    # TODO 3 – Wrapper, der vor jedem Call den Provider auflöst und das Credential injiziert
+    return AuthenticatedFunctionTool(func=search_salesforce, auth_config=salesforce_auth_config)
+```
+
+Und der Client verliert seine Auth-Logik komplett:
+
+```python
+class SalesforceClient:
+    def __init__(self, domain: str, api_version: str | None = None):
+        self.domain = domain.replace("https://", "").replace("http://", "").strip("/")
+        self.api_version = api_version or _DEFAULT_API_VERSION
+        # Auth Manager liefert nur das Token, nicht Salesforce' instance_url →
+        # REST-Basis aus der My Domain ableiten
+        self.instance_url = f"https://{self.domain}"
+
+    def search_files(self, access_token: str, query: str) -> list:
+        resp = requests.get(
+            f"{self.instance_url}/services/data/{self.api_version}/search",
+            headers={"Authorization": f"Bearer {access_token}"},
+            params={"q": _build_sosl(query)},
+            timeout=_TIMEOUT_SECONDS,
+        )
+        …
+```
+
+`.env` danach: `SALESFORCE_CLIENT_ID` und `SALESFORCE_CLIENT_SECRET` **gelöscht**, `SALESFORCE_DOMAIN` bleibt, `SALESFORCE_AUTH_PROVIDER_URI` kommt dazu. Dependencies: `google-adk[gcp,agent-identity]`.
+
+### 6.7 Der vollständige Ablauf eines Salesforce-Tool-Calls (aus dem Lab, als Sequenz)
+
+1. Import: `register_auth_provider(GcpAuthProvider())` + `salesforce_auth_config`
+2. Modell ruft `search_salesforce(query="…")` – nur `query`
+3. `AuthenticatedFunctionTool` fängt ab → ADK fragt Auth Manager, **authentifiziert als Cloud-Run-SA** (ADC → Metadata-Server)
+4. Auth Manager führt den Client-Credentials-Grant gegen `https://<SF_DOMAIN>/services/oauth2/token` aus (bzw. liefert das gecachte, noch gültige Token) → `AuthCredential` mit `oauth2.access_token`
+5. ADK injiziert `credential` in deine Funktion – **das Modell sieht das Token nie**
+6. Deine Funktion ruft Salesforce mit `Authorization: Bearer …`
+
+Vergleich der beiden Zustellwege: **Header für MCP-Tools, Argument für Function-Tools** – derselbe Provider-Mechanismus dahinter.
+
+### 6.8 Deploy-Unterschiede
+
+| | GitHub-Agent (Agent Runtime) | Salesforce-Agent (Cloud Run) |
+|---|---|---|
+| Identität aktivieren | `deploy_with_identity.sh` (zwei API-Calls: Engine mit Identität anlegen → SPIFFE-Principal provisionieren → dann Code deployen) | nichts extra – Cloud Run hat immer einen SA |
+| Was das Deploy ausgibt | *Effective identity* (bare, ohne `principal://`) + Reasoning Engine ID | Service-URL + Service Account |
+| IAM-Member | `principal://…` | `serviceAccount:…` |
+| Test | `agents-cli run --url $GITHUB_AGENT_URL --mode a2a --app-name agent "…"` | `agents-cli run --url $SF_URL --mode a2a "…"` (IAP vorher aus) |
+
+Hinweis aus dem Lab: `agents-cli deploy --agent-identity` scheiterte zum Lab-Zeitpunkt, weil Identitäts-Provisionierung und Code-Deploy in einem Request kombiniert wurden („failed to start and cannot serve traffic“) – daher das Skript mit zwei getrennten Requests.
+
+### 6.9 Troubleshooting
+
+| Symptom | Ursache | Fix |
+|---|---|---|
+| Agent antwortet leer, Log zeigt `CONNECTOR_AUTH_TOKEN_EXCHANGE_ERROR` | Auth Manager konnte den Grant gegen Salesforce nicht ausführen | Client-ID/Secret/Token-URL im Provider prüfen; Run-As-User darf die Files lesen? |
+| 403 kurz nach dem IAM-Grant | IAM-Propagation (1–2 min) | warten, erneut |
+| Agent kann Auth Manager gar nicht erreichen | SA fehlt `roles/serviceusage.serviceUsageConsumer` | Rolle im Projekt vergeben |
+| Nach Entfernen des Bindings: Permission Error statt Daten | erwartet – beweist, dass das Secret nicht mehr im Agent liegt | – |
+
+---
+
+## 7. Plattform-Dienste, die *deine* Agenten aufrufen (Service Agents als Aufrufer)
+
+Auth geht nicht nur *vom* Agent aus – auch Google-Dienste müssen sich bei deinen Agenten authentifizieren:
+
+| Google-Dienst | Will was tun | Braucht |
+|---|---|---|
+| **Discovery Engine** (Agent Registry, Gemini Enterprise) | Agent Card des Cloud-Run-Agents lesen, um ihn zu registrieren | `roles/run.invoker` auf dem Cloud-Run-Dienst für `service-PROJECT_NUMBER@gcp-sa-discoveryengine.iam.gserviceaccount.com` |
+| **Telemetry / Cloud Trace** | Traces *vom* Agent annehmen | der Cloud-Run-SA braucht `roles/telemetry.tracesWriter`; Agent-Runtime-Agents exportieren über eingebaute Telemetrie – kein Grant nötig |
+| **Gemini Enterprise** | Endnutzer zum Agent lassen | Identity Provider konfigurieren (Google Identity), Nutzer erhält Rolle *Agent User* auf dem Agent |
+
+```bash
+gcloud run services add-iam-policy-binding salesforce-agent \
+  --project=${PROJECT_ID} --region=${LOCATION} \
+  --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-discoveryengine.iam.gserviceaccount.com" \
+  --role="roles/run.invoker"
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+  --role="roles/telemetry.tracesWriter"
+```
+
+### 7.1 Least Privilege prüfen und reparieren (Lab 3)
+
+```bash
+# Über-Berechtigung simulieren
+gcloud projects add-iam-policy-binding ${PROJECT_ID} --member="serviceAccount:${SF_SA}" --role="roles/editor" --condition=None
+# Finden: SCC AI Protection → "Agents with excessive permissions"; Policy Analyzer (IAM & Admin) → Principal = SF_SA
+# Reparieren
+gcloud projects remove-iam-policy-binding ${PROJECT_ID} --member="serviceAccount:${SF_SA}" --role="roles/editor"
+```
+
+Was ein Cloud-Run-Agent im Kurs *wirklich* braucht: `roles/aiplatform.user`, `roles/telemetry.tracesWriter`, `roles/logging.logWriter`, `roles/cloudtrace.agent`. IAM Recommender schlägt in Produktion nach ~90 Tagen Nutzung engere Rollen vor; Policy Analyzer liest aus Cloud Asset Inventory (bis zu 1 min Verzögerung).
+
+---
+
+## 8. Fehlerbilder-Spickzettel
+
+| Fehlermeldung / Symptom | Bedeutet | Fix |
+|---|---|---|
+| `service account info is missing 'email' field` | ADC fehlt oder abgelaufen | `gcloud auth application-default login` |
+| „no active account“ / reauth prompt | gcloud-CLI-Creds fehlen | `gcloud auth login` |
+| **401 Unauthorized** | kein/falsches Token (Access statt ID oder umgekehrt) | richtigen Token-Typ für das Ziel |
+| **403 Permission Denied** | Token gültig, IAM-Grant fehlt (oft: lokal ging es, deployed nicht) | Rolle für die *Runtime-Identität* vergeben |
+| 403 beim Datastore-Import direkt nach Anlage | Ressource noch nicht provisioniert | 10 s warten |
+| `Service account service-…@gcp-sa-aiplatform-re… does not exist` | Service Agent noch nicht erzeugt | `gcloud beta services identity create --service=aiplatform.googleapis.com` |
+| Cloud Run nach Redeploy wieder 403/401 | IAM-Policy wurde zurückgesetzt | `allUsers`/`run.invoker` erneut binden |
+| `agents-cli run` erreicht Cloud Run nicht | IAP davor | `gcloud run services update … --no-iap` |
+| `CONNECTOR_AUTH_TOKEN_EXCHANGE_ERROR` | 2LO-Grant beim Auth Manager fehlgeschlagen | Provider-Werte / Run-As-User prüfen |
+| `Regional Access Boundary … Gaia id not found` (Cloud Shell) | kosmetisch bei Qwiklabs-Konten | ggf. ADC neu |
+
+---
+
+## 9. Glossar (kurz)
+
+- **ADC** – Application Default Credentials; Auflösungskette, mit der Google-Client-Bibliotheken ohne Codeänderung lokal (User) und deployed (SA) Credentials finden.
+- **Access Token** – opakes OAuth-2.0-Token mit Scopes für Google-APIs, ~1 h gültig.
+- **ID-Token** – OIDC-JWT, beweist Identität gegenüber genau einer Audience.
+- **Service Account / Service Agent** – von dir angelegte bzw. Google-verwaltete nicht-menschliche Identität.
+- **SPIFFE / SVID** – Standard für Workload-Identitäten (X.509- oder JWT-SVIDs); Basis von Agent Identity.
+- **STS / Workload Identity Federation** – Token-Exchange, mit dem eine externe/Workload-Identität gegen ein Google-Token getauscht wird (`sts.googleapis.com`).
+- **2LO / 3LO** – 2-legged (Client Credentials, app-only) vs. 3-legged (Authorization Code, im Namen eines Nutzers) OAuth.
+- **PAT** – Personal Access Token (GitHub); technisch ein statisches Bearer-Secret.
+- **Auth Provider** – Ressource im Agent Identity Auth Manager, die ein API-Key-/2LO-/3LO-Credential kapselt; Zugriff per `roles/agentidentity.user`.
+- **A2A** – Agent2Agent-Protokoll (Agent Card + JSON-RPC); Auth ist nicht Teil des Protokolls, sondern der Transportebene/des Ziels.
+- **IAP** – Identity-Aware Proxy; setzt Google-Login vor einen Dienst.
+- **DPoP** – Demonstrating Proof of Possession; bindet ein Token an einen Client-Schlüssel.
+
+
+---
+
+<br>
+
+# AI for Software Engineering (SDLC)
+
 
 # Phase 0 · The map
 
