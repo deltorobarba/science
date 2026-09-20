@@ -8,6 +8,19 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
+Study and research notes on quantum theory.
+
+- [I. Heisenberg-Weyl](#i-heisenberg-weyl)
+- [II. Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra](#ii-tensor-algebra-tv-as-basis-for-exterior-symmetric-clifford-and-weyl-algebra)
+- [III. Quantum Dynamics](#iii-quantum-dynamics)
+- [IV. Chaos, Scrambling and OTOCs](#iv-chaos-scrambling-and-otocs)
+- [V. QML on Classical Data: Dequantization vs. Genuine Quantum Advantage](#v-qml-on-classical-data-dequantization-vs-genuine-quantum-advantage)
+- [VI. Quantum Learning: Learning from Quantum Experiments](#vi-quantum-learning-learning-from-quantum-experiments)
+<br>
+
+---
+
+<a id="i-heisenberg-weyl"></a>
 ## I. Heisenberg-Weyl
 
 > Every quantum gate is a time evolution $U = e^{-i\hat Ht}$. The physical and information-theoretic complexity of the gate is determined by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
@@ -115,6 +128,7 @@ The $T$ gate belongs to level $\mathcal{C}_3$. Operationally, any gate residing 
 * **Chapter 2** encounters this ladder again as the foundational exception enabling cheap Hamiltonian simulation (shadow simulation, fast-forwarding of linear/quadratic models) and identifies degree $\geq 3$ as the root driver of chaotic scrambling dynamics (out-of-time-ordered correlators, OTOCs).
 * **Chapter 3** leverages this hierarchy as the tunable magic dial for learnable quantum state classes, using the degree-1 Heisenberg-Weyl displacements $D_{q,p}$ as the operator basis through which two-copy Bell measurements reconstruct unknown quantum spectra.
 
+<a id="ii-tensor-algebra-tv-as-basis-for-exterior-symmetric-clifford-and-weyl-algebra"></a>
 ## II. Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra
 
 *The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** in that ideal (symmetric $Q$ or antisymmetric $\omega$), plus whether you switch its value on at all.*
@@ -832,12 +846,14 @@ The readout check constrains computational time speedups, but does not eliminate
 
 <br>
 
-# VI. Quantum Learning: Learning from Quantum Experiments
+<a id="vi-quantum-learning-learning-from-quantum-experiments"></a>
+## VI. Quantum Learning: Learning from Quantum Experiments
 
 > **Guiding Principle.** In quantum machine learning, the data source decides, not the hardware. When learning from classical data (top row), quantum speedups are fragile: classical models with sufficient data systematically catch up (*Power of Data*). When learning directly from **quantum data** (bottom row: physical copies of states $\rho$, channels $\mathcal{E}$, or Hamiltonians $H$), **unconditional exponential separations** exist and have been demonstrated in hardware. Here, quantum state copies cannot be cloned, information is capped by Holevo's bound, and the Born rule turns physical states into statistical sampling oracles.
 
 ---
 
+<a id="foundations-separation-objectives--measurement-primitives"></a><a id="foundations-separation-objectives-measurement-primitives"></a>
 ## Foundations: Separation, Objectives & Measurement Primitives
 
 ### Data-vs-Learner Separation
@@ -903,6 +919,7 @@ Every learning protocol is charged against three independent budgets:
 
 ---
 
+<a id="three-learning-archetypes-searching-estimating--identifying"></a><a id="three-learning-archetypes-searching-estimating-identifying"></a>
 ## Three Learning Archetypes: Searching, Estimating & Identifying
 
 The learning universe divides into three distinct tasks based on how observables and hypotheses are provided:
@@ -973,9 +990,9 @@ The learning universe divides into three distinct tasks based on how observables
 
 ---
 
-## Structural Synthesis
+### Structural Synthesis
 
-### Two Structural Ways Classical Algorithms Fail
+#### Two Structural Ways Classical Algorithms Fail
 
 ```
   FAILURE MODE 1: Dense Hypothesis Size          FAILURE MODE 2: Classical Decoder Bottleneck
@@ -991,7 +1008,7 @@ The learning universe divides into three distinct tasks based on how observables
 
 ```
 
-### Access-by-Task Landscape
+#### Access-by-Task Landscape
 
 ```
                       ESTIMATING / IDENTIFYING                SEARCHING
@@ -1020,7 +1037,7 @@ The learning universe divides into three distinct tasks based on how observables
 
 ---
 
-### Strategic Positioning: Machine-Learned Decoders for Quantum Data
+#### Strategic Positioning: Machine-Learned Decoders for Quantum Data
 
 * **Core Focus:** Establishing verifiable quantum learning advantages with minimal quantum resources—specifically operating at **rung 2 (two-copy quantum memory)**.
 * **Algorithmic Decoupling:** Every protocol decomposes into:
