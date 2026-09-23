@@ -203,6 +203,39 @@ The searching column has its endpoints; these four statements fix the shape of t
 
 **4. The hard endpoint of the cyclic basis.** A single $\mathbb{Z}_d$ is an abelian group, and hidden shift, hidden number, and discrete logarithm inside it are abelian hidden-subgroup instances, easy for a quantum decoder by period finding. A hard endpoint in the cyclic basis therefore has to survive Shor. The candidate from the literature is the dihedral hidden-shift problem over $\mathbb{Z}_N$: Kuperberg's sieve solves it in $2^{O(\sqrt{\log N})}$ (2005), subexponential in $\log d$, and Regev (2004) reduces unique-SVP to it, so it lives in the same lattice world as LWE. The precise form of open question (2) is then: is localization in the cyclic displacement spectrum equivalent to a dihedral coset problem? If so the endpoint is neither $\mathrm{poly}(\log d)$ nor $\mathrm{poly}(d)$ but Kuperberg's exponent.
 
+## The repaired success criterion and the three failure modes
+
+The refinements above and the LWE row show that sparsity is not a success criterion. The displacement instance behind `thm:lwe-displacement` is sparse, its peaks lie far above the shot-noise floor, it is available from conjugate pairs, and its support still cannot be located in polynomial time. The central conjecture therefore needs a third condition, and that condition is computational rather than statistical (mentor feedback, Block C).
+
+**Three conditions.** The pipeline finds the peaks efficiently when all three hold:
+
+| Condition | Budget it secures | Where the tables supply it | Without it |
+| --- | --- | --- | --- |
+| **(i) Conjugate Bell access:** measurements on $\rho\otimes\rho^*$ | Copies: the sample boundary, rung 2 of the access ladder | King, Wan, McClean 2024, Thm. 2: all $d^2$ magnitudes from $O(\log d/\epsilon^4)$ copies at two-copy memory; free for real states, and not needed on qubits, where $P\otimes P$ already commute | $\Omega(\sqrt d/(K^2\epsilon^2))$ measurements on $\rho^{\otimes K}$ (Thm. 1); $\Omega(d/\epsilon^2)$ with single copies, even of both $\rho$ and $\rho^*$ (Thm. 3); on qudits, Bell sampling on $\rho\otimes\rho$ can be uniform (Allcock et al. 2024) |
+| **(ii) Signal-to-noise and margin:** the dominant amplitudes lie above the shot-noise floor and stand out from the background | Copies: statistical detectability of each peak and of the top-$k$ boundary | Hoeffding plus a union bound over the $d^2$ addresses; a gap $g$ between the $k$-th and the $(k+1)$-th magnitude costs $N = O(g^{-2}\log(d^2/\delta))$ (the quadrant in the appendix); condition (C2a) in the table of the next subsection | Peaks sink below $1/\sqrt N$, or the top-$k$ boundary is not resolved |
+| **(iii) Structural decodability:** the support comes from a family that is computationally decodable under the *actual* sample-access model | Time: the computational boundary | Polynomial dictionaries and local observables (Regime 1: Bresler; Klivans, Meka; Bakshi, Liu, Moitra, Tang; the degree promise of QAC⁰); subgroups and stabilizer groups (Regime 2: Montanaro; Allcock et al. on qudits; approximate subgroups by Grewal, Iyer, Kretschmer, Liang and by stabilizer bootstrapping); factorized spectra over coprime factors (Regime 3, the best-first heap) | The LWE displacement instance and LWE from samples; pseudomagic states; LPN as the classical mirror |
+
+**The logical form.** The LWE instance satisfies (i) and (ii) and is still hard, so the two together are not sufficient. That is the content of Block B, and it is why (iii) is needed. With an explicit list of families, (iii) turns the criterion into a sufficiency theorem for a promise problem, the form stated in the positioning section. It is not a proven necessary condition:
+* (i) is not needed on qubits or for real states.
+* The approximate-subgroup rows show that the list of decodable families is open-ended.
+* Under query access (rung 3) the access itself replaces (iii) for the LWE endpoint (Grilo, Kerenidis, Zijlstra 2019).
+
+Without an explicit list, "decodable under the access model" only restates the conclusion. The conjecture of this project is then a membership claim: the uniformly random top-$k$ supports of the instance generator belong to the decodable side of (iii), although they are none of the three listed families.
+
+**Three failure modes.** Instead of one undifferentiated error, the failures separate cleanly, each with its own kind of bound:
+
+| Failure mode | Question | Kind of bound | Instances in the tables |
+| --- | --- | --- | --- |
+| **Statistical detectability** | Is the signal large enough compared with the number of samples $N$? | Information-theoretic and unconditional: Holevo and packing, the tree method, Hoeffding | Without the conjugate: King, Wan, McClean, Thms. 1 and 3; peaks below the noise floor: (C2a) |
+| **Computational search** | Can the frequencies be found in $\mathrm{poly}(n)$ time, or are they cryptographically hidden as in LWE? | Computational and conditional: LWE, LPN, one-way functions | The LWE displacement instance and LWE from samples; pseudomagic states; bounded gate complexity. Escapes: the promises of (iii), or query access |
+| **Identifiability at ties and plateaus** | Is "the top-$k$" a well-defined answer? | Neither: a property of the target, fixed by the output format | Stabilizer plateaus, $2^n$ equal coefficients (the linear cluster state); the mirror pair $(q,p)\leftrightarrow(q,-p)$ of real states, an exact tie for `defn:validtopk`; the threshold $\cos^2(\pi/8)$ above which the nearest stabilizer state is unique (Grewal, Iyer, Kretschmer, Liang 2023) |
+
+A tie breaks the uniqueness of a ranking but not the physical localization of the subspace. Montanaro's decoder returns the stabilizer group, the whole plateau, and never ranks inside it. For such targets the output is a level set or a subspace, and success is measured on that set; top-$k$ accuracy with $k$ inside a plateau only measures an arbitrary tie-break.
+
+**Relation to the two ways to fail.** The appendix separates "hypothesis too large" (memory) from "search too hard" (time). The trichotomy lives inside the sparse-list representation. Statistical detectability is the copies budget, computational search is "search too hard", and identifiability belongs to no budget because it concerns the definition of the output. The representation failure is orthogonal and is already solved by the sparse list of $O(k\log d)$ bits.
+
+**The three blocks of the feedback in one sentence each.** A explains why standard signal processing does not carry over one-to-one to quantum samples. B shows through LWE that a sparse spectrum can still be hopelessly hard to search. C draws the consequence and names the conditions under which the pipeline provably works.
+
 ## Which spectrum? The Heisenberg–Weyl restriction and the conjugate
 
 "A promise about the spectrum" presupposes an operator basis in which the spectrum is written. Bell sampling fixes that basis, and the conjugate pair fixes which states can be fed into it. Both restrictions come from the conjugate-pairs paper (King, Wan, McClean 2024, in the folder as 2403.03469).
@@ -4757,4 +4790,5 @@ The same Bell measurement is therefore incoherent or coherent depending on the o
 * **Approach:** *Machine-learned decoders for quantum measurement data.* A trained model replaces hand-built combinatorics (graph coloring, matrix multiplicative weights) and exploits the structure of the state class. Transfers to Hamiltonian learning, noise characterization, error-correction decoders.
 * **Contribution:** Computationally efficient **structure learning** of sparse displacement spectra from two-copy Bell measurements. Triply efficient, posed as a promise problem, with provable instances (dictionary and subgroup classes) and a provable limit (LWE hardness of generic localization).
 * **Structure:** Every protocol splits into a *quantum frontend* (which measurement on how many copies) and a *classical decoder*. The error factorizes into localization and estimation. Conjugate Bell pairs in front, learned CNN decoder plus sequential sign integrator behind.
+* **Success criterion:** Conjugate Bell access, a signal-to-noise margin, and structural decodability under sample access. The first two secure the copies, only the third secures the time. Failures separate into statistical detectability, computational search, and identifiability at ties (see "The repaired success criterion" under Searching).
 * **Cell in the quadrant:** sampling access at rung 2, searching task: the hard corner. The provable instances (dictionary, subgroup) are the two promises that make the corner decodable; the LWE limit is the statement that sparsity alone is not a third one. The conjecture places a uniformly random top-$k$ support on the decodable side without proof, and the learned decoder is its empirical candidate.
