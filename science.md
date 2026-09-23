@@ -16,7 +16,7 @@ Study notes quantum learning theory (learning from quantum experiments)
 - [Estimating](#estimating)
 - [Estimating (Papers)](#estimating-papers)
 - [Identifying](#identifying)
-- [Identifying (Paper)](#identifying-paper)
+- [Identifying (Papers)](#identifying-papers)
 - [Cross-Task: Bounds, Hardness, Decoders, Surveys](#cross-task-bounds-hardness-decoders-surveys)
 - [Appendix](#appendix)
 
@@ -111,7 +111,7 @@ Literature:
 * **Chen, Gong, Zhang (2024):** Separations for adaptive multi-copy shadow tomography.
 * **Allcock, Doriguello, Ivanyos, Santha (2024):** Bell sampling fails on qudits, $d > 2$: the output can be uniform. Replacement measurements for stabilizer learning; the reason this project uses conjugate pairs rather than two identical copies.
 
-**Two more separations of the same shape.** *Purity testing* (is $\rho$ pure or maximally mixed?) needs $O(1)$ copies with two-copy memory (a SWAP test) but $\Omega(2^{n/2})$ without (Chen, Cotler, Huang, Li, FOCS 2021); the memory-free lower bound also kills any single-copy route to $\mathrm{Tr}(\rho^2)$. *Pauli channel estimation*: learning all $4^n$ Pauli eigenvalues of a channel to $\pm\epsilon$ takes roughly $O(n/\epsilon^2)$ uses with ancilla-assisted entangled inputs versus $2^{\Omega(n)}$ without (Chen, Zhou, Seif, Jiang, PRA 2022), the channel version of the shadow-tomography separation. The general framework in which all of these live is **QUALM** (Aharonov, Cotler, Qi, Nat. Commun. 2022): an experiment is a quantum algorithm that calls an unknown *lab oracle*, with *coherent* access (outputs of several calls held and measured jointly) or *incoherent* access (each output measured completely before the next call, adaptivity allowed). The separations above are statements about this coherence, which is the memory axis of this document, not about the model class; which oracle nature supplies, copies of $\rho$, pairs $\rho\otimes\rho^*$, or the preparation circuit, is the separate access ladder. On qubits the SWAP test behind these separations is a coarse-grained Bell measurement: SWAP is diagonal in the Bell basis, with eigenvalue $(-1)^{\#Y}$ on the outcome $P$. On qudits with $d>2$ it is not; see the QUALM summary under Identifying (Paper).
+**Two more separations of the same shape.** *Purity testing* (is $\rho$ pure or maximally mixed?) needs $O(1)$ copies with two-copy memory (a SWAP test) but $\Omega(2^{n/2})$ without (Chen, Cotler, Huang, Li, FOCS 2021); the memory-free lower bound also kills any single-copy route to $\mathrm{Tr}(\rho^2)$. *Pauli channel estimation*: learning all $4^n$ Pauli eigenvalues of a channel to $\pm\epsilon$ takes roughly $O(n/\epsilon^2)$ uses with ancilla-assisted entangled inputs versus $2^{\Omega(n)}$ without (Chen, Zhou, Seif, Jiang, PRA 2022), the channel version of the shadow-tomography separation. The general framework in which all of these live is **QUALM** (Aharonov, Cotler, Qi, Nat. Commun. 2022): an experiment is a quantum algorithm that calls an unknown *lab oracle*, with *coherent* access (outputs of several calls held and measured jointly) or *incoherent* access (each output measured completely before the next call, adaptivity allowed). The separations above are statements about this coherence, which is the memory axis of this document, not about the model class; which oracle nature supplies, copies of $\rho$, pairs $\rho\otimes\rho^*$, or the preparation circuit, is the separate access ladder. On qubits the SWAP test behind these separations is a coarse-grained Bell measurement: SWAP is diagonal in the Bell basis, with eigenvalue $(-1)^{\#Y}$ on the outcome $P$. On qudits with $d>2$ it is not; see the QUALM summary under Identifying (Papers).
 
 <br>
 
@@ -143,6 +143,7 @@ Literature:
 | **Simon's problem, hidden subgroup** | Classical function | Searching: subgroup promise → the hidden subgroup | Query: $O(n)$ superposition queries | $O(n^3)$, Gaussian elimination on Fourier samples | $O(n^2)$ | 🟢 🟢 🟢; the query-side mirror of Montanaro |
 | **LWE with superposition queries** (Grilo, Kerenidis, Zijlstra 2019) | Classical function | Searching: noisy linear samples in superposition → the secret $\mathbf{s}$ | Query: poly superposition queries | poly | poly | 🟢 🟢 🟢; the instance that is LWE-hard under sampling |
 | **Hamiltonian structure learning from real-time evolution** (Bakshi, Liu, Moitra, Tang, FOCS 2024) | Hamiltonian | Searching: $k$-locality promise, interaction terms *not* given → which of the $n^{O(k)}$ candidate terms are present, and their coefficients | Query to the dynamics $e^{-iHt}$: Heisenberg-limited total evolution time, $O(\log n/\epsilon)$ | poly | poly | 🟢 🟢 🟢; locality promise with unknown geometry; the searching counterpart of Heisenberg-limited coefficient learning in the estimating table |
+| **Heisenberg-limited learning without short-time control** (Shin, Lee, Oh 2026) | Hamiltonian, $m$-sparse in the Pauli basis, support unknown | Searching: sparsity promise, support *not* given → the $m$ terms present and their coefficients; the continuation of the row above on the access axis | Query to $e^{-iHt}$ with every query of duration at least a fixed constant $T$: $t_{\mathrm{tot}} = \tilde O(\min\{4^m T^3/\epsilon, 4^m T/\epsilon^2\})$, polynomial for $m = O(\log n)$; for $m = \mathrm{poly}(n)$ a tradeoff $t_{\mathrm{tot}} = \tilde O(m^{K+2}T/\epsilon)$ at $T = \Theta(m^{-1/K})$ | poly | poly | 🟢 🟢 🟢 for logarithmic sparsity; short Trotter steps are rewritten as long evolutions plus a learned correction generator; resolves the open problem of Bakshi et al. on time resolution |
 
 ## Searching protocols
 
@@ -156,7 +157,7 @@ The observables are the output. Two families: structure learning from measuremen
 * **Grewal, Iyer, Kretschmer, Liang (2023):** Bell difference sampling, states with few non-Clifford gates.
 * **Hangleiter, Gullans (PRL 2024):** Bell sampling as a universal diagnostic framework.
 * **Chen, Nadimpalli, Yuen (SODA 2023):** Quantum juntas, the support search at the level of qubits, logarithmic in $n$.
-* **Bakshi, Liu, Moitra, Tang (FOCS 2024):** Hamiltonian structure learning from real-time evolution. Only locality is promised, the interaction terms are not given, and the total evolution time stays Heisenberg-limited. The line between this and coefficient learning: for a geometrically local Hamiltonian on a known lattice, all local terms form a dictionary of bounded degree, and coefficient learning returns the structure as a by-product. Structure learning proper begins when the geometry is unknown, $k$-body terms among arbitrary qubits; the guarantees of the coefficient algorithms depend on the degree of the interaction graph and no longer apply directly. The coefficient papers with known terms (Anshu et al. 2021; Haah, Kothari, Tang 2022; Bakshi, Liu, Moitra, Tang, STOC 2024; Gu, Cincio, Coles 2024) are estimating protocols and sit in the dynamics subsection.
+* **Bakshi, Liu, Moitra, Tang (FOCS 2024):** Hamiltonian structure learning from real-time evolution. Only locality is promised, the interaction terms are not given, and the total evolution time stays Heisenberg-limited. The line between this and coefficient learning: for a geometrically local Hamiltonian on a known lattice, all local terms form a dictionary of bounded degree, and coefficient learning returns the structure as a by-product. Structure learning proper begins when the geometry is unknown, $k$-body terms among arbitrary qubits; the guarantees of the coefficient algorithms depend on the degree of the interaction graph and no longer apply directly. The coefficient papers with known terms (Anshu et al. 2021; Haah, Kothari, Tang 2022; Bakshi, Liu, Moitra, Tang, STOC 2024; Gu, Cincio, Coles 2024) are estimating protocols and sit in the dynamics subsection. Shin, Lee, Oh (2026) resolve the paper's open problem on time resolution: Heisenberg-limited learning of $m$-sparse Hamiltonians with every query of duration at least a fixed constant $T$, polynomial for $m = O(\log n)$; see the next row of the searching table.
 * **Bshouty, Jackson (1998):** DNF from quantum examples by Fourier sampling, the sample-access case in which heavy coefficients are found without queries.
 * **Adcock, Cleve (2002) / Montanaro, Osborne (2010):** Quantum Goldreich–Levin, for Boolean functions under quantum queries and for the Pauli spectrum of operators. For unitaries the heavy terms are already found by Bell sampling on the Choi state, a sample-access route, because the spectrum is unit-normalized; see the normalization paragraph below.
 
@@ -238,8 +239,9 @@ Jede Zusammenfassung folgt demselben Aufbau: Einordnung in die Tabellen, Problem
 | Montanaro, Osborne 2010 | Unitary mit $f^2 = I$ | alle Pauli-Koeffizienten über einer Schwelle $\gamma$ | Query, $f$ und $f^\dagger$ | $\mathrm{poly}(n, 1/\gamma)$ | 🟢 🟢 🟢 | keines, die Normierung $\sum_s \hat f_s^2 = 1$ genügt |
 | Chen, Nadimpalli, Yuen 2023 | Unitary | die $k$ relevanten Qubits, dann das $k$-Qubit-Unitary | Sample auf dem Choi-Zustand, Test mit Queries an $U, U^\dagger$ | $O(k/\epsilon + 4^k/\epsilon^2)$, unabhängig von $n$ | 🟢 🟢 🟢 | $k$-Junta |
 | Bakshi, Liu, Moitra, Tang 2024 | Hamiltonian | welche der $n^{O(K)}$ lokalen Terme vorkommen, und ihre Koeffizienten | Query an die Dynamik $e^{-iHt}$ | $t_{\mathrm{total}} = O(\log(n)/\epsilon)$, $\tilde O(n^2)$ klassisch | 🟢 🟢 🟢 | $K$-Lokalität mit beschränkter lokaler Norm |
+| Shin, Lee, Oh 2026 | Hamiltonian | Träger und Koeffizienten bei Sparsity $m$, ohne Kurzzeitzugriff | Query an $e^{-iHt}$, nur für $t \geq T$ | $t_{\mathrm{tot}} = \tilde O(4^m T^3/\epsilon)$, poly für $m = O(\log n)$ | 🟢 🟢 🟢 | Sparsity $m$ in der Pauli-Basis |
 
-Zwei Familien. Die ersten drei Paper suchen den Träger eines *Zustands* per Bell-Sampling und leben von der Untergruppenstruktur. Die letzten drei suchen die schweren Pauli-Koeffizienten eines *Operators*; dort ist die Suche leicht, weil das Spektrum eines Unitaries auf eins normiert ist. Der Absatz zur Normierung in theory.md erklärt, warum dieselbe Messung beim Zustand gegen die LWE-Wand läuft.
+Zwei Familien. Die ersten drei Paper suchen den Träger eines *Zustands* per Bell-Sampling und leben von der Untergruppenstruktur. Die letzten vier suchen die schweren Pauli-Koeffizienten eines *Operators*; dort ist die Suche leicht, weil das Spektrum eines Unitaries auf eins normiert ist und Lokalität oder Sparsity den Kandidatenraum polynomiell halten. Shin, Lee, Oh setzen Bakshi et al. auf der Zugriffsachse fort: dieselbe Suche, aber ohne Kurzzeitzugriff auf die Dynamik. Der Absatz zur Normierung in theory.md erklärt, warum dieselbe Messung beim Zustand gegen die LWE-Wand läuft.
 
 ---
 
@@ -605,18 +607,75 @@ Ableitungsschätzung lernt Hamiltonians ohne Strukturwissen, aber mit $t_{\mathr
 
 Paper: [arXiv:2405.00082](https://arxiv.org/abs/2405.00082)
 
+---
+
+## Heisenberg-limited Hamiltonian learning without short-time control (arXiv:2604.27838)
+
+Die Arbeit von **Myeongjin Shin, Junseo Lee und Changhun Oh** (KAIST, Seoul National University; 2026) beseitigt eine Hardware-Voraussetzung aller Heisenberg-limitierten Verfahren: den Zugriff auf beliebig kurze Evolutionszeiten. Sie zeigt, dass ein $m$-sparsamer Hamiltonian auch dann am Heisenberg-Limit gelernt werden kann, wenn jede Anfrage an $e^{-iHt}$ mindestens eine feste Dauer $T$ hat; für $m = O(\log n)$ mit polynomieller Gesamtzeit bei beliebigem konstanten $T$, für polynomielles $m$ mit einem quantitativen Tausch zwischen minimaler und gesamter Evolutionszeit. Das löst ein offenes Problem von Bakshi, Liu, Moitra und Tang.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Searching im strengen Sinn der Tabellen: $H = \sum_{x=1}^m\alpha_xP_x$ mit unbekanntem Träger, und Algorithmus 2 heißt ausdrücklich "Coefficient and structure learning"; die Trunkierung auf $m$-Sparsity ist die Trägersuche. Die Zeile steht deshalb in der Searching-Tabelle direkt unter Bakshi, Liu, Moitra, Tang, deren offenes Problem sie löst; ihr Beitrag betrifft die Zugriffsachse (welche Evolutionszeiten das Orakel liefert), und die Estimating-Zeile von Huang, Tong, Fang, Su ist die Vorgängerin auf dieser Achse.
+* **Objekt:** $m$-sparsamer, spurfreier Hamiltonian, $\Vert H\Vert_\infty\leq 1$. **Zugriff:** Query an $U(t) = e^{-iHt}$, aber nur für $t\geq T$; dazu Simulation bekannter Hamiltonians und Ancillas (halber maximal verschränkter Zustand).
+* **Status:** 🟢 🟢 🟢 für $m = O(\log n)$: $t_{\mathrm{tot}} = \tilde O(\min\{4^mT^3/\epsilon, 4^mT/\epsilon^2\})$, Queries und Nachverarbeitung $\mathrm{poly}(n, 1/\epsilon)$. Für $m = \mathrm{poly}(n)$ und konstantes $T$ quasi-polynomiell.
+* **Versprechen:** Sparsity $m$ in der Pauli-Basis; kein Kurzzeitzugriff nötig.
+
+### Das Problem
+
+Iterative Verfeinerung lernt in Runde $j$ das Residuum $\Delta H_j = H - H_j$ und braucht dafür $e^{-i\Delta H_jt}$, das per Trotter aus $e^{-iHt/N}e^{iH_jt/N}$ gebaut wird; das erzwingt $t_{\min} = \Theta(\sqrt\epsilon)$ oder $\Theta(1/m)$. Kontrollpulse haben endliche Bandbreite, Anstiegszeiten und Totzeiten, und bei vielen kurzen Segmenten dominieren Schaltfehler. Kann man Heisenberg-Skalierung mit $t_{\min}\geq T$ für konstantes $T$ erreichen?
+
+### Kernresultate
+
+* **Theorem 1 (logarithmisch sparsam).** $t_{\mathrm{tot}} = \tilde O(\min\{4^mT^3/\epsilon, 4^mT/\epsilon^2\})$ mit $t_{\min} = T$; für $m = O(\log n)$ effizient und Heisenberg-limitiert für jedes feste $T > 0$.
+* **Theorem 2 (polynomiell sparsam).** $t_{\mathrm{tot}} = \tilde O(\min\{m^{K+2}T/\epsilon, m^KT/\epsilon^2\})$ bei $t_{\min} = T = \Theta(m^{-1/K})$, $K\in\mathbb{N}$; mit $K = \Theta(\log m)$ ist $t_{\min} = \Theta(1)$ bei $t_{\mathrm{tot}} = \tilde O(m^{2+\log m}/\epsilon)$. Erster quantitativer Tausch zwischen $t_{\min}$ und $t_{\mathrm{tot}}$.
+* **Gl. (19)–(22) (Langzeit-Emulation).** $e^{-iH\tau}e^{iH_j\tau} = e^{-iH(T+\tau)}C_je^{iH_j(T+\tau)}$ mit $C_j = e^{iHT}e^{-iH_jT}$; jeder kurze Trotter-Schritt wird zu einem langen Schritt plus Korrektur. $C_j$ selbst enthält Rückwärtsentwicklung, aber $C_j^\dagger = e^{iH_jT}e^{-iHT}$ ist mit Vorwärtsentwicklung zugänglich; man lernt einen Hermiteschen Generator $W_j$ mit $C_j^\dagger = e^{-iW_j}$ und simuliert $e^{iW_j}$. Fehler $\epsilon'$ bei $\Vert W_j - \tilde W_j\Vert_F\leq\epsilon'/(2N)$.
+* **Struktur von $W_j$.** Im logarithmisch sparsamen Regime ist $W_j$ auf einem Pauli-Raum der Größe $\leq 4^m$ getragen; im polynomiellen Regime dicht, aber per Baker–Campbell–Hausdorff quasi-sparsam approximierbar.
+* **Koeffizientenextraktion.** $e^{-i\Delta H_jt}$ auf die Hälfte eines maximal verschränkten Zustands angewendet kodiert die Pauli-Koeffizienten von $\Delta H_j$ als Amplituden erster Ordnung; sparsame Zustandstomographie liest sie, Trunkierung erhält $m$-Sparsity und Normschranke, $\eta_{j+1} = \eta_j/2$. Frühe Runden mit großem Fehler laufen mit einer Standard-Quantenlimit-Routine.
+
+### Methodischer Ansatz
+
+* Der Kern ist die Umschreibung eines Produktformel-Schritts in einen langen Schritt mit fester Korrektur, und die Beobachtung, dass die Korrektur ein Hamiltonian mit kontrollierter Norm und Sparsity ist, der selbst mit langen Zeiten gelernt werden kann; das Lernen wird also zweistufig, erst $W_j$, dann $\Delta H_j$.
+* Das Paper unterscheidet ausdrücklich minimale Evolutionszeit $t_{\min}$ von Zeitauflösung $\delta$ (Taktschritt der Kontrolle): Es behandelt die erste; die zweite bleibt offen.
+
+### Bedeutung und Anwendungen
+
+* Konzeptioneller Wechsel: Ultrakurze Pulse sind für informationstheoretisch optimales Lernen nicht nötig; lange Dynamik plus algorithmische Reduktion genügt.
+* Löst das offene Problem 3 bei Bakshi et al. (beliebig große Zeitauflösung) für den logarithmisch sparsamen Fall und gibt für den Vielteilchenfall den ersten Tausch.
+* Anschluss an Quantum Probe Tomography (lokale Sonden) und ancilla-freie Verfahren als nächste Schritte.
+
+### Bezug zum eigenen Projekt
+
+* Die Achse $t_{\min}$ ist genau die Achse, die in der Bakshi-Zusammenfassung als in der eigenen Taxonomie fehlend benannt wurde (Faktor Hardware-Realismus); dieses Paper macht sie zu einer eigenständigen Ressource mit Tauschkurve.
+* Die Zweistufigkeit "Korrekturgenerator lernen, dann Residuum lernen" ist strukturell das eigene Zwei-Phasen-Schema mit einem Probe-Zustand: Das Unbekannte wird in eine Umgebung verschoben, in der die Messung erster Ordnung ist; hier heißt die Umgebung $\Delta H_j$, dort $\rho\otimes\tilde\rho^*$.
+* Die Kodierung von Pauli-Koeffizienten als Amplituden erster Ordnung auf einem Bell-Paar ist Choi-Sampling; die sparsame Tomographie dahinter ist die Query-Version der Top-$k$-Lokalisierung, mit $4^m$ als Größe des Kandidatenraums.
+
+### Grenzen und offene Fragen
+
+* $4^m$ im logarithmisch sparsamen und $m^{K+2}$ im polynomiellen Regime; ob $\mathrm{poly}(m, T)/\epsilon$ bei $t_{\min} = T$ möglich ist, ist die zentrale offene Frage.
+* Zeitauflösung $\delta$ (programmierbare Zeiten in $\delta\mathbb{N}$) nicht behandelt.
+* Braucht Ancillas und globale Kontrolle; ancilla-freie und lokal-sondierende Varianten sind Ausblick.
+* Timing-Ungenauigkeit $[(1-\delta)T, (1+\delta)T]$ nicht analysiert.
+
+### Fragen zum Tieferbohren
+
+* Wie überträgt sich die Umschreibung $e^{-iH\tau}e^{iH_j\tau} = e^{-iH(T+\tau)}C_je^{iH_j(T+\tau)}$ auf Displacement-Hamiltonians, deren Pauli-Raum durch $d^2$ Adressen ersetzt ist, und ist $W_j$ dann sparsam in der Displacement-Basis?
+* Ist die sparsame Tomographie in Algorithmus 2 ein Query-Algorithmus (Goldreich–Levin-artig) oder ein Sample-Algorithmus auf dem Choi-Zustand, und wo genau sitzt die Trägersuche?
+* Welche Tauschkurve $t_{\min}$ gegen Kopienzahl gibt es für Zustände, wenn "Evolutionszeit" durch "Präparationszeit pro Kopie" ersetzt wird?
+
+Paper: [arXiv:2604.27838](https://arxiv.org/abs/2604.27838)
+
 <br>
 
 # Estimating
 
 **Estimating** (observables are *input*). Given: copies of $\rho$ and a list of $M$ observables, explicit or implicit. Returned: the $M$ expectation values to precision $\epsilon$. Like a panel of predefined SNPs: the loci are fixed in advance, only their values are unknown. Full tomography is the limit $M = d^2$, sequencing the whole genome. The list can be explicit and polynomial (a dictionary), implicit and exponential (all Paulis), drawn from a distribution (PAC learning and average-case prediction), or revealed one observable at a time (online learning). The task type is the same in each case; the budgets differ.
 
-**What is known.** This is the best-charted column of the field, almost entirely on the sample side. Full tomography costs $\Theta(d^2/\epsilon^2)$ copies with entangled measurements and $\Theta(d^3/\epsilon^2)$ with single copies, adaptivity included. Shadow tomography answers $M$ questions with $\mathrm{poly}(\log M, n, 1/\epsilon)$ copies, currently $\tilde O(\log^2 M \cdot \log d/\epsilon^4)$; classical shadows do it with single-copy random measurements at a cost set by the shadow norm, cheap for local observables and exponential for global ones. Two-copy memory closes that gap: $\Theta(n)$ copies for all Pauli expectations against $2^{\Omega(n)}$ without memory, the strongest proven separation in the field, demonstrated in hardware. Conjugate pairs deliver the clean squared spectrum at constant memory. Under query access the precision rate improves from $1/\epsilon^2$ to $1/\epsilon$, for observables, for unitaries, and for Hamiltonian couplings.
+**What is known.** This is the best-charted column of the field, almost entirely on the sample side. Full tomography costs $\Theta(d^2/\epsilon^2)$ copies with entangled measurements and $\Theta(d^3/\epsilon^2)$ with single copies, adaptivity included. Shadow tomography answers $M$ questions with $\mathrm{poly}(\log M, n, 1/\epsilon)$ copies, since 2026 at the classical adaptive-data-analysis rates $O(\log M\sqrt{\log d}/\epsilon^3)$ and $O(\sqrt M/\epsilon^2)$ (Chen, O'Donnell, Pelecanos, Wright), down from $\tilde O(\log^2 M \cdot \log d/\epsilon^4)$ (Bădescu, O'Donnell 2021); classical shadows do it with single-copy random measurements at a cost set by the shadow norm, cheap for local observables and exponential for global ones. Two-copy memory closes that gap: $\Theta(n)$ copies for all Pauli expectations against $2^{\Omega(n)}$ without memory, the strongest proven separation in the field, demonstrated in hardware. Conjugate pairs deliver the clean squared spectrum at constant memory. Under query access the precision rate improves from $1/\epsilon^2$ to $1/\epsilon$, for observables, for unitaries, and for Hamiltonian couplings.
 
 **Efficiency status.** Copies: 🟢 everywhere except full tomography and its low-rank and unitary variants, which stay exponential in $n$ by dimension counting. Time and memory: 🔴 for general shadow tomography, because its hypothesis is a $2^n\times 2^n$ matrix, and likewise for PAC and online learning of states. 🟢 🟢 🟢 exactly where a promise or a resource is named: locality (classical shadows), two-copy memory (all Paulis), a dictionary (conjugate pairs), a gapped phase (ground-state prediction), locality of the Hamiltonian (Gibbs and real-time learning, time-efficient at any constant temperature only since 2024).
 
 **What is open.**
-* (1) The precision exponent. Shadow tomography sits at $1/\epsilon^4$, the lower bound at $1/\epsilon^2$; whether the gap closes at polylogarithmic cost in $M$ is open.
+* (1) The precision exponent. Shadow tomography reached $O(\log M\sqrt{\log d}/\epsilon^3)$ in 2026 (Chen, O'Donnell, Pelecanos, Wright), the classical adaptive-data-analysis rate, with a lower bound of $\Omega(\log M\sqrt{\log d}/(\epsilon^2\log(1/\epsilon)))$ and evidence that $1/\epsilon^3$ is tight (Lyu, Talwar 2025); the dimension-free $O(\sqrt M/\epsilon^2)$ is optimal. For Pauli observables nothing better than $1/\epsilon^4$ is known, and any improvement needs highly entangled measurements (Chen, Gong, Ye 2024).
 * (2) Memory between zero and two. The sample complexity interpolates smoothly with $k$ qubits of memory (Chen, Cotler, Huang, Li), but no protocol family is known that uses a fixed small memory budget for structured observable sets.
 * (3) Triply efficient schemes beyond Paulis and local fermionic observables, and whether a learned decoder can replace the graph-coloring step on which the current schemes rely.
 * (4) Noise. The two-copy separations are stated for ideal Bell measurements; robustness to preparation, crosstalk, and readout errors is the practically decisive axis, and the first empirical evaluation of a two-copy triply efficient scheme dates from 2025.
@@ -624,20 +683,25 @@ Paper: [arXiv:2405.00082](https://arxiv.org/abs/2405.00082)
 | Protocol or class | Object | Task type: given → returned | Copies or queries (access) | Time | Memory | Status & Condition |
 | --- | --- | --- | --- | --- | --- | --- |
 | **Full QST** | State | Estimating, $M = d^2$: nothing withheld → density matrix $\rho$ | Sample: $\Theta(d^2/\epsilon^2)$ entangled, $\Theta(d^3/\epsilon^2)$ single-copy | $\mathrm{poly}(d)$ | $d^2$ entries | 🔴 🔴 🔴; baseline |
-| **Shadow tomography, general** (Aaronson 2018; Bădescu–O'Donnell 2021) | State | Estimating: list of $M$ observables → $M$ values $\mathrm{Tr}(O_i\rho)$ | Sample: $\mathrm{poly}(\log M, n, 1/\epsilon)$ | $\exp(n)$: the MMW update touches a $2^n \times 2^n$ hypothesis | $\exp(n)$: that hypothesis | 🟢 🔴 🔴; hypothesis too large |
+| **Shadow tomography, general** (Aaronson 2018; Bădescu–O'Donnell 2021; Chen, O'Donnell, Pelecanos, Wright 2026) | State | Estimating: list of $M$ observables → $M$ values $\mathrm{Tr}(O_i\rho)$, online against adaptively chosen observables | Sample: $\mathrm{poly}(\log M, n, 1/\epsilon)$; since 2026 the classical adaptive-data-analysis rates $O(\log M\sqrt{n}/\epsilon^3)$ and $O(\sqrt M/\epsilon^2)$, down from $\tilde O(\log^2 M\cdot n/\epsilon^4)$ | $\exp(n)$: the MMW update touches a $2^n \times 2^n$ hypothesis | $\exp(n)$: that hypothesis | 🟢 🔴 🔴; hypothesis too large |
 | **PAC learning of states** (Aaronson 2007) | State | Estimating, average case: observables drawn from a distribution → predictions correct for most of them | Sample: $O(n)$ | No efficient learner in general; efficient for stabilizer states (Rocchetto 2018) | $d \times d$ hypothesis in general, poly for structured classes | 🟢 🔴 🔴; generic |
 | **Classical shadows, $k$-local Paulis** | State | Estimating: list of $M$ local observables, chosen after measurement → $M$ values | Sample: $O(\log M \cdot 3^k/\epsilon^2)$ | poly | $O(Nn)$, one stabilizer product per snapshot | 🟢 🟢 🟢; locality promise |
-| **All $4^n$ Pauli observables, two-copy** (King, Gosset, Kothari, Babbush 2024) | State | Estimating: all $4^n$ Paulis → any value on demand | Sample: $\mathrm{poly}(n)$, two copies at a time; $2^{\Omega(n)}$ with single copies (Chen, Cotler, Huang, Li 2021) | $\mathrm{poly}(n)$ | $\mathrm{poly}(n)$, the compressed representation | 🟢 🟢 🟢; two-copy memory |
+| **Classical shadows in hardware** (Zhang, Sun, Fang, Zhang, Yuan, Lu, PRL 2021) | State, a four-qubit photonic GHZ state | Estimating: 50 local Paulis, $\langle H\rangle$, $\langle H^2\rangle$, subsystem purities, PT-moments → values, compared across importance sampling, grouping, uniform, biased, and derandomized shadows | Sample: $N_s \leq 2000$ single-copy local-Clifford measurements | poly | poly | 🟢 🟢 🟢; locality; derandomized shadows win when many large-support terms are present |
+| **Median-of-means constants** (Fu, Koh, Goh, Kong 2024) | State | Estimating: the same functions, with Minsker's optimal constants and a U-statistic median → values | Sample: the constant $C$ in $\Pr[\vert\hat\mu-\mu\vert \geq C\sigma\sqrt{t/N}] \leq 2e^{-t}$ drops from about $8$ to $\sqrt\pi$ (median of means) or $\sqrt2$ (U-statistic); shots for $\epsilon = 0.1$ from $58\cdot 10^3$ to $38\cdot 10^3$ | poly, incomplete U-statistics via random or cyclic designs | poly | 🟢 🟢 🟢; post-processing only; the plain mean is best in practice for Pauli measurements, the modified estimators for Clifford measurements |
+| **All $4^n$ Pauli observables, two-copy** (King, Gosset, Kothari, Babbush 2024) | State | Estimating: all $4^n$ Paulis → any value on demand | Sample: $O(n\log(n/\epsilon)/\epsilon^4)$, two copies at a time; $2^{\Omega(n)}$ with single copies (Chen, Cotler, Huang, Li 2021) | $\mathrm{poly}(4^n, 1/\epsilon)$ to learn, i.e. $\mathrm{poly}(\vert S\vert)$, the paper's definition of time efficiency; $\mathrm{poly}(n)$ per query from the compressed representation at constant $\epsilon$ (Cor. 12) | $\mathrm{poly}(n)$, the compressed representation | 🟢 🟢 🟢 in the paper's sense; two-copy memory; triply efficient learning of an arbitrary subset of Paulis in time $\mathrm{poly}(\vert S\vert, n)$ is open (Conjecture 13) |
 | **Displacement amplitudes over a dictionary, conjugate pairs** (King, Wan, McClean 2024) | State | Estimating: list of $M$ candidate $(q,p)$ → magnitudes of $y_{q,p}$ from Bell sampling, signs by the adaptive eigenprobe | Sample on $\rho\otimes\rho^*$: $O(\log d/\epsilon^4)$ for all magnitudes, $N = O(g^{-2}\log(M/\delta))$ for the top-$k$ over the list; $\Omega(\sqrt d)$ without the conjugate copy | $\mathrm{poly}(M)$ character means on one Bell record | $O(M)$ values | 🟢 🟢 🟢; conjugate access plus dictionary promise, *Regime 1* |
 | **Low-rank tomography, compressed sensing** (Gross, Liu, Flammia, Becker, Eisert 2010) | State | Estimating, $M = d^2$ with a rank-$r$ promise → the state | Sample: $O(rd\log^2 d)$ Pauli expectation values instead of $d^2$ | $\mathrm{poly}(d)$, nuclear-norm minimization | $O(rd)$ | 🔴 🔴 🔴 in $n$; the rank promise cuts $d^2$ to $rd$ |
 | **Spectrum estimation by Schur sampling** (Keyl, Werner 2001; O'Donnell, Wright 2015) | State | Estimating: the eigenvalues of $\rho$ → the spectrum | Sample: $O(d^2/\epsilon^2)$ copies measured collectively, quantum memory $k = N$ | $\mathrm{poly}(d)$ | $O(d)$ | 🔴 🔴 🟢 in $n$; the far end of the memory axis, all copies entangled at once |
 | **Online learning of quantum states** (Aaronson, Chen, Hazan, Kale, Nayak 2018) | State | Estimating, sequential: observables arrive one at a time → a prediction each, regret $O(\sqrt{Tn})$, at most $O(n/\epsilon^2)$ mistakes | Sample-free: the true value $\mathrm{Tr}(E_t\rho)$ is fed back after each round | $\exp(n)$: MMW over a $2^n\times 2^n$ hypothesis | $\exp(n)$ | 🟢 🔴 🔴; hypothesis too large, the online cousin of shadow tomography |
-| **Classical shadows, other ensembles** (fermionic and matchgate: Zhao, Rubin, Miyake 2021; Wan, Huggins, Lee, Babbush 2023; shallow and locally scrambled: Bertoni et al. 2024; Hu, Choi, You 2023; derandomized: Huang, Kueng, Preskill 2021) | State | Estimating: fermionic observables, or local observables under shallow randomization → values | Sample: poly, the shadow norm of the chosen ensemble decides the constant | poly | poly | 🟢 🟢 🟢; the promise moves with the ensemble |
+| **Classical shadows, other ensembles** (fermionic and matchgate: Zhao, Rubin, Miyake 2021; Wan, Huggins, Lee, Babbush 2023; unified with a gate-optimal sampling scheme: Heyraud, Chomet, Tilly 2024; shallow and locally scrambled: Bertoni et al. 2024; Hu, Choi, You 2023; derandomized: Huang, Kueng, Preskill 2021; symmetric spaces $G/K$: Chang, Krumtünger, Larocca, West 2026) | State | Estimating: fermionic observables, or local observables under shallow randomization → values | Sample: poly, the shadow norm of the chosen ensemble decides the constant; the first three moments of the ensemble decide the protocol, so ensembles with equal moments are interchangeable | poly | poly | 🟢 🟢 🟢; the promise moves with the ensemble |
+| **Classical shadows, locally entangled bases** (Ippoliti 2024) | State | Estimating: Paulis compatible with a dimer covering → values; Bell measurements on qubit pairs *within* one copy, quantum memory still one | Sample: shadow norm $3^{k/2}$ instead of $3^k$, $(3/2)^k$ with $n$-qubit GHZ bases, optimal among stabilizer measurements; incompatible Paulis unlearnable; a deformed family is tomographically complete with $\sim 4^{k \bmod 2}\, 2^k$ | poly | poly | 🟢 🟢 🟢; compatibility with the covering, a promise on the observables, not on the state |
+| **Classical shadows on qudits** (Mao, Yi, Zhu 2024; qudit Clifford shadows for off-diagonal elements: King, Wan, McClean 2024) | State on $n$ qudits, $d$ an odd prime | Estimating: fidelities and Weyl observables → values | Sample: shadow norm $\leq (2d-3)\Vert O\Vert_2^2 + 2\Vert O\Vert_\infty^2$ under global Cliffords, an $O(d)$ overhead over qubits independent of $n$ although the qudit Clifford group is only a 2-design; one T gate after the Clifford removes the overhead; $(d+1)^m$ for $m$-local Weyl operators under local Cliffords | poly, simulation $O((n+t)^3 + t d^{t+1})$ | poly | 🟢 🟢 🟢; bounded Hilbert–Schmidt norm; a displacement operator on a single qudit carries the factor $d+1$, the single-copy wall of the conjugate-pair row |
 | **Ground-state properties across a phase from shadows** (Huang, Kueng, Torlai, Albert, Preskill 2022; Lewis et al. 2024; Onorati, Rouzé, França, Watson 2023) | Family of states $\rho(x)$ | Estimating, generalization: shadows of $\rho(x)$ at training parameters $x$ → $\mathrm{Tr}(O\rho(x'))$ at new $x'$ in the same phase | Sample: $\mathrm{poly}(n)$ training states, $O(\log n)$ in the improved version | poly | poly | 🟢 🟢 🟢; gapped phase plus locality, the provable machine-learned decoder |
 | **Hamiltonian coefficients from Gibbs states, known terms** (Anshu, Arunachalam, Kuwahara, Soleimanifar 2021) | Hamiltonian, from copies of its Gibbs state | Estimating: known interaction terms → their coefficients | Sample: $\mathrm{poly}(n, 1/\epsilon)$ copies of the Gibbs state | Not efficient in the original algorithm; polynomial at high temperature (Haah, Kothari, Tang 2022) and at any constant temperature (Bakshi, Liu, Moitra, Tang 2024) | poly | 🟢 🔴→🟢 🟢; the time budget was the open half for three years |
-| **Low-degree quantum objects** (Arunachalam, Dutt, Escudero Gutiérrez 2024; Volberg, Zhang 2023) | Observable, unitary, channel | Estimating: Pauli degree at most $\ell$ → all $n^{O(\ell)}$ coefficients | Sample: polynomial in $n$ for constant degree, via the noncommutative Bohnenblust–Hille inequality. ⚠️ Access model unverified: with random product inputs the row stays in the sample block, with adaptively chosen inputs it moves to the query block | poly | poly | 🟢 🟢 🟢; low-degree promise, a dictionary of size $n^{O(\ell)}$ |
+| **Low-degree quantum objects** (Arunachalam, Dutt, Escudero Gutiérrez, Palazuelos 2024; qudits and cyclic groups via a dimension-free Remez inequality: Klein, Slote, Volberg, Zhang 2023) | Observable, unitary, channel | Estimating: Pauli degree at most $\ell$ → all $n^{O(\ell)}$ coefficients | Channels and unitaries: query, $\exp(\tilde O(\ell^2 + \ell\log 1/\epsilon))$ uses independent of $n$; observables: sample, $O(\log n)$ random product-state inputs for constant degree, via noncommutative Bohnenblust–Hille inequalities; on $K$-level qudits in the Heisenberg–Weyl basis the same with constant $(\log K)^{O(\ell^2)}$ | poly | poly | 🟢 🟢 🟢; low-degree promise, a dictionary of size $n^{O(\ell)}$ |
 | **Predicting arbitrary quantum processes** (Huang, Chen, Preskill 2023) | Channel | Estimating, average case: unknown channel $\mathcal{E}$, inputs from a distribution → $\mathrm{Tr}(O\,\mathcal{E}(\rho))$ for most inputs | Sample: $\mathrm{poly}(n)$ uses of the channel on random inputs | poly | poly | 🟢 🟢 🟢; average case plus locality of $O$ |
 | **Pauli channel eigenvalues, entanglement-assisted** (Chen, Zhou, Seif, Jiang 2022) | Channel | Estimating: all $4^n$ Pauli eigenvalues of a channel → any eigenvalue on demand | Sample on the Choi state: channel applied once per shot to half of a Bell pair, $O(n/\epsilon^2)$ with the entangled ancilla as quantum memory, $2^{\Omega(n)}$ without | poly per eigenvalue, from one Bell record | poly, the Bell record | 🟢 🟢 🟢 with ancilla memory; the channel version of the two-copy separation |
+| **Heisenberg–Weyl transfer matrix, limited parallel access** (Subramanian, Kwon, Jiang 2026) | Channel on $m$ qudits ($d$ prime) or $m$ bosonic modes | Estimating: a bounded query set of entries $\mathrm{Tr}[D(q_o,p_o)\mathcal{E}(D(q_i,p_i))]/d^m$ → their magnitudes | Sample on the Choi state with $c$ parallel channel uses per round: $O(\log(M/\delta)/\epsilon^4)$ with one use of $\mathcal{E}\otimes\mathcal{E}^*$, tight in $\epsilon$; without the conjugate channel $\Omega(d^{m+m'}/(c^2\epsilon^2))$ for every $c < d$, efficient only at $c = d$ with $\epsilon^{-2d}$; bosonic channels exponential for all $c = O(1/\epsilon)$ | poly | poly | 🟢 🟢 🟢 with conjugate access; the channel version of the conjugate-pair row and of the $d$-copy hierarchy for qudits |
 | **Amplitude estimation** | State, through its preparation circuit | Estimating: one observable → its value | Query: $O(1/\epsilon)$ calls to the preparation circuit | poly | poly | 🟢 🟢 🟢; Heisenberg rate |
 | **Heisenberg-limited Hamiltonian learning** (Huang et al. PRL 2023) | Hamiltonian | Estimating: known interaction graph → the coupling values | Query to the dynamics $e^{-iHt}$: total evolution time $T \sim 1/\epsilon$ | poly | poly | 🟢 🟢 🟢; locality promise plus queries to the dynamics |
 | **Pauli channel estimation, sequence-based** (Flammia, Wallman 2020; Harper, Flammia, Wallman 2020) | Channel | Estimating: Pauli eigenvalues of a noise channel under a sparse or local model → values | Query: repeated application of the channel in sequences of varying length, interleaved with random Pauli twirls | poly for sparse or local noise | poly | 🟢 🟢 🟢; sparse or local noise model; sequential use buys robustness against state-preparation and measurement errors |
@@ -677,8 +741,16 @@ Literature:
 * **Aaronson, Chen, Hazan, Kale, Nayak (NeurIPS 2018):** Online learning of quantum states, regret $O(\sqrt{Tn})$, mistake bound $O(n/\epsilon^2)$, MMW inside.
 * **Zhao, Rubin, Miyake (PRL 2021) / Wan, Huggins, Lee, Babbush (2023):** Fermionic and matchgate shadows. **Bertoni et al. (PRL 2024) / Hu, Choi, You (PRL 2023):** shallow and locally scrambled shadows.
 * **Volberg, Zhang (2023) / Arunachalam, Dutt, Escudero Gutiérrez (2024):** Noncommutative Bohnenblust–Hille inequality and learning of low-degree quantum objects: a polynomial dictionary in disguise.
+* **Chen, O'Donnell, Pelecanos, Wright (2026):** Online shadow tomography at the classical rates, $O(\log M\sqrt{\log d}/\epsilon^3)$ and $O(\sqrt M/\epsilon^2)$, via the excitation (quantum Efron–Stein) decomposition as a measure of measurement damage.
+* **Klein, Slote, Volberg, Zhang (2023):** A dimension-free Remez inequality gives Bohnenblust–Hille inequalities over cyclic groups and hence $O(\log n)$-sample low-degree learning on $K$-level qudits in the Heisenberg–Weyl basis.
+* **Zhang, Sun, Fang, Zhang, Yuan, Lu (PRL 2021):** Classical shadows on a four-qubit photonic processor; uniform, biased, and derandomized shadows against importance sampling and grouping, plus purities and PT-moments from U-statistics.
+* **Fu, Koh, Goh, Kong (2024):** Minsker's optimal median-of-means constants and a U-statistic median for classical shadows; the estimator should match the measurement ensemble.
+* **Ippoliti (Quantum 2024):** Bell and locally entangled measurement bases within one copy: $3^{k/2}$ for compatible Paulis, $(3/2)^k$ with GHZ bases, at the price of unlearnable operators.
+* **Heyraud, Chomet, Tilly (2024):** Clifford-3-cubatures; the $SO(2n)$ matchgate ensemble and all discrete matchgate ensembles in the literature give equivalent shadows, with a gate-optimal sampling scheme.
+* **Mao, Yi, Zhu (2024):** Qudit shadows from the Clifford group cost only an $O(d)$ overhead independent of $n$; a single T gate removes it.
+* **Chang, Krumtünger, Larocca, West (2026):** Shadows over compact symmetric spaces $G/K$: the channel is a convex combination of the parent-group channel and a dephasing channel.
 
-**The variance bound that decides the ensemble.** The shot count of classical shadows is governed by the **shadow norm** $\|O\|_{\mathrm{shadow}}^2$, which depends on the unitary ensemble: for random single-qubit Pauli measurements, $\|P\|_{\mathrm{shadow}}^2 = 3^{k}$ for a $k$-local Pauli $P$ (local observables cheap, global ones exponential); for random $n$-qubit Cliffords, $\|O\|_{\mathrm{shadow}}^2 \leq 3\,\mathrm{Tr}(O^2)$, so *fidelity* with any pure state costs $O(1/\epsilon^2)$ shots independent of $n$, while a global Pauli still costs $\Theta(2^n)$. Neither ensemble handles global Paulis; that is the gap two-copy Bell measurements close. Two follow-ups worth knowing: **derandomization** (Huang, Kueng, Preskill, PRL 2021) picks the measurement bases greedily against a fixed observable list and beats random shadows by constant factors in practice; **Bădescu–O'Donnell** (STOC 2021) brought shadow tomography proper down to $\tilde O(\log^2 M\cdot\log d/\epsilon^4)$ copies.
+**The variance bound that decides the ensemble.** The shot count of classical shadows is governed by the **shadow norm** $\|O\|_{\mathrm{shadow}}^2$, which depends on the unitary ensemble: for random single-qubit Pauli measurements, $\|P\|_{\mathrm{shadow}}^2 = 3^{k}$ for a $k$-local Pauli $P$ (local observables cheap, global ones exponential); for random $n$-qubit Cliffords, $\|O\|_{\mathrm{shadow}}^2 \leq 3\,\mathrm{Tr}(O^2)$, so *fidelity* with any pure state costs $O(1/\epsilon^2)$ shots independent of $n$, while a global Pauli still costs $\Theta(2^n)$. Neither ensemble handles global Paulis; that is the gap two-copy Bell measurements close. Two follow-ups worth knowing: **derandomization** (Huang, Kueng, Preskill, PRL 2021) picks the measurement bases greedily against a fixed observable list and beats random shadows by constant factors in practice; **Bădescu–O'Donnell** (STOC 2021) brought shadow tomography proper down to $\tilde O(\log^2 M\cdot\log d/\epsilon^4)$ copies. Chen, O'Donnell, Pelecanos, Wright (2026) then reached the classical rates $O(\log M\sqrt{\log d}/\epsilon^3)$ and $O(\sqrt M/\epsilon^2)$, online, by tracking measurement damage as the energy of an excitation decomposition.
 
 ## Continuous-variable systems: CV shadows and Gaussian learning
 
@@ -702,6 +774,7 @@ The estimating tasks whose object is a process. The object axis is defined in th
 * **Dutkiewicz, O'Brien, Schuster (2024) / Gu, Cincio, Coles (Nat. Commun. 2024) / Li, Zou, Tong (PRL 2024) / Möbus et al. (2023):** Heisenberg-limited learning needs control; practical protocols; bosons; dissipation-enabled learning.
 * **Harper, Flammia, Wallman (Nat. Phys. 2020) / Chen, Zhou, Seif, Jiang (PRA 2022) / Caro (2024):** Pauli-noise learning in practice, the entangled-ancilla separation, the Pauli transfer matrix as the channel analogue of the Pauli spectrum.
 * **Chung, Lin (2021) / Huang, Chen, Preskill (PRX Quantum 2023):** PAC learning of channels; predicting arbitrary processes on average with polynomial data.
+* **Subramanian, Kwon, Jiang (2026):** Heisenberg–Weyl transfer matrices of qudit and bosonic channels under $c$-copy parallel access: efficient with the conjugate channel $\mathcal{E}\otimes\mathcal{E}^*$ at a tight $\epsilon^{-4}$, exponential for $c < d$ without it, a master lower bound for all $c$-copy protocols.
 
 **Two practical anchors.** *Heisenberg limit* means total evolution time $T \sim 1/\epsilon$ for precision $\epsilon$ on a coupling, versus the standard quantum limit $T \sim 1/\epsilon^2$ of incoherent repetition; the PRL 2023 protocol reaches it with product-state inputs plus a decoupling pulse sequence, no entangled probes. On the noise side, the field-standard protocols are **randomized benchmarking** (Emerson et al. 2005; Magesan et al. 2011), which extracts an average gate fidelity from the exponential decay of survival probability under random Cliffords, and **gate set tomography** (Blume-Kohout et al. 2013; Nielsen et al. 2021), the self-consistent full characterization; Flammia–Wallman's Pauli channel estimation is the sparse, scalable middle ground and the one that maps onto the noise-learning transfer named in the positioning section.
 
@@ -709,7 +782,1718 @@ The estimating tasks whose object is a process. The object axis is defined in th
 
 # Estimating (Papers)
 
-(content pending)
+Zusammenfassungen der wichtigen Paper zum Aufgabentyp **Estimating**: die Observablen sind der Input. Gegeben sind Kopien eines Zustands, Anwendungen eines Kanals oder einer Dynamik, dazu eine Liste von $M$ Observablen, explizit oder implizit, oder eine Verteilung, aus der sie gezogen werden. Zurück kommen die $M$ Erwartungswerte bis auf $\epsilon$. Die Liste kann polynomiell und explizit sein (ein Dictionary), implizit und exponentiell (alle Paulis), verteilungsgezogen (PAC) oder sequentiell (online). Der Aufgabentyp bleibt derselbe, die Budgets ändern sich.
+
+Jede Zusammenfassung folgt demselben Aufbau wie in der Searching-Sektion: Einordnung in die Tabellen, Problem, Kernresultate, Methode, Bedeutung, Bezug zum eigenen Projekt, Grenzen und offene Fragen, Fragen zum Tieferbohren. Die Statusglyphen lesen sich in der Reihenfolge Kopien · Zeit · Speicher.
+
+## Übersicht
+
+| Paper | Objekt | Was geschätzt wird | Zugriff | Kosten | Status | Versprechen |
+| --- | --- | --- | --- | --- | --- | --- |
+| Aaronson 2018 | Zustand | $M$ Zwei-Ausgangs-Messungen, $M$ und $D$ exponentiell | Sample, verschränkte Messungen über alle Kopien | $\tilde O(\log^4 M \cdot \log D/\epsilon^4)$ Kopien | 🟢 🔴 🔴 | keines; Hypothese ist eine $D\times D$-Matrix |
+| Aaronson 2007 | Zustand | $\mathrm{Tr}(E\rho)$ für die meisten $E \sim \mathcal{D}$ | Sample, Trainingsmessungen aus $\mathcal{D}$ | $m = \tilde O(n/(\gamma^4\epsilon^4))$ Trainingsdaten (Thm. 1.1), $\tilde O(n/(\epsilon\gamma^2))$ mit Faktor $\log^2 n$ (Thm. 1.2) | 🟢 🔴 🔴 | Zukunft gleicht Vergangenheit: $E$ i.i.d. aus $\mathcal{D}$ |
+| Aaronson, Chen, Hazan, Kale, Nayak 2018 | Zustand | $\mathrm{Tr}(E_t\rho)$ für adversariell gewählte $E_t$, Runde für Runde | Sample-frei nach Feedback $b_t$ | $O(n/\epsilon^2)$ Fehler, Regret $O(\sqrt{Tn})$ | 🟢 🔴 🔴 | keines; MMW über eine $2^n\times 2^n$-Hypothese |
+| Bădescu, O'Donnell 2021 | Zustand | Threshold Search, Shadow Tomography, Hypothesenauswahl | Sample, unverschränkte Kopien | $O(\log^2 m/\epsilon^2)$ für Threshold Search, $\tilde O(\log^2 m\cdot\log d/\epsilon^4)$ für Shadow Tomography | 🟢 🔴 🔴 | keines |
+| Chen, O'Donnell, Pelecanos, Wright 2026 | Zustand | Online Shadow Tomography | Sample, Messung gelifteter Observablen über $n$ Kopien | $O(\log m\sqrt{\log d}/\epsilon^3)$ oder $O(\sqrt m/\epsilon^2)$, die klassischen Raten | 🟢 🔴 🔴 | keines |
+| Huang, Kueng, Preskill 2020 | Zustand | $M$ lineare Funktionen, Auswahl nach der Messung | Sample, Einzelkopien, zufällige Cliffords oder Paulis | $O(\log M\cdot\max_i\Vert O_i\Vert^2_{\mathrm{shadow}}/\epsilon^2)$ | 🟢 🟢 🟢 | Lokalität oder beschränkte Hilbert–Schmidt-Norm |
+| Zhang, Sun, Fang, Zhang, Yuan, Lu 2021 | Zustand, 4 Photonen-Qubits | lokale Paulis, $\langle H\rangle$, $\langle H^2\rangle$, Purities, PT-Momente | Sample, Einzelkopien, lokale Cliffords in Hardware | $N_s \leq 2000$ Messungen | 🟢 🟢 🟢 | Lokalität; derandomisierte Basen |
+| Fu, Koh, Goh, Kong 2024 | Zustand | dieselben Funktionen, mit engeren Median-of-Means-Konstanten | Sample, Einzelkopien | Konstante $C$ von etwa $8$ auf $\sqrt\pi$ bzw. $\sqrt2$ | 🟢 🟢 🟢 | keines; reine Nachverarbeitung |
+| Hu, Choi, You 2023 | Zustand | Fidelities und Paulis nach lokal verwürfelter Dynamik endlicher Tiefe | Sample, Einzelkopien, Schaltkreis oder Hamiltonevolution | Shadow-Norm aus dem Entanglement Feature | 🟢 🟢 🟢 | lokale Verwürfelung, $P(U) = P(UV) = P(VU)$ |
+| Ippoliti 2024 | Zustand | Paulis, die zur Dimer-Überdeckung passen | Sample, Einzelkopien, Bell-Messung *innerhalb* einer Kopie | $3^{k/2}$ statt $3^k$, $(3/2)^k$ mit GHZ-Basen | 🟢 🟢 🟢 | Kompatibilität mit der Dimer-Überdeckung |
+| Wan, Huggins, Lee, Babbush 2023 | Zustand | lokale fermionische Observablen, Gauß-Fidelities, Slater-Überlappe | Sample, Einzelkopien, zufällige Matchgates | Varianz $\sim n^{\vert S\vert/2}$, Pfaffians in $O(n^3)$ | 🟢 🟢 🟢 | Parität, fermionische Struktur |
+| Heyraud, Chomet, Tilly 2024 | Zustand | dieselben fermionischen Größen | Sample, $\mathrm{SO}(2n)$-Ensemble oder Perfect-Matching-Unterensemble | dieselben Varianzen, gatteroptimales Sampling | 🟢 🟢 🟢 | wie oben |
+| Mao, Yi, Zhu 2024 | Qudit-Zustand, $d$ ungerade Primzahl | Fidelities und Weyl-Observablen | Sample, Einzelkopien, Qudit-Cliffords plus $k$ T-Gatter | Overhead $O(d)$ gegenüber Qubits, $O(1)$ ab einem T-Gatter | 🟢 🟢 🟢 | beschränkte Hilbert–Schmidt-Norm |
+| Chang, Krumtünger, Larocca, West 2026 | Zustand | Observablen nahe der Diagonale einer Basis | Sample, Einzelkopien, Ensembles aus $G/K$ | Varianz wie beim Elterngruppen-Protokoll, leicht besser auf der Diagonale | 🟢 🟢 🟢 | keines |
+| King, Gosset, Kothari, Babbush 2024 | Zustand | alle $4^n$ Paulis, $k$-Körper-Fermionen | Sample, Bell-Messung auf $\rho\otimes\rho$, dann Einzelkopien | $O(n\log(n/\epsilon)/\epsilon^4)$ resp. $O(k\log n\cdot p_k(4/\epsilon^2)/\epsilon^2)$ | 🟢 🟢 🟢, Zeit $\mathrm{poly}(\vert S\vert)$ | Zwei-Kopien-Speicher |
+| King, Wan, McClean 2024 | Qudit-Zustand | alle $d^2$ Displacement-Amplituden, Betrag und Vorzeichen | Sample auf $\rho\otimes\rho^*$ | $O(\log d/\epsilon^4)$; $\Omega(\sqrt d)$ auf $\rho^{\otimes K}$ | 🟢 🟢 🟢 | Konjugatzugriff |
+| Gross, Liu, Flammia, Becker, Eisert 2010 | Zustand | die Dichtematrix bei Rang $r$ | Sample, $O(rd\log^2 d)$ zufällige Pauli-Erwartungswerte | konvexes Programm, SVT | 🔴 🔴 🔴 in $n$ | Rang $r \ll d$ |
+| Keyl, Werner 2001 | Zustand | das Spektrum | Sample, kollektive Schur-Messung auf $\rho^{\otimes N}$ | Fehler $e^{-N\cdot I(s)}$ mit relativer Entropie $I$ | 🔴 🔴 🟢 in $n$ | keines |
+| Haah, Kothari, O'Donnell, Tang 2023 | Unitary | $U$ in Diamantnorm | Query, $\Theta(d^2/\epsilon)$ Anwendungen, ein Qudit | Bootstrap von $1/\epsilon^2$ auf $1/\epsilon$ | 🔴 🔴 🔴 in $n$ | keines |
+| Lewis et al. 2024 | Familie von Grundzuständen | $\mathrm{Tr}(O\rho(x))$ an neuen $x$ derselben Phase | klassische Daten $(x_\ell, y_\ell)$, Shadows | $N = \log(n/\delta)\,2^{\mathrm{polylog}(1/\epsilon)}$, Zeit $O(nN)$ | 🟢 🟢 🟢 | Gap, geometrische Lokalität, bekannte Geometrie |
+| Onorati, Rouzé, França, Watson 2023 | Gibbs- und Grundzustände | Lipschitz-Observablen einer Instanz; lokale Observablen in einer Phase | Sample, Einzelkopien | $O(\mathrm{polylog}(n)/\epsilon^2)$ resp. $O(\log(M/\delta)e^{\mathrm{polylog}(1/\epsilon)})$ | 🟢 🟢 🟢 | exponentieller Korrelationszerfall, GALI |
+| Huang, Chen, Preskill 2023 | Kanal | $\mathrm{Tr}(O\,\mathcal{E}(\rho))$ für $\rho\sim\mathcal{D}$ lokal flach | Sample, Produkt-Inputs, Pauli-Messungen | $N = O(\log n)$ bei konstantem $\epsilon$, Zeit $O(kn^kN)$ | 🟢 🟢 🟢 | lokal flache Verteilung, beschränkter Grad |
+| Arunachalam, Dutt, Escudero Gutiérrez, Palazuelos 2024 | Kanal, Unitary, Polynom | alle Pauli-Koeffizienten bei Grad $d$ | Query an $\mathcal{E}$ resp. $U$ | $\exp(\tilde O(d^2 + d\log 1/\epsilon))$, unabhängig von $n$ | 🟢 🟢 🟢 | Grad $d = O(1)$ |
+| Klein, Slote, Volberg, Zhang 2023 | Qudit-Observable, Funktion auf $\mathbb{Z}_K^n$ | Low-Degree-Approximation in $L^2$ | Sample $(\rho, \mathrm{tr}[A\rho])$ auf Produktzuständen | $O(\log n)$ Samples bei konstantem Grad | 🟢 🟢 🟢 | Grad $d$, Heisenberg–Weyl- oder Gell-Mann-Basis |
+| Haah, Kothari, Tang 2022 | Hamiltonian aus Gibbs-Zustand | die Koeffizienten bekannter Terme | Sample, Kopien von $e^{-\beta H}/Z$ | $O(\log(N/\delta)/(\beta^2\epsilon^2))$, Zeit linear darin | 🟢 🟢 🟢 | $\beta < \beta_c$, Low-Intersection |
+| Huang, Tong, Fang, Su 2023 | Hamiltonian aus Dynamik | die Koeffizienten bekannter Terme | Query, $e^{-iHt}$ mit Ein-Qubit-Clifford-Schichten | $T = O(\epsilon^{-1}\log\delta^{-1})$, Heisenberg-Limit | 🟢 🟢 🟢 | bekannter Wechselwirkungsgraph |
+| Flammia, Wallman 2020 | Pauli-Kanal | alle $4^n$ Fehlerraten, oder $s$ ausgewählte, oder ein Markov-Feld | Query, RB-artige Sequenzen von Pauli-Gattern | $O(\epsilon^{-2}n2^n)$; $O(\epsilon^{-4}\log s\log(s/\epsilon^2))$; $O_k(\epsilon^{-2}n^2\log n)$ | 🟢 🟢 🟢 bei Sparsity | Sparsity oder $k$-lokales Faktorgraph-Modell |
+| Chen, Zhou, Seif, Jiang 2022 | Pauli-Kanal | alle $4^n$ Eigenwerte | Sample auf dem Choi-Zustand mit $k$ Ancilla-Qubits | $O(n2^{n-k}/\epsilon^2)$, $O(n/\epsilon^2)$ bei $k=n$; $\Omega(2^{n/3})$ ohne Ancilla | 🟢 🟢 🟢 mit Ancilla | verschränkter Ancilla-Speicher |
+| Subramanian, Kwon, Jiang 2026 | Qudit- und bosonischer Kanal | Beträge der Heisenberg–Weyl-Transfermatrix | $c$ parallele Kopien von $\mathcal{E}$ oder von $\mathcal{E}\otimes\mathcal{E}^*$ | $O(\log(M/\delta)/\epsilon^4)$ mit $\mathcal{E}^*$; $\Omega(d^{2m})$ für $c < d$; $\epsilon^{-2d}$ bei $c = d$ | 🟢 🟢 🟢 mit Konjugat | Konjugatzugriff oder $d$-Kopien-Speicher |
+
+Sechs Familien. Die ersten fünf Paper sind die generische Shadow Tomography: sample-effizient für jede Liste, mit einer $2^n\times 2^n$-Hypothese als Preis. Die nächsten neun sind Classical Shadows und ihre Ensembles: die Shadow-Norm des Ensembles entscheidet, welche Observablen billig sind. Dann die Zwei-Kopien-Paper, die die Lücke bei globalen Paulis schließen und den Konjugatzugriff einführen, die drei Tomographie-Grenzfälle (Rang, Spektrum, Unitary), die fünf Paper zum Lernen über eine Phase und über Low-Degree-Strukturen, und schließlich Hamiltonians und Kanäle. Der rote Faden für dieses Projekt: Wo eine Zeile 🟢 🟢 🟢 ist, steht ein Versprechen oder eine Ressource daneben; Zwei-Kopien-Speicher und Konjugatzugriff sind die beiden Ressourcen, die in mehreren Zeilen zugleich auftauchen.
+
+---
+## Shadow Tomography of Quantum States (arXiv:1711.01053)
+
+Die Arbeit von **Scott Aaronson** (UT Austin; STOC 2018, erweiterte Fassung 2018) führt das Problem ein, das dieser Tabelle den Namen gibt: Gegeben ein unbekannter $D$-dimensionaler gemischter Zustand $\rho$ und $M$ bekannte Zwei-Ausgangs-Messungen $E_1, \dots, E_M$, schätze jedes $\mathrm{Tr}(E_i\rho)$ auf $\pm\epsilon$. Das Hauptresultat: $\tilde O(\epsilon^{-4}\log^4 M\cdot\log D)$ Kopien genügen, also polynomiell viele in $n = \log D$, selbst wenn $M$ exponentiell ist. Der Name stammt von Steve Flammia: Man lernt nicht $\rho$, sondern den Schatten, den $\rho$ auf die Messungen wirft.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating im Reinformat. Die Liste der Observablen ist der Input, nichts wird gesucht, nichts identifiziert. $M$ darf exponentiell sein, und genau das unterscheidet die Zeile von der naiven Schätzung mit $O(M/\epsilon^2)$ Kopien.
+* **Objekt:** gemischter Zustand. **Zugriff:** Sample; die Messung ist aber eine verschränkte Prozedur über alle $k$ Kopien gleichzeitig, mit Quantenspeicher $k$. Das ist das andere Ende der Speicherachse gegenüber Classical Shadows.
+* **Status:** 🟢 🔴 🔴. Kopien polylogarithmisch; Zeit und Speicher exponentiell, weil die Hypothese eine $D\times D$-Matrix ist und die Messschaltung im schlimmsten Fall polynomiell in $M$ *und* $D$ ist. Das ist die Zeile "Shadow tomography, general" der Estimating-Tabelle.
+* **Versprechen:** keines. Der Preis dafür ist die Hypothesengröße; die Zeile ist der Prototyp für "hypothesis too large" im Anhang der Tabellen.
+
+### Das Problem
+
+Volle Tomographie braucht $\Theta(D^2)$ Kopien (O'Donnell–Wright, Haah et al.), für $n$ Qubits also $4^n$. Aaronson hatte 2016 gefragt, ob $\mathrm{poly}(\log D, \log M)$ Kopien für *alle* $M$ Erwartungswerte reichen könnten, und die Meinungen waren geteilt. Die naheliegende Idee, Gentle Measurement, scheitert ohne Versprechenslücke: Liegt $\mathrm{Tr}(E_i\rho)$ "auf der Kante", beschädigt jede Messung von $E_i$ die Kopien schwer, und man hat nur polylogarithmisch viele davon. Die Motivation kam aus der Quantengeld-Theorie, aber die Anwendungen reichen bis zu Quantum Advice und Einweg-Kommunikation.
+
+### Kernresultate
+
+* **Theorem 2 (Shadow Tomography).** $k = \tilde O(\log(1/\delta)\cdot\log^4 M\cdot\log D/\epsilon^4)$ Kopien genügen; die Prozedur ist explizit. Eine frühere Version hatte $1/\epsilon^5$, der Schritt zu $1/\epsilon^4$ kommt aus dem Online-Lernalgorithmus von Aaronson, Chen, Hazan, Kale und Nayak.
+* **Theorem 16 und Folgerungen (Untergrenzen).** Jede Lösung braucht $\Omega(\min\{D^2, \log M\}/\epsilon^2)$ Kopien; im klassischen Spezialfall $\Omega(\min\{D, \log M\}/\epsilon^2)$, und dort ist die Schranke scharf. Bei beliebig großem $M$ subsumiert das die $\Omega(D^2)$-Schranke der Tomographie. Ob quantenmechanisch $(\log M)^{O(1)}$ Kopien unabhängig von $D$ reichen, bleibt offen.
+* **Proposition 20 (Promise-Gap-Version).** Mit einem Versprechen $\mathrm{Tr}(E_i\rho) \geq c_i$ oder $\leq c_i - \epsilon$ genügen $O(\log M/\epsilon^2)$ Kopien per Gentle Measurement; das ist der leichte Teil.
+* **Quantum-Occam-Vergleich (Theorem 3).** Der PAC-Satz von 2007 gibt $\tilde O(\log D/(\gamma^4\epsilon^4))$ Kopien, aber nur für einen $1-\gamma$-Anteil der Messungen; Shadow Tomography verlangt alle.
+* **Anwendungen (Abschnitt 2).** Private-Key-Quantengeld, kopiergeschützte Software, Quantum Advice, Einweg-Kommunikation; Brandão et al. reduzierten anschließend die Rechenzeit per SDP.
+
+### Methodischer Ansatz
+
+1. **Postselected Learning.** Starte mit der maximal gemischten Hypothese $\rho_0 = I/D$. Finde eine Messung $E_i$, auf der die aktuelle Hypothese um mehr als $\epsilon$ danebenliegt, und aktualisiere $\rho_t$ durch simulierte Postselektion auf ein Ergebnis, das mit $\rho$ verträglich ist. Weil $\rho$ Gewicht mindestens $1/D$ in $I/D$ hat, konvergiert das nach $\Theta(\log D)$ Iterationen. Das ist Boosting bzw. Multiplicative Weights in Quantensprache und stammt aus dem Beweis $\mathrm{BQP/qpoly} \subseteq \mathrm{PostBQP/poly}$.
+2. **Gentle Search.** Es gibt keine Alice, die die verletzten Messungen kennt. Der Quantum-OR-Bound (Aaronson 2006, korrigiert von Harrow, Lin und Montanaro) entscheidet mit $O(\log M/\epsilon^2)$ Kopien, *ob* ein $E_i$ mit $\mathrm{Tr}(E_i\rho) \geq c$ existiert, ohne die Kopien zu zerstören.
+3. **Binäre Suche** über die Liste macht aus dem Entscheidungs- ein Suchproblem; die Fehlerlücke schrumpft dabei von $\epsilon$ auf $\epsilon - \alpha$, $\epsilon - 2\alpha$ und so weiter, und das erzeugt den Faktor $\log^4 M$.
+
+### Bedeutung und Anwendungen
+
+* Das Paper definiert die Estimating-Spalte: Die Frage "wie viele Kopien für $M$ Fragen" ist seither das Standardmaß, und alle späteren Verbesserungen (Aaronson–Rothblum, Bădescu–O'Donnell, Chen–O'Donnell–Pelecanos–Wright) messen sich an $\log^4 M \cdot \log D/\epsilon^4$.
+* Es trennt das informationstheoretische vom rechnerischen Problem und benennt die Rechenzeit ausdrücklich als offen; Classical Shadows und Triply Efficient Shadow Tomography sind Antworten auf genau diese Lücke.
+* Epistemisch: Ein $n$-Qubit-Zustand enthält für jede polynomiell große Familie von Schaltkreisen nur $\mathrm{poly}(n)$ Bit lernbare Information.
+
+### Bezug zum eigenen Projekt
+
+* Die Zeile ist der Vergleichspunkt, gegen den die "triply efficient"-Formulierung des eigenen Papers definiert ist: sample-effizient ist hier erledigt, zeit- und speichereffizient nicht. Die Instanzenleiter in objective.md fragt genau, für welche Zustandsklassen sich die $2^n\times 2^n$-Hypothese durch ein sparsames Surrogat ersetzen lässt.
+* Die Unterscheidung "alle $M$" gegen "die meisten $M$" (Shadow Tomography gegen PAC) ist dieselbe wie zwischen Worst-Case-Garantie für jedes $(q,p)$ und Average-Case-Garantie über die Top-$k$-Verteilung im eigenen Protokoll.
+* Postselected Learning ist der konzeptionelle Vorläufer des MMW-Schritts, den das eigene CNN ersetzt; die $\Theta(\log D)$ Iterationen sind die Zahl der adaptiven Runden, die ein gelernter Decoder mindestens implizit durchläuft.
+
+### Grenzen und offene Fragen
+
+* Die Messung ist eine gemeinsame Messung über alle $k$ Kopien mit Schaltkreisen polynomieller Größe in $M$ und $D$; für Hardware ist das nicht umsetzbar.
+* Die Lücke zwischen $1/\epsilon^4$ und $1/\epsilon^2$, und zwischen $\log^4 M$ und $\log M$, war beim Erscheinen offen; die $M$-Abhängigkeit hat Bădescu–O'Donnell auf $\log^2 M$ und Chen et al. 2026 auf $\log M$ gebracht.
+* Ob die Soundness von Aaronsons ursprünglicher OR-Prozedur gilt, ist offen; die Fassung von Harrow, Lin und Montanaro wird verwendet.
+* Keine Robustheit gegen Rauschen und keine Aussage über spezielle Observablenklassen.
+
+### Fragen zum Tieferbohren
+
+* Wie genau simuliert Bob Postselektion klassisch, und wo geht dabei $\log D$ Speicher hinein, den ein sparsames Surrogat vermeiden müsste?
+* Gilt die Untergrenze $\Omega(\min\{D^2, \log M\}/\epsilon^2)$ auch für Listen von Displacement-Operatoren mit $M = d^2$, und was sagt sie über $\rho\otimes\rho^*$?
+* Welche der Anwendungen (Quantengeld, Advice) hat eine Entsprechung in der Sprache "Zustand als Hypothese, die Vorhersagen macht"?
+
+Paper: [arXiv:1711.01053](https://arxiv.org/abs/1711.01053)
+
+---
+
+## The Learnability of Quantum States (arXiv:quant-ph/0608142)
+
+Die Arbeit von **Scott Aaronson** (Waterloo, 2006; *Proc. R. Soc. A* 2007) ist der Quantum-Occam-Satz: Ein $n$-Qubit-Zustand ist im PAC-Sinn lernbar mit einer Zahl von Trainingsmessungen, die nur linear in $n$ wächst, wenn man sich damit begnügt, die *meisten* Messungen aus einer Verteilung $\mathcal{D}$ richtig vorherzusagen. Der Autor betont, der Beitrag sei konzeptionell: Die Mathematik steht bei Bartlett–Long und bei Ambainis, Nayak, Ta-Shma und Vazirani, die Beobachtung, dass sie zusammen einen Lernsatz ergeben, ist neu.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating, Average Case. Gegeben sind Trainingsmessungen $E_1, \dots, E_m \sim \mathcal{D}$ mit ihren Werten, zurück kommt eine Hypothese $\sigma$, die $\mathrm{Tr}(E\rho)$ für einen $1-\epsilon$-Anteil der $E \sim \mathcal{D}$ auf $\gamma$ genau trifft. Die Zeile "PAC learning of states" der Estimating-Tabelle.
+* **Objekt:** gemischter Zustand. **Zugriff:** Sample; jede Trainingsmessung wird auf $\Theta(\log m/\eta^2)$ Kopien wiederholt, oder in der Measure-Once-Variante (Theorem 1.3) auf genau eine.
+* **Status:** 🟢 🔴 🔴. Trainingsdaten linear in $n$; das Finden einer konsistenten Hypothese ist ein QMA-Suchproblem, per SDP in $\mathrm{poly}(2^n)$ lösbar. Effizient nur für strukturierte Klassen, zuerst Stabilizerzustände (Rocchetto 2018).
+* **Versprechen:** kein Versprechen über den Zustand, aber eines über die Daten: Zukunft gleicht Vergangenheit, die Testmessungen stammen aus derselben Verteilung wie die Trainingsmessungen.
+
+### Das Problem
+
+Tomographie braucht $4^n$ Observablen; Häffner et al. brauchten für acht Ionen 656.100 Experimente. Für tausend Teilchen wäre eine Beschreibung nicht einmal in kosmischen Zeitskalen zu gewinnen, und dann stellt sich die Frage, was der Zustand überhaupt *bedeutet*: Er sollte wenigstens eine Hypothese sein, die vergangene Beobachtungen zusammenfasst und künftige vorhersagt. Die Antwort des Papers: Für Vorhersagen genügt "pretty-good tomography".
+
+### Kernresultate
+
+* **Theorem 1.1.** Mit $m \geq \frac{K}{\gamma^2\epsilon^2}\big(\frac{n}{\gamma^2\epsilon^2}\log^2\frac{1}{\gamma\epsilon} + \log\frac1\delta\big)$ Trainingsmessungen ist die Trainingsmenge mit Wahrscheinlichkeit $1-\delta$ "gut": Jede Hypothese $\sigma$ mit $|\mathrm{Tr}(E_i\sigma) - \mathrm{Tr}(E_i\rho)| \leq \eta$ auf allen Trainingsdaten erfüllt $\Pr_{E\sim\mathcal{D}}[|\mathrm{Tr}(E\sigma) - \mathrm{Tr}(E\rho)| > \gamma] \leq \epsilon$, sofern $\gamma\epsilon \geq 7\eta$.
+* **Theorem 1.2.** Bessere Abhängigkeit von $\gamma$ und $\epsilon$ zum Preis von $n\log^2 n$: $m \geq \frac{K}{\epsilon}\big(\frac{n}{(\gamma-\eta)^2}\log^2\frac{1}{(\gamma-\eta)\epsilon} + \log\frac1\delta\big)$; in Anhang 9 wird gezeigt, dass das nahezu optimal ist.
+* **Theorem 1.3 (Measure once).** Mit einem einzigen Bit pro Messung und einer Hypothese, die den quadratischen Verlust minimiert, steigt der Bedarf von $\sim n/(\gamma^4\epsilon^4)$ auf $\sim n/(\gamma^8\epsilon^4)$: $m \geq \frac{K}{\gamma^4\epsilon^2}\big(\frac{n}{\gamma^4\epsilon^2}\log^2\frac1{\gamma\epsilon} + \log\frac1\delta\big)$.
+* **Adaptive Messungen (Objection 2).** Für $r$ adaptive Runden reichen $O(nr)$ Samples, und das ist optimal.
+* **Anwendungen.** $R^1(f) = O(M\,Q^1(f))$ für die Einweg-Kommunikationskomplexität jeder Booleschen Funktion; $\mathrm{HeurBQP/qpoly} \subseteq \mathrm{HeurQMA/poly}$: vertrauenswürdiger klassischer Rat verifiziert unvertrauten Quantenrat auf den meisten Eingaben.
+
+### Methodischer Ansatz
+
+* **Fat-Shattering-Dimension.** Die Hypothesenklasse der $n$-Qubit-Zustände, als reellwertige Funktionen $E \mapsto \mathrm{Tr}(E\rho)$, hat $\gamma$-Fat-Shattering-Dimension $O(n/\gamma^2)$. Der Beweis dreht die Untergrenze für Quantum Random Access Codes von Ambainis et al. um: Wer $k$ Bits mit Fehler $p$ in $n$ Qubits kodieren will, braucht $n \geq (1-H(p))k$; also können $n$ Qubits nicht mehr als $O(n/\gamma^2)$ Messungen "shattern".
+* **Bartlett–Long.** Für reellwertige Hypothesenklassen mit beschränkter Fat-Shattering-Dimension gibt es Generalisierungsschranken; sie liefern die Formeln der Theoreme.
+* **Distribution-free.** $\mathcal{D}$ muss nur existieren, nicht bekannt sein; derselbe Algorithmus funktioniert für jedes $\mathcal{D}$.
+
+### Bedeutung und Anwendungen
+
+* Der Beginn der Quantenlerntheorie für Zustände: Shadow Tomography (2018) und Online-Lernen (2018) sind Verallgemeinerungen dieses Satzes auf "alle Messungen" und auf adversarielle Reihenfolgen.
+* Objection 3 formuliert zuerst die Frage nach zeiteffizienten Speziallfällen, die später Rocchetto (Stabilizer), Grewal et al. (wenige T-Gatter) und die Promise-Kataloge der Identifying-Tabelle beantworten; die GGM-Reduktion zeigt, dass generisch effizientes Lernen Einwegfunktionen brechen würde.
+* Experimentell realisiert von Rocchetto et al. (2019).
+
+### Bezug zum eigenen Projekt
+
+* Die Average-Case-Formulierung ist die richtige Sprache für eine gelernte Decoder-Pipeline: Das CNN wird auf einer Verteilung von Instanzen trainiert und bewertet, und die Generalisierungsgarantie ist eine Aussage über diese Verteilung, nicht über jede Adresse $(q,p)$.
+* Die Fat-Shattering-Schranke $O(n/\gamma^2)$ ist das saubere Argument dafür, warum $\mathrm{poly}(n)$ Kopien informationstheoretisch immer reichen; die Härte des eigenen Problems liegt, wie in Objection 3, allein im Finden der Hypothese.
+* Objection 2 ist die Antwort auf die Frage "Phase 2 ist adaptiv, gilt der Satz noch?": Ja, mit einem Faktor $r$ in der Rundenzahl.
+
+### Grenzen und offene Fragen
+
+* Keine Aussage über Rechenzeit; effiziente Speziallfälle waren die ausdrückliche offene Frage.
+* $k$-Ausgangs-Messungen nur per Reduktion mit Faktor $k$; eine direkte Analyse fehlt.
+* Die Abhängigkeit $1/(\gamma^4\epsilon^4)$ in Theorem 1.1 ist praktisch prohibitiv; Theorem 1.2 verbessert sie gegen $n\log^2 n$.
+* Die i.i.d.-Annahme über die Messungen ist genau das, was das Online-Paper später aufhebt.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die Fat-Shattering-Rechnung für Displacement-Observablen $D_{q,p}$ auf einem einzelnen Qudit aus, wo es kein $n$ gibt, sondern nur $\log d$?
+* Lässt sich das Random-Access-Code-Argument für $\rho\otimes\rho^*$-Zugriff wiederholen, und ändert der Konjugatzugriff die effektive Dimension?
+* Welche Verteilung $\mathcal{D}$ über Observablen entspricht der Top-$k$-Verteilung des eigenen Protokolls, und was ist ihre effektive Fat-Shattering-Dimension?
+
+Paper: [arXiv:quant-ph/0608142](https://arxiv.org/abs/quant-ph/0608142)
+
+---
+
+## Online Learning of Quantum States (arXiv:1802.09025)
+
+Die Arbeit von **Scott Aaronson, Xinyi Chen, Elad Hazan, Satyen Kale und Ashwin Nayak** (UT Austin, Princeton, Google AI, Waterloo; NeurIPS 2018) verallgemeinert den PAC-Satz von 2007 auf das Online-Modell: Die Messungen $E_1, E_2, \dots$ kommen nacheinander, adversariell und adaptiv, und der Lerner muss vor jeder eine Vorhersage abgeben. Ergebnis: höchstens $O(n/\epsilon^2)$ Fehler größer als $\epsilon$, und im nicht-realisierbaren Fall Regret $O(\sqrt{Tn})$. Drei Beweise, jeder mit anderen Stärken.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating, sequentiell. Die Observablen werden eine nach der anderen enthüllt, zurück kommt pro Runde eine Vorhersage. Die Zeile "Online learning of quantum states" der Estimating-Tabelle.
+* **Objekt:** gemischter Zustand. **Zugriff:** Sample-frei im Kern: Nach jeder Runde wird ein Feedback $b_t$ mit $|b_t - \mathrm{Tr}(E_t\rho)| \leq \epsilon/3$ geliefert; woher es stammt (Einzelkopien-Messungen), ist dem Algorithmus egal.
+* **Status:** 🟢 🔴 🔴. Fehlerzahl linear in $n$; Laufzeit pro Runde exponentiell in $n$, weil $E_t$ als $2^n\times 2^n$-Matrix vorliegt und die Hypothese $\omega_t$ ebenso groß ist. Das ist unvermeidbar, solange Input und Output explizit sind.
+* **Versprechen:** keines über den Zustand, keines über die Reihenfolge der Messungen.
+
+### Das Problem
+
+Der PAC-Satz setzt voraus, dass Trainings- und Testmessungen i.i.d. aus derselben Verteilung stammen. Im Labor bestimmt die Natur, welche Messungen möglich sind, und die Menge wächst mit der Kontrolle; der Theoretiker wird Runde für Runde herausgefordert. Gesucht ist ein Lernalgorithmus, der ohne jede Verteilungsannahme auskommt und dessen Fehlerzahl beschränkt bleibt, wo auch immer die Fehler liegen.
+
+### Kernresultate
+
+* **Theorem 1 (Fehlerschranke).** Es gibt eine explizite Strategie für Hypothesen $\omega_1, \omega_2, \dots$, so dass $|\mathrm{Tr}(E_t\omega_t) - \mathrm{Tr}(E_t\rho)| > \epsilon$ höchstens $O(n/\epsilon^2)$-mal vorkommt. Das ist optimal, weil die $\epsilon$-Fat-Shattering-Dimension der Zustände $\Theta(n/\epsilon^2)$ ist.
+* **Theorem 2 (Regret).** Für konvexe, $L$-Lipschitz-Verluste $\ell_t$, insbesondere $L_1$ und $L_2$, gibt es eine Strategie mit Regret $R_T = O(L\sqrt{Tn})$ gegen die beste feste Hypothese im Nachhinein, auch bei adaptivem Gegner und ohne dass die Daten von einem Zustand stammen müssen. Untergrenze $\Omega(\sqrt{Tn})$ für $L_1$.
+* **Sequentielle Fat-Shattering-Dimension** der $n$-Qubit-Zustände: $O(n/\epsilon^2)$, über Nayaks Random-Access-Code-Schranke und "measurement decision trees". Damit funktioniert jeder Online-Algorithmus, der nur diese Dimension braucht, bis auf $\log^{3/2} T$.
+* **Anwendung.** Als Black Box in Aaronsons Shadow Tomography verbessert Theorem 1 die Kopienzahl von $1/\epsilon^5$ auf $1/\epsilon^4$.
+
+### Methodischer Ansatz
+
+1. **Regularized Follow-the-Leader / Matrix Exponentiated Gradient** (Abschnitt 3). Start bei $\omega_1 = 2^{-n}I$, Regularisierung mit der von-Neumann-Entropie, Update über die Matrixexponentialfunktion des akkumulierten Gradienten; die Konvexitäts- und Taylor-Argumente werden von reellen auf komplexe Matrizen übertragen. Beste Parameter, Anschluss an die Online-Convex-Optimization-Literatur.
+2. **Postselektion** (Abschnitt 4). Dieselbe Idee wie im Shadow-Tomography-Paper: Verfeinere die maximal gemischte Hypothese durch simulierte postselektierte Messungen; selbständig, aber ohne optimale Parameter und ohne Regret-Aussage.
+3. **Sequentielle Fat-Shattering-Dimension** (Abschnitt 5). Gibt die Regret-Schranke über Rakhlin et al. und macht den Satz portabel auf jeden Online-Lerner mit Dimensionsgarantie.
+
+### Bedeutung und Anwendungen
+
+* Das ist der MMW-Motor hinter allen späteren Shadow-Tomography-Verbesserungen: Bădescu–O'Donnell reduzieren Threshold Search auf diesen Fehler-beschränkten Lerner, King, Gosset, Kothari und Babbush berechnen ihren Mimicking State damit, King, Wan und McClean übertragen ihn auf Displacement-Operatoren.
+* Nur Einzelkopien-Messungen und verrauschtes Feedback: näher am Labor als optimale Tomographie oder Zertifizierung, die verschränkte Messungen über exponentiell viele Kopien brauchen.
+* Die Regret-Formulierung deckt den nicht-realisierbaren Fall ab: Die Daten müssen nicht von einem Zustand stammen.
+
+### Bezug zum eigenen Projekt
+
+* Das ist der Algorithmus, den das eigene Paper ausdrücklich ersetzt: "the Matrix Multiplicative Weights update that drives their adaptivity". Die Hypothese $\omega_t$ ist die $d\times d$-Matrix, die im eigenen Protokoll zum sparsamen Surrogat mit $O(k)$ Gewichten geworden ist.
+* Die Fehlerschranke $O(n/\epsilon^2)$ ist eine Obergrenze für die Zahl der adaptiven Runden, die eine Phase-2-Strategie braucht; sie sagt, dass der sequentielle Sign-Integrator höchstens $O(\log d/\epsilon^2)$-mal "überrascht" werden kann.
+* Die exponentielle Laufzeit pro Runde ist die Zeile "hypothesis too large" der Tabellen: Speicher erzwingt Zeit. Ein CNN mit fester Eingabegröße $6\times 64\times 64$ ist der Gegenentwurf, ohne Garantie.
+
+### Grenzen und offene Fragen
+
+* Regret $O(\sqrt{Tn})$ gegen $\Omega(n)$ für $L_2$ im realisierbaren Fall: die Lücke bleibt.
+* Laufzeit exponentiell, unvermeidbar bei expliziten Matrizen; für implizit gegebene $E_t$ (etwa Paulis) ist nichts gesagt.
+* Der Postselektionsbeweis liefert keine Regret-Schranke; ob er sich dafür eignet, ist offen.
+* Feedback mit Fehler $\epsilon/3$ ist vorausgesetzt; wie viele Kopien es kostet, steht außerhalb des Modells.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht das RFTL-Update konkret aus, wenn die Hypothese auf einen Träger von $k$ Displacement-Adressen beschränkt wird, und bleibt die Fehlerschranke erhalten?
+* Was ist die sequentielle Fat-Shattering-Dimension der Klasse "Zustände mit $k$-sparsamem Displacement-Spektrum"?
+* Wie verhält sich der Regret, wenn das Feedback aus Bell-Messungen auf $\rho\otimes\sigma^*$ mit *bekanntem* $\sigma$ stammt, also aus genau der Messung von Phase 2?
+
+Paper: [arXiv:1802.09025](https://arxiv.org/abs/1802.09025)
+
+---
+
+## Improved quantum data analysis (arXiv:2011.10908)
+
+Die Arbeit von **Costin Bădescu und Ryan O'Donnell** (Carnegie Mellon; STOC 2021, Langfassung *TheoretiCS* 2024) verbessert die Grundroutinen der Quantendatenanalyse quadratisch und vereinfacht ihre Beweise. Der Kern ist ein Quantum-Threshold-Search-Algorithmus mit $O(\log^2 m/\epsilon^2)$ Kopien statt $\tilde O(\log^4 m)$, daraus folgen Shadow Tomography mit $\tilde O(\log^2 m\cdot\log d/\epsilon^4)$ Kopien, die zugleich beste bekannte Abhängigkeit von allen drei Parametern beim Erscheinen, und Hypothesenauswahl unter $m$ Zuständen mit derselben Kopienzahl oder alternativ $\tilde O(\log^3 m/\epsilon^2)$.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating für Threshold Search und Shadow Tomography, Identifying für die Hypothesenauswahl. Das Paper steht deshalb in zwei Tabellen: als Verbesserung der Zeile "Shadow tomography, general" und als Quelle der $O(\log M)$-Kopien in "Identification: hypothesis selection".
+* **Objekt:** gemischter Zustand. **Zugriff:** Sample, unverschränkte Kopien $\rho^{\otimes n}$; die Messungen selbst sind kollektiv über die Kopien, wie bei Aaronson.
+* **Status:** 🟢 🔴 🔴 für Shadow Tomography, aus demselben Grund wie dort; Threshold Search selbst ist über die Observablen $A_i$ polynomiell, aber die Reduktion auf den Online-Lerner bringt die $d\times d$-Hypothese zurück.
+* **Versprechen:** keines. Neu ist die Einsicht, dass die richtige klassische Entsprechung nicht Differential Privacy, sondern *Adaptive Data Analysis* ist.
+
+### Das Problem
+
+Klassisch schätzt man $m$ Erwartungswerte aus $O(\log m/\epsilon^2)$ Samples, indem man dieselben Samples wiederverwendet. Quantenmechanisch verändert jede Messung den Zustand, und Wiederverwendung ist heikel. Die besten Schranken waren $\tilde O(\log^4 m\cdot\log d/\epsilon^4)$ (Aaronson) und $\tilde O(\log^2 m\cdot\log^2 d/\epsilon^8)$ (Aaronson–Rothblum, aus Differential Privacy). Die Autoren wollen den Kern der Sache, das Wiederverwenden unter Konditionierung, sauber und mit optimalen Parametern behandeln.
+
+### Kernresultate
+
+* **Theorem 1.1 (Threshold Search).** Gegeben Observablen $0 \leq A_i \leq 1$ und Schwellen $\theta_i$: Entweder ein $j$ mit $\mathbb{E}_\rho[A_j] > \theta_j - \epsilon$ oder die Aussage "alle $\mathbb{E}_\rho[A_i] \leq \theta_i$", mit $n = \frac{\log^2 m + \ell}{\epsilon^2}\cdot O(\ell)$ Kopien, $\ell = \log(1/\delta)$. Der Algorithmus ist *online*: Die Paare $(A_t, \theta_t)$ kommen nacheinander, und er passt oder hält an.
+* **Threshold Decision** (Anhang A): nur die Existenzfrage, $O(\log(m/\delta)/\epsilon^2)$ Kopien, eine Straffung von Harrow, Lin, Montanaro.
+* **Theorem 1.2 ($\chi^2$-stabiles Schwellen-Reporting).** Für $S \sim \mathrm{Binomial}(n,p)$ und unabhängiges exponentielles Rauschen $X$ mit $\mathbb{E}[X] \gg \mathrm{stddev}[S]$ ändert die Konditionierung auf "$S + X$ unter der Schwelle" die Verteilung von $S$ nur um $d_{\chi^2} \lesssim \Pr[B]\cdot\mathrm{stddev}[S]/\mathbb{E}[X]$. Das ist ein rein klassischer Satz und der technische Kern; er ist komponierbar wie der Sparse-Vector-Mechanismus.
+* **Theorem 1.4 (Shadow Tomography).** $n = \frac{(\log^2 m + \ell)\log d}{\epsilon^4}\cdot O(\ell)$ Kopien, online gegen adaptiv gewählte $A_t$, über die Black-Box-Reduktion auf den fehlerbeschränkten Online-Lerner von Aaronson et al.
+* **Theorem 1.5 (Hypothesenauswahl).** Unter $m$ Zuständen $\sigma_i$ finde $k$ mit $d_{\mathrm{tr}}(\rho, \sigma_k) \leq 3.01\eta + \epsilon$, $\eta = \min_i d_{\mathrm{tr}}(\rho,\sigma_i)$; Kopienzahl das Minimum aus der Shadow-Tomography-Schranke und $\tilde O(\log^3 m/\epsilon^2)$. Bei paarweise weit entfernten Hypothesen wird die klassische Optimalschranke erreicht.
+
+### Methodischer Ansatz
+
+* Die Schwierigkeit steckt im Fall $\epsilon = \delta = 1/4$, $\theta_j = 3/4$. Man misst jede Observable $A_t$ als verstärkte Zwei-Ausgangs-Messung auf $\rho^{\otimes n}$, addiert exponentielles Rauschen zur Zählstatistik und prüft eine Schwelle. Solange kein "über der Schwelle" eintritt, ist der Zustand nach Theorem 1.2 in $\chi^2$-Divergenz kaum verändert; die Divergenzen addieren sich über die Runden, und weil jede ein kleiner Bruchteil von $\Pr[B]^2$ ist, überlebt der Zustand bis zum ersten Treffer.
+* Der Übergang zu Shadow Tomography ist die Standardreduktion: Der Online-Lerner macht höchstens $O(\log d/\epsilon^2)$ Fehler, Threshold Search findet jeden Fehler mit $\log^2 m$ Kopien, und $\log d/\epsilon^2$ Fehler mal $\log^2 m/\epsilon^2$ Kopien gibt $\log^2 m\cdot\log d/\epsilon^4$.
+* Die philosophische Bemerkung der Autoren: In der Praxis ist $\log d$ klein, $\epsilon$ wichtig ($1/\epsilon^4$ ist schmerzhaft), und theoretisch ist $m$ das Interessanteste, weil $\log m$ statt $\log^2 m$ die Hypothesenauswahl auf die klassische Rate bringen würde.
+
+### Bedeutung und Anwendungen
+
+* Beste Shadow-Tomography-Schranke von 2021 bis 2026; die Threshold-Search-Primitive ist seither Standardwerkzeug, auch in Chen, O'Donnell, Pelecanos, Wright (2026), die dieselbe Reduktion mit neuem Schadensmaß auf $\log m$ bringen.
+* Die Hypothesenauswahl mit $O(\log M)$ Kopien ist die Grundlage aller Identifying-Zeilen mit polynomieller Kandidatenliste.
+* Die Perspektive "Adaptive Data Analysis statt Differential Privacy" ist die konzeptionelle Brücke, die später auch in der Efron–Stein-Sichtweise von 2026 trägt.
+
+### Bezug zum eigenen Projekt
+
+* Threshold Search ist die formale Version von "gibt es eine Adresse mit $|y_{q,p}| \geq \theta$?": genau die Frage, die Phase 1 für alle $d^2$ Adressen gleichzeitig beantwortet, dort aber nicht-adaptiv aus dem Bell-Record. Die Kopienzahl $O(\log^2 m/\epsilon^2)$ mit $m = d^2$ ist ein Vergleichswert für die $O(\log d/\epsilon^4)$ des Konjugatpaar-Verfahrens: besser in $\epsilon$, schlechter in $\log d$, und ohne Konjugat.
+* Die Hypothesenauswahl mit $3.01\eta + \epsilon$ ist der agnostische Rahmen, in dem eine Liste von Kandidatenträgern aus dem CNN bewertet werden könnte: $M$ Surrogat-Zustände, $O(\log M)$ Kopien.
+* Die $\chi^2$-Stabilität ist ein sauberes Werkzeug, um zu quantifizieren, wie viel Phase 2 die Kopien "verbraucht", wenn Probe-Messungen sequentiell auf demselben Register laufen; im eigenen Protokoll werden stattdessen frische Kopien genommen, was die Analyse trivial, aber die Kopienzahl größer macht.
+
+### Grenzen und offene Fragen
+
+* $\log^2 m$ statt $\log m$; von den Autoren als die interessanteste Lücke benannt und 2026 geschlossen.
+* $1/\epsilon^4$ statt $1/\epsilon^2$; alle Shadow-Tomography-Resultate haben "atypische" $\epsilon$-Exponenten, wie auch in Adaptive Data Analysis.
+* Keine Rechenzeit-Aussage; die Reduktion auf MMW bleibt exponentiell.
+* Die $\chi^2$-Schranke gilt für Binomialstatistik, also Zwei-Ausgangs-Messungen; Mehrausgangs-Messungen brauchen eine Reduktion.
+
+### Fragen zum Tieferbohren
+
+* Wie überträgt sich Theorem 1.2 auf die Multinomialstatistik einer Bell-Messung mit $d^2$ Ausgängen?
+* Was ist die Hypothesenauswahl-Schranke, wenn die $m$ Kandidaten selbst nur als Surrogate mit $O(k\log d)$ Bits vorliegen, und gilt $3.01\eta$ dann für die Fidelity im Displacement-Spektrum?
+* Wo genau verliert die Reduktion Threshold Search $\to$ Shadow Tomography den Faktor $\log d/\epsilon^2$, und ist das der Faktor, den Chen et al. 2026 mit dem Energie-Argument einsparen?
+
+Paper: [arXiv:2011.10908](https://arxiv.org/abs/2011.10908)
+
+---
+
+## Online Shadow Tomography Matching the Classical Bounds (arXiv:2607.29686)
+
+Die Arbeit von **Sitan Chen, Ryan O'Donnell, Angelos Pelecanos und John Wright** (Harvard, CMU, Berkeley; 2026) schließt die seit 2016 offene Lücke zwischen den quantenmechanischen und den klassischen Raten der Shadow Tomography. Zwei Protokolle: $O(\log m\sqrt{\log d}/\epsilon^3)$ Kopien, das erste mit $o(\log^2 m)$ und zugleich $\mathrm{poly}(\log d/\epsilon)$, und $O(\sqrt m/\epsilon^2)$ Kopien, dimensionsfrei und optimal unter dimensionsfreien Schranken. Beide gelten online gegen adaptiv gewählte Observablen, und das Minimum der beiden ist bis auf Konstanten die klassische Rate der Adaptive Data Analysis. Das Werkzeug ist neu: Messschaden wird über die *Excitation-Zerlegung* (Pickl 2011) gemessen, die duale Form der Quanten-Efron–Stein-Zerlegung.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating, online. Die Observablen $0 \preceq A^{(t)} \preceq 1$ kommen adaptiv aufgrund des bisherigen Transkripts, jede Antwort muss $\pm\epsilon$ treffen. Offline ist der Spezialfall fester Observablen, und auch dort verbessert das Paper alle drei Exponenten.
+* **Objekt:** gemischter Zustand. **Zugriff:** Sample, $n$ Kopien, gemessen mit Zwei-Ausgangs-Messungen an *gelifteten* Observablen $\bar A = \frac1n\sum_i A_i$ über alle Kopien, also mit Quantenspeicher $n$.
+* **Status:** 🟢 🔴 🔴. Kopien auf klassischem Niveau; das $\log m$-Protokoll läuft über MMW mit $2^n\times 2^n$-Hypothese, das $\sqrt m$-Protokoll misst direkt, aber über $d^n$-dimensionale Projektoren.
+* **Versprechen:** keines. Das ist die neue Zeile "Shadow tomography, general" mit den Raten von 2026; die Tabelle und der Absatz "What is open (1)" sind entsprechend aktualisiert.
+
+### Das Problem
+
+Klassisch (alle Matrizen diagonal) ist das Problem Adaptive Data Analysis mit $n = O(\min\{\log m\sqrt{\log d}/\epsilon^3, \sqrt m/\epsilon^2\})$ (Bassily et al.), und es gibt Evidenz für Optimalität (Nissim et al.; Lyu–Talwar). Quantenmechanisch standen $O(\log^2 m\cdot\log d/\epsilon^4)$ (Bădescu–O'Donnell, Bostanci–Bene Watts) und offline $O(\sqrt m\log m/\epsilon^2)$ (Sinha). Bei $d$ exponentiell in $m$ war online nichts besser als der triviale Schätzer. Die Frage: Sind die klassischen Raten quantenmechanisch erreichbar?
+
+### Kernresultate
+
+* **Theorem 1.2.** Online Shadow Tomography mit $n = O(\sqrt K\log(m+K)/\epsilon^2)$ Kopien, $K = \Theta(\log d/\epsilon^2)$, also $O(\log m\sqrt{\log d}/\epsilon^3)$, Erfolgswahrscheinlichkeit $9/10$.
+* **Theorem 1.3.** Online Shadow Tomography mit $n = O(\sqrt m/\epsilon^2)$ Kopien, unabhängig von $d$; verbessert das beste vorherige Online-Resultat um den Faktor $\sqrt m\log m$ und Sinhas Offline-Schranke $O(\sqrt m\log m/\epsilon^2)$ um $\log m$, und entfernt nebenbei den $\log(1/\epsilon)$-Faktor der klassischen Schranke von Dagan–Kur bei konstanter Fehlerwahrscheinlichkeit.
+* **Lemma 3.4 (Energie kontrolliert Schaden).** Für einen subnormierten Zustand $\tau$, der im Unterraum $|\bar A - \mathrm{Tr}(A\rho)\mathbb{1}| \geq \xi$ liegt, gilt $\mathrm{Tr}(\tau) \leq 18\,\mathcal{E}[\tau]/\xi^2$ mit der Energie $\mathcal{E}[\tau] = \frac1n\mathrm{Tr}(N\tau)$, $N = \sum_i Q_i$ der Zahloperator der Anregungen.
+* **Corollary 4.6 / Lemma 5.3 (Energiezuwachs pro Runde).** Beim logistischen Zwei-Ausgangs-Test wächst die Energie um höchstens $O(\lambda^2/n^2\cdot\mathrm{Tr}(f(\bar A)\tau))$, bei der verrauschten Direktmessung um $O(1/(n^2\epsilon^2))$.
+* **Anhang A.** Optimale Threshold Search über informationstheoretische Methoden.
+
+### Methodischer Ansatz
+
+1. **Excitation-Zerlegung.** Mit $P = |\psi\rangle\langle\psi|$ (Purifikation von $\rho$) und $Q = 1-P$ zerlegt sich jeder Vektor auf $n$ Registern orthogonal in $|\phi_S\rangle = \prod_{i\in S}Q_i\prod_{i\notin S}P_i|\phi\rangle$. Für $|\psi\rangle^{\otimes n}$ liegt alle Masse auf $S = \emptyset$; je mehr Masse auf großen $S$, desto beschädigter der Zustand. Die Energie ist die mittlere Anregungszahl, in Boolescher Sprache der totale Einfluss; formal ist die Zerlegung dual zur Quanten-Efron–Stein-Zerlegung (Pelecanos, França, Marwaha, O'Donnell 2025).
+2. **Charging.** Ein "problematischer" Zustand, auf dem $\bar A$ um mehr als $\epsilon$ vom wahren Wert abweicht, hat entweder kleine Wahrscheinlichkeit oder hohe Energie (Lemma 3.4). Es genügt also, den erwarteten Energiezuwachs jeder Operation zu kontrollieren.
+3. **Viele Observablen (Theorem 1.2).** Schüler–Lehrer-Spiel wie bei Aaronson: Der Schüler läuft MMW, der Lehrer testet, ob die Schätzung $\nu$ nahe ist, mit der Zwei-Ausgangs-Messung $f(\bar A)$, $f$ logistisch mit Steilheit $\lambda$. Bei falscher Schätzung ist das Ergebnis stark verzerrt, also wenig Schaden; die Summe der Energiezuwächse ist die erwartete Fehlerzahl $O(\log d/\epsilon^2)$ mal $\lambda^2/n^2$, und $\lambda = O(n\epsilon^2/\sqrt{\log d})$ plus ein Term $me^{-\Omega(\lambda\epsilon)}$ ergeben $n = \Omega(\log m\sqrt{\log d}/\epsilon^3)$.
+4. **Wenige Observablen (Theorem 1.3).** Direkt messen, mit kompakt getragenem Kosinus-Rauschen der Breite $\Theta(\epsilon)$ (statt Gauß-Rauschen, um $\log m$ zu sparen); Energiezuwachs $O(1/(n^2\epsilon^2))$ pro Runde, nach $m$ Runden $m/(n^2\epsilon^2) \lesssim \epsilon^2$ gibt $n = \Omega(\sqrt m/\epsilon^2)$.
+
+### Bedeutung und Anwendungen
+
+* Beendet eine Lücke von zehn Jahren; die Estimating-Tabelle dieses Dokuments hat in der Spalte "Copies" jetzt die klassischen Raten stehen.
+* Spezialisiert auf diagonale Matrizen liefert das Argument neue Beweise der klassischen Raten *ohne* Differential Privacy, über Fourier-Analyse auf Produkträumen: Der Efron–Stein-Blick ist auch klassisch neu.
+* Für spezielle Observablenklassen bleibt Luft: Für Paulis war vor 2026 nichts Besseres als $1/\epsilon^4$ bekannt, und Chen, Gong, Ye zeigten, dass jede Verbesserung stark verschränkte Messungen braucht.
+
+### Bezug zum eigenen Projekt
+
+* Das Paper liefert die neue Referenzrate für die Spalte "Kopien" bei generischen Listen; der Absatz "What is open (1)" im Estimating-Kapitel war auf $1/\epsilon^4$ formuliert und ist jetzt auf $1/\epsilon^3$ mit der Lyu–Talwar-Evidenz für Optimalität gesetzt.
+* Die Energie als Schadensmaß ist ein Kandidat für die Frage, wie viel Phase 2 des eigenen Protokolls die Kopien wirklich verbraucht: Die Probe-Messung auf $\rho\otimes\sigma^*$ ist eine geliftete Observable über zwei Register, und ihre Anregungsbilanz wäre direkt berechenbar.
+* Die Bemerkung zu Paulis (kein besseres $\epsilon$ als $1/\epsilon^4$ ohne hohe Verschränkung) ist eine Warnung: Die $O(\log d/\epsilon^4)$ der Konjugatpaar-Magnitudenschätzung sind vermutlich nicht ohne größeren Quantenspeicher zu verbessern; eine empirisch beobachtete $\epsilon^{-3.2}$ wäre dann ein Instanzeneffekt, kein Protokollgewinn.
+
+### Grenzen und offene Fragen
+
+* Erfolgswahrscheinlichkeit $9/10$; die $\delta$-Abhängigkeit ist nicht ausgearbeitet.
+* Beide Protokolle brauchen Quantenspeicher $n$ und Messungen im Eigenraum gelifteter Observablen; für Hardware so wenig geeignet wie Aaronsons Original.
+* Optimalität: $\Omega(\log m\sqrt{\log d}/(\epsilon^2\log(1/\epsilon)))$ ist bewiesen, $\epsilon^{-3}$ nur für Algorithmen, die auch auf den empirischen Samples genau sind.
+* Keine Aussage über Rechenzeit; MMW bleibt.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die Excitation-Zerlegung für $\rho\otimes\rho^*$ aus, wo die zwei Register verschiedene Zustände tragen, und ist die Bell-Messung eine "geliftete" Observable im Sinne des Papers?
+* Kann das Energie-Argument die $1/\epsilon^4$ der Bell-Sampling-Magnitudenschätzung erklären oder verbessern, wenn man Bell-Messungen über mehr als zwei Kopien zulässt?
+* Was ist die Efron–Stein-Zerlegung eines Displacement-Operators $D_{q,p}$ auf $n$ Kopien eines Qudits, und wie hängt ihr Grad mit $(q,p)$ zusammen?
+
+Paper: [arXiv:2607.29686](https://arxiv.org/abs/2607.29686)
+
+---
+## Predicting Many Properties of a Quantum System from Very Few Measurements (arXiv:2002.08953)
+
+Die Arbeit von **Hsin-Yuan Huang, Richard Kueng und John Preskill** (Caltech, JKU Linz; *Nature Physics* 16, 1050 (2020)) ist das Classical-Shadows-Paper. Sie verbindet Aaronsons Sichtweise (Eigenschaften vorhersagen statt den Zustand rekonstruieren) mit rigorosen Konvergenzgarantien und dem Stabilizer-Formalismus zu einem Protokoll, das mit $O(\log M)$ Einzelkopien-Messungen $M$ lineare Funktionen vorhersagt, unabhängig von der Systemgröße und mit passender informationstheoretischer Untergrenze. Die Zielobservablen dürfen nach der Messung gewählt werden.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben $M$ lineare Funktionen $\mathrm{Tr}(O_i\rho)$, zurück kommen ihre Werte per Median-of-Means. Die Zeilen "Classical shadows, $k$-local Paulis" und, mit Clifford-Ensemble, die Fidelity-Schätzung in der Estimating-Tabelle.
+* **Objekt:** gemischter Zustand. **Zugriff:** Sample, Einzelkopien, zufällige Basis pro Kopie (Rung 1 der Zugriffsleiter, die Primitive "single-copy randomized measurements").
+* **Status:** 🟢 🟢 🟢 unter dem Versprechen, das die Shadow-Norm ausdrückt: Lokalität $k$ (Pauli-Ensemble, Norm $\leq 4^k\Vert O\Vert_\infty^2$, $3^k$ bei Tensorprodukten) oder beschränkte Hilbert–Schmidt-Norm (Clifford-Ensemble, Norm $\leq 3\,\mathrm{tr}(O^2)$). Globale Paulis kosten $3^n$ bzw. $2^n$: das ist die Lücke, die Zwei-Kopien-Messungen schließen.
+* **Versprechen:** kein Versprechen über den Zustand, nur über die Observablen.
+
+### Das Problem
+
+Tomographie skaliert exponentiell in Kopien, Speicher und Rechenzeit. MPS- und Neural-Network-Tomographie helfen nur unter Strukturannahmen. Aaronsons Shadow Tomography ist sample-effizient, braucht aber exponentiell lange Schaltkreise über alle Kopien in Quantenspeicher. Gesucht: ein Protokoll, das ebenso viele Eigenschaften vorhersagt, aber mit Einzelkopien-Messungen, effizienter Nachverarbeitung und beweisbaren Garantien.
+
+### Kernresultate
+
+* **Prozedur.** Pro Kopie: zufälliges $U$ aus dem Ensemble, Rechenbasis-Messung, speichere den Snapshot $\hat\rho = \mathcal{M}^{-1}(U^\dagger|\hat b\rangle\langle\hat b|U)$ mit $\mathbb{E}[\hat\rho] = \rho$. Für $n$-Qubit-Cliffords $\mathcal{M}_n^{-1}(X) = (2^n+1)X - I$, für Tensorprodukte von Ein-Qubit-Cliffords das Tensorprodukt von $\mathcal{M}_1^{-1}(X) = 3X - I$.
+* **Theorem 1.** $N = O(\log M\cdot\max_i\Vert O_i\Vert_{\mathrm{shadow}}^2/\epsilon^2)$ Snapshots genügen, um alle $M$ Werte auf $\epsilon$ genau zu treffen; der Beweis läuft über Varianzschranke plus Median-of-Means ($K = 2\log(2M/\delta)$ Gruppen).
+* **Theorem 2 (Untergrenze).** Jedes Einzelkopien-Verfahren braucht $\Omega(\log M\cdot\max_i\Vert O_i\Vert_{\mathrm{shadow}}^2/\epsilon^2)$ Messungen, mit der Shadow-Norm als Hilbert–Schmidt-Norm oder als exponentielle Funktion der Lokalität. Beweis über Einbettung in ein Kommunikationsprotokoll.
+* **Nichtlineare Funktionen.** $\mathrm{tr}(O\rho\otimes\rho)$ per U-Statistik über Paare unabhängiger Snapshots; Rényi-2-Entropie kleiner Subsysteme, Kosten exponentiell in $|A|$, unabhängig von $n$.
+* **Numerik.** Bis 160 Qubits; GHZ-Fidelity mit konstanter Shadow-Größe gegen NNQST, das linear in $n$ wächst und bei Phasenfehlern ($p \to 1$) Fidelity nahe eins meldet, wo sie null ist; Zweipunktfunktionen im 1D-TFIM (50 Sites) und im 2D-Heisenberg-Modell ($8\times 8$); Entanglement-Entropien gegen Brydges et al.; Energievarianz lokaler Hamiltonians.
+* **Direct Fidelity Estimation** brauchte im schlimmsten Fall $O(2^n/\epsilon^4)$ Samples; Clifford-Shadows brauchen $O(1/\epsilon^2)$ unabhängig von $n$.
+
+### Methodischer Ansatz
+
+* **Der Messkanal.** $\mathcal{M}(\rho) = \mathbb{E}[U^\dagger|\hat b\rangle\langle\hat b|U]$ ist ein Quantenkanal, invertierbar genau dann, wenn das Ensemble tomographisch vollständig ist; die Inverse ist nicht physikalisch (nicht vollständig positiv), wird aber nur klassisch angewendet.
+* **Die Shadow-Norm.** $\Vert O\Vert_{\mathrm{shadow}}^2 = \max_\sigma\mathbb{E}_U\sum_b\langle b|U\sigma U^\dagger|b\rangle\langle b|U\mathcal{M}^{-1}(O)U^\dagger|b\rangle^2$ ist eine Varianzschranke, die nur vom Ensemble und von $O$ abhängt. Für 3-Designs (Cliffords) ergibt sich $3\,\mathrm{tr}(O^2)$; für lokale Paulis faktorisiert sie über die Qubits.
+* **Speicher.** Snapshots sind Stabilizerzustände und werden im Tableau gespeichert; für Stabilizer-Observablen (GHZ, toric code) läuft die Auswertung per Gottesman–Knill in $O(n^2)$.
+
+### Bedeutung und Anwendungen
+
+* Das Arbeitspferd der Praxis: NISQ-tauglich, offener Quellcode, Grundlage der randomized-measurement-Toolbox (Elben et al. 2023), der Derandomisierung (Huang, Kueng, Preskill 2021), der fermionischen, lokal verwürfelten, Bell- und symmetrischen Ensembles der folgenden Zusammenfassungen.
+* Die Shadow-Norm ist die Sprache, in der alle späteren Ensemble-Papiere ihre Ergebnisse ausdrücken; Theorem 2 sagt, dass die exponentielle Lokalitätsabhängigkeit ein Naturgesetz für Einzelkopien ist, kein Artefakt.
+* Der Vergleich mit NNQST ist die erste saubere Gegenüberstellung von beweisbaren und gelernten Decodern auf derselben Aufgabe.
+
+### Bezug zum eigenen Projekt
+
+* Theorem 2 ist die Einzelkopien-Wand, gegen die das Projekt arbeitet: Für Displacement-Operatoren auf einem Qudit ist die Shadow-Norm des verallgemeinerten Clifford-Ensembles $\Omega(d)$ (King, Wan, McClean, Theorem 31), also $\Omega(d/\epsilon^2)$ Kopien für alle $d^2$ Amplituden. Die Konjugatpaar-Messung ist der Ausweg, und dieses Paper liefert die Referenz, gegen die der Vorteil gemessen wird.
+* Median-of-Means ist der Schätzer, den auch Phase 1 benutzt; die Konstanten dieses Papers sind konservativ (Fu et al. 2024).
+* Die Numerik ist ein Vorbild für die Instanzenleiter: dieselben Modelle (TFIM, Heisenberg), dieselben Observablen (Zweipunktfunktionen), dieselbe Gegenüberstellung mit einem gelernten Modell.
+
+### Grenzen und offene Fragen
+
+* Globale Observablen: Pauli-Strings der Länge $n$ kosten $3^n$ Shadows, eine direkte Messung $1/\epsilon^2$; die Autoren nennen es selbst das "non-example".
+* Für nichtlineare Funktionen gibt es keine Untergrenze.
+* $n$-Qubit-Cliffords brauchen $n^2/\log n$ verschränkende Gatter; Shallow Shadows (Bertoni et al., Hu–Choi–You, Ippoliti) sind die Antwort.
+* Rauschen: robuste Varianten (Chen, Yu, Zeng, Flammia 2021; Koh, Grewal 2022) kamen später.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die Shadow-Norm des verallgemeinerten Qudit-Clifford-Ensembles für $D_{q,p}$ konkret aus, und warum trägt sie den Faktor $d$ (Vergleich mit Theorem 31 bei King, Wan, McClean und mit Mao, Yi, Zhu)?
+* Kann die U-Statistik-Konstruktion für $\mathrm{tr}(O\rho\otimes\rho)$ die Bell-Messung auf $\rho\otimes\rho$ *simulieren*, und was kostet die Simulation im Vergleich zur echten Zwei-Kopien-Messung?
+* Was genau bricht bei NNQST im Fall $p = 1$, und welche Zertifikatsgröße würde einen gelernten Decoder vor demselben Fehler bewahren?
+
+Paper: [arXiv:2002.08953](https://arxiv.org/abs/2002.08953)
+
+---
+
+## Experimental quantum state measurement with classical shadows (arXiv:2106.10190)
+
+Die Arbeit von **Ting Zhang, Jinzhao Sun, Xiao-Xu Fang, Xiao-Ming Zhang, Xiao Yuan und He Lu** (Shandong, Peking, Oxford, Hongkong; *Phys. Rev. Lett.* 127, 200501 (2021)) prüft die Classical-Shadows-Familie auf einem photonischen Vier-Qubit-Prozessor unter realistischen Bedingungen: endliche Messzahlen, verrauschte Operationen. Verglichen werden uniforme, lokal verzerrte und derandomisierte Shadows mit Importance Sampling und Observablen-Gruppierung, für lineare Observablen, Hamilton-Momente und nichtlineare Größen wie Purities und PT-Momente.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben Listen lokaler Paulis, ein Hamiltonian, Subsystem-Purities und Momente der partiellen Transposition; zurück kommen die Werte. Neue Zeile "Classical shadows in hardware" der Estimating-Tabelle.
+* **Objekt:** ein präparierter Vier-Qubit-GHZ-Zustand mit Fidelity $0.9546 \pm 0.0006$ (per QST). **Zugriff:** Sample, Einzelkopien, lokale Cliffords über Wellenplatten.
+* **Status:** 🟢 🟢 🟢 bei $n = 4$; die Frage des Papers ist nicht Skalierung, sondern Konstanten und Rauschen.
+* **Versprechen:** Lokalität der Observablen ($\leq 2$-lokale Paulis); die derandomisierte Variante nutzt zusätzlich die Kenntnis der Liste.
+
+### Das Problem
+
+Ein Molekül-Hamiltonian mit $M$ Moden hat $O(M^4)$ Terme, naive Messung kostet $O(M^8/\epsilon^2)$ Shots. Fortgeschrittene Messstrategien (Importance Sampling, Gruppierung, Shadows) sind theoretisch verstanden, aber ihre Praxistauglichkeit und ihr Verhalten unter Hardware-Rauschen waren unerprobt. Die Autoren bauen den einheitlichen Rahmen von Wu et al. nach, in dem alle Strategien Spezialfälle einer Verteilung $K(\mathcal{P})$ über Messbasen mit einer Gewichtsfunktion $f$ sind.
+
+### Kernresultate
+
+* **Aufbau.** Polarisationsverschränkte Photonenpaare aus einem Sagnac-Interferometer, per Beam Displacer zu einem Hyper-Verschränkungszustand $|GHZ_4\rangle = (|HhHh\rangle + |VvVv\rangle)/\sqrt2$ in Polarisation und Pfad erweitert; Pauli-Messungen und Ein-Qubit-Cliffords aus HWP/QWP-Sätzen; fünf Koinzidenzen pro Messbasis.
+* **Lineare Observablen.** 50 zufällige $\leq 2$-lokale Paulis; der Maximalfehler fällt mit $N_s$ und liegt bei $N_s = 2000$ unter $0.1$ für alle Verfahren außer $\ell_1$-Sampling; bei fester $N_s$ und wachsender Observablenzahl ist derandomisiertes Shadowing am genauesten.
+* **Hamiltonian.** $H = J\sum_i(Z_iZ_{i+1} + X_iY_{i+1} + Y_iZ_{i+1} + X_iZ_{i+1}) + h\sum_i X_i$ mit $J = h = 1/4$: Für $\langle H\rangle$ sind LDF-Gruppierung und derandomisierte Shadows gleichauf, für $\langle H^2\rangle$ mit vielen Termen großen Trägers sind derandomisierte Shadows deutlich besser.
+* **Nichtlineare Größen.** Mit $N_s = 1000$ Shadows: Subsystem-Purities $P_A$ für alle Teilmengen per U-Statistik über Paare; $P_A < P_{AB}$ für alle $A$ zertifiziert echte Mehrteilchen-Verschränkung. PT-Momente $p_n = \mathrm{Tr}[(\rho^{T_A})^n]$ per U-Statistik über $n$-Tupel; $p_2^2 > p_3$ (Verletzung der $p_3$-PPT-Bedingung) zeigt bipartite Verschränkung auch für gemischte Zustände.
+* **Fehlerskalierung.** Der Fehler von Purity und $p_2$ fällt für kleine $N_s$ wie $1/N_s$, schneller als die asymptotische $1/\sqrt{N_s}$.
+
+### Methodischer Ansatz
+
+* Einheitlicher Schätzer $\hat o(\mathcal{P}) = \sum_l\alpha_l f(\mathcal{P}, O_l, K)\mu(\mathcal{P}, \mathrm{supp}(O_l))$ mit Ein-Shot-Ausgängen $\mu$; die Verfahren unterscheiden sich nur in $K$ und $f$: $\ell_1$-Sampling ($K \propto|\alpha_l|$), LDF-Gruppierung (kompatible Terme in Gruppen), uniforme Shadows ($K = 3^{-n}$), lokal verzerrte Shadows (Produktverteilung), derandomisierte Shadows (greedy gewählte Basen).
+* Shadows: $\hat\rho = \bigotimes_i(3U_i|b_i\rangle\langle b_i|U_i - I)$; Subsystem-Schätzer durch Einschränken des Index.
+* Vergleich gegen QST als Referenz, 20 bzw. 10 Wiederholungen für Fehlerbalken.
+
+### Bedeutung und Anwendungen
+
+* Erste Gegenüberstellung aller aktuellen Messstrategien auf derselben Hardware; die Aussage "derandomisierte Shadows gewinnen bei vielen großen Termen" ist seither Praxiswissen für VQE-artige Anwendungen.
+* Zeigt, dass Shadows nichtlineare Größen (Verschränkungsnachweise) auf echten Daten liefern, ohne Tomographie.
+* Vorläuferexperimente: Struchalin et al. (optisch, uniforme Stabilizer-Messungen), Elben et al. (Ionenfallen-Daten für Verschränkungsdetektion).
+
+### Bezug zum eigenen Projekt
+
+* Der Faktor "Hardware-Realismus" der eigenen Taxonomie hat hier einen Datenpunkt: Bei vier Qubits und $10^3$ bis $2\cdot 10^3$ Shots liegen alle Verfahren im Fehlerbereich $10^{-1}$, und Rauschen verschiebt die Rangfolge nicht.
+* Die U-Statistik-Schätzer für $p_2$ und $p_3$ sind die Einzelkopien-Simulation von Zwei- und Drei-Kopien-Observablen; der Vergleich mit einer echten Bell-Messung auf $\rho\otimes\rho$, die $\mathrm{tr}(\rho^2)$ direkt liefert, wäre das Experiment, das die Speicherachse in Hardware sichtbar macht.
+* Die Feststellung, dass das Ensemble (uniform, verzerrt, derandomisiert) die Genauigkeit bei fester Shot-Zahl bestimmt, ist das Einzelkopien-Analogon der Frage, welche Zwei-Kopien-Basis (Bell auf $\rho\otimes\rho$ oder auf $\rho\otimes\rho^*$) das Spektrum am besten sichtbar macht.
+
+### Grenzen und offene Fragen
+
+* Vier Qubits, ein Zustand; keine Aussage über Skalierung.
+* Keine Fehlerminderung; die Autoren nennen die Kombination von Shadows mit Error Mitigation als nächsten Schritt.
+* Die derandomisierte Variante braucht die Observablenliste vorab und gibt damit die "measure first, ask later"-Eigenschaft auf.
+* Die $1/N_s$-Skalierung bei kleinen $N_s$ ist beobachtet, nicht erklärt.
+
+### Fragen zum Tieferbohren
+
+* Wie viele Koinzidenzen pro Basis sind optimal, wenn die Basiswahl selbst Zeit kostet, und wie ändert das die effektive Sample-Komplexität?
+* Lässt sich das $p_3$-PPT-Kriterium aus einem Bell-Record auf $\rho\otimes\rho^*$ ablesen, und was ist die Zwei-Kopien-Entsprechung der PT-Momente?
+* Welche Rauschmodelle (Dephasierung in Polarisation gegen Pfad) erklären die Rangfolge der Verfahren, und ändert Randomized Compiling sie?
+
+Paper: [arXiv:2106.10190](https://arxiv.org/abs/2106.10190)
+
+---
+
+## Classical Shadows with Improved Median-of-Means Estimation (arXiv:2412.03381)
+
+Die Arbeit von **Winston Fu, Dax Enshan Koh, Siong Thye Goh und Jian Feng Kong** (A*STAR, SUTD, SMU Singapur; 2024) betrifft die Nachverarbeitung: Huang, Kueng und Preskill haben in ihrer Median-of-Means-Analyse großzügige Konstanten gewählt, und in der Praxis entscheiden Konstanten über Shot-Zahlen. Die Autoren übertragen Minskers optimale Konstanten und seinen permutationsinvarianten Schätzer (eine U-Statistik über Gruppenmittel) auf Classical Shadows, implementieren zwei unvollständige U-Statistik-Varianten und vergleichen numerisch auf einer Ising-Kette und auf GHZ-Zuständen.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating, unverändert; das Paper ändert nur den Schätzer, nicht die Messung. In der Estimating-Tabelle als Zeile "Median-of-means constants" neben den Classical-Shadows-Zeilen.
+* **Objekt:** Zustand. **Zugriff:** Sample, Einzelkopien; Pauli- oder Clifford-Messungen.
+* **Status:** 🟢 🟢 🟢. Die Modifikation kostet Rechenzeit $O(k^l\log k)$ für die vollständige U-Statistik und wird deshalb durch Stichproben (zufällig oder zyklisch) auf $O(m)$ gebracht.
+* **Versprechen:** keines.
+
+### Das Problem
+
+Die Median-of-Means-Schranke $\Pr[|\hat\mu - \mu| \geq C\sigma\sqrt{t/N}] \leq 2e^{-t}$ gilt bei Huang et al. mit $C \approx 8$; sie setzen $N = 34\sigma^2 k/\epsilon^2$, $t = k/2$. Minsker zeigte $C = \sqrt\pi + o(1)$ für den gewöhnlichen Median-of-Means und $C = \sqrt2 + o(1)$ für einen modifizierten Schätzer, der den Median über alle $l$-elementigen Teilmengen der Gruppenmittel nimmt. Wie viel bringt das für Shadows, und wie rechnet man den modifizierten Schätzer für große Datensätze aus?
+
+### Kernresultate
+
+* **Theorem 1 (Minsker, angepasst).** $\Pr[|\hat\mu_{\mathrm{MoM}} - \mu| \geq \sigma\sqrt{t/N}] \leq 2\exp(-t/(\pi(1+o(1))))$ für $t$ in einem Fenster $[l_{k,N}, u_{k,N}]$, also $C = \sqrt\pi$; die Momentenbedingung ist bei Quantenmessungen trivial erfüllt. Aus der Union Bound folgt $t = \log(2M/\delta)$ und die Wahl $t = k/\log k$.
+* **Theorem 2 (Minsker, U-Statistik).** Für den Median über alle $\binom{n}{l}$ Mittelwerte von $l$ Gruppenmitteln: Schranke $3\exp(-t/(2(1+o(1))))$, also $C = \sqrt2$.
+* **Zwei praktische Implementierungen.** MomRand zieht $m$ zufällige Teilmengen; MomCyc benutzt zyklische Permutationen mit Offsets aus einem modifizierten Golomb-Lineal und hat bessere asymptotische relative Effizienz bei gleichem $m$.
+* **Benchmarks.** Ising-Kette mit 50 Qubits, Pauli-Messungen (Tensornetze), Zweipunktfunktion: das einfache Mittel ist am genauesten, dann der ursprüngliche MoM; die modifizierten Schätzer überschreiten ihre Schranken bei $3.3\sigma$ und taugen hier nicht. Verrauschter GHZ-Zustand mit Clifford-Messungen, Fidelity: die modifizierten Schätzer sind besser als MoM und folgen den Schranken eng. Purity (quadratisch): das Mittel bleibt vorn.
+* **Tabelle I** (Fehler $\epsilon = 0.1$): Shots nach Mean-Schranke $80\cdot 10^6$, HKP-Schranke $1.3\cdot 10^6$, Original-MoM-Schranke $58\cdot 10^3$, neue Schranke $38\cdot 10^3$.
+* Die Unabhängigkeit der Shot-Zahl von $n$ (Fidelity von GHZ mit $r = 5, 10, 15, 20$) bleibt für alle Schätzer erhalten.
+
+### Methodischer Ansatz
+
+* Snapshots in $kl$ Gruppen, Gruppenmittel $Z_j$, dann Median über Mittel von $l$-Teilmengen; unvollständige U-Statistiken (Lee) mit Varianzformel $\mathrm{Var}\,U^{(0)} = \sigma_l^2/m + (1-1/m)\mathrm{Var}\,U$ und asymptotischer relativer Effizienz als Auswahlkriterium.
+* Bewertung gegen $3.3\sigma$-Grenzen (Ausfallwahrscheinlichkeit $0.1\%$), damit numerische und theoretische Schranken bei $\delta = 10^{-3}$ direkt vergleichbar sind.
+
+### Bedeutung und Anwendungen
+
+* Eine Faktor-1.5-Ersparnis in der Schranke gegenüber Huang et al. und ein Faktor 34 gegenüber der HKP-Zahl, ohne Änderung am Experiment und auch auf existierenden Datensätzen anwendbar.
+* Die Botschaft, dass der Schätzer zum Messensemble passen muss (Pauli: MoM oder Mittel; Clifford: modifizierter MoM), ist ein nützlicher Praxishinweis; die Normalität von $\hat o_i(N,1)$ ab $N \geq 1000$ wird bestätigt.
+
+### Bezug zum eigenen Projekt
+
+* Phase 1 des eigenen Protokolls schätzt $|y_{q,p}|^2$ als Mittelwert über den Bell-Record; die Konstanten der Konzentrationsschranke gehen direkt in die Zahl der Bell-Samples ein, und dieses Paper zeigt, wo die Faktoren zwischen Theorie und Praxis liegen.
+* Die Beobachtung "Mittel schlägt Median-of-Means in der Praxis" ist ein Argument, empirische Skalierungsexponenten (wie $\epsilon^{-3.2}$ aus der Evaluation von 2025) nicht mit worst-case-Schätzern zu vergleichen.
+* Die Wahl des Schätzers ist ein Freiheitsgrad, den ein gelernter Decoder implizit hat; die Frage, ob das CNN einen medianartigen oder mittelwertartigen Schätzer lernt, ist testbar.
+
+### Grenzen und offene Fragen
+
+* Nur zwei Testfälle; keine Theorie, warum die modifizierten Schätzer bei Pauli-Messungen scheitern (Appendix C diskutiert es).
+* Die $o(1)$-Terme werden ignoriert; die Fensterbedingungen an $t$ sind asymptotisch.
+* Für quadratische Funktionen benutzen Huang et al. Median von U-Statistiken; die Übertragung ist nicht ausgearbeitet.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die Konzentration der Bell-Record-Statistik aus (Multinomial über $d^2$ Ausgänge), und welche MoM-Variante ist dort optimal?
+* Kann ein CNN, das auf verrauschten Bell-Records trainiert wird, die Schätzerwahl implizit an das Rauschmodell anpassen, und wie würde man das nachweisen?
+* Wo liegt die Grenze zwischen "Konstanten" und "Exponenten" in der eigenen Skalierungsanalyse, wenn $d$ nur bis $64$ oder $128$ reicht?
+
+Paper: [arXiv:2412.03381](https://arxiv.org/abs/2412.03381)
+
+---
+
+## Classical Shadow Tomography with Locally Scrambled Quantum Dynamics (arXiv:2107.04817)
+
+Die Arbeit von **Hong-Ye Hu, Soonwon Choi und Yi-Zhuang You** (UC San Diego, Harvard, Berkeley, MIT; *Phys. Rev. Research* 5, 023027 (2023)) verallgemeinert Classical Shadows von 2-Design-Ensembles auf beliebige *lokal verwürfelte* Ensembles endlicher Tiefe: Verteilungen $P(U)$, die unter lokalen Basiswechseln invariant sind, $P(U) = P(UV) = P(VU)$ für Produkte $V$. Dann hängt die Rekonstruktionsabbildung nur vom *Entanglement Feature* der Snapshots ab, also von den mittleren Purities in allen Teilregionen, und Shallow Circuits sowie Hamiltonevolutionen realer Simulatoren werden zu Shadow-Ensembles mit einstellbarer Shadow-Norm.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben Fidelities oder Pauli-Observablen, zurück kommen die Werte; die Neuerung ist das Ensemble. Teil der Zeile "Classical shadows, other ensembles" (shallow and locally scrambled).
+* **Objekt:** Zustand. **Zugriff:** Sample, Einzelkopien, Evolution unter einem Schaltkreis endlicher Tiefe oder einem lokalen Hamiltonian für endliche Zeit, dann Rechenbasis-Messung.
+* **Status:** 🟢 🟢 🟢 mit Einschränkung: Es gibt $2^N$ Rekonstruktionskoeffizienten $r_A$; sie werden einmal aus dem Entanglement Feature berechnet, was für eindimensionale Systeme mit Entanglement-Feature-Dynamik effizient geht und allgemein exponentiell ist.
+* **Versprechen:** lokale Verwürfelung; approximative Verwürfelung mit kontrollierbarem Bias über das lokale Frame-Potential.
+
+### Das Problem
+
+Die beiden Grenzfälle von Huang, Kueng und Preskill, globale Cliffords für niedrigen Rang und lokale Cliffords für lokale Observablen, sind nicht interpolierbar, und zufällige Schaltkreise sind auf Ionenfallen- und Rydberg-Simulatoren schwer zu realisieren, während eine feste verschränkende Dynamik leicht ist. Gesucht: Shadows für die Dynamik, die die Hardware hergibt, mit Rekonstruktion und Sample-Komplexität, die nicht von den Details der Dynamik abhängen.
+
+### Kernresultate
+
+* **Rekonstruktionsabbildung (Gl. 7, 9, 12).** Für lokal verwürfelte Snapshot-Ensembles gilt $\sigma = \mathcal{M}[\rho] = \sum_{B,C}d^{2N-|B|}\rho_B\,\mathrm{Wg}_{B,C}W^{(2)}_{\mathcal{E}_\sigma,C}$ mit Weingarten-Funktion $\mathrm{Wg}$ und dem zweiten Entanglement Feature $W^{(2)}_{C} = \mathbb{E}\,e^{-S^{(2)}_C(\hat\sigma)}$; die Inverse ist $\rho = d^N\sum_A r_A\sigma_A$ mit Koeffizienten $r_A$ aus einem linearen Gleichungssystem mit universellen Fusionskoeffizienten. Für on-site 2-Designs kommt $\bigotimes((d+1)\sigma_i - 1)$ heraus, für globale 2-Designs $(d^2+1)\sigma - 1$.
+* **Sample-Komplexität (Gl. 15–23).** Die zustandsabhängige Shadow-Norm $\Vert O\Vert^2_{\mathcal{E}_\sigma|\rho}$ wird durch das dritte Entanglement Feature und Weingarten-Funktionen über $S_3^N$ ausgedrückt; die über lokale Basiswechsel gemittelte Norm $\Vert O\Vert^2_{\mathcal{E}_\sigma}$ hängt nur von den Entanglement Features von Ensemble und Observable ab.
+* **Zwei-Qudit-Modell.** Mit mittlerer Ein-Qudit-Purity $w$ zwischen $1$ (Produktzustand) und $2d/(d^2+1)$ (Page) interpolieren $r_A$ und Shadow-Norm analytisch zwischen den beiden Grenzfällen; bei kurzer Zeit sind lokale Observablen billiger, bei langer Zeit sind alle gleich teuer.
+* **Numerik.** Schaltkreise endlicher Tiefe und Hamiltonevolutionen einer Spinkette nach dem Vorbild von Ionenfallen und Rydberg-Arrays; die Shallow-Circuit-Messung erreicht für Fidelity- und Pauli-Aufgaben geringere Tomographie-Komplexität als Pauli- oder Clifford-Messungen; ein einziger Hamiltonian genügt für approximative Tomographie, der Bias fällt schnell auf ein kleines Plateau.
+
+### Methodischer Ansatz
+
+* Einfügen und Mitteln lokaler 2-Design-Basiswechsel $V$ in $\sigma = \mathbb{E}\,V^\dagger\hat\sigma V\,\mathrm{Tr}(V^\dagger\hat\sigma V\rho)d^N$ erlaubt die Weingarten-Rechnung, ohne die Dynamik zu kennen; nur Purities bleiben übrig.
+* Das Entanglement Feature wird entweder aus der Definition durch Sampling des Prior-Ensembles berechnet oder für unbekannte experimentelle Ensembles aus Rényi-Entropie-Messungen geschätzt; für 1D gibt es effiziente Entanglement-Feature-Dynamik.
+* Das lokale Frame-Potential quantifiziert die Abweichung von exakter Verwürfelung und damit den Bias.
+
+### Bedeutung und Anwendungen
+
+* Öffnet Shadows für analoge Simulatoren; parallel und unabhängig entstanden Shallow Shadows (Bertoni et al.), die Einordnung über Entanglement Features ist die allgemeinere.
+* Die Aussage, dass die Rekonstruktionsabbildung nur von Purities abhängt, ist ein Strukturresultat über Messkanäle mit lokaler Symmetrie; Ippoliti benutzt sie für Bell- und GHZ-Basen.
+* Der Zusammenhang Shadow-Norm $\leftrightarrow$ Entanglement Feature macht die Ensemblewahl zu einem Optimierungsproblem über die Verschränkung der Messbasis.
+
+### Bezug zum eigenen Projekt
+
+* Die Bell-Messung auf zwei Kopien ist eine feste, nicht zufällige Messbasis; das Paper zeigt, wie man eine feste verschränkende Dynamik trotzdem als Shadow-Ensemble behandelt, indem man lokal verwürfelt. Die Frage, ob Bell-Sampling auf $\rho\otimes\rho^*$ mit lokalen Qudit-Cliffords davor ein lokal verwürfeltes Zwei-Kopien-Ensemble wird, ist direkt anschließbar.
+* Das Entanglement Feature als einzige relevante Kenngröße ist ein Kandidat für den Faktor "Mixedness/Verschränkung" der eigenen Taxonomie: Es ist messbar und bestimmt die Kosten.
+* Die $2^N$ Koeffizienten $r_A$ sind ein Beispiel für "Speicher exponentiell, aber einmalig"; das eigene Coprime-Folding hat dieselbe Struktur, nur mit $d^2 \to 64\times 64$.
+
+### Grenzen und offene Fragen
+
+* $2^N$ Rekonstruktionskoeffizienten im Allgemeinen; effizient nur mit Zusatzstruktur.
+* Der Bias approximativ verwürfelter Ensembles ist numerisch, nicht rigoros kontrolliert.
+* Keine Untergrenzen; ob Shallow-Ensembles für eine Observablenklasse optimal sind, ist offen.
+* Qudits sind formal enthalten, Beispiele nur für Qubits.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht das Entanglement Feature der transversalen Bell-Basis auf $\rho\otimes\rho^*$ aus, wenn man beide Kopien als ein $2$-Qudit-System liest?
+* Kann die Weingarten-Rechnung für $U(d)^N$-Twirls auf die Heisenberg–Weyl-Gruppe eines einzelnen Qudits übertragen werden, wo es kein $N$ gibt?
+* Wie hängt die Shadow-Norm eines Displacement-Operators $D_{q,p}$ von der Zeit einer Hamiltonevolution ab, die vor der Messung läuft?
+
+Paper: [arXiv:2107.04817](https://arxiv.org/abs/2107.04817)
+
+---
+
+## Classical shadows based on locally-entangled measurements (arXiv:2305.10723)
+
+Die Arbeit von **Matteo Ippoliti** (UT Austin, Stanford; *Quantum* 2024) verschiebt die Verschränkung von den Kopien in die Messbasis: Statt jedes Qubit einzeln in einer zufälligen Pauli-Basis zu messen, werden Paare benachbarter Qubits *innerhalb einer Kopie* in der Bell-Basis gemessen. Für Pauli-Operatoren, die zur Dimer-Überdeckung passen, sinkt die Shadow-Norm quadratisch von $3^k$ auf $3^{k/2}$; andere Operatoren werden unlernbar. Eine Familie zwischen Pauli- und Bell-Basen ist tomographisch vollständig und behält einen Teil des Gewinns, und $n$-Qubit-GHZ-Basen erreichen $(3/2)^k$, optimal unter Stabilizer-Messungen.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben eine Liste von Paulis, zurück kommen ihre Werte; das Paper handelt von der Messbasis. Neue Zeile "Classical shadows, locally entangled bases" der Estimating-Tabelle.
+* **Objekt:** Zustand. **Zugriff:** Sample, Einzelkopien. Wichtig für die Tabellen: Die Bell-Messung hier ist *nicht* die Zwei-Kopien-Bell-Messung der Speicherachse, sondern eine Zwei-Qubit-Messung auf einer Kopie; Quantenspeicher bleibt eins.
+* **Status:** 🟢 🟢 🟢 für kompatible Operatoren; Nachverarbeitung ist ein Produkt über Dimere.
+* **Versprechen:** Kompatibilität mit der gewählten Dimer-Überdeckung: Der Träger schneidet jedes Dimer in $0$ oder $2$ Sites. Das ist ein Versprechen über die Observablen, nicht über den Zustand.
+
+### Das Problem
+
+Zufällige Pauli-Messungen kosten $3^k$ Shots für Gewicht $k$, und das ist informationstheoretisch optimal *im Allgemeinen*. Man kann aber Genauigkeit auf einer Operatorklasse gegen Unlernbarkeit auf einer anderen tauschen; Shallow Shadows tun das über Schaltkreistiefe mit $\sim k2^k$ für zusammenhängende Träger. Gibt es einen hardware-schonenderen Tausch mit nur Zwei-Qubit-Verschränkung?
+
+### Kernresultate
+
+* **Bell-Shadows (Abschnitt 2).** Lokal verwürfeln, Paare in der Bell-Basis messen, Standardrekonstruktion. Der Messkanal faktorisiert in Zwei-Qubit-Kanäle mit Eigenwerten $\lambda_{\circ\circ} = 1$, $\lambda_{\circ\bullet} = \lambda_{\bullet\circ} = 0$, $\lambda_{\bullet\bullet} = 1/3$; also $\Vert P\Vert_{\mathrm{sh}}^2 = 3^{k/2}$ für kompatible $P$ und Nullen sonst (nicht tomographisch vollständig). Es genügt, ein Qubit pro Dimer zu verwürfeln (Gate-Teleportation). $10^{N/2}$ von $4^N$ Operatoren sind kompatibel.
+* **Anwendungsfälle (2.3).** Stringoperatoren gerader Länge in 1D mit zwei Dimer-Überdeckungen: $2\ln(M/2)3^{k/2}/\epsilon^2$ statt $\ln M\,3^k/\epsilon^2$; hexagonale Plaquetten (Color-Code-Stabilisatoren): Vorfaktor $54$ statt $729$; $p$-Punkt-Funktionen von Zwei-Körper-Termen: $3^p$ statt $9^p$.
+* **Allgemeine Zwei-Qubit-Basen (Abschnitt 3).** Mit CPhase($\phi$) statt CZ wird der Kanal über $\delta = \ln 2 - S_2^a$ deformiert: $\lambda_{\bullet\circ} \simeq \delta/3$, $\lambda_{\bullet\bullet} \simeq 1/(3+2\delta)$, tomographisch vollständig für $\delta > 0$, Shadow-Norm $\simeq(3+2\delta)^{|A|/2}(\sqrt3/\delta)^{c_A}$ mit $c_A$ der Zahl geschnittener Dimere. Bei $\delta = \ln(11/8)$ ist $\Vert P\Vert^2_{\mathrm{sh}} = 4^{k\bmod 2}\cdot 2^k$ und schlägt Shallow Shadows ($k2^k$) ab $k \gtrsim 4$. Für Träger mit "Löchern" der Dichte $\rho$ hilft Verschränkung oberhalb einer Schwelle $\rho^*(\delta)$, gegen Shallow Shadows ab $\rho^* \gtrsim 0.945$.
+* **GHZ-Basen (Abschnitt 4).** $n$-Qubit-GHZ-Basen sind optimal unter Stabilizer-Messungen für kompatible Operatoren: $\Vert P\Vert^2_{\mathrm{sh}} = f_n^k$ mit $f_2 = \sqrt3$, $f_3 = 3/2^{2/3}$, $f_n \to 3/2$; die Schranke $(3/2)^k$ folgt daraus, dass eine Basis höchstens $2^n$ der $3^n$ Operatoren vollen Gewichts trifft; GHZ maximiert die Zahl voll getragener Stabilisatoren (Shor–Laflamme-Gewichtsverteilung).
+
+### Methodischer Ansatz
+
+* Lokale Verwürfelung macht den Kanal Pauli-diagonal; die Eigenwerte folgen aus dem Entanglement Feature der Messbasis (Hu, Choi, You; Bertoni et al.): $\lambda_A = (-1/3)^{|A|}\sum_{B\subseteq A}(-2)^{|B|}P^B$ mit $P^B$ der mittleren Subsystem-Purity der Basiszustände.
+* Basis-Zählargument: Pro Dimer werden $3$ von $9$ Zwei-Qubit-Operatoren gemessen (zwei explizit, der dritte als Produkt), also Trefferwahrscheinlichkeit $3^{-k/2}$.
+* Für typische Operatoren mit Löchern wird die geometrische Mittelung $e^{\mathbb{E}\ln\Vert P\Vert^2}$ verwendet, weil die Shadow-Norm über Größenordnungen schwankt.
+
+### Bedeutung und Anwendungen
+
+* Ein hardware-billiger Ersatz für Shallow Shadows bei Stringoperatoren, Plaquetten und Korrelationsfunktionen; Tabelle 1 des Papers ordnet Pauli-, Bell-, deformierte und GHZ-Shadows nach Skalierung und Lernbarkeit.
+* Zeigt, dass "Bell-Messung" zwei ganz verschiedene Dinge bedeuten kann: über zwei Kopien (Speicherachse) oder über zwei Qubits einer Kopie (Basiswahl). Nur die erste sieht das Pauli-Spektrum global.
+
+### Bezug zum eigenen Projekt
+
+* Die begriffliche Klärung ist für das eigene Paper wichtig: Bell-Messungen *innerhalb* einer Kopie liefern $3^{k/2}$ und bleiben an der Einzelkopien-Wand von Theorem 2 bei Huang et al.; Bell-Messungen *über* $\rho\otimes\rho^*$ liefern $O(\log d/\epsilon^4)$ für alle $d^2$ Amplituden. Die Ressource ist der zweite Zustand, nicht das verschränkende Gatter.
+* Die Idee "Genauigkeit auf einer Klasse gegen Unlernbarkeit auf einer anderen tauschen" ist eine Vorlage für Messbasen, die auf eine Promise-Klasse zugeschnitten sind; ein Dictionary-Regime könnte eine Basis wählen, die nur die Dictionary-Adressen sieht.
+* Die Schranke $(3/2)^k$ über "höchstens $2^n$ von $3^n$ Operatoren pro Basis" ist ein Zählargument, das sich auf die $d^2$ Displacement-Adressen eines Qudits übertragen ließe.
+
+### Grenzen und offene Fragen
+
+* Bell-Shadows sind tomographisch unvollständig; die deformierte Familie zahlt mit schlechterer Asymptotik.
+* GHZ-Basen brauchen Tiefe linear in $n$ oder viele Hilfsqubits; Verhalten unter Rauschen offen.
+* Nur Pauli-Observablen; die Übertragung auf Nicht-Pauli-Observablen ist nicht ausgeführt.
+* Qudits nicht behandelt.
+
+### Fragen zum Tieferbohren
+
+* Was ist die Qudit-Version: Messung in der Basis der gemeinsamen Eigenvektoren von $X\otimes X^\dagger$ und $Z\otimes Z^\dagger$ auf zwei Qudits einer Kopie, und welche Displacement-Operatoren sind dann "kompatibel"?
+* Wie verhält sich die Shadow-Norm der deformierten Basis, wenn man sie auf $\rho\otimes\rho^*$ anwendet und die Dimere über die Kopien legt?
+* Ist die Shor–Laflamme-Optimalität von GHZ ein Spezialfall einer Aussage über maximale Träger in einer Nebenklasse, die auch für Stabilizer-Träger im Displacement-Spektrum gilt?
+
+Paper: [arXiv:2305.10723](https://arxiv.org/abs/2305.10723)
+
+---
+## Matchgate Shadows for Fermionic Quantum Simulation (arXiv:2207.13723)
+
+Die Arbeit von **Kianna Wan, William J. Huggins, Joonho Lee und Ryan Babbush** (Google Quantum AI, Stanford, Columbia, Harvard; *Commun. Math. Phys.* 404, 629 (2023)) analysiert Classical Shadows aus zufälligen Matchgate-Schaltkreisen, also fermionischen Gauß-Unitaries. Hauptsatz: Die ersten drei Momente der Haar-Verteilung auf der kontinuierlichen Matchgate-Gruppe $\cong O(2n)$ stimmen mit denen der diskreten Untergruppe der Clifford-Matchgates (signierte Permutationen) überein, ein "Matchgate-3-Design". Daraus folgen effiziente Schätzer für lokale fermionische Observablen, Fidelities mit Gauß-Zuständen und Überlappe mit Slater-Determinanten, was den exponentiellen Nachverarbeitungsschritt im hybriden QC-AFQMC-Algorithmus beseitigt.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben lokale fermionische Operatoren $\gamma_S$, Gauß-Dichteoperatoren $\varrho$, Slater-Determinanten $|\varphi\rangle$; zurück kommen $\mathrm{tr}(\gamma_S\rho)$, $\mathrm{tr}(\varrho\rho)$, $\langle\psi|\varphi\rangle$. Zeile "Classical shadows, other ensembles (fermionic and matchgate)".
+* **Objekt:** Zustand eines $n$-Moden-Fermionensystems, per Jordan–Wigner als $n$ Qubits. **Zugriff:** Sample, Einzelkopien, zufälliger Matchgate-Schaltkreis, Rechenbasis-Messung.
+* **Status:** 🟢 🟢 🟢. Varianz $\sim n^{|S|/2}$ für lokale Observablen, konstant bzw. sublinear wachsend für Gauß-Fidelities und Überlappe; Nachverarbeitung in $O(n^3)$ über Pfaffians.
+* **Versprechen:** Parität: der Messkanal hat Bild $\Gamma_{\mathrm{even}}$, also müssen Zustand oder Observablen gerade Operatoren sein. Das ist physikalisch fast immer gegeben.
+
+### Das Problem
+
+Huggins et al. hatten QC-AFQMC mit Clifford-Shadows implementiert: Der Trial-Zustand wird auf dem Quantencomputer präpariert, Shadows werden gesammelt, und die Überlappe $\langle\Psi_{\mathrm{trial}}|\varphi_i\rangle$ mit den Slater-Determinanten des Monte-Carlo-Laufs werden klassisch ausgewertet. Die Varianz ist konstant, aber die Auswertung $\langle b|U|\varphi_i\rangle$ mit Clifford-$U$ braucht exponentiell kleine Genauigkeit und skaliert exponentiell. Gesucht: ein Ensemble, dessen Shadows fermionische Größen effizient und mit polynomieller Varianz liefern.
+
+### Kernresultate
+
+* **Theorem 1 (drei Momente).** $\mathcal{E}^{(j)}_{M_n} = \mathcal{E}^{(j)}_{M_n\cap\mathrm{Cl}_n}$ für $j = 1, 2, 3$, mit expliziten Ausdrücken über Projektoren $|\Upsilon^{(2)}_k\rangle\!\rangle$ und $|\Upsilon^{(3)}_{k_1k_2k_3}\rangle\!\rangle$ in Liouville-Darstellung. Corollary 1: die Clifford-Matchgates bilden ein Matchgate-3-Design. Die Matchgate-Gruppe hat $2n+1$ inäquivalente Irreps, gegenüber einer nichttrivialen bei der Clifford-Gruppe.
+* **Messkanal (Gl. 30, 32).** $\mathcal{M} = \sum_\ell\binom{n}{\ell}\binom{2n}{2\ell}^{-1}\mathcal{P}_{2\ell}$ mit $\mathcal{P}_k$ dem Projektor auf Produkte von $k$ Majoranas; Inverse durch Kehrwerte der Koeffizienten auf $\Gamma_{\mathrm{even}}$.
+* **Varianz (Gl. 33–36).** Explizite Formel mit Koeffizienten $\alpha_{\ell_1\ell_2\ell_3}$; dank der Symmetrie darf die Majorana-Basis frei gewählt werden.
+* **Lokale fermionische Observablen.** $\mathrm{tr}(\tilde\gamma_S\mathcal{M}^{-1}(U_Q^\dagger|b\rangle\langle b|U_Q)) = \binom{2n}{|S|}\binom{n}{|S|/2}^{-1}\mathrm{pf}(i(Q'Q^TC_{|b\rangle}QQ'^T)|_S)$, Varianz $\leq\binom{2n}{|S|}\binom{n}{|S|/2}^{-1}\sim n^{|S|/2}$; dieselbe Skalierung wie Zhao, Rubin, Miyake, aber in beliebiger Basis.
+* **Theorem 2 (Gauß-Dichteoperatoren).** $\mathrm{tr}(\varrho_1\mathcal{P}_{2\ell}(\varrho_2))$ ist der Koeffizient von $z^\ell$ in $2^{-n}\mathrm{pf}(C_{\varrho_1})\mathrm{pf}(-C_{\varrho_1}^{-1} + zC_{\varrho_2})$; alle Koeffizienten in $O(n^3)$ (Anhang D). Varianz polynomiell beschränkt; für Gauß-Dichteoperatoren $O(\sqrt n\log n)$ (Anhang F).
+* **Überlappe mit Slater-Determinanten.** Über $\rho = \frac12(|0\rangle + |\psi\rangle)(\langle 0| + \langle\psi|)$ und $\langle\psi|\varphi\rangle = 2\,\mathrm{tr}(|\varphi\rangle\langle 0|\rho)$; effizient berechenbare Varianzschranke, ausgewertet bis 1000 Qubits mit sublinearem Wachstum. Algorithmus 1 fasst das QC-AFQMC-Protokoll zusammen.
+* **Allgemeiner Rahmen** für Produkte lokaler fermionischer Operatoren, Gauß-Dichteoperatoren und Gauß-Unitaries, inklusive Überlappe mit beliebigen reinen Gauß-Zuständen, ohne Varianzschranke.
+
+### Methodischer Ansatz
+
+* Explizite Twirl-Kanäle über die Darstellungstheorie von $O(2n)$ auf der Clifford-Algebra der Majoranas; die Gleichheit der Momente für die diskrete Untergruppe wird durch direkten Vergleich der Ausdrücke gezeigt.
+* Pfaffian-Identitäten aus Wicks Theorem; für Theorem 2 ein elementarer Zugang über die Clifford-Algebra-Struktur, der sich auf den Überlapp-Fall erweitern lässt, wo Summationsformeln fehlen.
+* Sampling der Ensembles in Anhang B; $n^2/\log n$-Gatter-Frage der Cliffords entfällt, Matchgates sind lineare Optik auf Fermionen.
+
+### Bedeutung und Anwendungen
+
+* Macht QC-AFQMC polynomiell in der Nachverarbeitung; die Autoren erweitern die Reichweite von Shadows auf globale fermionische Größen, die weder lokal noch niedrigrangig im Qubit-Sinn sind.
+* Das Matchgate-3-Design ist ein Strukturresultat mit Anwendungen jenseits von Shadows; Heyraud, Chomet und Tilly verallgemeinern es auf $SO(2n)$ und vereinheitlichen alle Matchgate-Ensembles.
+* Für $k$-Körper-Fermionen mit Einzelkopien ist $\Omega(n^k/\epsilon^2)$ nötig (King, Gosset, Kothari, Babbush, Theorem 3); Matchgate-Shadows erreichen das bis auf Logarithmen und sind damit die Einzelkopien-Referenz für die fermionische Zwei-Kopien-Zeile.
+
+### Bezug zum eigenen Projekt
+
+* Die Gauß-Unitaries sind das fermionische Gegenstück zu den Displacement-Operatoren: eine Gruppe mit expliziter Darstellungstheorie, deren Twirls sich geschlossen berechnen lassen. Das Paper ist die Vorlage dafür, wie man eine Shadow-Norm für eine strukturierte Operatorgruppe *ausrechnet*, statt sie zu schätzen.
+* Die Varianz $n^{|S|/2}$ ist eine "Lokalität in der Majorana-Basis", die sich von der Pauli-Lokalität unterscheidet; das ist das Beispiel dafür, dass der Begriff "lokal" von der Basis abhängt, in der das Spektrum gelesen wird, genau wie bei Heisenberg–Weyl gegen Pauli.
+* Der Trick, Überlappe über den Zustand $\frac12(|0\rangle + |\psi\rangle)(\dots)$ als Erwartungswerte zu schreiben, ist eine Einzelkopien-Umgehung des Hadamard-Tests und damit ein Vorbild für Phase 2, wo Vorzeichen über Erwartungswerte auf $\rho\otimes\sigma^*$ statt über kontrollierte Operationen gewonnen werden.
+
+### Grenzen und offene Fragen
+
+* Für den allgemeinen Rahmen (Produkte von Gauß-Objekten) fehlen Varianzschranken.
+* Die Überlapp-Varianz ist nur numerisch bis 1000 Qubits kontrolliert; ein analytisches $O(\mathrm{poly}(n))$ fehlt.
+* Nur gerade Operatoren; ungerade Sektoren brauchen Zusatzkonstruktionen (Anhang A).
+* Rauschrobustheit nicht behandelt.
+
+### Fragen zum Tieferbohren
+
+* Warum hat die Matchgate-Gruppe $2n+1$ Irreps auf $L(\mathcal{H}_n)$, und welche Struktur hat die Heisenberg–Weyl-Gruppe eines Qudits im Vergleich?
+* Lässt sich Theorem 2 (Polynom in $z$ aus zwei Pfaffians) auf Überlappe zwischen Gauß-Zuständen in der Displacement-Darstellung übertragen, wo Kovarianzmatrizen durch charakteristische Funktionen ersetzt werden?
+* Was ist der Zwei-Kopien-Matchgate-Shadow: Bell-Messung auf $\rho\otimes\rho$ in der Majorana-Basis, und sieht sie das ganze fermionische Spektrum?
+
+Paper: [arXiv:2207.13723](https://arxiv.org/abs/2207.13723)
+
+---
+
+## Unified Framework for Matchgate Classical Shadows (arXiv:2409.03836)
+
+Die Arbeit von **Valentin Heyraud, Héloise Chomet und Jules Tilly** (InstaDeep Paris und London; 2024) räumt die Zoologie der fermionischen Shadow-Ensembles auf. Zhao, Rubin und Miyake benutzten signierte Permutationen, Wan et al. die volle Gruppe $O(2n)$, O'Gorman Perfect Matchings; das $SO(2n)$-Ensemble war unanalysiert, und die Beziehung der Protokolle unklar. Das Paper führt *Clifford-3-Kubaturen* ein, zeigt, dass das $SO(2n)$-Ensemble eine ist, beweist die Äquivalenz aller genannten Protokolle und leitet daraus ein gatteroptimales Sampling-Schema ab.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating, derselbe Aufgabentyp wie bei Wan et al.; das Paper ändert nur die Ensemblewahl. Eintrag in der Zeile "Classical shadows, other ensembles".
+* **Objekt:** fermionischer Zustand. **Zugriff:** Sample, Einzelkopien, Matchgate-Schaltkreise aus unabhängigen zufälligen Pauli-Rotationen.
+* **Status:** 🟢 🟢 🟢, mit den Varianzen von Wan et al. und weniger Gattern.
+* **Versprechen:** wie bei Wan et al.
+
+### Das Problem
+
+Der Messkanal hängt vom 2-fach-Twirl ab, die Varianz vom 3-fach-Twirl; Ensembles mit denselben ersten drei Momenten sind für Shadows äquivalent. Wan et al. hatten das für $O(2n)$ gegen seine Clifford-Untergruppe gezeigt und die Frage nach $SO(2n)$ offen gelassen; Zhao und Miyake hatten das Fehlen bemerkt. Außerdem schienen die diskreten Ensembles eine bevorzugte Majorana-Basis auszuzeichnen, und die Beziehung der Varianzen verschiedener Unterensembles war nur teilweise bekannt.
+
+### Kernresultate
+
+* **Lemma 1.** Für eine Pauli-Rotation $R_\theta = e^{-i\theta Z/2}$ mit Winkel $\theta$ aus einer um die Clifford-Winkel symmetrischen Verteilung $\nu$ gilt $\mathbb{E}\,\mathcal{R}_\theta^{\otimes 3} = \frac{1-p}{2}(\mathcal{I}^{\otimes 3} + \mathcal{Z}^{\otimes 3}) + \frac p2(\mathcal{S}^{\otimes 3} + \mathcal{S}^{\dagger\otimes 3})$: Der dritte Twirl einer zufälligen Rotation ist eine konvexe Kombination von Clifford-Twirls.
+* **Theorem 1.** Jedes Ensemble aus Matchgate-Schaltkreisen fester Architektur mit unabhängigen Rotationen, deren Winkelverteilungen die Symmetrie erfüllen, hat dieselben ersten drei Momente wie sein Clifford-Unterensemble: eine Clifford-3-Kubatur. Insbesondere ist das $SO(2n)$-Ensemble $M_n^+$ eine Clifford-3-Kubatur, und Proposition 2 verallgemeinert das Matchgate-3-Design von Wan et al. auf $M_n^+\cap\mathrm{Cl}_n$.
+* **Propositionen 3 und 4 (Äquivalenzen).** Die Varianzen der Shadow-Schätzer sind invariant unter Reflexionen an Majorana-Operatoren (Einfügen von Vorzeichen $Q = DQ'$), und Ensembles, deren Permutationen demselben Perfect Matching entsprechen, liefern dieselben Varianzen. Damit sind die Protokolle von Zhao et al., Wan et al. und O'Gorman äquivalent.
+* **Proposition 5 / Algorithmus 1.** Ein Sampling-Schema über Perfect Matchings, das in der Gatterzahl (Givens-Rotationen) optimal ist und die Garantien der vollen Ensembles erbt.
+* Numerischer Vergleich der Schemata; die Autoren erwarten Anwendungen der Kubatur-Resultate in Randomized Benchmarking und variationalen Algorithmen.
+
+### Methodischer Ansatz
+
+* Zerlegung von $SO(2n)$-Elementen in Givens-Rotationen benachbarter Achsen, die unter Jordan–Wigner Zwei-Qubit-$XX$-Rotationen und Ein-Qubit-$Z$-Rotationen sind; die Twirl-Kanäle der Rotationen werden per Lemma 1 in Clifford-Kanäle zerlegt, und die Konvexität überträgt sich auf Produkte.
+* Die Äquivalenzbeweise laufen über die Invarianzen des 3-fach-Twirls und die Struktur der generalisierten symmetrischen Gruppe $\mathbb{Z}_2\wr\mathrm{Sym}(2n)$.
+
+### Bedeutung und Anwendungen
+
+* Beantwortet die offene Frage von Wan et al. positiv und macht die Wahl des Ensembles zu einer reinen Hardware-Frage: Man nimmt das mit den wenigsten Gattern.
+* Die Kubatur-Sicht (statt Design-Sicht) ist allgemeiner: Sie gilt für Winkelverteilungen, nicht nur für Gruppen, und ordnet Ergebnisse wie die Clifford-2-Kubaturen früherer Arbeiten ein.
+
+### Bezug zum eigenen Projekt
+
+* Die Botschaft "Momente entscheiden, nicht das Ensemble" gilt auch für die Bell-Messung auf $\rho\otimes\rho^*$: Zwei Zwei-Kopien-Messbasen mit denselben ersten drei Momenten sind für Magnituden- und Varianzfragen ununterscheidbar. Das ist ein Kriterium, um Varianten der eigenen Messung (etwa mit vorgeschalteten lokalen Qudit-Cliffords) ohne neue Analyse zu bewerten.
+* Die Invarianz unter Reflexionen ist das fermionische Gegenstück zur Frage, ob $D_{q,p}$ und $D_{-q,p}$ (also $D$ und $D^T$) für die Statistik äquivalent sind; für $\rho\otimes\rho$ gegen $\rho\otimes\rho^*$ ist genau das der Unterschied.
+* Gatteroptimale Sampling-Schemata sind der Faktor "Hardware-Realismus" auf der Messseite.
+
+### Grenzen und offene Fragen
+
+* Die Kubatur gilt für Schaltkreise fester Architektur; approximative Ensembles mit sublinearer Tiefe liefern nur approximative Twirls, und ein Schätzer dafür ist unklar.
+* Keine neuen Varianzschranken, nur Äquivalenzen.
+* Der Zusammenhang zu zufälligen phylogenetischen Bäumen (zufällige Perfect Matchings) wird als Ausblick genannt.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht Lemma 1 für Qudit-Rotationen $e^{-i\theta Z}$ mit $Z$ dem Clock-Operator aus, und welche Winkelverteilungen ergeben Qudit-Clifford-Kubaturen?
+* Gibt es eine Kubatur-Aussage für die transversale Bell-Messung mit vorgeschalteten zufälligen lokalen Cliffords auf beiden Kopien?
+* Ist das Perfect-Matching-Schema das fermionische Analogon der Dimer-Überdeckung von Ippoliti, und was verbindet die beiden Zählargumente?
+
+Paper: [arXiv:2409.03836](https://arxiv.org/abs/2409.03836)
+
+---
+
+## The Magic in Qudit Shadow Estimation based on the Clifford Group (arXiv:2410.13572)
+
+Die Arbeit von **Chengsi Mao, Changhao Yi und Huangjun Zhu** (Fudan; 2024, mit Begleitpapier zu dritten Momenten von Clifford-Orbits) klärt die Sample-Komplexität von Shadow Estimation auf Qudits ungerader Primzahldimension $d$. Die Qudit-Clifford-Gruppe ist nur ein 2-Design, und die Stabilizerzustände weichen im dritten Moment exponentiell in $n$ von einem 3-Design ab; trotzdem ist der Overhead gegenüber Qubits nur $O(d)$, unabhängig von $n$. Eine Schicht aus wenigen T-Gattern, schon ein einziges, beseitigt den Overhead und macht die Fidelity-Schätzung unabhängig von $d$ und $n$.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben Fidelities mit Stabilizer-Projektoren, Weyl-Observablen, allgemeine spurfreie Operatoren; zurück kommen die Werte mit Shadow-Norm-Garantie. Neue Zeile "Classical shadows on qudits" der Estimating-Tabelle; zugleich die Qudit-Fortsetzung der Clifford-Zeile von Huang, Kueng, Preskill.
+* **Objekt:** $n$-Qudit-Zustand, $d$ ungerade Primzahl, $D = d^n$. **Zugriff:** Sample, Einzelkopien, lokale oder globale Qudit-Cliffords, optional gefolgt von $k$ T-Gattern mit Fourier-Gattern.
+* **Status:** 🟢 🟢 🟢 für Observablen beschränkter Hilbert–Schmidt-Norm; Simulation eines Shots kostet $O((n+t)^3 + t\,d^{t+1})$ mit $t$ Magic-Gattern.
+* **Versprechen:** beschränkte Hilbert–Schmidt-Norm (global) oder $m$-Lokalität (lokal).
+
+### Das Problem
+
+Qubit-Shadows beruhen auf der 3-Design-Eigenschaft der Clifford-Gruppe. Für $d$ ungerade Primzahl ist $\mathrm{Cl}(n,d)$ kein 3-Design, und die Shadow-Norm generischer Observablen war unbekannt, obwohl Qudit-Prozessoren (Photonen, Ionen, Transmons) existieren. Wie teuer ist Qudit-Shadow-Estimation, und kann man die fehlende Design-Eigenschaft billig nachrüsten?
+
+### Kernresultate
+
+* **Lokale Cliffords (Proposition 1, Theorem 1).** Für $m$-lokale Weyl-Operatoren $\Vert O\Vert^2_{\mathrm{sh}} = (d+1)^m$; für $m$-lokale Operatoren allgemein $\leq d^m\Vert\tilde O\Vert_2^2$. Rekonstruktion $\bigotimes_j((d+1)U_j^\dagger|b_j\rangle\langle b_j|U_j - I)$.
+* **Globale Cliffords (Theorem 2).** $\Vert O\Vert_2^2 \leq\Vert O\Vert^2_{\mathrm{sh}} \leq (2d-3)\Vert O\Vert_2^2 + 2\Vert O\Vert_\infty^2$ für spurfreie $O$; diagonal in einer Stabilizerbasis $\leq (d-1)\Vert O\Vert_2^2 + d\Vert O\Vert_\infty^2$; für $n = 1$ und diagonal exakt $(d+1)\Vert O\Vert_\infty^2$. Das Verhältnis $\Vert O\Vert^2_{\mathrm{sh}}/\Vert O\Vert_2^2 \leq 2d-1$ ist unabhängig von $n$, obwohl die Operatornorm des dritten normierten Momentenoperators von $\mathrm{Stab}(n,d)$ für $d \neq 2 \bmod 3$ exponentiell wächst.
+* **Theorem 3.** Für Stabilizer-Projektoren vom Rang $K$: $\Vert O_0\Vert^2_{\mathrm{sh}}/\Vert O_0\Vert_2^2 = \frac{D+1}{D+d}(d-1-\frac dD + \frac dK)$: linear in $d$, praktisch unabhängig von $n$ ab $n \geq 5$. Stabilizerzustände sind die für Stabilizer-Messungen schwierigsten Observablen.
+* **Theorem 4 (Magic).** Mit einem Clifford gefolgt von $k$ T-Gattern (diagonale Gatter der dritten Clifford-Hierarchie, $\omega^{f(b)}$ mit kubischem $f$) gilt $\Vert O_0\Vert^2_{\mathrm{sh}} \leq\gamma_{d,k}\Vert O_0\Vert_2^2$ mit $\gamma_{d,k} = 3 + 2^{k+1}/(d(d-2)^k)$ für $d \neq 1 \bmod 3$ und einer Formel derselben Gestalt sonst; $\gamma_{d,k}$ konvergiert exponentiell in $k$ gegen den 3-Design-Wert $3$, und schon $k = 1$ entfernt den Faktor $d$.
+* **Numerik.** GHZ mit $n = 100$: Ohne T-Gatter ist die Steigung von $1/\langle\epsilon^2\rangle$ gegen $N$ etwa $\propto 1/d$; mit einem T-Gatter ist das Verhältnis der Steigungen über alle $d$ höchstens 3. Eine Dualität: die MSE hängt von der Gesamtzahl der T-Gatter in Präparation *und* Messung ab. Depolarisierte GHZ-Fidelity mit 5000 Samples gut geschätzt, Streuung sinkt mit $k$.
+
+### Methodischer Ansatz
+
+* Dritte Momente von Clifford-Orbits, insbesondere von Stabilizer- und Magic-Zuständen, aus dem Begleitpapier; der Schlüssel ist, dass die Shadow-Norm nicht die Operatornorm des Momentenoperators braucht, sondern nur bestimmte Matrixelemente.
+* Für die Simulation: verallgemeinerte Tableau-Darstellung und Gadgetisierung der T-Gatter auf Qudits, kombiniert mit Clifford-Sampling.
+
+### Bedeutung und Anwendungen
+
+* Die Verifikation von Qudit-Systemen ist leichter als befürchtet; ein einziges Magic-Gatter schließt die Lücke zu Qubits, ein neuer Anwendungsfall für "wenig Magic als Ressource".
+* Zeigt, dass Ensembles weit von 3-Designs (nach dem üblichen Maß) für Shadows genauso gut sein können; das Maß "Abstand zum 3-Design" ist für Shadows das falsche.
+
+### Bezug zum eigenen Projekt
+
+* Das ist die Einzelkopien-Referenz *auf Qudits*: Für ein einzelnes Qudit ($n = 1$) ist die Stabilizerbasis-Messung eine vollständige MUB-Menge, und die Shadow-Norm eines Displacement-Operators trägt den Faktor $d+1$ (Gl. 11). Zusammen mit Theorem 31 bei King, Wan, McClean ($\Omega(d)$ Varianz für Displacements) ist das die $\Omega(d/\epsilon^2)$-Wand, die Konjugatpaare unterlaufen.
+* T-Gatter in der Messung sind ein neuer Freiheitsgrad, der bei Bell-Messungen fehlt: Die Frage, ob ein Magic-Gatter vor der Bell-Messung die Verteilung über die $d^2$ Adressen gleichmäßiger oder informativer macht, ist offen und testbar.
+* Die Beobachtung "Stabilizerzustände sind für Stabilizer-Messungen am schwierigsten" ist das Spiegelbild von Montanaros Plateau: Wo alle Koeffizienten Betrag eins haben, ist Lokalisierung leicht und Schätzung schwer.
+
+### Grenzen und offene Fragen
+
+* Nur ungerade Primzahlen $d$; zusammengesetztes $d$ (kein Körper) ist außen vor, genau der Fall, der für dieses Projekt zählt.
+* Theorem 2 ist eine obere Schranke; für generische Observablen ist die tatsächliche Norm oft viel kleiner und $d$-unabhängig (Fig. 2).
+* Die genaue Form von $\gamma_{d,k}$ für $d = 1 \bmod 3$ ist eine andere Formel; Details im Begleitpapier.
+* Rauschen und Fehlerminderung nicht behandelt.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht Theorem 2 für $d = 4, 6, 8, 9$ aus, wo $\mathbb{Z}_d$ kein Körper ist und die Clifford-Gruppe eine andere Struktur hat?
+* Was ist die Shadow-Norm von $D_{q,p}$ unter dem Clifford-plus-T-Ensemble, und fällt der Faktor $d$ auch dort?
+* Gibt es ein Zwei-Kopien-Analogon der T-Gatter-Dualität, also eine Beziehung zwischen Magic des Zustands und Informationsgehalt eines Bell-Samples?
+
+Paper: [arXiv:2410.13572](https://arxiv.org/abs/2410.13572)
+
+---
+
+## Classical shadows over symmetric spaces (arXiv:2605.05518)
+
+Die Arbeit von **Rebecca Chang, Maureen Krumtünger, Martín Larocca und Maxwell West** (MIT, Los Alamos, Melbourne, Oak Ridge; 2026) verlässt die Annahme, dass das Shadow-Ensemble eine Gruppe ist: Sie untersucht Ensembles, die gleichverteilt aus den sieben unendlichen Familien kompakter symmetrischer Räume vom Typ I stammen, Quotienten $G/K$ der unitären, orthogonalen und symplektischen Gruppe nach den Fixpunktmengen einer Involution. Das Ergebnis ist eine einheitliche Theorie: Der Messkanal ist eine konvexe Kombination des Kanals der Elterngruppe, eines Dephasierungskanals und, bei symplektischem $G$, eines subleading Terms; für Observablen, die auf der bevorzugten Basis konzentriert sind, gibt es leichte Verbesserungen.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating; wieder ist die Neuerung das Ensemble. Eintrag in der Zeile "Classical shadows, other ensembles".
+* **Objekt:** Zustand. **Zugriff:** Sample, Einzelkopien, $U \sim G/K$ realisiert als $\sigma(g)^{-1}g$ mit $g \sim G$.
+* **Status:** 🟢 🟢 🟢; die Inversion des Kanals ist trivial, weil die Zerlegung multiplizitätsfrei ist.
+* **Versprechen:** keines über den Zustand; ein Gewinn tritt nur für Observablen mit Gewicht auf der Diagonale der Messbasis $W$ auf.
+
+### Das Problem
+
+Shadows über kompakten Gruppen sind über Schur's Lemma gut verstanden: Der Kanal ist $G$-äquivariant und zerfällt nach Irreps. Symmetrische Räume sind keine Gruppen, der Kanal ist nicht mehr äquivariant unter allen Nebenklassenvertretern, und es war unklar, ob sich etwas Systematisches sagen lässt. Motivation: Symmetrische Räume spielen in der Kompilation eine Rolle (Cartan-Zerlegungen), und die induzierten Verteilungen auf $G$ sind nicht-uniform, also möglicherweise besser an Observablenklassen anpassbar.
+
+### Kernresultate
+
+* **Lemma 1.** Der Kanal $\mathcal{M}_{G/K,W}$ kommutiert mit der adjungierten Wirkung jeder Untergruppe $H \subseteq K\cap N_W$ ($N_W$ die $W$-normalisierenden Elemente), also zerfällt er nach $H$-Irreps; in allen Fällen multiplizitätsfrei, die $s_\lambda$ sind reelle Zahlen.
+* **Theorem 1.** $\mathcal{M}_{G/K,W}(\rho) = (1-\alpha)\mathcal{M}_{G,W}(\rho) + \beta\mathcal{A}_W(\rho) + (\alpha-\beta)(J\mathcal{A}_W(\rho)J^\dagger - \mathcal{A}_W(\rho J)J)$, mit $\mathcal{A}_W$ dem Dephasierungskanal in $W$ und $J$ der symplektischen Form. Für AI, AII, CI, DIII ist $\alpha = O(d^{-2})$, also praktisch ohne Interesse; für AIII, BDI, CII ist $0 \leq\alpha\leq 1$ über die Signatur $s$ der Involution einstellbar. $\alpha = \beta$ außer für $G = SP$, dort $|\alpha - \beta| = O(1/d)$. Tabelle I gibt $\alpha_{G/K}$ für alle sieben Familien.
+* **Konsequenzen.** Die Kanäle erben das Bild des Elternkanals, also dieselbe Menge unverzerrt schätzbarer Observablen; die Varianz hängt von der 2-Norm der Projektion der Observablen auf den diagonalen Unterraum ab; bei $d = 128$ zeigen AIII und BDI knappe Verbesserungen gegenüber unitär und orthogonal, wenn die Observablen stark auf der Diagonale konzentriert sind. AIII und CII stimmen führend überein, weil symplektische Ensembles Zustands-$k$-Designs für alle $k$ sind.
+* **Sampling.** 6-Designs über die Elterngruppen genügen; für die unitäre Gruppe in logarithmischer Tiefe, für orthogonale und symplektische nicht in sublinearer Tiefe (No-go-Sätze).
+
+### Methodischer Ansatz
+
+* Twirls zweiter Ordnung über $G/K$ als Twirls vierter Ordnung über $G$ (Weingarten-Kalkül auf $U$, $O$, $SP$; für BDI $(11!!)^2$ Terme) oder direkt über Matsumotos Weingarten-Kalkül für symmetrische Räume. Theorem 1 macht die volle Rechnung überflüssig: Zwei Unbekannte werden aus wenigen Matrixelementen bestimmt.
+* Die Sampling-Vorschrift $\sigma(g)^{-1}g$ (Duenez, Matsumoto) ist links-$K$-invariant.
+
+### Bedeutung und Anwendungen
+
+* Schließt die Theorie der Shadows über die klassischen kompakten Gruppen und ihre symmetrischen Räume; die Gruppen-Fälle (unitär: HKP; orthogonal: West et al. "real shadows"; symplektisch: West et al. 2024) sind Spezialfälle.
+* Der Ausblick nennt allgemeine Darstellungen, etwa DIII mit $SO$ als Matchgate-Gruppe, wo $SO(2n)/U(n)$ die Mannigfaltigkeit reiner Gauß-Zustände ist: eine Brücke zu den Matchgate-Papieren.
+
+### Bezug zum eigenen Projekt
+
+* Das Ensemble-Denken "konvexe Kombination aus Elternkanal und Dephasierung" beschreibt auch Bell-Messungen mit unvollkommenen Gattern: Ein Rauschkanal vor der Bell-Basis wirkt wie eine Dephasierung in der Bell-Basis, und die Formel sagt, wie sich die Rekonstruktion ändert. Das ist relevant für den Faktor "Hardware-Realismus" der eigenen Taxonomie.
+* Die Beobachtung, dass eine Basis-Bevorzugung nur auf der Diagonale hilft, ist ein Hinweis darauf, warum das Heisenberg–Weyl-Spektrum als *Ganzes* keine bevorzugte Einzelkopien-Basis hat: Jede Displacement-Adresse ist in jeder Stabilizerbasis gleich schlecht sichtbar.
+* Die Cartan-Struktur ist das Werkzeug, mit dem man fragen könnte, ob $\rho\otimes\rho^*$ ein Punkt in einem symmetrischen Raum ist (die Konjugation ist eine Involution) und was das für Twirls über die Kopien bedeutet.
+
+### Grenzen und offene Fragen
+
+* Die Verbesserungen sind konstant und klein; das Paper ist primär strukturell.
+* Die Operatoren $s_\lambda$ werden nicht direkt aus der Darstellungstheorie identifiziert; für Gruppen gibt es einfache Formeln, für symmetrische Räume nicht.
+* Nur definierende Darstellungen; allgemeine Darstellungen sind Ausblick.
+
+### Fragen zum Tieferbohren
+
+* Ist die Abbildung $\rho \mapsto \rho^*$ eine Involution, deren Fixpunktmenge (reelle Zustände) einen symmetrischen Raum definiert, und was ist der zugehörige Shadow-Kanal auf $\rho\otimes\rho^*$?
+* Wie sieht Theorem 1 für die Heisenberg–Weyl-Gruppe als Untergruppe von $U(d)$ aus, und welche Involutionen respektieren sie?
+* Lässt sich der Dephasierungsanteil $\beta\mathcal{A}_W$ als Modell für Auslesefehler in der Bell-Basis benutzen, und wie skaliert die nötige Korrektur mit $d$?
+
+Paper: [arXiv:2605.05518](https://arxiv.org/abs/2605.05518)
+
+---
+
+## Triply efficient shadow tomography (arXiv:2404.19211)
+
+Die Arbeit von **Robbie King, David Gosset, Robin Kothari und Ryan Babbush** (Google Quantum AI, Caltech, Waterloo, Perimeter; *PRX Quantum* 6, 010336 (2025)) definiert *triple Effizienz*: sample-effizient ($\mathrm{poly}(\log|S|, 1/\epsilon)$), rechen-effizient ($\mathrm{poly}(|S|, n, 1/\epsilon)$) und Messungen auf konstant vielen Kopien zugleich, mit Gesamtspeicher $O(n)$. Sie gibt die ersten triply effizienten Protokolle für alle $4^n$ Paulis und für $k$-Körper-Fermionen, beide mit Zwei-Kopien-Clifford-Messungen, und zeigt, dass Zwei-Kopien-Messungen dafür nötig sind. Der Rahmen: Bell-Sampling reduziert das Problem auf fraktionale Färbung eines induzierten Teilgraphen des Kommutationsgraphen mit beschränkter Cliquenzahl.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben eine Menge $S$ von Paulis, zurück kommen alle $\mathrm{Tr}(P\rho)$; für $S = \mathcal{P}^{(n)}$ ist das die Zeile "All $4^n$ Pauli observables, two-copy", für $S = \mathcal{F}_k^{(n)}$ die fermionische Zeile.
+* **Objekt:** Zustand. **Zugriff:** Sample; Bell-Messung auf $\rho\otimes\rho$ für die Magnituden (Rung 1, Quantenspeicher zwei), dann Einzelkopien-Clifford-Messungen, geführt von einer Färbung.
+* **Status:** 🟢 🟢 🟢 im Sinne der Definition. ⚠️ Korrektur an der Tabelle: Für alle Paulis ist die Rechenzeit $\mathrm{poly}(2^n, 1/\epsilon)$ (Theorem 7), also $\mathrm{poly}(|S|)$ mit $|S| = 4^n$, nicht $\mathrm{poly}(n)$; polynomiell in $n$ ist nur die Abfrage einer Pauli-Erwartung aus der komprimierten Darstellung (Corollary 12). Die Zeile ist entsprechend angepasst.
+* **Versprechen:** Zwei-Kopien-Speicher als Ressource; kein Versprechen über den Zustand.
+
+### Das Problem
+
+Allgemeine Shadow Tomography ist exponentiell in der Rechenzeit und braucht verschränkte Messungen über viele Kopien. Classical Shadows sind triply effizient für $k$-lokale Paulis, versagen aber bei hohem Gewicht. Huang, Kueng und Preskill (2021) lernen beliebige Pauli-Mengen mit $O(\log|S|/\epsilon^4)$ Kopien und $\mathrm{poly}(|S|)$ Zeit, brauchen aber Gentle Measurements auf vielen Kopien für die Vorzeichen. Für $k$-Körper-Fermionen und für alle Paulis ist sample-effiziente Einzelkopien-Tomographie unmöglich (Theorem 2 aus Chen, Cotler, Huang, Li; Theorem 3 neu: $\Omega(n^k/\epsilon^2)$). Gibt es triply effiziente Protokolle mit zwei Kopien?
+
+### Kernresultate
+
+* **Theorem 5 (Einzelkopien via fraktionale Färbung).** Hat der Kommutationsgraph $G(S)$ eine samplebare fraktionale Färbung der Größe $\chi$, dann lernt man alle $\mathrm{Tr}(P\rho)$ mit $O(\chi\log|S|/\epsilon^2)$ Einzelkopien-Clifford-Messungen; die Pauli-Shadows von HKP sind der Fall $\chi = 3^k$.
+* **Theorem 6 (zwei Kopien, jede Menge $S$).** $O(\log|S|/\epsilon^4)$ Zwei-Kopien-Messungen: Bell-Sampling liefert $|\mathrm{Tr}(P\rho)|$ auf $\epsilon/4$, definiert $S_\epsilon = \{P: u_P \geq 3\epsilon/4\}$; ein *Mimicking State* $\sigma$ mit $|\mathrm{Tr}(\sigma P)| \geq\epsilon/4$ auf $S_\epsilon$ existiert (etwa $\rho$) und wird ohne weitere Kopien per Brute Force gefunden; Bell-Sampling auf $\rho\otimes\sigma$ liefert $\mathrm{Tr}(P\rho)\mathrm{Tr}(P\sigma)$ und damit die Vorzeichen. Sample-effizient, rechnerisch absurd.
+* **Theorem 7 (alle Paulis, triply effizient).** $O(n\log(n/\epsilon)/\epsilon^4)$ Samples, Zeit $\mathrm{poly}(2^n, 1/\epsilon)$: Der Mimicking State wird per Matrix Multiplicative Weights mit zusätzlichen Einzelkopien-Messungen berechnet und mit $O(4^n)$ Gattern präpariert.
+* **Lemma 8.** Die größte Clique in $G(S_\epsilon)$ hat mit hoher Wahrscheinlichkeit höchstens $4/\epsilon^2$ Knoten: Antikommutierende Observablen können nicht gleichzeitig groß sein (Unschärfe).
+* **Lemma 9 und Theorem 10 ($k$-Körper-Fermionen).** Induzierte Teilgraphen von $G(\mathcal{F}_k^{(n)})$ sind $\chi$-beschränkt mit polynomieller Bindungsfunktion $p_k(\omega)$, $p_1(\omega) = \omega+1$, $p_2 = O(\omega^8)$; Sample-Komplexität $O(k\log n\cdot p_k(4/\epsilon^2)/\epsilon^2)$, für $k = 1$ also $O(\log n/\epsilon^4)$, für $k = 2, 3$ etwa $\epsilon^{-18}$ und $\epsilon^{-110}$.
+* **Lemma 11 und Corollary 12 (Kompression).** Induzierte Teilgraphen von $G(\mathcal{P}^{(n)})$ haben $\chi \leq (2n+1)^{\omega-1}$ (Gyárfás, längste induzierte Pfade $\leq 2n+1$); damit lässt sich jeder Zustand für konstantes $\epsilon$ in $\mathrm{poly}(n)$ Bits komprimieren, aus denen jede Pauli-Erwartung in $\mathrm{poly}(n)$ Zeit folgt, gelernt aus $\mathrm{poly}(n)$ Kopien mit $2^{O(n)}$ Rechenzeit.
+* **Conjecture 13.** Die Paulis mit $|\mathrm{Tr}(\rho P)| \geq\delta$ haben eine fraktionale Färbung der Größe $O(1/\delta^2)$; wäre sie effizient, gäbe es triply effiziente Shadow Tomography für jede Pauli-Menge.
+
+### Methodischer Ansatz
+
+1. **Magnituden per Bell-Sampling** in der Basis, die alle $P\otimes P$ diagonalisiert; $\mathrm{Tr}(\rho P)^2$ mit $\delta = \Theta(\epsilon^2)$, daher $\epsilon^{-4}$.
+2. **Vorzeichen als Färbungsproblem.** Auf $S_\epsilon$ genügt Einzelkopien-Lernen mit einer Färbung von $G(S_\epsilon)$; die Cliquenzahl $O(1/\epsilon^2)$ und $\chi$-Beschränktheit liefern polynomielle Färbungen.
+3. **Mimicking State per MMW** für alle Paulis: Die Hypothese wird so lange aktualisiert, bis sie auf $S_\epsilon$ betragsmäßig groß ist; das ist die Technik, die King, Wan, McClean für Displacement-Operatoren übernehmen.
+
+### Bedeutung und Anwendungen
+
+* Definiert das Effizienzziel dieses Projekts und liefert die erste Landkarte (Tabelle 2 des Papers): naiv, HKP, Bell-Sampling plus Gentle Measurement, und die neuen Zwei-Kopien-Verfahren.
+* Zwei Kopien sind notwendig *und* hinreichend für Pauli- und fermionische Shadow Tomography; lokale Paulis gehen mit einer Kopie, lokale Fermionen nicht: ein sauberer Unterschied zwischen Qubit- und Fermion-Lokalität.
+* Die Graphentheorie ($\chi$-Beschränktheit, Gyárfás) ist ein neues Werkzeug in der Quantenlerntheorie.
+
+### Bezug zum eigenen Projekt
+
+* Das eigene Paper zitiert genau dieses Papier für "triply efficient" und ersetzt zwei seiner Komponenten: die Färbung (Gruppierung inkompatibler Observablen) und das MMW. Die Sample-Komplexität $O(\log|S|/\epsilon^4)$ der Magnituden ist dieselbe wie in Phase 1; die $\epsilon^{-2}$ der Vorzeichen entspricht Phase 2.
+* Lemma 8 ist eine Strukturaussage über *jeden* Zustand: Höchstens $4/\epsilon^2$ paarweise antikommutierende Adressen können gleichzeitig groß sein. Für Displacement-Operatoren mit ihrer $\omega$-Kommutation ist das Analogon eine Schranke an die Zahl großer Amplituden auf nicht-kommutierenden Adressen, ein Kandidat für ein beweisbares Versprechen im Top-$k$-Regime.
+* Die Korrektur der Tabelle (Zeit $\mathrm{poly}(4^n)$ für alle Paulis) ist wichtig für die Positionierung: Das eigene Verfahren ist nicht "so effizient wie KGKB", sondern zielt auf Zeit polynomiell in $\log d$ bei einer Liste, die nur implizit gegeben ist, und genau das ist im Allgemeinen (Conjecture 13) offen.
+
+### Grenzen und offene Fragen
+
+* Triply effiziente Shadow Tomography für *beliebige* Pauli-Teilmengen ist offen (Conjecture 13); Lemma 11 gibt nur $n^{O(1/\epsilon^2)}$ Farben.
+* Die $\epsilon$-Exponenten für Fermionen ($\epsilon^{-18}$, $\epsilon^{-110}$) sind unpraktisch; bessere Bindungsfunktionen sind offen.
+* Rapid-Retrieval-Kompression für $\epsilon = 1/\mathrm{poly}(n)$ ist offen.
+* Bell-Sampling auf $\rho\otimes\rho$ liefert $\mathrm{Tr}(\rho P)^2$ nur für Paulis; für Displacement-Operatoren braucht man $\rho\otimes\rho^*$.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht der Kommutationsgraph der $d^2$ Displacement-Operatoren aus, was ist seine Cliquenzahl auf der Menge großer Amplituden, und ist die Familie seiner induzierten Teilgraphen $\chi$-beschränkt?
+* Kann das CNN die Färbung *implizit* lernen, und lässt sich das an der Struktur der gelernten Filter ablesen?
+* Was ist die Rapid-Retrieval-Kompression eines Qudit-Zustands mit $k$-sparsamem Spektrum: $O(k\log d)$ Bits, und ist die Abfrage in $O(\log d)$ Zeit möglich?
+
+Paper: [arXiv:2404.19211](https://arxiv.org/abs/2404.19211)
+
+---
+## Exponential learning advantages with conjugate states and minimal quantum memory (arXiv:2403.03469)
+
+Die Arbeit von **Robbie King, Kianna Wan und Jarrod R. McClean** (Google Quantum AI, Caltech, Stanford; *PRX Quantum* 5, 040301 (2024)) führt die Lernressource dieses Projekts ein: gemeinsame Messungen auf einem Zustand und seinem komplex Konjugierten, $\rho\otimes\rho^*$. Für die Aufgabe, alle $d^2$ Displacement-Amplituden $y_{q,p} = \mathrm{Tr}(D_{q,p}\rho)$ eines $d$-dimensionalen Zustands zu lernen, genügen $O(\log d/\epsilon^4)$ Kopien von $\rho\otimes\rho^*$, während jedes Verfahren auf $\rho^{\otimes K}$ ohne $\rho^*$ mindestens $\Omega(\sqrt d/(K^2\epsilon^2))$ Messungen braucht, selbst für $K$ bis $1/(12\epsilon)$. Die Vorzeichen folgen mit einem Hypothesenzustand und Matrix Multiplicative Weights; dazu kommen verallgemeinerte Clifford-Shadows für Qudits und der Nachweis, dass der Kommutationstrick auf Displacement-Operatoren beschränkt ist.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben ist die implizite Liste aller $d^2$ Displacement-Adressen, zurück kommen Beträge und Vorzeichen. Die Zeile "Displacement amplitudes over a dictionary, conjugate pairs" der Estimating-Tabelle; in der Suchtabelle ist dasselbe Paper die Grundlage der Sample-Seite.
+* **Objekt:** $d$-dimensionaler Zustand, $d$ Primzahl in den Sätzen. **Zugriff:** Sample auf $\rho\otimes\rho^*$, Rung 2 der Zugriffsleiter; die Bell-Messung verschränkt genau zwei Register, Quantenspeicher konstant.
+* **Status:** 🟢 🟢 🟢. Kopien logarithmisch in $d$; die Magnitudenschätzung ist rechnerisch trivial; die Vorzeichenbestimmung läuft in $\mathrm{poly}(d, 1/\epsilon)$ über eine $d\times d$-Hypothese, polynomiell im Hilbertraum eines einzelnen Qudits, im $n$-Qubit-Bild also $2^n$.
+* **Versprechen:** keines über den Zustand; die Ressource ist der Zugriff. Für die Top-$k$-Variante dieses Projekts kommt das Dictionary-Versprechen hinzu (Regime 1).
+
+### Das Problem
+
+Zwei-Kopien-Messungen liefern exponentielle Vorteile für Pauli-Erwartungswerte (Huang et al. 2022), und die Beträge sind mit minimalem Speicher lernbar, die Vorzeichen aber nur mit aufgabenabhängig großem Speicher (Huang, Kueng, Preskill 2021). Für Qudits ist zudem bekannt, dass Bell-Sampling auf $\rho\otimes\rho$ versagen kann. Die Fragen: Gibt es eine Ressource mit konstantem Speicher, die das ganze Displacement-Spektrum liefert, was kostet ihr Fehlen, und wo ist $\rho^*$ physikalisch verfügbar?
+
+### Kernresultate
+
+* **Theorem 1 (Untergrenze ohne $\rho^*$).** Beträge aller Amplituden auf $\epsilon$ mit Wahrscheinlichkeit $2/3$ aus Messungen auf $\rho^{\otimes K}$, $K \leq 1/(12\epsilon)$: $\Omega(\sqrt d/(K^2\epsilon^2))$ Messungen. Mit minimalem Speicher ist die Aufgabe ohne $\rho^*$ nicht effizient.
+* **Theorem 2 (Beträge).** $O(\log d/\epsilon^4)$ Samples von $\rho\otimes\rho^*$ lernen alle $y_{q,p}$ bis auf ein Vorzeichen; einfach und rechnerisch effizient.
+* **Theorem 3 (Einzelkopien).** Jedes Einzelkopien-Protokoll braucht $\Omega(d/\epsilon^2)$ Kopien, auch mit Einzelkopien-Zugriff auf $\rho$ *und* $\rho^*$: Verschränkte Messung ist nötig, nicht nur das Konjugat.
+* **Theorem 4 (Eindeutigkeit).** Kommutieren $U\otimes\tilde U$ und $V\otimes\tilde V$ für nicht-kommutierende $U, V$ endlicher Ordnung $d$, dann sind $U, V$ unitär äquivalent zu einer direkten Summe von Displacement-Operatoren. Der Tensor-Erweiterungstrick ist auf Heisenberg-Gruppen beschränkt (Stone–von-Neumann-artig).
+* **Theorem 5 (Vorzeichen).** Alle $d^2$ Amplituden inklusive Vorzeichen mit $O(\log d/\epsilon^4)$ Samples von $\rho\otimes\rho^*$, Laufzeit $\mathrm{poly}(d, \epsilon^{-1})$: Hypothesenzustand verschiebt den Ursprung einer Magnitudenmessung, MMW findet ihn (Technik aus King, Gosset, Kothari, Babbush).
+* **Theorem 6 (Qudit-Clifford-Shadows).** Alle Nebendiagonalelemente $\langle i|U^\dagger\rho U|j\rangle$ in allen Stabilizerbasen $U \in\mathrm{Cl}_d$ mit $O(\log d/\epsilon^2)$ Einzelkopien; Theorem 31 gibt die Varianz für beliebige $O$, mit Hilbert–Schmidt-Anteil plus Displacement-Überlappen; für Displacement-Operatoren ist die Varianz $\Omega(d)$, konsistent mit Theorem 3.
+* **Anwendungen.** Quantendaten aus Quantenrechnung: $\rho^*$ durch Konjugation jedes Gatters, also exponentieller Vorteil von White-Box- gegenüber Black-Box-Zugriff; Quantendaten aus der Natur: Sensor-Arrays, Long-Baseline-Interferometrie, Mixedness-Testing gegen thermischen Hintergrund; bosonischer Limes $d\to\infty$ mit $x = \sqrt{\pi/d}(q,p)$.
+
+### Methodischer Ansatz
+
+* **Kommutativität durch Tensor-Erweiterung.** $D_{q,p}\otimes D_{q,p}^*$ kommutieren für alle $(q,p)$ und werden gemeinsam gemessen; die Ausgangsverteilung ist $|y_{q,p}|^2/d$ (Anhang B). Auf $\rho\otimes\rho$ stünde $D\otimes D$, und die kommutieren nur für Qubits.
+* **Untergrenzen** (Anhang G) per Tree-Methode über eine Familie von Zuständen nahe der maximal gemischten mit einer eingeprägten Displacement-Amplitude, mit der Nicht-Kommutativität von $D_{q,p}^{\otimes K}$ auf $\rho^{\otimes K}$ als Hebel; $K$ tritt quadratisch auf.
+* **Vorzeichen** (Anhang C): Bell-Messung auf $\rho\otimes\sigma^*$ mit bekanntem Hypothesenzustand $\sigma$ liefert $\mathrm{Re}(y_{q,p}\overline{\mathrm{Tr}(D\sigma)})$-artige Größen; MMW passt $\sigma$ an, bis alle großen Adressen betragsmäßig groß auf $\sigma$ sind.
+* **Shadows** (Anhang H): Twirls der Qudit-Clifford-Gruppe bis zur dritten Ordnung; $\mathrm{Cl}_d$ ist Normalisator der Heisenberg–Weyl-Gruppe und enthält die QFT.
+
+### Bedeutung und Anwendungen
+
+* Neue Achse in der Landkarte: Der Zugriff ($\rho$, $\rho\otimes\rho^*$, Schaltkreis) ist von der Speicherachse unabhängig, und die Trennung hier ist eine zwischen zwei Orakeln bei gleichem kleinem Speicher, nicht zwischen kohärent und inkohärent (siehe QUALM-Absatz).
+* Eine physikalisch motivierte Observablenfamilie mit bosonischem Limes; das Paper verbindet Quantenlerntheorie mit Sensorik.
+* Theorem 4 sagt, dass für Klassen jenseits der Heisenberg-Gruppen neue Primitiven nötig sind.
+
+### Bezug zum eigenen Projekt
+
+* Das ist Paper 1 des Projekts: Phase 1 ist Theorem 2, Phase 2 ersetzt das MMW aus Theorem 5 durch den adaptiven Probe-Zustand $\tilde\rho$ mit CNN-Steuerung. Die Sample-Komplexität $O(\log d/\epsilon^4)$ ist das Ziel der eigenen Skalierungsmessung in $d$; die $\epsilon^{-4}$ der Magnituden und $\epsilon^{-2}$ der Vorzeichen sind die Referenz für die empirische Gesamtskalierung.
+* Theorem 3 ist der Grund, warum die Pipeline überhaupt zwei Kopien braucht, und Theorem 1 der Grund, warum $\rho\otimes\rho$ nicht genügt; die Evaluation von 2025 mit $\rho\otimes\rho$ arbeitet deshalb auf reellen Zuständen (GHZ, reelle Gibbs-Zustände), wo $\rho = \rho^*$.
+* Theorem 4 ist die theoretische Grenze von Objective 3 ("Verallgemeinerungen von Paulis"): Der Trick reicht genau bis zu Displacement-Operatoren, nicht weiter.
+* Die Untergrenze $\Omega(\sqrt d)$ ist eine *Sample*-Aussage; die LWE-Härte des eigenen Papers ist eine *Zeit*-Aussage über dieselbe Aufgabe mit Sparsity-Versprechen. Beide zusammen bilden die Zelle "sampling access, searching" des Quadranten.
+
+### Grenzen und offene Fragen
+
+* $d$ Primzahl in den Beweisen; zusammengesetztes $d$ und die zyklische Ein-Qudit-Basis sind nicht behandelt.
+* Die Vorzeichenbestimmung ist polynomiell in $d$, nicht in $\log d$: rechnerisch effizient nur für einzelne Qudits, nicht für $n$-Qubit-Systeme mit $d = 2^n$.
+* $\rho^*$ ist nicht physikalisch aus $\rho$ herstellbar; die Verfügbarkeit hängt von der Quelle ab (Anhang D), mit Einschränkungen bei Sensoren.
+* Rauschen: keine Analyse; die Bell-Messung braucht saubere Zwei-Register-Gatter.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die Verteilung der Bell-Messung auf $\rho\otimes\rho^*$ für zusammengesetztes $d$ aus, wo $\mathbb{Z}_d$ kein Körper ist und $D_{q,p}$ Untergruppen verschiedener Ordnung erzeugen?
+* Welche Phaseninformation genau bleibt bei "bis auf ein Vorzeichen" übrig, wenn $y_{q,p}$ komplex ist: der Betrag, oder auch das Argument modulo $\pi$?
+* Wo liegt in der Tree-Methode des Beweises von Theorem 1 der Term, der bei Zugriff auf $\rho^*$ verschwindet, und lässt sich daraus ein Interpolationsresultat zwischen $\rho\otimes\rho$ und $\rho\otimes\rho^*$ (etwa $\rho\otimes\tilde\rho$ mit unvollkommenem Konjugat) gewinnen?
+
+Paper: [arXiv:2403.03469](https://arxiv.org/abs/2403.03469)
+
+---
+
+## Quantum state tomography via compressed sensing (arXiv:0909.3304)
+
+Die Arbeit von **David Gross, Yi-Kai Liu, Steven T. Flammia, Stephen Becker und Jens Eisert** (Hannover, Caltech, Perimeter, Potsdam; *Phys. Rev. Lett.* 105, 150401 (2010)) überträgt Compressed Sensing und Matrix Completion auf die Tomographie: Ein Zustand vom Rang $r$ in Dimension $d$ ist aus $O(rd\log^2 d)$ zufällig gewählten Pauli-Erwartungswerten eindeutig rekonstruierbar, per Minimierung der Spurnorm unter linearen Nebenbedingungen, statt aus $d^2$ Einstellungen. Das Verfahren ist robust gegen Rauschen, zertifiziert Nähe zur Reinheit ohne Vorannahme und läuft numerisch in Minuten für acht Qubits.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating mit $M = d^2$, aber unter einem Rangversprechen; zurück kommt die Dichtematrix. Die Zeile "Low-rank tomography, compressed sensing" der Estimating-Tabelle, im Abschnitt "structured escapes before shadows".
+* **Objekt:** gemischter Zustand nahe Rang $r$. **Zugriff:** Sample, Einzelkopien, $m$ zufällige Pauli-Erwartungswerte, jeder aus vielen Kopien geschätzt.
+* **Status:** 🔴 🔴 🔴 in $n$: $rd\log^2 d$ ist exponentiell in $n$, aber der Faktor $d$ statt $d^2$ ist eine quadratische Ersparnis, und Zeit und Speicher sind $O(rd)$-artig statt $O(d^2)$.
+* **Versprechen:** Rang $r \ll d$, etwa reine Zustände unter lokalem Rauschen mit Rate $p$: Rang $\approx d^{H(p)}$.
+
+### Das Problem
+
+Volle Tomographie von acht Ionen kostete Hunderttausende Messungen und Wochen Nachverarbeitung. Parameterzählung sagt, dass $O(rd)$ Einstellungen für Rang $r$ reichen könnten, aber Minimum-Rang-Probleme sind NP-hart, und die Matrix-Completion-Sätze (Candès–Recht, Candès–Tao) verlangen Matrixelemente und Inkohärenz-Annahmen, die im Labor nicht passen. Gesucht: Pauli-Messungen, beliebige Dichtematrizen, effiziente Rekonstruktion.
+
+### Kernresultate
+
+* **Theorem 1.** Für $\rho$ vom Rang $r$ und $m = c\,dr\log^2 d$ zufällige Pauli-Erwartungswerte ist $\rho$ die eindeutige Lösung von $\min\Vert\sigma\Vert_{\mathrm{tr}}$ unter $\mathrm{tr}\,\sigma = 1$, $\mathrm{tr}(w(A_i)\sigma) = \mathrm{tr}(w(A_i)\rho)$, mit Fehlerwahrscheinlichkeit exponentiell klein in $c$.
+* **Observation 1 (Rauschen).** Ist $\rho_t$ nur $\epsilon_1$-nahe an Rang $r$ und sind die Erwartungswerte bis auf $\epsilon_2$ bekannt, dann liefert das relaxierte Programm $\min\Vert\sigma\Vert_{\mathrm{tr}}$ mit $\Vert\mathcal{R}\sigma - \mathcal{R}\omega\Vert_2 \leq\epsilon$ einen Fehler $O(\epsilon\sqrt{rd})$ in Spurnorm; die Autoren vermuten deutlich bessere Robustheit.
+* **Observation 2 (Zertifizierung).** Für fast reine Zustände lässt sich Reinheit aus $O(d)$ Pauli-Werten zertifizieren und der Zustand mit expliziten Fehlerschranken aus $O(cd\log^2 d)$ Werten rekonstruieren, ohne Vorannahme über $r$ und $\delta_1$.
+* **Hybridmethode.** Strukturierte Zufallswahl $w(u,v)$ für $u$ aus einer Menge der Größe $O(r\,\mathrm{polylog}\,d)$ und alle $v$: Rechenzeit $O(d)$ statt $O(d^2)$ pro Schritt, ohne die volle Garantie.
+* **Numerik.** Acht Qubits, Rang 3, 5% Depolarisierung, Gauß-Rauschen $\sigma = 0.1/d$: 95% Fidelity in unter zehn Sekunden mit der Hybridmethode; auf den Daten des Acht-Ionen-Experiments 90.5% Fidelity mit einer Rang-3-Näherung aus unter 30% der Paulis in drei Minuten.
+* **Prozesse:** über den Jamiołkowski-Zustand, effektiv für Kanäle mit wenigen Kraus-Operatoren.
+
+### Methodischer Ansatz
+
+* **Dual Certificate.** Eindeutigkeit folgt aus einem strikten Subgradienten $Y$ der Spurnorm im Bild des Sampling-Operators $\mathcal{R}$; zwei Fälle nach dem Verhältnis von $\Delta_T$ zu $\Delta_T^\perp$ (Tangentialraum $T$ der Rang-$r$-Matrizen).
+* **Golfing Scheme.** Ein rekursiver Prozess $Y_i = \sum_j\mathcal{R}_jX_{j-1}$ mit $l$ unabhängigen Batches von $\kappa_0 rd$ Paulis konvergiert exponentiell gegen einen fast-Subgradienten; nichtkommutative Large-Deviation-Schranken (Ahlswede–Winter) für $\Vert\mathcal{A} - \mathbb{1}_T\Vert$. Das ist eine deutliche Vereinfachung gegenüber Candès–Recht.
+* **Solver:** Singular Value Thresholding statt Interior Point.
+
+### Bedeutung und Anwendungen
+
+* Der erste Beweis, dass ein Strukturversprechen (Rang) die Tomographie quadratisch verbilligt, und der Beginn der Anwendung von Compressed Sensing in der Quanteninformation; Nachfolger: Fehlerschranken und Sample-Komplexität (Flammia, Gross, Liu, Eisert 2012), Prozess-Tomographie mit Compressed Sensing (Rekord bei drei Qubits, zitiert in Flammia–Wallman).
+* Das Golfing Scheme wurde ein Standardwerkzeug der Matrix-Completion-Theorie.
+
+### Bezug zum eigenen Projekt
+
+* Rang ist das "low rank ⇒ easy"-Versprechen; das eigene Projekt arbeitet mit dem dazu orthogonalen Versprechen Sparsity im Displacement-Spektrum. Beide sind Compressed-Sensing-Strukturen, aber die eigene Aufgabe hat keine *wählbaren* Messungen: Bell-Sampling liefert i.i.d. Züge, nicht die $m$ ausgewählten Erwartungswerte. Das ist der Unterschied zwischen dieser Zeile (🔴 in Kopien, aber Query-artig in der Auswahl) und der eigenen (🟢 in Kopien, LWE-hart im Decoder).
+* Die Trace-Norm-Minimierung ist das konvexe Surrogat für Rang; das $\ell_1$-Surrogat für Sparsity im Spektrum wäre die naheliegende beweisbare Alternative zum CNN, sofern ein RIP-artiges Argument für Bell-Statistik existiert.
+* Zertifizierte Tomographie (Observation 2) ist ein Vorbild für ein Zertifikat der Sparsity: Aus dem Bell-Record lässt sich $\sum|y_{q,p}|^4$-artige Statistik ablesen, die die Konzentration des Spektrums misst.
+
+### Grenzen und offene Fragen
+
+* Exponentiell in $n$; das Rangversprechen ändert den Exponenten nicht, nur die Basis.
+* Die Robustheitsschranke $O(\epsilon\sqrt{rd})$ ist grob; RIP-basierte Argumente sollten besser sein (Vermutung).
+* Die Hybridmethode ist ohne Garantie.
+* Jeder Pauli-Erwartungswert braucht viele Kopien; die Sample-Komplexität in Kopien wird hier nicht gezählt.
+
+### Fragen zum Tieferbohren
+
+* Gilt ein Golfing-Argument für die Displacement-Basis eines Qudits, die orthogonal, aber nicht Hermitesch ist?
+* Was ist die Compressed-Sensing-Formulierung von "Sparsity im Displacement-Spektrum plus i.i.d. Bell-Samples", und ist die Sample-Matrix inkohärent im Sinne der RIP?
+* Wie hängen Rang und Displacement-Sparsity zusammen: Hat ein Rang-$r$-Zustand ein Spektrum mit höchstens wie vielen großen Adressen?
+
+Paper: [arXiv:0909.3304](https://arxiv.org/abs/0909.3304)
+
+---
+
+## Estimating the spectrum of a density operator (arXiv:quant-ph/0102027)
+
+Die Arbeit von **Michael Keyl und Reinhard F. Werner** (TU Braunschweig; *Phys. Rev. A* 64, 052311 (2001)) ist eine vierseitige Notiz mit einem Satz, der die Speicherachse an ihrem fernen Ende definiert: Misst man $N$ Kopien von $\rho$ gemeinsam in der Zerlegung von $\mathcal{H}^{\otimes N}$ nach irreduziblen Darstellungen der symmetrischen Gruppe, also nach Young-Diagrammen $Y$, dann ist $Y/N$ ein Schätzer des Spektrums von $\rho$, und die Fehlerwahrscheinlichkeit fällt exponentiell in $N$ mit einer explizit berechneten Rate, der relativen Entropie zwischen geschätztem und wahrem Spektrum.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben die implizite Liste "die Eigenwerte", zurück kommt das geordnete Spektrum $r_1 \geq\dots\geq r_d$. Die Zeile "Spectrum estimation by Schur sampling".
+* **Objekt:** gemischter Zustand auf $\mathbb{C}^d$. **Zugriff:** Sample, aber mit einer kollektiven Messung auf allen $N$ Kopien zugleich; Quantenspeicher $k = N$, die Primitive "Collective Schur sampling".
+* **Status:** 🔴 🔴 🟢 in $n$ gemäß Tabelle: Für Präzision $\epsilon$ braucht man $N \sim d^2/\epsilon^2$ Kopien (O'Donnell, Wright 2015 für die optimalen Raten), die Messung ist eine Schur-Transformation über $N$ Register, der Output hat nur $d$ Zahlen.
+* **Versprechen:** keines; das Verfahren ist basisunabhängig und braucht nicht einmal die Kenntnis der Eigenbasis.
+
+### Das Problem
+
+Die Dichtematrix lässt sich nur auf Ensembles schätzen (No-Cloning), und Schätzung ist ein Grenzfall von Kloning bei $M\to\infty$. Für gemischte Zustände ist unklar, welche Gütefunktion "optimal" definiert. Statt Optimalität für endliches $N$ fragen die Autoren nach dem asymptotischen Verhalten bei beliebigen, auch verschränkten Messungen auf $\rho^{\otimes N}$, für die einfachste nichttriviale Größe: das Spektrum.
+
+### Kernresultate
+
+* **Symmetriereduktion.** Ohne Verlust an Schätzqualität darf der Schätzer mit allen Permutationen $S_p$ und allen $U^{\otimes N}$ kommutieren; dann ist er eine Funktion der Projektoren $P_Y$ auf die Summanden $R_Y\otimes S_Y$ der Schur–Weyl-Zerlegung $\mathcal{H}^{\otimes N} \cong\bigoplus_Y R_Y\otimes S_Y$, mit $Y$ den Young-Diagrammen mit $d$ Zeilen und $N$ Kästchen.
+* **Der Schätzer.** $s_N(Y) = Y/N$, die normierten Zeilenlängen. Die Wahrscheinlichkeit ist $\mathrm{tr}(\rho^{\otimes N}P_Y) = \chi_Y(\rho)\dim S_Y$ mit dem Charakter $\chi_Y$ der $GL(d)$-Darstellung; Figur 1 zeigt die Verteilung für $d = 3$, $N = 120$, $r = (0.6, 0.3, 0.1)$, scharf um das wahre Spektrum.
+* **Theorem.** Der Schätzer ist asymptotisch exakt, und für jede Menge $\Delta$ mit kleinem Rand gilt $\lim_N\frac1N\ln K_N(\Delta) = -\inf_{s\in\Delta}I(s)$ mit der Ratenfunktion $I(s) = \sum_j s_j(\ln s_j - \ln r_j)$, der relativen Entropie der Wahrscheinlichkeitsvektoren $s$ und $r$.
+* **Beweisskizze.** Die Laplace-Transformierte $c(\eta) = \lim\frac1N\ln\int K_N(ds)e^{N\eta\cdot s}$ wird über Gewichte der Darstellung $\pi_Y$ abgeschätzt: $Y$ ist das höchste Gewicht, also $e^{Y\cdot h} \leq\chi_Y(\rho_h) \leq\dim(R_Y)e^{Y\cdot h}$ mit polynomiellem $\dim R_Y$; daraus $c(\eta) = \ln\sum_\alpha r_\alpha e^{\eta_\alpha}$, und Legendre-Transformation gibt $I$. Regularität nach Duffield und Gärtner–Ellis.
+
+### Methodischer Ansatz
+
+* Große Abweichungen für Tensorpotenzen von Gruppendarstellungen (Duffield 1990), erweitert von $\rho = I/d$ auf beliebiges $\rho$ durch den Faktor $\chi_Y(\rho)/\chi_Y(I)$.
+* Die Ordnung $\rhd$ auf Gewichten (Zeilenlängen absteigend) macht $Y$ zum "schnellsten Exponentialterm"; das ist der Grund, warum gerade die Zeilenlängen das Spektrum schätzen.
+
+### Bedeutung und Anwendungen
+
+* Begründet Schur-Sampling als Messprimitive; O'Donnell und Wright (2015, 2016) und Haah et al. (2017) bauen die optimale Tomographie ($\Theta(d^2/\epsilon^2)$) und das Spektrumtesten darauf auf. Die Darstellungstheorie der symmetrischen Gruppe wurde damit zum Standardwerkzeug der Quantenstatistik.
+* Die Ratenfunktion als relative Entropie verbindet Quantenstatistik mit Sanovs Theorem; die Autoren bemerken, dass es keinen direkten Weg zur i.i.d.-Theorie gibt.
+* Ausblick auf einen Schätzer für den ganzen Dichteoperator: Young-Diagramm messen, dann kovariante Messung der Eigenbasis; genau das wurde die optimale Tomographie.
+
+### Bezug zum eigenen Projekt
+
+* Die Zeile markiert, was "Speicher $k = N$" kostet und kauft: optimale Raten, aber eine Messung über alle Kopien. Das eigene Protokoll steht mit $k = 2$ am anderen Ende, und die Frage "was ist mit $k$ zwischen zwei und $N$ erreichbar" (offene Frage 2 der Estimating-Sektion) hat hier ihren Endpunkt.
+* Das Spektrum ist basisunabhängig, das Displacement-Spektrum basisabhängig; die Schur-Messung sieht die Eigenwerte, die Bell-Messung die Koeffizienten in einer festen Operatorbasis. Purity $\mathrm{tr}(\rho^2) = \sum r_j^2$ ist die eine Größe, die beide Messungen liefern (SWAP-Test als Zwei-Kopien-Schur-Messung); sie ist der Mixedness-Faktor der eigenen Taxonomie.
+* Die Beweistechnik (höchstes Gewicht dominiert die Laplace-Transformierte) ist ein Muster für Konzentrationsaussagen über i.i.d. Bell-Samples, deren Verteilung ebenfalls eine Darstellungssumme ist.
+
+### Grenzen und offene Fragen
+
+* Keine Aussage über Optimalität bei endlichem $N$; die Autoren fanden für verschiedene Gütekriterien verschiedene Optimalschätzer, selten den hier vorgeschlagenen.
+* Nur das Spektrum, nicht die Eigenbasis.
+* Die Messung ist eine Schur-Transformation über $N$ Register, für Hardware nicht realistisch.
+
+### Fragen zum Tieferbohren
+
+* Was ist die Zwei-Kopien-Einschränkung der Schur-Messung ($N = 2$: symmetrischer und antisymmetrischer Unterraum), und wie hängt sie mit der Y-Parität der Bell-Basis zusammen (siehe Hangleiter–Gullans)?
+* Wie sieht die Ratenfunktion für Schätzer aus, die nur $k$ Kopien zugleich verschränken, und interpoliert sie zwischen $I(s)$ und der Einzelkopien-Rate?
+* Lässt sich aus dem Bell-Record auf $\rho\otimes\rho^*$ die Purity ablesen, und ist das die Schur-Statistik für $N = 2$ in anderer Basis?
+
+Paper: [arXiv:quant-ph/0102027](https://arxiv.org/abs/quant-ph/0102027)
+
+---
+
+## Query-optimal estimation of unitary channels in diamond distance (arXiv:2302.14066)
+
+Die Arbeit von **Jeongwan Haah, Robin Kothari, Ryan O'Donnell und Ewin Tang** (Microsoft, Google, CMU, Washington; FOCS 2023) löst die Prozesstomographie für Unitaries in der strengsten Metrik: Ein unbekanntes $Z \in U(d)$ wird mit $O(d^2/\epsilon)$ Anwendungen auf $\epsilon$ in Diamantnorm geschätzt, mit nur einem Qudit Speicher, und $\Omega(d^2/\epsilon)$ Anwendungen sind nötig, selbst mit Zugriff auf $Z^\dagger$ und kontrollierte Versionen. Vorher: $O(d^3/\epsilon^2)$ (Standard-Prozesstomographie) oder $O(d^{2.5}/\epsilon)$ (Yang, Renner, Chiribella über Normumrechnung). Die Technik ist ein Bootstrap, der Konstant-Fehler-Schätzungen zu Heisenberg-Skalierung hochzieht.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating mit $M = d^2$: nichts wird vorenthalten, zurück kommt $U$. Die Zeile "Unitary estimation in diamond distance".
+* **Objekt:** Unitary. **Zugriff:** Query, Rung 3: adaptiv gewählte Zustände $V_2(ZV_1)^pV_0|0\rangle$, also Sequenzen von Anwendungen; kein Ancilla.
+* **Status:** 🔴 🔴 🔴 in $n$: Queries buchen die Rate $1/\epsilon$, nicht die Dimension.
+* **Versprechen:** keines; das ist die Query-Version der vollen Tomographie.
+
+### Das Problem
+
+Prozesstomographie ist in vielen Metriken studiert; die operationell natürliche, die Diamantnorm (Worst-Case über alle Eingaben inklusive Ancilla), war nicht direkt behandelt. Entanglement-Infidelity ist Average-Case und um bis zu $\sqrt d$ schwächer (Proposition 1.9: $4F \leq\Vert\cdot\Vert_\diamond^2 \leq 2dF$; die kontrollierte $C^kX$ hat Infidelity $O(2^{-k})$ zur Identität, aber Diamantabstand 1). Die "Storage-and-Retrieval"-Literatur (Bisio et al., Sedlák et al., Yang–Renner–Chiribella) optimiert Parallelstrategien in Infidelity mit Speicher in der Größe der Query-Zahl. Gesucht: Diamantnorm, Heisenberg-Rate, kein Speicheroverhead, und eine passende Untergrenze.
+
+### Kernresultate
+
+* **Theorem 1.1.** Ein Algorithmus mit $O(d^2/\epsilon)$ Queries, einem Qudit, $\mathrm{poly}(d, 1/\epsilon)$ Gattern und klassischer Zeit, Ausgabe $\hat Z$ mit $\mathbb{E}\Vert\mathcal{U}(\hat Z) - \mathcal{U}(Z)\Vert_\diamond^2 \leq\epsilon^2$; als gemischt-unitärer Kanal $\mathcal{M}$ sogar $\Vert\mathcal{M} - \mathcal{U}(Z)\Vert_\diamond \leq\epsilon^2$.
+* **Theorem 1.2.** Jeder Algorithmus mit Orakeln für $Z, Z^\dagger, cZ, cZ^\dagger$ und Fehler $\epsilon < 1/8$ braucht $\Omega(d^2/\epsilon)$ Queries: die erste gemeinsam optimale Untergrenze, für jede Funktion $\epsilon = \phi(d)$ scharf.
+* **Theorem 2.1 (Basisalgorithmus).** Standard-Prozesstomographie mit Sorgfalt gibt $O(d^2/\epsilon^2)$: Zustandstomographie der Spalten $Z|i\rangle$ mit Haar-zufälligem Fehler (keine Kumulation zu $\sqrt d\epsilon$), relative Phasen aus den Spalten von $Z$ und $ZF$ mit der Fourier-Matrix $F$ (Proposition 2.3).
+* **Lemma 3.1 (Wurzeln).** Sind $U, V$ $\alpha$-nahe in Diamantnorm und beide $0.01$-nahe an der Identität, dann sind $U^{1/p}, V^{1/p}$ $50\alpha/p$-nahe.
+* **Theorem 3.3 (Bootstrap, Algorithmus 1).** Aus einem Basisalgorithmus mit Fehler $1/200$ wird ein Algorithmus mit Fehler $\epsilon$ bei $1/\epsilon$-fachem Query-Overhead: Schätze $(ZV_j^\dagger)^{2^j}$ mit konstantem Fehler, wobei $V_j$ die bisherige Schätzung ist ("shift to identity"), und ziehe Wurzeln.
+* **Vergleich.** Yang–Renner–Chiribella: $O(d^2/\sqrt\delta)$ in Infidelity, parallel, Speicher $\Theta(d^2\log d/\sqrt\epsilon)$; van Apeldoorn et al.: $O(d^2/\epsilon\cdot\log)$ mit $cZ, cZ^\dagger$ und $\Theta(d\log)$ Speicher. Der neue Algorithmus braucht nur $Z$ und keinen Speicher.
+
+### Methodischer Ansatz
+
+* **Warmup** (Fig. 1): Für $Z = \mathrm{diag}(1, e^{i\phi})$ liefern Konstant-Fehler-Schätzungen von $Z^{2^k}$ die Bits von $\phi$; das ist inkohärente Phasenschätzung (robust phase estimation). Für allgemeine $Z$ scheitert das, wenn Eigenwerte nahe $-1$ liegen (Potenzen von $\pm1$ verraten nichts über Eigenvektoren); Lemma 3.1 verlangt daher Nähe zur Identität, und das Recentering $ZV_j^\dagger$ stellt sie her.
+* **Untergrenze:** Kombination von Unitary-Channel-Discrimination (Bavaresco et al.) mit einer Reduktionstechnik aus der Quantenquery-Komplexität, angepasst von diagonalen auf allgemeine Unitaries.
+* Median-Trick (Proposition 2.4) für Erfolgswahrscheinlichkeit $1-\eta$ bei $O(\log 1/\eta)$ Overhead; Diskretisierung per Solovay–Kitaev für endliche Präzision.
+
+### Bedeutung und Anwendungen
+
+* Schließt die Unitary-Tomographie in Diamantnorm ab: $\Theta(d^2/\epsilon)$ ist optimal in Queries und im Speicher.
+* Qualitativ nahe an Gate Set Tomography, das Heisenberg-Skalierung durch lange Gattersequenzen erreicht; das Paper gibt dafür erstmals eine theoretische Schranke in einem verwandten Modell.
+* Der Bootstrap ist ein allgemeines Werkzeug: Konstant-Fehler-Schätzer plus Wurzelziehen plus Recentering gibt Heisenberg-Rate für Objekte auf einer Lie-Gruppe.
+
+### Bezug zum eigenen Projekt
+
+* Die Zeile zeigt, was Query-Zugriff *nicht* kauft: die Dimension. Für die Estimating-Spalte gilt: Query verbessert $1/\epsilon^2$ zu $1/\epsilon$, Sparsity oder Rang verbessern $d^2$; beides zusammen ist die Frage nach effizienter Unitary-Schätzung unter Strukturversprechen (Low-Degree bei Arunachalam et al., Juntas bei Chen–Nadimpalli–Yuen).
+* Das Recentering "shift to identity" ist konzeptionell dasselbe wie der Hypothesenzustand von King, Wan, McClean und der Probe-Zustand von Phase 2: Man verschiebt das Unbekannte in eine Umgebung, in der die Messung linear und informativ ist. Die Querverbindung zwischen "Residuum lernen" (auch bei Bakshi et al. und Shin, Lee, Oh) und "Vorzeichen per Probe" ist ein gemeinsames Muster.
+* Die Unterscheidung Average-Case (Infidelity) gegen Worst-Case (Diamant) ist dieselbe wie zwischen PAC-Garantie und "alle $M$"-Garantie und sollte in der eigenen Skalierungsanalyse benannt werden: Top-$k$-Genauigkeit im Mittel über Instanzen ist Average-Case.
+
+### Grenzen und offene Fragen
+
+* Die Konstanten ($1/200$, $0.01$) sind unoptimiert.
+* Gatterkomplexität $\mathrm{poly}(d, 1/\epsilon)$; wie klein sie sein kann, ist nicht untersucht.
+* Nur Unitaries; allgemeine Kanäle in Diamantnorm bleiben bei $1/\epsilon^2$-artigen Raten.
+* Keine Robustheit gegen Rauschen in $Z$ selbst.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht Lemma 3.1 für die Heisenberg–Weyl-Gruppe aus, wo $D_{q,p}^d = I$ und Potenzen periodisch sind?
+* Lässt sich der Bootstrap auf die Schätzung einer *Präparationsunitary* mit Sparsity im Displacement-Spektrum des präparierten Zustands übertragen, und was ist dann das Analogon von $d^2$?
+* Warum reichen $Z$-Queries ohne Kontrolle, während van Apeldoorn et al. $cZ$ brauchen, und gilt dasselbe für Amplitudenschätzung im eigenen Query-Regime?
+
+Paper: [arXiv:2302.14066](https://arxiv.org/abs/2302.14066)
+
+---
+
+## Improved machine learning algorithm for predicting ground state properties (arXiv:2301.13169)
+
+Die Arbeit von **Laura Lewis, Hsin-Yuan Huang, Viet T. Tran, Sebastian Lehner, Richard Kueng und John Preskill** (Caltech, JKU Linz, AWS; *Nature Communications* 15, 895 (2024)) verbessert den beweisbaren ML-Algorithmus für Grundzustandseigenschaften in gapped Phasen von Huang, Kueng, Torlai, Albert und Preskill (Science 2022) dramatisch: statt $O(n^c)$ Trainingsdaten mit großem $c$ und $n^{O(1/\epsilon)}$ in der Genauigkeit reichen $N = \log(n/\delta)\,2^{\mathrm{polylog}(1/\epsilon)}$ Datenpunkte, Training und Vorhersage laufen in $O(n\log n)$, und die Verteilung über Parameter darf beliebig sein. Der Preis: Die Geometrie des Systems muss bekannt sein, und sie wird als induktiver Bias in eine Feature-Map eingebaut.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating mit Generalisierung. Gegeben Daten $(x_\ell, y_\ell \approx\mathrm{Tr}(O\rho(x_\ell)))$ für Hamiltonians $H(x)$ derselben Phase, zurück kommt $\mathrm{Tr}(O\rho(x))$ an neuen $x$. Die Zeile "Ground-state properties across a phase from shadows".
+* **Objekt:** Familie von Grundzuständen $\rho(x)$ eines geometrisch lokalen gapped Hamiltonians $H(x) = \sum_j h_j(\vec x_j)$, $x\in[-1,1]^m$. **Zugriff:** klassische Daten; mit Classical Shadows der Trainingszustände (Corollary 1) auch Sample-Zugriff mit $T = \tilde O(\log n/\epsilon^2)$ Messungen pro Zustand.
+* **Status:** 🟢 🟢 🟢: Daten logarithmisch, Zeit fast linear, Speicher das Gewicht $w^*$ der Dimension $m_\varphi = O(n)\cdot(1 + 2/\delta_2)^{\mathrm{poly}(\delta_1)}$.
+* **Versprechen:** Gap, geometrische Lokalität von $H$ und $O$ (Summe geometrisch lokaler Terme mit $\Vert O\Vert_\infty \leq 1$), bekannte Geometrie; die $x_\ell$ aus einer beliebigen unbekannten Verteilung $\mathcal{D}$.
+
+### Das Problem
+
+Der Vorgänger zeigte, dass ein klassischer ML-Algorithmus mit polynomiell vielen Daten Grundzustandseigenschaften über eine Phase vorhersagen kann, und dass das ohne Daten unter Standardannahmen unmöglich ist. Aber $n^c$ mit großem $c$, $n^{O(1/\epsilon)}$ in $\epsilon$ und nur die Gleichverteilung über $[-1,1]^m$ sind praktisch unbrauchbar. Die Untergrenze $N = n^{\Omega(1/\epsilon)}$ aus dem Vorgänger gilt ohne Kenntnis der Geometrie; also ist Geometrie die Zusatzinformation, die nötig ist.
+
+### Kernresultate
+
+* **Theorem 1.** Mit $N = \log(n/\delta)\,2^{\mathrm{polylog}(1/\epsilon)}$ Trainingspunkten aus beliebigem $\mathcal{D}$ und $|y_\ell - \mathrm{Tr}(O\rho(x_\ell))| \leq\epsilon$ liefert LASSO über der Feature-Map $\varphi$ eine Funktion $h^* = w^*\cdot\varphi$ mit $\mathbb{E}_{x\sim\mathcal{D}}|h^*(x) - \mathrm{Tr}(O\rho(x))|^2 \leq\epsilon$, Wahrscheinlichkeit $1-\delta$, Zeit $O(nN)$. Bei $\epsilon = \Theta(1)$: $N = O(\log n)$.
+* **Corollary 1.** Mit Classical Shadows $\sigma_T(\rho(x_\ell))$ aus $T = \tilde O(\log n/\epsilon^2)$ zufälligen Pauli-Messungen lernt derselbe Algorithmus eine Grundzustandsdarstellung $\hat\rho_{N,T}(x)$ mit derselben Garantie für *alle* Summen geometrisch lokaler Observablen zugleich.
+* **Theorem 2 (Pauli-1-Norm).** Für Summen geometrisch lokaler Observablen gilt $\sum_Q|\alpha_Q| \leq C\Vert O\Vert_\infty$: Die $\ell_1$-Norm der Pauli-Koeffizienten ist durch die Operatornorm beschränkt, eine Aussage, die für die $\ell_2$-Norm trivial ist und für $\ell_1$ neu.
+* **Proposition 1 (Härte ohne Daten).** Ein randomisierter Polynomialzeit-Algorithmus ohne Daten, der für alle glatten Familien gapped 2D-Hamiltonians Ein-Qubit-Eigenschaften im Mittel auf konstanten Fehler berechnet, löst NP-vollständige Probleme.
+* **Numerik.** 2D antiferromagnetische zufällige Heisenberg-Modelle bis $9\times 5 = 45$ Qubits mit Random-Fourier-Features; Fehler fällt mit $N$ und $T$ und hängt kaum von $n$ ab; die gelernten Gewichte nutzen die lokale Geometrie (Fig. 2B).
+
+### Methodischer Ansatz
+
+1. **Lokale Zerlegung per Spectral Flow.** $\mathrm{Tr}(O\rho(x)) \approx\sum_{P\in S^{(\mathrm{geo})}}f_P(x)$ mit $f_P(x) = \alpha_P\mathrm{Tr}(P\rho(\chi_P(x)))$, wobei $\chi_P$ alle Koordinaten außerhalb der Umgebung $I_P$ (Radius $\delta_1 = \Theta(\log^2(1/\epsilon))$) auf null setzt; Fehler $O(\epsilon)$ wegen exponentiell zerfallender Korrelationen in gapped Grundzuständen.
+2. **Diskretisierung.** Jedes glatte $f_P$ wird auf einem Gitter $X_P$ der Schrittweite $\delta_2 = \Theta(1/\epsilon)$ über den Koordinaten in $I_P$ durch Indikatorfunktionen verdickter affiner Unterräume $T_{x',P}$ approximiert; das definiert die Feature-Map $\varphi(x)_{x',P} = \mathbb{1}[x\in T_{x',P}]$.
+3. **LASSO mit $\Vert w\Vert_1 \leq B$.** Es existiert $w'$ mit Trainingsfehler $\leq 0.53\epsilon$ und $\Vert w'\Vert_1 \leq C\Vert O\Vert_\infty(1 + 2/\delta_2)^{\mathrm{poly}(\delta_1)} = 2^{\mathrm{polylog}(1/\epsilon)}$ (Theorem 2 liefert die Schranke); Standard-Generalisierungstheorie gibt $\mathbb{E}|h^* - \mathrm{Tr}(O\rho)|^2 \leq$ Trainingsfehler $+ O(B\sqrt{\log(m_\varphi/\delta)/N})$, also $N = O(\log(n/\delta)2^{\mathrm{polylog}(1/\epsilon)})$.
+
+### Bedeutung und Anwendungen
+
+* Macht den beweisbaren ML-Zugang praktisch: logarithmische Daten, fast lineare Zeit, beliebige Verteilung. Zusammen mit Onorati et al. (die Worst-Case-Garantien und thermische Phasen liefern) der Stand der Technik für "Lernen über eine Phase".
+* Die Pauli-1-Norm-Schranke ist unabhängig nützlich; verwandte Ungleichungen in Huang, Chen, Preskill (Corollary 4 dort) mit anderen Techniken.
+* Die Härteaussage zeigt die "Power of Data": Daten sind eine Ressource, die NP-Härte umgeht.
+
+### Bezug zum eigenen Projekt
+
+* Das ist der beweisbare gelernte Decoder der Tabellen und die nächste Verwandtschaft zum eigenen CNN: eine Feature-Map mit induktivem Bias (Geometrie hier, Coprime-Folding dort), ein linearer Lerner darüber, und eine Garantie, die aus der Struktur der Zielfunktion folgt. Der Unterschied: Hier ist die Zielfunktion beweisbar glatt und lokal, dort ist die Struktur (Top-$k$-Träger im Displacement-Spektrum) eine Conjecture.
+* Die Untergrenze $n^{\Omega(1/\epsilon)}$ *ohne* Geometrie gegen $\log n$ *mit* Geometrie ist das sauberste Beispiel dafür, wie ein Versprechen den Exponenten ändert; für das eigene Projekt ist die Frage, welches Zusatzwissen (Dictionary, Untergruppe, Gap) dieselbe Rolle spielt.
+* Objective 4 des Projekts (Grundzustände, Gibbs-Zustände) trifft genau die Zustandsfamilien dieses Papers; die numerische Vorlage (2D-Heisenberg, 45 Qubits, RMSE gegen $N$, $T$, $n$) ist übernehmbar.
+
+### Grenzen und offene Fragen
+
+* $2^{\mathrm{polylog}(1/\epsilon)}$ ist quasi-polynomiell in $1/\epsilon$; polynomiell ist offen.
+* Bekannte Geometrie ist nötig; ohne sie gilt die Untergrenze des Vorgängers.
+* Nur gapped Grundzustände; thermische Phasen und kritische Punkte bei Onorati et al.
+* Garantie im Mittel über $\mathcal{D}$, nicht punktweise.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die Feature-Map für Displacement-Observablen aus, deren "Geometrie" der Phasenraum $(q,p)$ ist: Was ersetzt $d_{\mathrm{qubit}}$, und ist $S^{(\mathrm{geo})}$ dann das Dictionary?
+* Gilt Theorem 2 (Pauli-1-Norm) für Summen von Displacement-Operatoren mit beschränkter Operatornorm, und was folgt für die $\ell_1$-Norm des Displacement-Spektrums eines Grundzustands?
+* Kann man die Spectral-Flow-Lokalität nutzen, um zu zeigen, dass Grundzustände lokaler Hamiltonians ein *sparsames* Displacement-Spektrum in einer geeigneten Basis haben?
+
+Paper: [arXiv:2301.13169](https://arxiv.org/abs/2301.13169)
+
+---
+## Efficient learning of ground & thermal states within phases of matter (arXiv:2301.12946)
+
+Die Arbeit von **Emilio Onorati, Cambyse Rouzé, Daniel Stilck França und James D. Watson** (TU München, ENS Lyon, Maryland; 2023) behandelt zwei Aufgaben: (a) Tomographie eines einzelnen Gibbs-Zustands bis auf Wasserstein-Distanz $n\epsilon$ aus $\mathrm{polylog}(n)$ Kopien, was alle Lipschitz-Observablen, also alle extensiven Größen inklusive Entropien, zugleich liefert; (b) Lernen lokaler Observablen über eine ganze thermische oder Grundzustandsphase aus $N = O(\log(M/\delta)e^{\mathrm{polylog}(1/\epsilon)})$ Samples mit *Worst-Case*-Garantie über den Parameterraum. Gegenüber Huang, Kueng, Torlai, Albert, Preskill ist das eine exponentielle Verbesserung in $\epsilon$, eine Erweiterung auf thermische Phasen, und punktweise statt gemittelte Garantien.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating, in zwei Varianten. Bei (a) ist die Liste "alle Lipschitz-Observablen" implizit und exponentiell, der Output eine Parametrisierung $x_0$ des Gibbs-Zustands. Bei (b) sind $M$ lokale Observablen gegeben, zurück kommen ihre Werte für alle $x$ der Phase. Zeilen "Ground-state properties across a phase" und, für (a), ein Zusatz zur Gibbs-Zeile.
+* **Objekt:** Gibbs-Zustände $\sigma(\beta, x) = e^{-\beta H(x)}/\mathrm{tr}$ und Grundzustände $\psi_g(x)$ lokaler Hamiltonians auf einem $D$-dimensionalen Gitter. **Zugriff:** Sample, Einzelkopien, Classical Shadows der Trainingszustände.
+* **Status:** 🟢 🟢 🟢. Kopien $\mathrm{polylog}(n)$; die Zeitkomplexität erbt die der eingesetzten Hamiltonian-Lerner (Anshu et al. für kommutierende Modelle, Haah–Kothari–Tang bei hoher Temperatur).
+* **Versprechen:** exponentieller Korrelationszerfall (Gl. II.2) für (a) und thermische Phasen in (b); für Grundzustände GALI, generalisierte approximative lokale Ununterscheidbarkeit, die gapped Phasen einschließt; für (b) zusätzlich eine anti-konzentrierte Verteilung über $x$ (etwa die Gleichverteilung).
+
+### Das Problem
+
+Shadows lernen lokale Observablen mit $\log n$ Kopien, aber exponentiell in der Trägergröße; Hamiltonian-Lernen aus Gibbs-Zuständen (Anshu et al., Haah et al.) rekonstruiert die Parameter, aber Spurdistanz-Garantien kosten polynomiell in $n$. Rouzé und França hatten beides über Transportkostenungleichungen verbunden, jedoch nur für topologisch triviale Zustände (kommutierende Hochtemperatur-Gibbs-Zustände, flache Schaltkreise). Für das Lernen über Phasen hatte HKTAP exponentielle $\epsilon$-Abhängigkeit, nur gapped Grundzustände und nur Garantien im Mittel.
+
+### Kernresultate
+
+* **Theorem II.3 (Gibbs-Tomographie).** Für kommutierende Gibbs-Zustände mit exponentiellem Korrelationszerfall liefern $N = O(\log(\delta^{-1})\mathrm{polylog}(n)\epsilon^{-2})$ Kopien ein $x_0$ mit $W_1(\sigma(\beta,x), \sigma(\beta,x_0)) \leq n\epsilon$; nichtkommutierend bei $\beta < \beta_c$ ebenso, und unter uniformem Clustering plus approximativer Markov-Eigenschaft mit $\epsilon^{-4}$.
+* **Stetigkeitsschranke (Gl. II.4).** $W_1(\sigma(\beta,x), \sigma(\beta,y)) = \Vert x - y\Vert_{\ell_1}O(\mathrm{polylog}\,n)$, scharf bis auf den Polylog bei $\beta = \Theta(1)$; Beweis über Quanten-Belief-Propagation. Damit reduziert sich $W_1$-Rekonstruktion auf $\ell_1$-Parameterlernen.
+* **Corollary II.4 (Entropien).** Von-Neumann-Entropie, bedingte Entropie, wechselseitige und bedingte wechselseitige Information beliebig großer Regionen ändern sich nur um $\Vert x|_{S(r_S)} - y|_{S(r_S)}\Vert_{\ell_1}\mathrm{polylog}$, also sind sie aus der Parameterschätzung mit multiplikativem Fehler ablesbar; Shadows brauchen dafür exponentiell in der Region.
+* **Theorem II.5 (Lernen in thermischen Phasen).** Mit $N = O(\log(M/\delta)\log(n/\delta)e^{\mathrm{polylog}(\epsilon^{-1})})$ Samples $(x_i, \tilde\sigma(\beta,x_i))$ aus der Gleichverteilung über $\Phi$ gibt es einen Schätzer mit $\sup_{x\in\Phi}|f_O(x) - \hat f_O(x)| \leq\epsilon\sum_i\Vert O_i\Vert_\infty$ für lokale $O = \sum_i O_i$.
+* **Theorem II.7 (GALI).** Dieselbe Garantie für Familien von Grund- oder Gibbs-Zuständen mit generalisierter approximativer lokaler Ununterscheidbarkeit (Definition II.6): Für jede Region $S$ und Radius $r$ gibt es Parameter außerhalb von $S(r)$, deren Wahl die Erwartungswerte auf $S$ nur um $(|S|f(r) + \eta(S))\Vert O\Vert_\infty$ ändert; gapped Grundzustandsphasen erfüllen das (Lieb–Robinson, Spectral Flow).
+
+### Methodischer Ansatz
+
+* **Wasserstein statt Spurdistanz.** Lipschitz-Observablen $\Vert L\Vert_{\mathrm{Lip}} = \max_i\min_{L_{i^c}}2\Vert L - L_{i^c}\otimes I_i\Vert_\infty$ und die duale Distanz $W_1$; $W_1 = O(\epsilon n)$ ist für extensive Observablen dasselbe wie multiplikative Genauigkeit $\epsilon$, kostet aber exponentiell weniger als Spurdistanz $O(\epsilon)$ (schon für Produktzustände).
+* **$W_1$-starke Konvexität** der Log-Zustandssumme, die linear in $n$ skaliert unter Clustering und Markov-Bedingung, als Verallgemeinerung der $\ell_2$-Konvexität bei Anshu et al.
+* **Lernen in der Phase.** Trainingspunkte $Y_1, \dots, Y_N$ gleichverteilt; für jede Observable $O_i$ mit Träger $S_i$ werden die Shadows der $t\approx\log n$ Trainingszustände gemittelt, deren *lokale* Parameter nahe $x$ liegen; Belief Propagation zeigt, dass lokale Erwartungswerte bei exponentiellem Korrelationszerfall glatt in den lokalen Parametern sind. Anti-Konzentration der Verteilung garantiert, dass jede kleine Parameterregion genug Trainingspunkte enthält. Das ist Konzentration des Maßes, nicht ML im engeren Sinn.
+
+### Bedeutung und Anwendungen
+
+* Zusammen mit Lewis et al. der Stand der Technik für "Lernen über eine Phase": Lewis et al. haben $O(\log n)$ Daten für beliebige Verteilungen im Mittel, Onorati et al. Worst-Case-Garantien für anti-konzentrierte Verteilungen und thermische Phasen; beide sind quasi-polynomiell in $1/\epsilon$.
+* Corollaries C.4 und C.6 sind auch klassisch neu ($W_1$-Lernen von Gibbs-Maßen); es gibt klassische Ising-Phasen mit Korrelationszerfall, aber ohne bekannten Sampler, und die Resultate gelten trotzdem.
+* Robuste Shadow-Tomographie-Algorithmen für Gibbs- und Grundzustände und Gibbs-Approximationen lokal ununterscheidbarer Grundzustände sind Werkzeuge von eigenem Wert.
+
+### Bezug zum eigenen Projekt
+
+* Für Objective 4 (Gibbs- und Grundzustände) ist das die Aussage, dass diese Zustandsklassen *als Klassen* mit $\mathrm{polylog}(n)$ Kopien vollständig beschrieben werden können, sobald Korrelationen exponentiell zerfallen. Die Frage für das eigene Projekt ist, ob dieselbe Struktur ein sparsames Displacement-Spektrum impliziert, und die Stetigkeitsschranke Gl. II.4 ist ein Werkzeug, um Sparsity entlang einer Phase zu verfolgen.
+* Die Unterscheidung "im Mittel" gegen "punktweise" ist dieselbe, die im eigenen Paper zwischen Skalierung über Instanzverteilungen und Garantie für jede Instanz zu treffen ist; das Paper zeigt, dass der Preis für punktweise Garantien eine Anti-Konzentrationsbedingung ist, kein Verlust in $n$.
+* Der Mixedness-Faktor der eigenen Taxonomie wird hier durch $\beta$ gesteuert; die Tabelle der Bedingungen (kommutierend, Hochtemperatur, Markov, GALI) ist eine Vorlage für die Instanzenleiter.
+
+### Grenzen und offene Fragen
+
+* Anti-Konzentration ist nötig; Verteilungen mit großen Regionen kleiner Wahrscheinlichkeit sind ausgeschlossen (Anhang D).
+* Für nichtkommutierende Gibbs-Zustände außerhalb des Hochtemperaturregimes hängt alles an Clustering plus Markov, das für viele Modelle vermutet, nicht bewiesen ist.
+* $e^{\mathrm{polylog}(1/\epsilon)}$ in der Genauigkeit.
+* Die Zeitkomplexität wird nicht separat bewiesen, sondern geerbt.
+
+### Fragen zum Tieferbohren
+
+* Ist $\Vert D_{q,p}\Vert_{\mathrm{Lip}}$ auf einem Qudit-Gitter beschränkt, und was sagt $W_1$-Nähe über die Displacement-Spektren zweier Gibbs-Zustände?
+* Wie sieht die approximative Markov-Bedingung in der Displacement-Basis aus, und impliziert sie eine Faktorisierung des Spektrums, die ein Best-First-Decoder nutzen könnte?
+* Lässt sich GALI als Versprechen für die Instanzenleiter operationalisieren, also messen, ohne den Hamiltonian zu kennen?
+
+Paper: [arXiv:2301.12946](https://arxiv.org/abs/2301.12946)
+
+---
+
+## Learning to predict arbitrary quantum processes (arXiv:2210.14894)
+
+Die Arbeit von **Hsin-Yuan Huang, Sitan Chen und John Preskill** (Caltech, Berkeley, AWS; *PRX Quantum* 4, 040337 (2023)) gibt einen effizienten ML-Algorithmus, der für einen *beliebigen* unbekannten $n$-Qubit-Prozess $\mathcal{E}$, auch einen mit exponentiell vielen Gattern, jede lokale Eigenschaft $\mathrm{tr}(O\mathcal{E}(\rho))$ des Outputs vorhersagt, mit kleinem mittleren Fehler über Inputzustände $\rho$ aus einer *lokal flachen* Verteilung, nach Training auf $N = O(\log n)$ Experimenten mit zufälligen Produktzuständen und zufälligen Pauli-Messungen. Der Beweis liefert eine Quanten-Bohnenblust–Hille-Ungleichung über einen verbesserten Optimierungsalgorithmus für lokale Hamiltonians.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating, Average Case über Inputs. Gegeben: Zugriff auf $\mathcal{E}$, eine Familie beschränkten Grades von Observablen $O$, eine Verteilung $\mathcal{D}$; zurück kommt $h(\rho, O)\approx\mathrm{tr}(O\mathcal{E}(\rho))$. Die Zeile "Predicting arbitrary quantum processes".
+* **Objekt:** Kanal. **Zugriff:** Sample im Sinne der Tabellen: nicht-adaptive Anwendung auf zufällige Produktzustände mit Einzelkopien-Pauli-Messungen, also der Input–Output-Datenzustand; die Autoren nennen es Zugriff auf $\mathcal{E}$, aber nichts wird adaptiv oder in Superposition gewählt.
+* **Status:** 🟢 🟢 🟢 für konstantes $\epsilon$: $N = \log n\cdot\min(2^{O(\log(1/\epsilon)(\log\log(1/\epsilon) + \log(1/\epsilon')))}, 2^{O(\log(1/\epsilon)\log n)})$, Zeit $O(kn^kN)$ mit $k = \Theta(\log 1/\epsilon)$; also $n^{O(\log 1/\epsilon)}$ bei $\epsilon' = 0$.
+* **Versprechen:** lokal flache Verteilung $\mathcal{D}$ (invariant unter Ein-Qubit-Cliffords auf jedem Qubit) und Observablen beschränkten Grades ($O(1)$ Terme pro Qubit, $\Vert O\Vert \leq 1$). Kein Versprechen über $\mathcal{E}$.
+
+### Das Problem
+
+Ein CPTP-Kanal hat exponentiell viele Parameter; Covering-Argumente, Shadow Tomography und Prozesstomographie brauchen exponentiell viele Daten für beliebige $\mathcal{E}$ und $\rho$. Für polynomiell erzeugbare $\mathcal{E}$ reichen polynomiell viele Daten, aber die Rechenzeit bleibt exponentiell. Gesucht: ein Algorithmus, der beliebige $\mathcal{E}$ effizient lernt, wenn man den Fehler im Mittel über eine sinnvolle Inputverteilung misst.
+
+### Kernresultate
+
+* **Theorem 1.** Mit $N = O(\log n)$ Trainingsdaten $S_N(\mathcal{E})$ (Produkt-Stabilizerzustände als Input, randomisierte Pauli-Messung am Output, $O(nN)$ Bits) lernt der Algorithmus $h(\rho, O)$ mit $\mathbb{E}_{\rho\sim\mathcal{D}}|h(\rho,O) - \mathrm{tr}(O\mathcal{E}(\rho))|^2 \leq\epsilon + \max(\Vert O'\Vert^2, 1)\epsilon'$ für jede lokal flache $\mathcal{D}$ und jedes $O$ beschränkten Grades, $O'$ die Grad-$k$-Trunkierung der Heisenberg-Evolution $\mathcal{E}^\dagger(O)$.
+* **Lernen von Zuständen (Abschnitt II.A).** Verbesserte Shadow-Norm: alle Observablen beschränkten Grades mit $\Vert O\Vert\leq B$ aus $N = O(\log(n)B^2/\epsilon^2)$ zufälligen Pauli-Messungen (vorher $O(n\log n\,B^2/\epsilon^2)$), mit passender Untergrenze auch für kollektive Messungen.
+* **Lernen von Observablen (II.B).** Unter lokal flachen $\mathcal{D}$ ist die Grad-$k$-Trunkierung $O^{(k)}$ von $O$ mit $\Vert O\Vert = O(1)$ bis auf $e^{-\Omega(k)}$ genau (Lemma 14); es genügt, wenige große Koeffizienten zu lernen; Training auf der festen Verteilung $\mathcal{D}'$ (zufällige Produkt-Stabilizerzustände) reicht für alle lokal flachen $\mathcal{D}$.
+* **Corollaries 1 und 2 (Optimierung).** Randomisierte Algorithmen in $O(n^k)$ bzw. $O(nd)$ finden Produktzustände mit Energie um $C(k)(\sum|\alpha_P|^{2k/(k+1)})^{(k+1)/2k}$ bzw. $\frac{C}{\sqrt d}\sum|\alpha_P|$ über oder unter dem Haar-Mittel, $C(k) = 1/\exp(\Theta(k\log k))$, per Polarisation statt Random Restriction.
+* **Corollaries 3 und 4 (Normungleichungen).** $\frac13C(k)\Vert H\Vert_{\mathrm{Pauli},2k/(k+1)} \leq\Vert H\Vert$ für $k$-lokale $H$ (beweist die Vermutung von Rouzé, Wirth, Zhang zur Quanten-Bohnenblust–Hille-Ungleichung) und $\frac13C(k,d)\Vert H\Vert_{\mathrm{Pauli},1} \leq\Vert H\Vert$ für beschränkten Grad $d$.
+* **Numerik.** Vorhersage von Quantendynamik mit Evolutionszeit bis $10^6$ und 50 Qubits.
+
+### Methodischer Ansatz
+
+1. **Reduktion.** $\mathrm{tr}(O\mathcal{E}(\rho)) = \mathrm{tr}(\mathcal{E}^\dagger(O)\rho)$: Der Output $\mathcal{E}(\rho_\ell)$ ist ein unbekannter Zustand (Shadows lernen ihn für beschränkten Grad), und $\mathcal{E}^\dagger(O)$ ist eine unbekannte Observable (Low-Degree-Lernen über lokal flache Verteilungen). Beides zusammen lernt den Prozess.
+2. **Algorithmus (III.A).** Empirische Pauli-Koeffizienten $\hat x_P(O)$ aus den Daten für alle $|P|\leq k$, Schwellenwert $\hat\alpha_P = 3^{|P|}\hat x_P$ falls groß, sonst $0$; Vorhersage $h(\rho,O) = \sum_P\hat\alpha_P\mathrm{tr}(P\rho)$ aus den $k$-RDMs von $\rho$, die klassisch oder per Shadows vorliegen.
+3. **Normungleichungen aus Optimierung.** Ein Zustand mit Energie deutlich über dem Haar-Mittel beweist eine Untergrenze an $\Vert H\Vert$ in Termen der Pauli-Koeffizienten; Polarisation (Qubits replizieren, alle bis auf die letzte Replika zufällig fixieren, letzte optimieren, mit Zufallsvorzeichen mitteln) liefert die Bohnenblust–Hille-Form.
+
+### Bedeutung und Anwendungen
+
+* Beliebige Prozesse werden im Average Case lernbar; der Kontrast zu Prozesstomographie und zum Worst Case ist die Aussage der "Power of Data".
+* Die Quanten-Bohnenblust–Hille-Ungleichung mit Konstante $\exp(\Theta(k\log k))$ ist unabhängig wichtig; Klein, Slote, Volberg, Zhang übertragen sie auf Qudits, Arunachalam et al. auf Kanäle.
+* Die observablenzentrierte Sicht auf Shadows (Lemma 1.10 bei Bakshi et al.) stammt hierher.
+
+### Bezug zum eigenen Projekt
+
+* Die Trunkierungsaussage "unter lokal flachen Verteilungen ist $\mathcal{E}^\dagger(O)$ effektiv low-degree" ist ein Mechanismus, der ein *implizites* Sparsity-Versprechen erzeugt: Nicht der Prozess ist sparsam, sondern das, was die Inputverteilung von ihm sieht. Für die eigene Conjecture ist das ein Vorbild dafür, dass Average-Case-Decodierbarkeit aus der Instanzverteilung kommen kann, nicht aus dem Zustand allein.
+* Das Schwellenwertverfahren (große Koeffizienten behalten, kleine nullen) ist der Eskenazis–Ivanisvili-Decoder und die algorithmische Form von "Top-$k$"; die Bohnenblust–Hille-Ungleichung ist die Garantie, dass es funktioniert. Die analoge Ungleichung für Displacement-Koeffizienten wäre der beweisbare Kern des eigenen Dictionary-Regimes.
+* $n^{O(\log 1/\epsilon)}$ ist quasi-polynomiell: Die Zeit skaliert mit der Zahl der Kandidaten $n^k$, was der Enumerationsstrategie des Dictionary-Regimes entspricht.
+
+### Grenzen und offene Fragen
+
+* Quasi-polynomielle Zeit in $1/\epsilon$; für kleine Fehler unpraktisch.
+* Lokal flache Verteilungen sind eine starke Annahme über die Inputs; für Inputs aus einem festen Experiment ohne Randomisierung gilt nichts.
+* Die Optimierungsalgorithmen können nicht wählen, ob sie maximieren oder minimieren.
+* Keine Aussage über den Worst Case über Inputs.
+
+### Fragen zum Tieferbohren
+
+* Was ist eine "lokal flache" Verteilung über Qudit-Zustände, wenn die lokale Gruppe die Heisenberg–Weyl-Gruppe statt der Clifford-Gruppe ist, und gilt Lemma 14 dann für Displacement-Grad?
+* Wie sieht die Polarisationstechnik für Displacement-Hamiltonians $\sum_{q,p}\alpha_{q,p}(D_{q,p} + D_{q,p}^\dagger)$ aus, und welche Bohnenblust–Hille-Konstante ergibt sich?
+* Kann das eigene CNN als Lerner von $\mathcal{E}^\dagger(O)$ gelesen werden, wenn $\mathcal{E}$ die Präparation des Zustands aus einem Referenzzustand ist?
+
+Paper: [arXiv:2210.14894](https://arxiv.org/abs/2210.14894)
+
+---
+
+## Learning low-degree quantum objects (arXiv:2405.10933)
+
+Die Arbeit von **Srinivasan Arunachalam, Arkopal Dutt, Francisco Escudero Gutiérrez und Carlos Palazuelos** (IBM Quantum, QuSoft/CWI, UCM/ICMAT; 2024) lernt Quantenobjekte mit niedrigem Pauli-Grad $d$ bis auf $\ell_2$-Fehler $\epsilon$: Kanäle und Unitaries mit $\exp(\tilde O(d^2 + d\log 1/\epsilon))$ Queries, unabhängig von $n$; Polynome aus $d$-Query-Quantenalgorithmen klassisch aus $O((1/\epsilon)^d\log n)$ Zufallsbeispielen, also auch für $d = O(\log n)$; Grad-$d$-Polynome aus $O(1/\epsilon^d)$ Queries an eine Block-Encoding. Technischer Kern sind neue Bohnenblust–Hille-Ungleichungen: für vollständig beschränkte Tensoren mit Konstante $1$, für Kanäle mit Konstante $\exp(d)$.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben ist die implizite Liste aller Pauli-Koeffizienten bis Grad $d$, zurück kommen sie alle. Die Zeile "Low-degree quantum objects" der Estimating-Tabelle; die Tabelle nennt daneben Volberg–Zhang (2023) für die noncommutative BH-Ungleichung, während 2301.01438 (Klein, Slote, Volberg, Zhang) das Qudit-Paper ist, siehe die folgende Zusammenfassung.
+* **Objekt:** Kanal $\Phi(\rho) = \sum_{x,y}\hat\Phi(x,y)\sigma_x\rho\sigma_y$, Unitary $U = \sum_x\hat U(x)\sigma_x$, klassische Polynome. **Zugriff:** Query: Der Lerner wählt Inputzustände, wendet $\Phi$ bzw. $U$ (und $\mathrm{c}U$) an und misst in beliebiger Basis. Damit steht die Zeile im Query-Block; die Warnung ⚠️ in der Tabelle ist hiermit für Kanäle und Unitaries aufgelöst.
+* **Status:** 🟢 🟢 🟢 für konstantes $d$: Queries unabhängig von $n$, Zeit polynomiell; $\exp(d^2)$ ist für $d = O(\sqrt{\log n})$ noch polynomiell.
+* **Versprechen:** Grad $\leq d$: $\hat\Phi(x,y) = 0$ für $|x| + |y| > d$.
+
+### Das Problem
+
+Linial–Mansour–Nisan lernen $\mathrm{AC}^0$ über Low-Degree-Approximation; Eskenazis–Ivanisvili brachten Low-Degree-Lernen auf $O(\log n)$ Samples, weil BH-Ungleichungen sagen, dass die meisten Koeffizienten klein sind. Für Quantenobjekte gab es BH-Ungleichungen für Observablen (Huang–Chen–Preskill, Volberg–Zhang) mit $\log n$-Abhängigkeit. Die Frage: Lassen sich Kanäle, Unitaries und Query-Algorithmen mit Komplexität polynomiell oder polylogarithmisch in $n$ lernen, und was sind die richtigen BH-Ungleichungen?
+
+### Kernresultate
+
+* **Theorem 12 (BH für Kanäle).** $\big(\sum_{x,y}|\hat\Phi(x,y)|^{2d/(d+1)}\big)^{(d+1)/2d} \leq\exp(d)$ für Grad-$d$-Kanäle, allgemeiner für Superoperatoren beschränkt in der $S_1\to S_\infty$-Norm; verallgemeinert die Operator-BH-Ungleichungen von Huang et al. und Volberg–Zhang.
+* **Theorem 19 (BH für vollständig beschränkte Tensoren).** Konstante $1$ statt $\mathrm{poly}(d)$ für $d$-lineare Tensoren, die Amplituden von $d$-Query-Algorithmen sind (Arunachalam, Briët, Palazuelos).
+* **Theorem 1 (Kanäle).** $(\epsilon,\delta)$-Lernen in $\ell_2$ mit $\exp(\tilde O(d^2 + d\log 1/\epsilon))\log(1/\delta)$ Queries; allgemeine Kanäle brauchen $\Omega(4^n)$.
+* **Proposition 2 (Pauli-Kanäle).** Grad-$d$-Pauli-Kanäle in Diamantnorm mit $O(n^{2d}/\epsilon^2\cdot\log(n/\delta))$ Queries, nur Produktzustände und Pauli-Messungen; dieselbe $n$-Abhängigkeit wie Flammia–O'Donnell (Population Recovery), aber Fourier-analytisch.
+* **Theorem 3 (Unitaries).** Grad-$d$-Unitaries mit $\exp(\tilde O(d^2 + d\log 1/\epsilon))\log(1/\delta)$ Anwendungen, über Montanaro–Osborne zur Koeffizientenschätzung und Volberg–Zhang zur Trunkierung. Question 4: Ist $\sum_x|\hat U(x)| \leq C(d)$? Dann wäre $1/\epsilon^2$ möglich.
+* **Theorem 5 (Query-Algorithmen).** Amplituden $T(x) = \langle v|\Psi_x\rangle$ von $d$-Query-Algorithmen (etwa $k$-Forrelation) klassisch aus $O((1/\epsilon)^d\log n)$ uniformen Beispielen, exponentiell besser als Eskenazis–Ivanisvili $(d/\epsilon)^{O(d)}\log n$, polynomiell in $n$ auch für $d = \omega(\log n)$.
+* **Facts 6, 7 (Boolesche Funktionen).** Grad-$d$-Boolesche Funktionen exakt aus $O(4^dd\log 1/\delta)$ Quantenbeispielen (Granularität $2^{1-d}$), klassisch $\Omega(2^d\log n)$; eine BH-artige Ungleichung für Boolesche Funktionen.
+* **Bemerkung (Zustände).** Grad-$d$-Zustände in Spurnorm mit $\tilde O(n^d/\epsilon^2\log(n/\delta))$ Kopien per Classical Shadows.
+
+### Methodischer Ansatz
+
+1. **Kanäle.** Die Matrix $\hat\Phi$ der Pauli-Koeffizienten ist eine Dichtematrix, unitär äquivalent zum Choi-Zustand (Bao–Yao); sie wird mit einer Query präpariert. Rechenbasis-Messungen sampeln $\{\hat\Phi(x,x)\}$, $O(1/\alpha^2)$ Samples finden alle $\alpha$-großen Diagonalen; ein SWAP-Test für gemischte Zustände schätzt die großen $\hat\Phi(x,y)$; alle anderen werden null gesetzt. Mit $T\sim\exp(d^2/\epsilon^d)$ und der BH-Ungleichung ist die Ausgabe $\epsilon$-nahe in $\ell_2$.
+2. **Unitaries.** Montanaro–Osbornes Goldreich–Levin-Variante schätzt große Koeffizienten; die BH-Ungleichung von Volberg–Zhang begründet die Trunkierung.
+3. **Tensoren.** Die Hybridungleichung zwischen BH und Grothendieck für vollständig beschränkte Multilinearformen.
+
+### Bedeutung und Anwendungen
+
+* Erste $n$-unabhängige Lernresultate für strukturierte Kanäle und Unitaries; Anwendungen auf Kurzzeit-Dynamik lokaler Hamiltonians (Lieb–Robinson macht $e^{-iHt}$ low-degree) und auf Rauschmodelle mit sparsamen lokalen Paulis.
+* Die BH-Ungleichung mit Konstante $1$ ist ein Beitrag zur Funktionalanalysis; die $\mathrm{poly}(d)$-gegen-$\exp(d)$-Lücke wird als inkomparabel erklärt (Tensoren gegen allgemeine Polynome).
+
+### Bezug zum eigenen Projekt
+
+* Der Kanal-Algorithmus ist strukturell das eigene Zwei-Phasen-Protokoll auf dem Choi-Zustand: Sampling findet die großen Diagonalen (Lokalisierung), ein SWAP-Test schätzt die Koeffizienten (Schätzung), und die BH-Ungleichung ersetzt die Conjecture. Für Zustände fehlt genau diese Ungleichung, weil die Normierung $\sum|y_{q,p}|^2 = d$ statt $1$ ist; das ist der Normierungsabsatz der Übersicht in Reinform.
+* Question 4 (ist die $\ell_1$-Norm der Koeffizienten eines Grad-$d$-Unitaries beschränkt?) ist die Unitary-Version der Frage, ob das Displacement-Spektrum einer Zustandsklasse $\ell_1$-beschränkt ist; für Grundzustände lokaler Hamiltonians gibt Lewis et al. Theorem 2 eine Antwort für Observablen, nicht für Zustände.
+* Die $n$-unabhängige Query-Komplexität ist die Query-Seite des Quadranten: Mit Kontrolle über den Input kollabiert die Dimension aus der Sample-Zahl, während Bell-Sampling auf Zuständen $\log d$ zahlt.
+
+### Grenzen und offene Fragen
+
+* $\exp(d^2)$ ist nur für $d = O(\sqrt{\log n})$ polynomiell; die Autoren vermuten $\mathrm{poly}(d)$-Abhängigkeit.
+* Nur $\ell_2$-Fehler für Kanäle und Unitaries; Diamantnorm nur für Pauli-Kanäle.
+* Question 4 offen; die Montanaro–Osborne-Vermutung (Grad-$d$-Unitaries sind $2^d$-Juntas) würde sie beantworten.
+* Zustände sind nur als Bemerkung behandelt.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die BH-Ungleichung für Kanäle in der Heisenberg–Weyl-Basis eines Qudits aus (Kombination mit Klein et al.), und was ist der "Grad" eines Displacement-Kanals?
+* Der SWAP-Test für gemischte Zustände als Koeffizientenschätzer: Ist er die Zwei-Kopien-Messung $\hat\Phi\otimes\hat\Phi$, und wie verhält sie sich zu Bell-Sampling auf $\hat\Phi\otimes\hat\Phi^*$?
+* Lässt sich der Ausgang "Sampling der Diagonalen mit $O(1/\alpha^2)$" als Sample-Untergrenze für die Lokalisierung im eigenen Protokoll lesen, wo die Diagonale $|y_{q,p}|^2/d$ ist?
+
+Paper: [arXiv:2405.10933](https://arxiv.org/abs/2405.10933)
+
+---
+
+## Quantum and classical low-degree learning via a dimension-free Remez inequality (arXiv:2301.01438)
+
+Die Arbeit von **Ohad Klein, Joseph Slote, Alexander Volberg und Haonan Zhang** (Hebrew University, Caltech, Michigan State/Bonn, South Carolina; 2023) erweitert Low-Degree-Lernen vom Hyperwürfel und von Qubits auf Produkte zyklischer Gruppen $\mathbb{Z}_K^n$ und auf $K$-Level-Qudits. Das technische Hindernis war, dass die Standardbeweise der Bohnenblust–Hille-Ungleichung im Polarisationsschritt ein Maximumprinzip brauchen, das für die $K$-ten Einheitswurzeln nicht gilt. Die Lösung ist eine dimensionsfreie Remez-Ungleichung: Das Supremum eines Polynoms vom Grad $d$ über $\Omega_K^n$ kontrolliert sein Supremum über den ganzen Polytorus $\mathbb{T}^n$ mit Konstante $(O(\log K))^d$. Daraus folgen $O(\log n)$-Sample-Algorithmen für Qudit-Observablen in der Heisenberg–Weyl- und der Gell-Mann-Basis.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben Samples $(\rho, \mathrm{tr}[A\rho])$, zurück kommt eine $L^2$-Approximation der Observablen, also alle Koeffizienten bis zum relevanten Grad. Ergänzung zur Zeile "Low-degree quantum objects" um die Qudit-Variante; die Tabelle nennt jetzt Klein, Slote, Volberg, Zhang für Qudits.
+* **Objekt:** Observable auf $n$ Qudits der Dimension $K$, oder Funktion $f:\mathbb{Z}_K^n\to\mathbb{C}$. **Zugriff:** Sample: zufällige Produktzustände aus einer festen Menge und ihr Erwartungswert; also Sample-Zugriff im Sinne der Tabellen, kein Query.
+* **Status:** 🟢 🟢 🟢 bei konstantem Grad: Samples $O(\log n)$, Zeit polynomiell.
+* **Versprechen:** Grad $\leq d$ in der gewählten Basis; für Theorem 4 keines über $A$, aber eines über die Verteilung $\mu$, unter der Low-Degree-Trunkierungen gute Approximationen sind.
+
+### Das Problem
+
+Eskenazis–Ivanisvili reduzieren Low-Degree-Lernen auf eine $\ell_p$-Schranke, $p < 2$, für die Fourier-Koeffizienten (BH-Ungleichung), weil dann die meisten Koeffizienten klein sind und Nullsetzen unter einer Schwelle einen $n$-unabhängigen $\ell_2$-Fehler gibt. Für Qubits existiert die BH-Ungleichung (Huang–Chen–Preskill; Volberg–Zhang). Für Qudits in der Heisenberg–Weyl-Basis (Clock und Shift, Eigenwerte $K$-te Einheitswurzeln) braucht man BH über $\mathbb{Z}_K^n$, den unstudierten Fall zwischen Hyperwürfel ($K = 2$) und Polytorus ($K = \infty$), und der Standardbeweis bricht, weil $\Omega_K$ nicht der Rand seiner konvexen Hülle ist; schon für $n = 1$, $K = 3$ gibt es $f$ mit $\Vert f\Vert_{\mathrm{conv}(\Omega_K)} > \Vert f\Vert_{\Omega_K}$.
+
+### Kernresultate
+
+* **Theorem 5 (dimensionsfreie Remez-Ungleichung).** Für $f$ vom Grad $d$ mit individuellem Grad $\leq K-1$: $\Vert f\Vert_{\mathbb{T}^n} \leq (O(\log K))^d\Vert f\Vert_{\Omega_K^n}$; anscheinend die erste diskrete multidimensionale Remez-Ungleichung mit dimensionsfreier Konstante.
+* **Corollary 6 (zyklische BH).** $\Vert\hat f\Vert_{2d/(d+1)} \leq (O(\log K))^{d + \sqrt{d\log d}}\Vert f\Vert_{\Omega_K^n}$, direkt aus Theorem 5 und der Polytorus-BH.
+* **Theorem 3 (zyklisches Low-Degree-Lernen).** Grad-$d$-Funktionen $f:\mathbb{Z}_K^n\to\mathbb{D}$ aus $(\log K)^{O(d^2)}\log(n/\delta)\epsilon^{-d-1}$ uniformen Beispielen bis auf $\Vert f - \tilde f\Vert_2^2 \leq\epsilon$ in Polynomialzeit, gegen $\mathrm{poly}(n)$ naiv.
+* **Theorem 4 (Qudit-Observablen).** Für *beliebige* beschränkte Observablen $A$ auf $n$ $K$-Level-Qudits und eine Klasse von Verteilungen $\mu$ über Zuständen: $\mathbb{E}_{\rho\sim\mu}|\mathrm{tr}[A\rho] - \mathrm{tr}[\tilde A\rho]|^2 \leq\epsilon$ aus $s \leq O(\log(n/\delta)C^{\log^2(1/\epsilon)}K^{3/2}\Vert A_{\leq t}\Vert_{\mathrm{op}}^{2t})$ Samples, $t\approx\log(1/\epsilon)$, Samples von der Gleichverteilung über eine feste Menge von Produktzuständen; die Klasse der $\mu$ erweitert die lokal flachen Verteilungen von Huang, Chen, Preskill auf Qudits und liefert auch für Qubits neue Verteilungen.
+* **Zwei Basen.** Gell-Mann reduziert auf die Hyperwürfel-BH; Heisenberg–Weyl auf die zyklische BH, also auf Theorem 5.
+
+### Methodischer Ansatz
+
+* **Lemma 7 (DFT-Interpolation).** Für $z\in\mathbb{T}$ gibt es $c$ mit $z^k = \sum_j c_j\omega^{jk}$ für $k < K$ und $\Vert c\Vert_1 \leq B\log K$, aus den DFT-Koeffizienten von $(1, z, \dots, z^{K-1})$ und der Harmonischen Zahl $H_K$. In einer Koordinate gibt Hölder sofort die Remez-Ungleichung.
+* **Korrelierter Zufall.** Koordinatenweise Wiederholung würde $(\log K)^n$ kosten; stattdessen wird die Summe als Erwartung über ein komplexes Maß gelesen und die $n$ Variablen werden korreliert, so dass die Konstante nur vom Grad abhängt. Zwei Beweise existieren; der hier gegebene hat die für Lernanwendungen bessere Konstante.
+* **Lernalgorithmus.** Fourier-Sampling der Koeffizienten, Nullsetzen unter der Schwelle (Eskenazis–Ivanisvili, leicht verallgemeinert), Plancherel für den $\ell_2$-Fehler.
+
+### Bedeutung und Anwendungen
+
+* Öffnet die Low-Degree-Lerntheorie für Qudit-Prozessoren, die in der NISQ-Ära praktische Vorteile bringen, und für Funktionen auf Hypergrids.
+* Die Remez-Ungleichung ist ein Werkzeug von eigenem Wert: eine Brücke von diskreten Räumen zurück in die klassische harmonische Analysis auf dem Polytorus.
+* Zeigt, dass die Heisenberg–Weyl-Basis *nicht* dieselbe Analysis hat wie die Pauli-Basis: Die Einheitswurzeln sind ein echtes Hindernis, kein technisches.
+
+### Bezug zum eigenen Projekt
+
+* Das ist das Paper, das die Fourier-Analysis in der Heisenberg–Weyl-Basis eines Qudits sauber macht; für ein einzelnes Qudit ($n = 1$, $K = d$) sind die Displacement-Koeffizienten $y_{q,p}$ genau die Koeffizienten in dieser Basis, und die zyklische BH-Ungleichung ist die Aussage, dass ein Operator beschränkter Norm mit "niedrigem Grad" in $(q,p)$ ein $\ell_{2d/(d+1)}$-beschränktes Spektrum hat.
+* Der Grad ist hier $|\alpha| = \sum_j\alpha_j$ mit $\alpha_j\in\{0, \dots, K-1\}$, also die Größe der Verschiebung; für $n = 1$ ist "Low-Degree" gleichbedeutend mit "kleines $q$ und $p$". Das ist ein Versprechen, das in der eigenen Instanzenleiter fehlt und beweisbar wäre: Zustände mit Displacement-Spektrum nahe dem Ursprung des Phasenraums.
+* Die Konstante $(\log K)^{O(d^2)}$ wächst mit $d = K$ (dem Grad bis zum vollen Phasenraum) unbrauchbar; das ist die Stelle, an der Low-Degree-Lernen aufhört und Sparsity-Lernen mit LWE-Härte anfängt.
+
+### Grenzen und offene Fragen
+
+* Die Konstante $(O(\log K))^d$ ist für $d\ll K$ oder sehr zusammengesetztes $K$ verbesserbar; Erweiterungen auf $L^p$ angekündigt.
+* Nur uniforme Samples auf Produktzuständen; adaptive oder nicht-uniforme Zugriffe nicht behandelt.
+* Theorem 4 braucht $\Vert A_{\leq t}\Vert_{\mathrm{op}}$ der Trunkierung, die für allgemeine $A$ groß sein kann.
+* Zusammengesetztes $K$ ist zugelassen (zyklische Gruppe, kein Körper), aber nur für Funktionen und Observablen, nicht für Zustände.
+
+### Fragen zum Tieferbohren
+
+* Gilt eine zyklische BH-Ungleichung für Zustände mit der Normierung $\sum|y_{q,p}|^2 = d$, etwa nach Reskalierung $\rho\mapsto d\rho$, und was sagt sie über die Zahl großer Koeffizienten?
+* Was ist der "Grad" eines Grundzustands eines Displacement-Hamiltonians, und ist er klein, wenn die Kopplungen $D_{q,p}$ nur kleine $(q,p)$ haben?
+* Wie sieht die korrelierte Randomisierung des Beweises aus, wenn man sie als Sampling-Vorschrift für Probe-Zustände in Phase 2 liest?
+
+Paper: [arXiv:2301.01438](https://arxiv.org/abs/2301.01438)
+
+---
+
+## Optimal learning of quantum Hamiltonians from high-temperature Gibbs states (arXiv:2108.04842)
+
+Die Arbeit von **Jeongwan Haah, Robin Kothari und Ewin Tang** (Microsoft Quantum, Washington; FOCS 2022) löst das Lernen der Koeffizienten eines Hamiltonians aus Kopien seines Gibbs-Zustands im Hochtemperaturregime optimal: $O(\log N/(\beta^2\epsilon^2))$ Kopien für $\ell_\infty$-Fehler $\epsilon$ und Rechenzeit linear in der Datengröße, mit passender Untergrenze $\Omega(e^\beta\log N/(\beta^2\epsilon^2))$ für alle $\beta$. Der Hamiltonian darf Low-Intersection sein (keine Geometrie nötig), und fast derselbe Algorithmus lernt $H$ aus $e^{-itH}$ bei konstantem $t$.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Die Terme $E_a$ sind bekannt, gesucht sind die Koeffizienten $\lambda_a$. Die Zeile "Hamiltonian coefficients from Gibbs states, known terms"; das Paper ist der Grund für "polynomial at high temperature" in der Zeitspalte.
+* **Objekt:** Hamiltonian, aus Kopien seines Gibbs-Zustands. **Zugriff:** Sample; jede Kopie wird in lokalen Pauli-Basen gemessen, es sind nur die lokalen Marginale nötig.
+* **Status:** 🟢 🟢 🟢 bei $\beta < \beta_c$: Kopien logarithmisch, Zeit $O(SN)$, Speicher die Koeffizienten. Für tiefe Temperaturen 🔴 in der Zeit bis Bakshi, Liu, Moitra, Tang (2024).
+* **Versprechen:** Low-Intersection ($O(1)$ Qubits pro Term, $O(1)$ Terme pro Qubit, keine Geometrie), $\beta$ unterhalb einer kritischen Konstante $\beta_c$, die nur von den Low-Intersection-Konstanten abhängt.
+
+### Das Problem
+
+Klassisch ist das Lernen von Markov-Zufallsfeldern seit 50 Jahren studiert; Parameterlernen kostet $2^{O(\beta)}\log N/(\beta^2\epsilon^2)$ Samples und ebenso viel Zeit mal $N$ (Folklore, Anhang B). Anshu, Arunachalam, Kuwahara und Soleimanifar hatten für geometrisch lokale Quanten-Hamiltonians $O(2^{\mathrm{poly}(\beta)}N^2\log N/(\beta^c\epsilon^2))$ Kopien und keine explizite Zeitschranke. Quantenmechanisch fehlt die Markov-Eigenschaft (Hammersley–Clifford), also übertragen sich klassische Algorithmen nicht. Die Fragen: die klassische Sample-Komplexität erreichen, und die Zeit.
+
+### Kernresultate
+
+* **Theorem 1.1.** Für Low-Intersection $H$ und $\beta < \beta_c$: $\ell_\infty$-Fehler $\epsilon$ mit $O(\log(N/\delta)/(\beta^2\epsilon^2))$ Kopien, $\ell_2$-Fehler mit $O(N\log(N/\delta)/(\beta^2\epsilon^2))$; Zeit linear in Kopienzahl mal $N$.
+* **Theorem 1.2 (Untergrenze).** Für jedes $\beta$ gibt es ein 2-lokales $H$ (disjunkte Zweiqubit-Terme), das $\Omega(e^\beta\log(N/\delta)/(\beta^2\epsilon^2))$ Kopien für $\ell_\infty$ und $\Omega(e^\beta N/(\beta^2\epsilon^2))$ für $\ell_2$ erzwingt; verbessert die frühere $\Omega((\sqrt N + \log(1-\delta))/(\beta\epsilon))$ erheblich.
+* **Theorem 1.3 (Echtzeit-Dynamik).** Aus $U = e^{-itH}$ mit bekanntem $t < t_c$: $O(\log(N/\delta)/(t^2\epsilon^2))$ Anwendungen, Zeit $O(N\log(N/\delta)/(t^2\epsilon^2))$; Zeitauflösung konstant statt $O(\epsilon)$, Kopien quadratisch besser als Ableitungsschätzung mit $1/\epsilon^4$.
+* **Starke Konvexität.** Die Log-Zustandssumme ist $\Theta(\beta^2)$-stark konvex bei hoher Temperatur, bis auf Konstanten der wahre Wert; daraus $\mathrm{Var}(\sum v_aE_a) = \Omega(\beta^2\Vert v\Vert_2^2)$ im thermischen Gleichgewicht.
+* **Vergleich.** Naive Tomographie eines Patches: quasi-polynomiell; Anshu et al.: $N^2\log N/(\beta^c\epsilon^2)$ Kopien und etwa $N^3\log N$ Zeit; hier $\log N/(\beta^2\epsilon^2)$ und $N\log N/(\beta^2\epsilon^2)$, in gewissen Regimen superpolynomiell besser.
+
+### Methodischer Ansatz
+
+1. **Clusterentwicklung** (Kuwahara–Saito): Die Taylorreihe von $\mathrm{Tr}(E_a\rho)$ in $\beta$ konvergiert bei $\beta < \beta_c$; $\partial_{\lambda_a}\log\mathrm{Tr}\,e^{-\beta H} = -\beta\,\mathrm{Tr}(E_a\rho)$ verbindet Erwartungswerte mit der Log-Zustandssumme. Nur $O(1/(\beta\epsilon))$ Terme im Abstand $\log(1/(\beta\epsilon))$ vom Träger von $E_a$ zählen.
+2. **Explizite Berechnung** der Clusterableitungen (Proposition 3.13, Algorithmus 2) in exakter Arithmetik, weil die $E_a$ Paulis sind; frühere Arbeiten behaupteten die Berechenbarkeit nur.
+3. **Polynomiales Gleichungssystem.** Die trunkierten Reihen sind Polynome in $\lambda$; die $\infty\to\infty$-Norm der inversen Jacobi-Matrix gibt die Sample-Komplexität (Theorem 4.2), Newton–Raphson mit $O(\log(1/(\beta\epsilon)))$ Iterationen löst es, und die Laufzeit wird vom Einlesen dominiert (Theorem 4.6).
+4. **Untergrenze** über Fano und KL-Divergenz wie bei klassischen Markov-Feldern (Santhanam–Wainwright), $\ell_2$ per Fehlerkorrekturcodes.
+
+### Bedeutung und Anwendungen
+
+* Optimal in allen Parametern; die erste Zeitschranke für Quanten-Hamiltonian-Lernen aus Gibbs-Zuständen. Die Tabelle dieses Dokuments hat die Zeitspalte "🔴→🟢" genau wegen dieses Papers und seines Nachfolgers bei beliebiger konstanter Temperatur.
+* Strukturlernen bleibt offen: Klassisch geht es über Parameterlernen auf allen $k$-lokalen Termen mit der Low-Intersection-Garantie, quantenmechanisch funktioniert der Algorithmus nur für $\beta < 1/\mathrm{poly}(N)$; Bakshi et al. lösen es 2024 aus der Dynamik.
+
+### Bezug zum eigenen Projekt
+
+* Das ist die "bekannte Terme"-Zeile, gegen die das Strukturlernen (Searching-Tabelle) definiert ist: Hier ist die Liste der Terme das Dictionary, und der Algorithmus schätzt Koeffizienten über einem Dictionary aus lokalen Marginalen. Regime 1 des eigenen Projekts ist dieselbe Struktur mit Displacement-Adressen statt Pauli-Termen.
+* Die Clusterentwicklung ist eine Sparsity-Aussage über Gibbs-Zustände bei hoher Temperatur: Erwartungswerte hängen nur von wenigen nahen Termen ab. Für Objective 4 (Gibbs-Zustände) ist das der Mechanismus, der ein sparsames oder zumindest lokalisiertes Displacement-Spektrum bei hoher Temperatur erwarten lässt, und $\beta_c$ die Grenze, ab der die Instanzenleiter schwer wird.
+* Die Untergrenze $e^\beta$ zeigt, dass tiefe Temperatur *Sample*-Kosten treibt, nicht nur Zeit; der Mixedness-Faktor ist also zweischneidig.
+
+### Grenzen und offene Fragen
+
+* $\beta < \beta_c$; tiefere Temperaturen erst 2024 (Bakshi et al.) in polynomieller Zeit, mit anderer Technik.
+* Strukturlernen aus Gibbs-Zuständen ist offen.
+* Die Konstante $\beta_c$ ist implizit über die Low-Intersection-Parameter; für konkrete Modelle nicht ausgerechnet.
+* Theorem 1.3 braucht bekanntes, kleines $t$.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die Clusterentwicklung für einen Displacement-Hamiltonian auf einem einzelnen Qudit aus, wo "Intersection" über den Phasenraum statt über Qubits definiert werden muss?
+* Ist die Log-Zustandssumme in der Displacement-Basis stark konvex, und was ist das Analogon von $\beta_c$ für die Instanzenleiter?
+* Lässt sich Newton–Raphson auf dem sparsamen Surrogat des eigenen Protokolls als Phase-2-Alternative zu MMW verwenden?
+
+Paper: [arXiv:2108.04842](https://arxiv.org/abs/2108.04842)
+
+---
+## Learning many-body Hamiltonians with Heisenberg-limited scaling (arXiv:2210.03030)
+
+Die Arbeit von **Hsin-Yuan Huang, Yu Tong, Di Fang und Yuan Su** (Caltech, Berkeley, Simons Institute, Microsoft; *Phys. Rev. Lett.* 130, 200403 (2023)) gibt den ersten Algorithmus, der einen wechselwirkenden $N$-Qubit-Hamiltonian aus seiner Dynamik am Heisenberg-Limit lernt: Gesamtevolutionszeit $T = O(\epsilon^{-1}\log\delta^{-1})$ für jeden Parameter, unabhängig von $N$, mit nur $O(\mathrm{polylog}(\epsilon^{-1})\log\delta^{-1})$ Experimenten, robust gegen SPAM-Fehler, ohne Eigen- oder Gibbs-Zustände, mit einer passenden Untergrenze. Die Idee: den Hamiltonian per Quantensimulationstechniken in nicht-wechselwirkende Patches mit bekannten Eigenvektoren umformen und dort robuste Phasenschätzung laufen lassen.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Der Wechselwirkungsgraph (die Menge $S$ der Pauli-Terme) ist bekannt, gesucht sind die $\lambda_a$. Die Zeile "Heisenberg-limited Hamiltonian learning".
+* **Objekt:** Low-Interaction-Hamiltonian $H = \sum_a\lambda_aE_a$, $|\lambda_a|\leq 1$. **Zugriff:** Query, Rung 3: verschachtelte Sequenzen $V_{K+1}U(t_K)\cdots V_1$ mit Schichten von Ein-Qubit-Clifford-Gattern, also Kontrolle zwischen den Evolutionen, die für Heisenberg-Skalierung nachweislich nötig ist (Dutkiewicz, O'Brien, Schuster).
+* **Status:** 🟢 🟢 🟢. Evolutionszeit $1/\epsilon$, Experimente polylogarithmisch, klassische Zeit $O(N\mathrm{polylog}(\epsilon^{-1})\log\delta^{-1})$.
+* **Versprechen:** bekannte Terme mit $O(1)$-Lokalität und $O(1)$ Termen pro Qubit; geometrische Lokalität nicht nötig, aber bei All-to-All-Wechselwirkung tritt eine $N$-Abhängigkeit in $T$ auf.
+
+### Das Problem
+
+Alle früheren Verfahren für Vielteilchen-Hamiltonians (Ableitungsschätzung, Gradientenverfahren, Polynominterpolation) brauchen $\epsilon^{-2}$ Experimente und Evolutionszeit, das Standard-Quantenlimit. Für einen Parameter oder ein Qubit erreicht Metrologie das Heisenberg-Limit $\epsilon^{-1}$ per verschränkter Zustände oder langer kohärenter Evolution; für Vielteilchen-Systeme zerstört das Verschränkungswachstum unter $e^{-iHt}$ den Vorteil, also blieb man bei kurzen Zeiten. Kann man das Heisenberg-Limit für Vielteilchen-Hamiltonians erreichen?
+
+### Kernresultate
+
+* **Theorem 1.** Ein SPAM-robuster Algorithmus mit Ein-Qubit-Clifford-Experimenten liefert nach Gesamtevolutionszeit $T = O(\epsilon^{-1}\log\delta^{-1})$ Schätzungen mit $\Pr[|\hat\lambda_a - \lambda_a|\leq\epsilon]\geq 1-\delta$ für jedes $a$; für alle Parameter zugleich $T = O(\epsilon^{-1}\log(N/\delta'))$. Zahl der Experimente $O(\mathrm{polylog}(\epsilon^{-1})\log\delta^{-1})$, Clifford-Schichten $O(\epsilon^{-1.5}\mathrm{polylog})$.
+* **Theorem 2 (Untergrenze).** Jeder SPAM-robuste Algorithmus mit beliebigen adaptiven Experimenten braucht $T = \Omega(\epsilon^{-1}\log\delta^{-1})$: ein algorithmischer Beweis des Heisenberg-Limits inklusive $\delta$.
+* Die Zahl der Experimente unterschreitet $\epsilon^{-1}$; das widerspricht dem Heisenberg-Limit nicht, das über die Gesamtzeit definiert ist.
+
+### Methodischer Ansatz
+
+1. **Reshaping.** Für Unitaries $U_k$ und Gewichte $w_k$ ist $\tilde H = \sum_kw_kU_kHU_k^\dagger$ ein neuer unbekannter Hamiltonian, unter dem man per qDRIFT oder Trotter (nur Vorwärtsentwicklung, keine höheren Ordnungen) evolvieren kann, ohne $H$ zu kennen, weil $e^{-itU_kHU_k^\dagger} = U_ke^{-itH}U_k^\dagger$.
+2. **Ein Qubit.** $\frac12(H + XHX) = \lambda_xX$ löscht $Y$ und $Z$; robuste Phasenschätzung (Kimmel, Low, Yoder) mit langer kohärenter Evolution auf dem bekannten Eigenzustand von $X$ gibt $\lambda_x$ mit $O(\epsilon^{-1}\log\delta^{-1})$ Zeit.
+3. **Wenige Qubits.** Mittelung über $I, X_1, Z_2, X_1Z_2$ lässt nur Terme mit $I$ oder $X$ auf Qubit 1 und $I$ oder $Z$ auf Qubit 2 stehen; die Eigenbasis $\{|\pm\rangle|0/1\rangle\}$ ist bekannt, Eigenwertdifferenzen per Phasenschätzung, Parameter per Hadamard-Transformation.
+4. **Divide and Conquer.** Pauli-Twirl eines Zwischenqubits ($\frac14(H + XHX + YHY + ZHZ)$ auf Qubit 3) entkoppelt die Kette in Patches ohne Verschränkung dazwischen; alle Patches werden parallel gelernt, mit Färbungen für Kopplungsterme.
+5. **Fehleranalyse** der Randomisierung und Trotterisierung (Anhänge D, F); die Untergrenze über TV-Distanz-Schranken pro Experiment (Anhang G).
+
+### Bedeutung und Anwendungen
+
+* Erstes Heisenberg-limitiertes Vielteilchen-Lernen; die Nachfolger (Dutkiewicz et al. über Notwendigkeit von Kontrolle; Bakshi et al. über Strukturlernen bei konstanter Zeitauflösung; Shin, Lee, Oh über Langzeitzugriff) definieren sich an dieser Arbeit.
+* Praktisch attraktiv: nur Ein-Qubit-Cliffords, SPAM-robust, keine speziellen Zustände; die Präzision ist durch die Geschwindigkeit der Ein-Qubit-Gatter begrenzt.
+* Anwendungen in Sensorik, Gerätecharakterisierung und Vielteilchenphysik.
+
+### Bezug zum eigenen Projekt
+
+* Die Zeile ist der Beleg für die Aussage der Übersicht, dass Query-Zugriff die Präzisionsrate von $1/\epsilon^2$ auf $1/\epsilon$ verbessert; das eigene Protokoll steht auf Rung 2 und hat diese Rate nicht. Ob Amplitudenschätzung auf dem Präparationsschaltkreis (Regime 3) für Displacement-Amplituden eine $1/\epsilon$-Rate gäbe, ist die Query-Version der eigenen Aufgabe.
+* Reshaping ist eine Symmetrisierungstechnik: Twirls über Untergruppen der Pauli-Gruppe projizieren den Hamiltonian auf einen Kommutanten. In der Heisenberg–Weyl-Basis eines Qudits wäre das Analogon der Twirl über eine Untergruppe der Displacement-Gruppe, der das Spektrum auf eine Nebenklasse einschränkt; das ist eine mögliche Messseiten-Vorverarbeitung für Regime 2.
+* Die Trennung "Experimente polylog, Zeit $1/\epsilon$" ist ein Hinweis darauf, dass die richtige Kostengröße vom Zugriff abhängt; in der eigenen Skalierungsanalyse ist die Kopienzahl das Analogon der Gesamtzeit.
+
+### Grenzen und offene Fragen
+
+* Bekannte Terme; Strukturlernen erst bei Bakshi et al.
+* All-to-All-Wechselwirkung bringt $N$ in $T$.
+* Die Zeitauflösung der Kontrollpulse muss fein sein (Trotter-Schritte); Bakshi et al. und Shin, Lee, Oh behandeln konstante Auflösung und Langzeitzugriff.
+* Keine Untergrenze für die Zahl der Experimente oder Gatter.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht Reshaping in der Displacement-Basis aus: Welche Twirls löschen welche $(q,p)$-Terme, und bleiben die Eigenbasen bekannt?
+* Warum verhindert die Nichtexistenz höherer Trotter-Ordnungen ohne Rückwärtsentwicklung keine Heisenberg-Skalierung, und wo genau geht der Faktor $\epsilon^{-1.5}$ in die Gatterzahl ein?
+* Was ist das Heisenberg-Limit für das Lernen eines *Zustands* (statt eines Hamiltonians) aus seinem Präparationsschaltkreis, und ist $1/\epsilon$ pro Displacement-Amplitude erreichbar?
+
+Paper: [arXiv:2210.03030](https://arxiv.org/abs/2210.03030)
+
+---
+
+## Efficient estimation of Pauli channels (arXiv:1907.12976)
+
+Die Arbeit von **Steven T. Flammia und Joel J. Wallman** (Sydney, Yale, Quantum Benchmark, Waterloo; *ACM Trans. Quantum Comput.* 1(1), 2020) gibt die erste systematische Sample-Komplexität für Pauli-Kanäle mit Garantien in *relativer* Präzision und robust gegen SPAM-Fehler: den vollen Kanal auf $n$ Qubits mit $O(\epsilon^{-2}n2^n)$ Messungen, effizient in der Hilbertraumdimension; eine beliebige Menge von $s$ Fehlerraten mit $O(\epsilon^{-4}\log s\log(s/\epsilon^2))$; und einen Kanal mit $k$-lokalen Korrelationen (Markov-Feld über bekanntem Faktorgraphen) mit $O_k(\epsilon^{-2}n^2\log n)$, effizient in $n$. Die Prozedur ist eine Variante von Randomized Benchmarking über die Pauli-Gruppe.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Die Liste ist die der $4^n$ Pauli-Fehlerraten $p$ oder Eigenwerte $\lambda$ (Walsh–Hadamard-Transformierte), explizit als Teilmenge $E$ oder implizit über den Faktorgraphen. Die Zeile "Pauli channel estimation, sequence-based".
+* **Objekt:** Pauli-Kanal, oder die Pauli-Projektion eines beliebigen Kanals per Randomized Compiling. **Zugriff:** Query, Rung 3: wiederholte Anwendung in Sequenzen variabler Länge, verschachtelt mit zufälligen Pauli-Gattern; das kauft SPAM-Robustheit und relative Präzision.
+* **Status:** 🟢 🟢 🟢 unter Sparsity ($s = \mathrm{poly}(n)$) oder Faktorgraph-Modell ($k = O(1)$); der volle Kanal ist $2^n$, effizient nur in $d$.
+* **Versprechen:** "nice noise" (gatterunabhängig, stationär, markovsch, nahe ideal); für Result 3 ein bekannter Faktorgraph mit positiven Marginalen.
+
+### Das Problem
+
+Pauli-Kanäle sind das Standardmodell der Fehlerkorrektur und werden durch Randomized Compiling physikalisch erzwungen; Schwellen ändern sich unter verzerrtem oder korreliertem Rauschen um Faktoren bis vier. Trotzdem gab es keine Schätzverfahren jenseits voller Kanaltomographie, die zudem additive Präzision liefert und durch SPAM-Fehler systematisch verzerrt ist; bei Fehlerraten von $10^{-6}$ wären $10^{12}$ Samples nötig. Gesucht: relative Präzision, SPAM-Robustheit, Skalierung in $n$ unter realistischen Modellen.
+
+### Kernresultate
+
+* **Result 1 (Propositionen 8, 9).** Alle $4^n$ Fehlerraten mit $O(\epsilon^{-2}n2^n)$ Messungen, $\Vert\hat p - p\Vert_2\leq O(\epsilon)(1 - p_0)$, $p_0$ die Wahrscheinlichkeit keines Fehlers; relative Präzision ist der Kern, weil die Fehlerraten winzig sind.
+* **Result 2 (Theorem 11).** Für jede Menge $E$ von $s$ Paulis $O(\epsilon^{-4}\log s\log(s/\epsilon^2))$ Messungen mit $\Vert\hat p - p\Vert_\infty\leq O(\epsilon)(1-p_0)$; das $\epsilon^{-4}$ ist ein Artefakt der Bias-Analyse der Subroutine Ratio. Anwendbar auf alle Fehler kleinen Gewichts; eine baumbasierte Suchheuristik findet sparsame Mengen, deren Ergebnis zertifizierbar ist.
+* **Result 3 (Proposition 18).** Für ein Markov-Feld mit $k$-Grad-Faktorgraph und positiven Marginalen ein Tensornetzwerk-Schätzer aus $O_k(\epsilon^{-2}n^2\log n)$ Messungen mit $\Vert\hat p - p\Vert_1\leq O(\epsilon)\Vert\mathbb{1}_I - p\Vert_\infty$, berechenbar in $\mathrm{poly}(n)$.
+* **Lemma 2 (Stabilizer-Überdeckungen).** Jede Menge $X$ von Paulis wird von höchstens $\min(|X|, \sqrt{|\langle X\rangle/S_X|} + 1)\leq 2^n + 1$ Stabilizergruppen überdeckt (MUB-Konstruktion), scharf für Gruppen.
+* **Numerik** bis 100 Qubits und eine Implementierung auf einem 14-Qubit-Gerät (Harper, Flammia, Wallman, *Nat. Phys.* 2020).
+
+### Methodischer Ansatz
+
+* **RB über die Pauli-Gruppe.** Präparation und Messung in einer Stabilizerbasis, Sequenzen zufälliger Pauli-Gatter mitteln das Rauschen; die Zerfallsraten der $2^n$ gleichzeitig ausgelesenen Bits werden per Hadamard-Transformation entkoppelt, statt serieller Exponentialfits einzelner Parameter; das ist die Neuerung gegenüber Character Benchmarking. Harper et al. hatten für Clifford-RB die relative Präzision eines Parameters gezeigt; hier sind es $4^n$.
+* **Symplektische Struktur.** Nur kommutierende Paulis sind gleichzeitig messbar; die Fehlerverteilung ist ein "symplektisches Markov-Feld" mit quasi-latenten Variablen, das sich von klassischen Markov-Feldern unterscheidet.
+* **Hammersley–Clifford** rundet lokal geschätzte Marginale zu einer globalen Verteilung als Tensornetzwerk.
+
+### Bedeutung und Anwendungen
+
+* Erster Beweis von Recovery-Garantien für Kanäle in relativer Präzision ohne SPAM-Bias; erste effiziente Garantien für nichttriviale Kanalklassen auf $n$ Qubits; qualitative Änderung gegenüber dem damaligen Rekord (drei Qubits per Compressed Sensing).
+* Anwendungen: Codes und Decoder auf das Rauschen zuschneiden, Fehlertoleranz anpassen, Schwellen und Overheads schätzen; die "Pauli noise learning transfer"-Idee der eigenen Positionierung.
+* Chen, Zhou, Seif, Jiang zeigen später, dass gerade diese RB-artigen, ancilla-freien Protokolle für Eigenwerte $\Omega(2^{n/3})$ Runden brauchen, während ein $n$-Qubit-Ancilla $O(n)$ erlaubt.
+
+### Bezug zum eigenen Projekt
+
+* Die Zeile ist der Query-Block-Vertreter für Kanäle: Sequenzen kaufen Robustheit, nicht Dimension. Für die eigene Pipeline ist Randomized Compiling auf beiden Kopien die Standardmethode, kohärente Fehler in Pauli-Rauschen zu verwandeln, und dieses Paper ist die Referenz dafür, was danach lernbar ist.
+* Der Übergang von Result 1 ($2^n$) zu Result 2 (Sparsity) zu Result 3 (Markov-Feld) ist die Kanal-Version der Instanzenleiter: generisch, sparsam, faktorisiert. Das eigene "factorized spectra with a best-first heap" ist das Zustands-Analogon von Result 3.
+* Relative Präzision ist eine Größe, die in der eigenen Skalierungsanalyse fehlt: Top-$k$-Amplituden sind groß, aber die Signalerkennung bei kleinem Signal-Rausch-Verhältnis würde von relativer statt additiver Genauigkeit profitieren.
+
+### Grenzen und offene Fragen
+
+* $\epsilon^{-4}$ in Result 2 vermutlich $\epsilon^{-2}$; die Suchheuristik hat keine formale Erfolgsanalyse.
+* Nur die Pauli-Projektion des Kanals; kohärente Anteile sind unsichtbar.
+* Der Faktorgraph muss bekannt sein; Strukturlernen des Rauschens ist offen.
+* Die Noise-Annahmen (gatterunabhängig, stationär) sind mild, aber nicht immer erfüllt.
+
+### Fragen zum Tieferbohren
+
+* Was ist die Heisenberg–Weyl-Version: Randomized Compiling mit Displacement-Operatoren auf Qudits, und welche Struktur hat das "symplektische Markov-Feld" der Fehlerraten über $\mathbb{Z}_d^2$?
+* Wie viel der Robustheit stammt aus der Sequenzlänge (Query) und wie viel aus dem Twirl (Sample)? Gäbe es eine Sample-Version mit Choi-Zuständen und Bell-Messung?
+* Lässt sich die baumbasierte Suchheuristik für sparsame Fehlermengen als Vorlage für eine Best-First-Suche im Displacement-Spektrum lesen?
+
+Paper: [arXiv:1907.12976](https://arxiv.org/abs/1907.12976)
+
+---
+
+## Quantum advantages for Pauli channel estimation (arXiv:2108.08488)
+
+Die Arbeit von **Senrui Chen, Sisi Zhou, Alireza Seif und Liang Jiang** (Chicago, Caltech; *Phys. Rev. A* 105, 032435 (2022)) beweist einen exponentiellen Vorteil verschränkter Messungen für eine praktisch relevante Aufgabe: alle $4^n$ Eigenwerte eines $n$-Qubit-Pauli-Kanals auf $\pm\epsilon$ lernen. Mit einem $n$-Qubit-Ancilla genügen $O(n/\epsilon^2)$ Anwendungen des Kanals, ohne Ancilla braucht jedes Protokoll, auch adaptiv und mit Verkettung, $\Omega(2^{n/3})$ Messrunden. Für $k$ Ancilla-Qubits gilt $\Omega(2^{(n-k)/3})$ allgemein und $\Omega(n2^{n-k})$ ohne Adaptivität und Verkettung, letzteres scharf.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Die implizite Liste aller $4^n$ Eigenwerte $\lambda_b$, zurück kommen sie alle. Die Zeile "Pauli channel eigenvalues, entanglement-assisted"; die Kanal-Version der Zwei-Kopien-Trennung.
+* **Objekt:** Pauli-Kanal $\Lambda(\cdot) = \sum_ap_aP_a(\cdot)P_a$. **Zugriff:** Sample auf dem Choi-Zustand: $n$ Bell-Paare, eine Hälfte durch den Kanal, Bell-Messung; das Ancilla ist der Quantenspeicher. Ohne Ancilla, aber mit Verkettung (RB-artig), ist es Query-Zugriff, und der hilft nachweislich nicht.
+* **Status:** 🟢 🟢 🟢 mit $n$ Ancilla-Qubits; 🔴 in den Kopien ohne.
+* **Versprechen:** keines über den Kanal; die Ressource ist das verschränkte Ancilla.
+
+### Das Problem
+
+Die bekannten Lernvorteile (Mixedness-Testing, Unitarity-Testing, Pauli-Erwartungswerte) sind künstlich oder nicht rauschrobust implementierbar. Quantum Benchmarking ist eine echte Aufgabe; Pauli-Kanäle sind durch Randomized Compiling universell; die Sample-Komplexität ihrer Schätzung war trotz langer Literatur nicht charakterisiert, und Flammia–Wallman hatten die Frage nach Untergrenzen für RB-artige Protokolle offen gelassen.
+
+### Kernresultate
+
+* **Theorem 1 und Algorithmus 1.** Mit $k$ Ancilla-Qubits: $k$ Bell-Paare für ein Teilsystem, Stabilizerzustände und Syndrommessungen (Stabilizer-Überdeckung $\mathcal{O}$ von $\mathcal{P}_{n-k}$) für das andere; die Ausgangsverteilung ist die Walsh–Hadamard-Transformierte der $\lambda$, also $(-1)^{\langle u,v\rangle + \langle s,e\rangle}$ ein erwartungstreuer Schätzer; $N = O(|\mathcal{O}|n\epsilon^{-2}\log\delta^{-1})$.
+* **Corollary 2.** Mit $2^{n-k}+1$ MUBs als Überdeckung: $O(n2^{n-k}\epsilon^{-2}\log\delta^{-1})$; für $k = n$ also $O(n/\epsilon^2)$; experimentell einfacher mit $3^{n-k}$ Pauli-Messungen.
+* **Theorem 3 (Untergrenzen)** für Genauigkeit $1/2$: (A) $\Omega(n2^{n-k})$ nicht-adaptiv, nicht-verkettend, $k$ Ancillas, scharf; (B) $\Omega(2^{(n-k)/3})$ adaptiv, nicht-verkettend; (C) $\Omega(2^{n/3})$ Runden für adaptive, verkettende, ancilla-freie Protokolle, also für alle RB-Varianten; (D) $\Omega(n)$ für beliebig verschränkte Messungen, also ist Algorithmus 1 mit $n$ Ancillas optimal, und mehr als $n$ Ancillas helfen nicht.
+* **Benchmarking-Protokoll** im Supplement: Sequenzen zufälliger Pauli-Gatter mit verrauschten Bell-Präparationen und -Messungen, SPAM-robust und exponentiell sample-effizienter als jedes ancilla-freie Verfahren, sofern das Ancilla isoliert und langlebig ist (Ionenfallen).
+* Bemerkung: Die Fehlerraten $p$ in $\ell_\infty$ sind mit $O(\log n)$ unverschränkten Samples lernbar (Flammia–O'Donnell); der Vorteil betrifft die Eigenwerte.
+
+### Methodischer Ansatz
+
+* **Konstruktion.** Die Kanäle $\Lambda_{(a,s)} = \frac1{2^n}(I\,\mathrm{Tr}(\cdot) + sP_a\mathrm{Tr}(P_a\cdot))$, $a\in[4^n-1]$, $s = \pm1$: Ein Eigenwert-Lerner identifiziert $(a,s)$. (A) folgt informationstheoretisch, (B) und (C) per Reduktion auf Diskrimination gegen den vollständig depolarisierenden Kanal mit der Tree-Methode von Huang, Kueng, Preskill; (D) per Teleportation Stretching (Reduktion auf POVMs auf Kopien des Choi-Zustands) plus Holevo.
+* Die Rolle des Ancillas: Ohne es gibt es keine Messeinstellung, die aus $p$ sampelt und alle $\lambda$ zugleich sieht; mit $n$ Bell-Paaren wird jedes $P_a$ auf einen eindeutigen Ausgang abgebildet (Superdense-Coding-Prinzip).
+
+### Bedeutung und Anwendungen
+
+* Erster praxisnaher, rauschrobuster Lernvorteil; die Trennung Ancilla gegen Verkettung ist neu: Das Ancilla bringt den exponentiellen Gewinn, die Sequenz nicht.
+* Die $k$-Ancilla-Tauschkurve ist die erste quantitative Ressourcenaussage zwischen $k = 0$ und $k = n$ und ein Beispiel für die offene Frage (2) der Estimating-Sektion.
+* Motiviert Subramanian, Kwon, Jiang (2026) zur Verallgemeinerung auf Qudit- und bosonische Kanäle mit $c$-Kopien-Zugriff und Konjugatkanal.
+
+### Bezug zum eigenen Projekt
+
+* Das ist die Kanal-Version der eigenen Messung: $n$ Bell-Paare, Kanal auf eine Hälfte, Bell-Messung entspricht Bell-Sampling auf dem Choi-Zustand, und die Verteilung ist die Walsh–Hadamard-Transformierte des Spektrums. Für Displacement-Kanäle auf Qudits ist die Transformation die symplektische Fourier-Transformation über $\mathbb{Z}_d^2$.
+* Die Aussage, dass Verkettung (Query) nicht hilft, aber das Ancilla (Speicher) exponentiell, ist die genaue Form der Trennung der Achsen, die die eigene Übersicht postuliert: Query kauft Rate, Speicher kauft Dimension.
+* Die Ergebnisse (A) und (B) zeigen, dass $o(n)$ Ancillas fast nichts bringen; für das eigene Projekt heißt das, dass ein "halber" zweiter Zustand (etwa ein unvollkommenes Konjugat auf wenigen Qudits) keinen exponentiellen Gewinn erwarten lässt, sofern die Analogie trägt.
+
+### Grenzen und offene Fragen
+
+* Untergrenzen für Genauigkeit $1/2$; die $\epsilon$-Abhängigkeit ist nur oben bewiesen.
+* Nur Eigenwerte; für andere Eigenschaften (Fehlerraten in anderen Metriken, strukturierte Kanäle) offen.
+* Das Benchmarking-Protokoll braucht ein isoliertes Ancilla; auf Plattformen mit Übersprechen ist der Vorteil fraglich.
+* Experimenteller Vergleich mit ancilla-freien Verfahren steht aus.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht Algorithmus 1 für Displacement-Kanäle auf Qudits aus, und ist die Stabilizer-Überdeckung von $\mathbb{Z}_d^{2(n-k)}$ mit $d^{n-k}+1$ MUBs für zusammengesetztes $d$ verfügbar?
+* Wo genau versagt die Tree-Methode, wenn der Lerner das Konjugat $\Lambda^*$ des Kanals hat, und ist das der Mechanismus hinter Subramanian et al. Theorem IV.1?
+* Ist die Aussage "mehr als $n$ Ancillas helfen nicht" das Kanal-Analogon von "zwei Kopien sind der Sweet Spot"?
+
+Paper: [arXiv:2108.08488](https://arxiv.org/abs/2108.08488)
+
+---
+
+## Quantum channel learning with limited parallel access (arXiv:2608.05307)
+
+Die Arbeit von **Mahadevan Subramanian, Hyukgun Kwon und Liang Jiang** (Chicago, Sejong; 2026) überträgt die Lernhierarchien für Zustände (Zwei-Kopien-Vorteil, $d$-Kopien-Vorteil für Qudits, Konjugatvorteil) auf Kanäle. Das Objekt ist die Heisenberg–Weyl-Transfermatrix $C_{\mathcal{E}}((q_i,p_i),(q_o,p_o)) = \mathrm{Tr}[D(q_o,p_o)\mathcal{E}(D(q_i,p_i))]/d^m$ eines Qudit-Kanals, oder ihre bosonische Version über zwei-Moden-gequetschte Choi-Zustände. Ein Master-Lemma liefert Untergrenzen für alle $c$-Kopien-Protokolle mit unbeschränkten Ancillas und Adaptivität, in jeder Dimension. Ergebnis: Mit $\mathcal{E}\otimes\mathcal{E}^*$ sind die Beträge mit $O(\log(M/\delta)/\epsilon^4)$ Messungen lernbar, und das ist scharf; ohne $\mathcal{E}^*$ ist jedes $c < d$ exponentiell in der Qudit-Zahl, bei $c = d$ wird es effizient mit $\epsilon^{-2d}$, und bosonisch bleibt es für alle $c = O(1/\epsilon)$ exponentiell.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating. Gegeben eine beschränkte Menge $Q$ von $M$ Anfragen $(q_i,p_i,q_o,p_o)$, zurück kommen die Beträge $|C_{\mathcal{E}}(Q)|$. Neue Zeile "Heisenberg–Weyl transfer matrix, limited parallel access" der Estimating-Tabelle, direkt unter Chen, Zhou, Seif, Jiang.
+* **Objekt:** Kanal auf $m$ Qudits (Primzahl $d$) oder $m$ bosonischen Moden. **Zugriff:** $c$ parallele Kopien von $\mathcal{E}$ oder von $\mathcal{E}\otimes\mathcal{E}^*$ pro Messrunde, mit beliebigen Ancillas, adaptiver Zustandspräparation und POVM (auch unendlich feine); Kanalanfragen $\Theta(cT)$ bei $T$ Runden. Das ist Sample-Zugriff auf den Choi-Zustand mit Speicher $c$ Kopien, also die Speicherachse für Kanäle.
+* **Status:** 🟢 🟢 🟢 mit Konjugatkanal; 🟢 in Kopien bei $c = d$ mit $\epsilon^{-2d}$; 🔴 für $c < d$ und bosonisch.
+* **Versprechen:** keines über den Kanal; die Ressourcen sind $\mathcal{E}^*$ und die Parallelität $c$.
+
+### Das Problem
+
+Für Zustände ist bekannt: Pauli-Erwartungswerte brauchen zwei Kopien, Heisenberg–Weyl-Erwartungswerte auf Qudits $d$ Kopien, und $\rho\otimes\rho^*$ gibt einen exponentiellen Vorteil, auch bosonisch. Für Kanäle gab es die Pauli-Transfermatrix auf Qubits und die Ancilla-Trennung von Chen, Zhou, Seif, Jiang; für Qudits und Bosonen fehlte ein allgemeiner Rahmen. Kann man die Transfermatrix mit beschränkter paralleler Nutzung des Kanals effizient schätzen, und was ändert der Konjugatkanal $\mathcal{E}^*$ (mit $\mathcal{E}^*(\rho^T)^T = \mathcal{E}(\rho)$ in fester Basis)?
+
+### Kernresultate
+
+* **Lemma III.1 (Master-Lemma).** Untergrenze für alle $c$-Kopien-Protokolle in einer Klasse von Viele-gegen-eins-Kanaldiskriminationsaufgaben, unabhängig von Dimensionen, mit Operatornormen bestimmter Summen von Kanaloperatoren als einziger Eingabe; behandelt auch unbeschränkte Messoperatoren (Homodyn) über eine Radon–Nikodym-Konstruktion. Ein Spezialfall (Corollary B.5.2) reduziert auf Zustandslernen (Ersatzkanal) und verschärft dort bekannte Schranken.
+* **Theorem IV.1 (mit Konjugat).** Einzelkopien-Zugriff auf $\mathcal{E}\otimes\mathcal{E}^*$ mit Ancilla: $O(\log(M/\delta)\epsilon^{-4})$ Messungen, nicht-adaptiv, per verallgemeinerter Bell-Messung auf $(\mathcal{E}\otimes I)(\sigma)\otimes(\mathcal{E}^*\otimes I)(\sigma^T)$ mit Bell-Paaren bzw. TMSV als $\sigma$; Theoreme IV.6/IV.7: $T = \Omega(c^{-4}\epsilon^{-4})$ für $c$-Kopien-Zugriff auf $\mathcal{E}\otimes\mathcal{E}^*$, also ist $\epsilon^{-4}$ scharf.
+* **Theorem IV.2 (ohne Konjugat, Qudits).** Für $c\leq\min(d,d')-1$: $T = \Omega(d^md'^{m'}c^{-2}\epsilon^{-2})$; für $c\geq d$ (mit $d = d'$) bis auf Konstanten $T = \Omega(\min\{d^{m+m'}/(c\epsilon)^2, (d/(c\epsilon))^{2d}\})$: scharfer Übergang bei $c = d$, und $\epsilon^{-2d}$ ist scharf gegen den $d$-Kopien-Algorithmus mit $O(d(m+m')\log(d/\delta)\epsilon^{-2d})$.
+* **Theorem IV.3 (ohne Konjugat, Bosonen).** $T = \Omega(d_{\mathrm{in}}^md_{\mathrm{out}}^{m'}c^{-2}\epsilon^{-2})$ für alle $c = O(1/\epsilon)$ mit effektiven Modendimensionen $d_{\mathrm{in}} = \sqrt{1 + (0.99\kappa\tanh 2r)^2}$, $d_{\mathrm{out}} = \sqrt{1 + (0.99\kappa')^2}$ bei Energieschranken $\kappa$; kein Übergang, weil die effektive Dimension mit der Genauigkeit wächst.
+* **Theoreme IV.4, IV.5 (selbstkonjugiert, eine Kopie).** Selbst für $\mathcal{E} = \mathcal{E}^*$ bleibt Einzelkopien-Zugriff $\Omega(d^md'^{m'}\epsilon^{-2})$; ab $c = 2$ greift Theorem IV.1.
+* **Abschnitt V (Hierarchie).** Für quadratfreies $d$ braucht man genau $d$ Kopien; für allgemeines $z$ das Produkt der Primteiler; eine Familie bosonischer Kanäle bleibt für jedes $c = O(1/\epsilon)$ hart; sequentieller Zugriff ist strikt stärker und bleibt offen.
+
+### Methodischer Ansatz
+
+* Die Kanaldiskriminationsfamilien $\mathcal{E}_{(q_1,p_1),(q_2,p_2)}$ mit Kraus-artigen Operatoren $\frac1{\sqrt2}(e^{i\pi/4}D + e^{-i\pi/4}D^\dagger)$ gegen das maximal gemischte Ziel; die Operatornorm von $\sum_{q,p}D(q,p)^{\otimes 2k}$ ist $d^m$ für $k\neq0\bmod d$ und $d^{2m}$ für $k = 0\bmod d$ (Lemma B.8), und genau daraus entsteht der Übergang bei $c = d$: Erst wenn $c$ Kopien der Displacement-Operatoren kommutieren, wird die Statistik informativ.
+* Mit dem Konjugat sind $D\otimes D^*$ für alle Adressen kommutierend, und die Terme $k = l\bmod d$ dominieren; das gibt $\epsilon^{-4}$ ohne Dimensionsfaktor.
+* Für Bosonen: TMSV-Choi-Zustände mit endlichem Squeezing $r$, damit die Transferfunktion beschränkt bleibt; die naive Transferfunktion $\mathrm{Tr}[D(\beta)\mathcal{E}(D^\dagger(\alpha))]$ ist unbeschränkt und nicht lernbar (Anhang C 1 b).
+
+### Bedeutung und Anwendungen
+
+* Vereinheitlicht die Zustandslern-Hierarchien in einem Kanal-Rahmen, der Qubits, Qudits und Bosonen umfasst, und benennt den Konjugatkanal als Ressource mit tight $\epsilon^{-4}$.
+* Der Konjugatkanal ist verfügbar, wenn alle Kraus-Operatoren in einer Basis reell sind (reelle Stinespring-Dilatation mit selbstkonjugierter Umgebung); ein Superkanal, der $\mathcal{E}^{\otimes k}$ in $\mathcal{E}^*$ verwandelt, existiert nicht.
+* Zeigt, dass die trace-distance-Beziehung zwischen TMSV-Choi-Zuständen und energiebeschränkter Diamantnorm exponentielle Vorfaktoren haben kann (Anhang C 2): ein Beitrag zur Frage nach der richtigen Metrik für bosonische Kanäle.
+
+### Bezug zum eigenen Projekt
+
+* Das ist die Kanalfassung von Objective 3 mit exakt dem Objekt des Projekts, $D(q,p)$ auf Qudits, und dem Konjugat als Ressource. Die Ergebnisse übersetzen sich direkt: Bell-Sampling auf $\rho\otimes\rho^*$ ist der Ersatzkanal-Spezialfall, und Corollary B.5.2 verschärft die Untergrenzen für $c$-Kopien-Zustandslernen aus dem bosonischen Konjugat-Paper exponentiell (Theorem B.22).
+* Der Übergang bei $c = d$ ist die präzise Form der Aussage "Bell-Sampling auf identischen Kopien versagt für Qudits" aus der Suchtabelle: Nicht zwei, sondern $d$ Kopien machen $D^{\otimes c}$ kommutierend, und $\epsilon^{-2d}$ ist der Preis. Für zusammengesetztes $d$ zählt das Produkt der Primteiler; für die zyklische Ein-Qudit-Basis des Projekts ist das die relevante Zahl.
+* $\epsilon^{-4}$ ist scharf für $\mathcal{E}\otimes\mathcal{E}^*$ mit beliebig vielen parallelen Kopien: Die $\epsilon^{-4}$ der Magnitudenschätzung in Phase 1 sind also keine Schwäche des Protokolls, sondern eine Eigenschaft der Ressource, jedenfalls für Beträge.
+* Das Master-Lemma ist ein Werkzeug, um eigene Untergrenzen für die Top-$k$-Lokalisierung mit $\rho\otimes\rho^*$ zu formulieren; es braucht nur Operatornormen von Summen über die Kandidatenadressen.
+
+### Grenzen und offene Fragen
+
+* Nur Beträge; die Phase von $C_{\mathcal{E}}$ ist bosonisch ohne Kenntnis der Anfragen nicht schätzbar, und für Qudits nur über Hypothesenzustände wie bei King, Wan, McClean.
+* Paralleler Zugriff; sequentielle Protokolle mit beschränktem Ancilla sind offen und vermutlich stärker.
+* Die Konstanten ($0.75$, $0.99$, $0.11$) sind Beweisartefakte; die Grenzen gelten für "große" $m$.
+* Die bosonische Aufgabe hängt von der Squeezing-Stärke $r$ und den Energieschranken ab; die Metrikfrage ist offen.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht der Übergang bei $c = d$ für die zyklische Ein-Qudit-Basis mit zusammengesetztem $d$ konkret aus, und welche Kopienzahl braucht das eigene Protokoll ohne Konjugat für $d = 64$?
+* Lässt sich das Master-Lemma auf die Aufgabe "finde die $k$ größten $|y_{q,p}|$" anwenden, um eine Sample-Untergrenze für Phase 1 mit und ohne $\rho^*$ zu gewinnen?
+* Was ist die reelle Stinespring-Bedingung für Zustände statt Kanäle: Welche Präparationen liefern $\rho^*$ physikalisch, und deckt sich das mit Anhang D bei King, Wan, McClean?
+
+Paper: [arXiv:2608.05307](https://arxiv.org/abs/2608.05307)
 
 <br>
 
@@ -717,7 +2501,7 @@ The estimating tasks whose object is a process. The object axis is defined in th
 
 **Identifying** (candidate *states* or functions are *input*). Given: copies of $\rho$ and a list of $M$ candidate states, or a class $\mathcal{C}$ with or without the promise that $\rho \in \mathcal{C}$. Returned: one index, one object from the class, or one bit. Like matching a sample against a database of known genomes: the hypotheses exist before the data. Sub-cases by the size of the list: $M = 2$ is state discrimination, general $M$ is hypothesis selection, a class with a promise is learning that class, a class without the promise is agnostic tomography, one bit is property testing, and $M = 1$ is certification. Identifying behaves like estimating in every budget as long as the list is polynomial and the candidates are efficiently representable. Once the class is exponentially large and parametrized, the task shades into searching, which is where the hardness rows of this table come from.
 
-**What is known.** The two-hypothesis case is solved exactly: Helstrom for minimum error, unambiguous discrimination for zero error with abstention, and the quantum Chernoff exponent for many copies. Hypothesis selection needs only $O(\log M)$ copies through threshold search. A catalogue of classes is learnable in polynomial time, each by exploiting the structure that defines it: stabilizer states and Clifford circuits by linear algebra, states with $t$ non-Clifford gates at cost $2^t$, Gaussian and near-Gaussian states, matrix product states, states of shallow circuits, phase states of bounded degree, juntas, low-degree objects. Property testing shows the memory axis at its sharpest: purity costs $O(1)$ copies with a SWAP test and $\Omega(2^{n/2})$ without. Certification of almost all states is possible with single-qubit measurements.
+**What is known.** The two-hypothesis case is solved exactly: Helstrom for minimum error, unambiguous discrimination for zero error with abstention, and the quantum Chernoff exponent for many copies. Hypothesis selection needs only $O(\log M)$ copies through threshold search. A catalogue of classes is learnable in polynomial time, each by exploiting the structure that defines it: stabilizer states and Clifford circuits by linear algebra, states with $t$ non-Clifford gates at cost $2^t$, Gaussian and near-Gaussian states, matrix product states, states of shallow circuits, phase states of bounded degree, juntas, low-degree objects. Property testing shows the memory axis at its sharpest: purity costs $O(1)$ copies with a SWAP test and $\Omega(2^{n/2})$ without, and mixedness testing with incoherent measurements costs $\Theta(d^{3/2}/\epsilon^2)$ whether or not the measurements are adaptive, against $\Theta(d/\epsilon^2)$ with entangled ones. Certification of almost all states is possible with single-qubit measurements.
 
 **Efficiency status.** Copies: 🟢 throughout; the class results are polynomial, the testing results constant. Time and memory: 🟢 on the catalogue, and provably 🔴 outside it under cryptographic assumptions. Pseudorandom states and pseudoentanglement are statistically learnable yet computationally indistinguishable from Haar; states of polynomial gate complexity need only $\tilde\Theta(G)$ copies but admit no polynomial-time learner; output distributions of circuits become hard under LPN with a single $T$ gate. These rows are this column's version of the LWE wall in the searching column.
 
@@ -729,21 +2513,24 @@ The estimating tasks whose object is a process. The object axis is defined in th
 
 | Protocol or class | Object | Task type: given → returned | Copies or queries (access) | Time | Memory | Status & Condition |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Pseudorandom states and pseudoentanglement** (Ji, Liu, Song 2018; Aaronson, Bouland, Fefferman, Ghosh, Vazirani, Zhang, Zhou 2022) | State | Identifying: pseudorandom or Haar-random, low or high entanglement → one bit | Sample: poly, information-theoretically learnable | No polynomial-time distinguisher from Haar | poly, the key | 🟢 🔴 🟢; hard by construction |
+| **Pseudorandom states and pseudoentanglement** (Ji, Liu, Song 2018; Aaronson, Bouland, Fefferman, Ghosh, Vazirani, Zhang, Zhou 2022) | State | Identifying: pseudorandom or Haar-random, entanglement $\Theta(n)$ or $\omega(\log n)$ across every cut → one bit | Sample: poly copies, information-theoretically learnable (random phase states are phase states of high degree); $t$ copies of a random subset phase state on $K$ strings are $O(t^2/K)$-close to Haar | No polynomial-time distinguisher under quantum-secure one-way functions; MPS testing needs $\Omega(\sqrt r)$ copies | poly, the key | 🟢 🔴 🟢; hard by construction |
 | **Identification**: state discrimination ($M=2$), hypothesis selection (general $M$) | State | Identifying: list of $M$ states → one index | Sample: Helstrom (min error) vs. USD (zero error + abort); $O(\log M)$ | Dominated by handling the $M$ candidates: poly for efficiently representable states, $\exp(n)$ for generic ones | The $M$ candidates, same split | 🟢 🟢* 🟢*; *for efficiently representable candidates |
-| **Agnostic tomography** (Grewal–Iyer–Kretschmer–Liang 2024; Chen–Gong–Ye–Zhang 2024) | State | Identifying against a class: class $\mathcal{C}$, no promise that $\rho \in \mathcal{C}$ → $\sigma\in\mathcal{C}$ with $F(\rho,\sigma) \geq \max_{\tau\in\mathcal{C}} F(\rho,\tau) - \epsilon$ | Sample: $\mathrm{poly}(n)$ for stabilizer and near-stabilizer classes | poly | poly, a tableau | 🟢 🟢 🟢; class structure |
-| **Purity and mixedness testing** (O'Donnell, Wright 2015; Bubeck, Chen, Li 2020; Chen, Cotler, Huang, Li 2021) | State | Identifying: pure or maximally mixed, $\rho = I/d$ or far from it → one bit | Sample: $O(1)$ copies with two-copy memory (SWAP test), $\Omega(2^{n/2})$ without | poly | poly | 🟢 🟢 🟢 with two-copy memory; the simplest memory separation |
+| **Agnostic tomography** (Grewal, Iyer, Kretschmer, Liang 2024; Chen, Gong, Ye, Zhang 2024) | State, mixed | Identifying against a class: class $\mathcal{C}$, no promise that $\rho \in \mathcal{C}$ → $\sigma\in\mathcal{C}$ with $F(\rho,\sigma) \geq \max_{\tau\in\mathcal{C}} F(\rho,\tau) - \epsilon$ | Sample: stabilizer product states $n^{O(\log(2/\tau))}/\epsilon^2$ by Bell difference sampling (Grewal et al.), improved to $n^2(1/\tau)^{O(\log 1/\tau)}/\epsilon^2$; all stabilizer states $n(1/\tau)^{O(\log 1/\tau)} + O(\log^2(1/\tau)/\epsilon^2)$ copies by stabilizer bootstrapping; stabilizer dimension $\geq n-t$ with $n(2^t/\tau)^{O(\log 1/\epsilon)}$; lower bound $\Omega(n/\tau)$ | $O(n^2(n+1/\epsilon^2))(1/\tau)^{O(\log 1/\tau)}$, polynomial for $\tau \geq e^{-c\sqrt{\log n}}$ | poly, a tableau | 🟢 🟢 🟢 for best fidelity $\tau$ down to slightly sub-polynomial; the same algorithm estimates stabilizer fidelity, the first efficient magic estimator |
+| **Purity and mixedness testing** (O'Donnell, Wright 2015; Bubeck, Chen, Li 2020; Chen, Cotler, Huang, Li 2021; Chen, Huang, Li, Liu 2022) | State | Identifying: pure or maximally mixed, $\rho = I/d$ or far from it → one bit | Sample: purity $O(1)$ copies with two-copy memory (SWAP test), $\Theta(2^{n/2})$ without; mixedness $\Theta(d/\epsilon^2)$ with entangled measurements, $\Theta(d^{3/2}/\epsilon^2)$ with incoherent ones, adaptive or not | poly | poly | 🟢 🟢 🟢 with two-copy memory; the simplest memory separation, and the proof that adaptivity does not replace memory |
+| **State certification with incoherent measurements** (Chen, Huang, Li, Liu, FOCS 2022) | State, mixed, against a known $\sigma$ | Identifying, $M = 1$: $\rho = \sigma$ or $\Vert\rho - \sigma\Vert_1 > \epsilon$ → one bit | Sample, one copy at a time, adaptive allowed: between $\tilde\Omega(\sqrt{d\,\underline d_{\mathrm{eff}}}\,F(\underline\sigma, I/d)/\epsilon^2)$ and $\tilde O(\sqrt{d\,\overline d_{\mathrm{eff}}}\,F(\overline\sigma, I/d)/\epsilon^2)$, from $\Theta(1/\epsilon^2)$ for pure $\sigma$ to $\Theta(d^{3/2}/\epsilon^2)$ for $\sigma = I/d$ | poly | none | 🟢 🟢 🟢; instance-optimal in the reference state, the quantum analogue of instance-optimal identity testing |
 | **Fixed-unitary and symmetry-class distinction** (Aharonov, Cotler, Qi, Nat. Commun. 2022; the QUALM paper) | Unitary, as a lab oracle | Identifying: one fixed Haar-random unitary on $\ell$ qubits applied at every call, or a fresh one per call → one bit; fixed unitary, orthogonal, or symplectic → one of three | Oracle calls on a fixed input with two-copy memory: $O(1)$ calls and a SWAP test on the outputs (a generalized SWAP test on a maximally entangled input for the symmetry class); every incoherent protocol, adaptive or not, needs $\Omega(2^{2\ell/7})$ calls | $O(\ell)$ gates | $2\ell$ qubits of quantum memory | 🟢 🟢 🟢 with coherent access; the process version of the purity separation, and the paper that defines coherent versus incoherent access |
-| **Stabilizer testing** (Gross, Nezami, Walter 2021; tolerant: Arunachalam, Dutt 2024; Chen, Gong, Ye, Zhang 2024) | State | Identifying: stabilizer state or far from all of them → one bit | Sample: $O(1)$ copies, six in the original test | poly | poly | 🟢 🟢 🟢; Bell difference sampling |
-| **State certification** (Huang, Preskill, Soleimanifar 2024) | State | Identifying, $M = 1$: target $\vert\psi\rangle$ known, copies of $\rho$ → accept if close, reject if far | Sample: $\mathrm{poly}(n)$ single-qubit measurements, for almost all target states | poly | poly | 🟢 🟢 🟢; verification rather than learning, the cheapest task in the column |
+| **Stabilizer testing** (Gross, Nezami, Walter 2021; tolerant: Arunachalam, Dutt 2024; Bao, van Dordrecht, Helsen 2024; Chen, Gong, Ye, Zhang 2024) | State | Identifying: stabilizer state or far from all of them → one bit; tolerant: stabilizer fidelity $\geq \epsilon_1$ or $\leq \epsilon_2$ | Sample: six copies per round, $O(1/\epsilon^2)$ rounds, three copies for qudits with $d \equiv 1, 5 \bmod 6$; tolerant with an unconditional polynomial gap $\epsilon_2 \leq C'\epsilon_1^{672}$ in $O(\epsilon_1^{-12})$ Bell-difference rounds | poly | $2n$ qubits | 🟢 🟢 🟢; Bell difference sampling, and a generalized uncertainty relation through the Lovász theta number for the tolerant case |
+| **State certification** (Huang, Preskill, Soleimanifar 2024) | State | Identifying, $M = 1$: target $\vert\psi\rangle$ known through an amplitude model, copies of $\rho$ → accept if $\langle\psi\vert\rho\vert\psi\rangle \geq 1 - \epsilon/2\tau$, reject if $< 1 - \epsilon$ | Sample: $O(\tau^2/\epsilon^2)$ single-qubit Pauli measurements, $O(\tau/\epsilon)$ with general single-qubit measurements, where $\tau$ is the relaxation time of a hypercube walk with stationary distribution $\vert\langle x\vert\psi\rangle\vert^2$; $\tau = O(n^2)$ for all but a $2^{-\Omega(n)}$ fraction of states, $O(n)$ for phase and GHZ-like states; two model queries per copy | poly | none | 🟢 🟢 🟢; verification rather than learning, the cheapest task in the column, with a tolerance gap of $2\tau$ |
 | **Clifford plus few non-Clifford gates** (Lai, Cheng 2022; Grewal, Iyer, Kretschmer, Liang 2023; Leone, Oliviero, Hamma 2024; Hangleiter, Gullans 2024) | State | Identifying against a class: at most $t$ non-Clifford gates → the state | Sample: $\mathrm{poly}(n, 2^t)$ | $\mathrm{poly}(n, 2^t)$, polynomial for $t = O(\log n)$ | poly | 🟢 🟢 🟢 up to logarithmic magic; the time budget grows as $2^t$, magic is the hardness dial |
-| **Gaussian and near-Gaussian states** (fermionic: Aaronson, Grewal 2023; Mele, Herasymenko 2024; bosonic and continuous-variable: Mele et al. 2024) | State | Identifying against a class: Gaussian, Gaussian plus $t$ non-Gaussian gates, or energy-bounded CV states → the state | Sample: $\mathrm{poly}(n, 2^t)$, resp. polynomial in modes and energy | poly | poly | 🟢 🟢 🟢; Gaussianity promise, the continuous-variable cousin of the stabilizer rows |
-| **Matrix product and finitely correlated states** (Cramer et al. 2010; Fanizza, Galke, Lumbreras, Muñoz-Gil, Winter 2023) | State | Identifying against a class: bond dimension $D$ in one dimension → the state | Sample: $\mathrm{poly}(n, D)$ copies, local measurements only | poly | $O(nD^2)$ | 🟢 🟢 🟢; entanglement-area promise |
-| **States prepared by shallow circuits** (Huang, Liu, Broughton, Kim, Anshu, Landau, McClean, STOC 2024; Landau, Liu 2024) | State | Identifying against a class: $\vert\psi\rangle = U\vert 0^n\rangle$ with $U$ of constant depth → a preparation circuit close in trace distance; on a 2D lattice in Huang et al., beyond that geometry in Landau, Liu | Sample: $\mathrm{poly}(n)$ copies, single-qubit measurements only | poly | poly | 🟢 🟢 🟢; light-cone promise |
-| **Shallow circuits as unitaries** (Huang, Liu, Broughton, Kim, Anshu, Landau, McClean, STOC 2024) | Unitary | Identifying against a class: unknown constant-depth $U$ of arbitrary architecture → a circuit close to $U$ in diamond distance, via local inversions sewn into a global inverse | Sample on input–output pairs: $\mathrm{poly}(n)$ applications of $U$ to random product inputs, nonadaptive, single-qubit measurements on the outputs | poly | poly | 🟢 🟢 🟢; light-cone promise; constant depth bounds every light cone, so finding them is a polynomial dictionary, as for juntas |
-| **Phase states of degree $\ell$** (Arunachalam, Bravyi, Dutt, Yoder 2023) | State; also through its preparation circuit | Identifying against a class: $\sum_x (-1)^{f(x)}\vert x\rangle$ with $\deg f \leq \ell$ → the polynomial $f$ | Sample: $\Theta(n^\ell)$ copies; Query: $O(n^{\ell-1})$ uses of the preparation circuit | poly | poly | 🟢 🟢 🟢; a proven sample-versus-query gap in the first budget |
-| **Bounded gate complexity** (Zhao, Lewis, Kannan, Quek, Huang, Caro 2023) | State or unitary | Identifying against a class: states or unitaries with at most $G$ gates → an approximation | Sample: $\tilde\Theta(G)$ copies, information-theoretically | Computationally hard under cryptographic assumptions, already for polynomial $G$ | poly | 🟢 🔴 🟢; the thesis of this document in one theorem |
-| **Output distributions of quantum circuits** (Hinsche et al. 2022, 2023; Nietner et al. 2023) | Classical distribution of a circuit | Identifying against a class: classical samples of $\vert\langle x\vert U\vert 0\rangle\vert^2$ → a generator for the distribution | Sample (classical outcomes of the circuit): poly | Polynomial for Clifford circuits; hard under LPN once a single $T$ gate is allowed, also on average | poly | 🟢 🔴 🟢; the same cryptographic wall as the LWE rows, on the classical side of the measurement |
+| **Subsystem purity of $t$-doped states** (Leone, Oliviero, Esposito, Hamma 2024) | State from a $t$-doped Clifford circuit, bipartition $E \vert F$ with $f = n_F/n$ | Identifying the Clifford hull, then estimating: $\mathrm{Pur}(\psi_E)$, possibly exponentially small → the value up to a factor $4^t$ | Query to the circuit for the Clifford completion, $\mathrm{poly}(n)\,e^{O(t)}$, then $O(n^3)$ stabilizer measurements | poly for $t = O(\log^2 n)$ | poly | 🟢 🟢 🟢 in the localized phase $t/f \leq 1$; a stabilizer-entropy phase transition at $t/f = 1$ separates the regime where the magic can be cleansed from $E$ |
+| **Gaussian and near-Gaussian states** (fermionic: Aaronson, Grewal 2023; Mele, Herasymenko 2024; bosonic and continuous-variable: Mele et al. 2024) | State | Identifying against a class: Gaussian, Gaussian plus $t$ non-Gaussian gates, or energy-bounded CV states → the state | Sample: free fermions $O(m^3n^2/\epsilon^4)$ copies in $O(m)$ beamsplitter bases; $t$ non-Gaussian gates $\mathrm{poly}(n, 2^t)$ single-copy measurements; CV Gaussian $O(n^7E^4/\epsilon^4)$, $t$-doped $\mathrm{poly}(n) + O((nE/\epsilon)^{2\kappa t})$; generic energy-bounded CV states need $\Omega(\epsilon^{-2n})$ | poly, resp. $\mathrm{poly}(n, 2^t)$; time $e^{\Omega(t)}$ necessary under RingLWE for $t = \tilde\omega(\log n)$ | poly | 🟢 🟢 🟢; Gaussianity promise, the continuous-variable cousin of the stabilizer rows; the same compression theorem holds for stabilizers, fermions, and bosons |
+| **Matrix product and finitely correlated states** (Cramer et al. 2010; Fanizza, Galke, Lumbreras, Rouzé, Winter 2023) | State | Identifying against a class: bond dimension $D$ in one dimension → the state; a realization of dimension $m$ for translation-invariant states on the infinite chain | Sample: linearly many local measurement settings with a certified fidelity bound (Cramer et al.); $\mathrm{poly}(t, m, 1/\eta, 1/\epsilon)$ copies of marginals on $2s+1$ sites, $\eta$ the smallest singular value of the Hankel-type matrix (Fanizza et al.) | poly | $O(nD^2)$, resp. $O(m^2d^2)$ | 🟢 🟢 🟢; entanglement-area promise; the first sample guarantee for matrix product density operators from local measurements |
+| **States prepared by shallow circuits** (Huang, Liu, Broughton, Kim, Anshu, Landau, McClean, STOC 2024; Landau, Liu 2024) | State | Identifying against a class: $\vert\psi\rangle = U\vert 0^n\rangle$ with $U$ of depth $d$ → a preparation circuit close in trace distance; on a 2D lattice in Huang et al., on any $k$-dimensional lattice in Landau, Liu | Sample: $2^{O(d^2)}(n/\epsilon)^{O(1)}$ copies with single-qubit measurements (2D); $\tilde O(n^4)2^{O(c)}/\epsilon^4$ copies with $c = O((3k)^{k+2}d)^k$ on a $k$-dimensional lattice | poly for $d = O(1)$, quasipolynomial for $d = \mathrm{polylog}(n)$ | poly | 🟢 🟢 🟢; light-cone promise; the replacement process of Landau, Liu avoids every constraint-satisfaction step and gives a polynomial test for the trivial phase |
+| **Shallow circuits as unitaries** (Huang, Liu, Broughton, Kim, Anshu, Landau, McClean, STOC 2024) | Unitary | Identifying against a class: unknown constant-depth $U$ of arbitrary architecture → a circuit close to $U$ in diamond distance, via local inversions sewn into a global inverse | Sample on input–output pairs: $O(n^2\log n/\epsilon^2)$ random product inputs with single-qubit Pauli measurements on the outputs, nonadaptive; finite gate set $O(\log n)$ samples with zero error; Query: $\Theta(1)$ uses of $U$ and $\Theta(n)$ time, both optimal | $\mathrm{poly}(n)/\epsilon^2$; $O(n^3\log n/\epsilon^2)$ on a lattice | poly | 🟢 🟢 🟢; light-cone promise; constant depth bounds every light cone, so finding them is a polynomial dictionary, as for juntas; log depth without geometry is exponentially hard |
+| **Non-Markovian processes of bounded memory** (White, Pollock, Hollenberg, Modi, Hill, PRX Quantum 2022) | Process over $k$ time steps, its process tensor | Identifying against a class: Markov order $\ell$ → the process tensor, positive and causal, by maximum likelihood | Query: sequences of control operations, $O(N_{\mathrm{oc}}^k)$ circuits by linear inversion with an overcomplete basis, $O(N_{\mathrm{mle}}^k)$ with maximum likelihood, $O(kN_{\mathrm{mle}}^\ell)$ at Markov order $\ell$; $O(d^{4k})$ parameters in general | poly for fixed $\ell$ | $d^{2k+2}$ entries, truncated by $\ell$ | 🟢 🟢 🟢 for finite Markov order; memory length is the dial, and its violation is itself measurable |
+| **Phase states of degree $\ell$** (Arunachalam, Bravyi, Dutt, Yoder 2023) | State; also through its preparation circuit | Identifying against a class: $\sum_x (-1)^{f(x)}\vert x\rangle$ with $\deg f \leq \ell$ → the polynomial $f$, exactly | Sample: $\Theta(n^\ell)$ copies with separable measurements (single-qubit $X$ and $Z$), $\Theta(n^{\ell-1})$ with entangled measurements (pretty-good measurement); queries to the preparation circuit give the same counts; $O(n^\ell)$ for $\mathbb{Z}_q$-valued phases | $O(n^{3\ell-2})$ separable; exponential for the pretty-good measurement | poly | 🟢 🟢 🟢 with separable measurements; a proven separable-versus-entangled gap of a factor $n$ in the first budget, paid for with exponential time |
+| **Bounded gate complexity** (Zhao, Lewis, Kannan, Quek, Huang, Caro 2023) | State or unitary | Identifying against a class: states or unitaries with at most $G$ gates → an approximation | Sample: $\tilde\Theta(G/\epsilon^2)$ copies, independent of $n$, single-copy measurements suffice; Query: $\tilde O(G\min\{1/\epsilon^2, \sqrt{2^n}/\epsilon\})$ and $\Omega(G/\epsilon)$ for average-case unitary learning, $\Omega(2^{\min\{G/2C, n/2\}}/\epsilon)$ in diamond distance | $e^{\Omega(\min\{G, n\})}$ under RingLWE, already for $G = \tilde\omega(\log n)$; polynomial for $G = O(\log n)$ | poly | 🟢 🔴 🟢; the thesis of this document in one theorem, with $\log n$ gates as the transition point |
+| **Output distributions of quantum circuits** (Hinsche et al. 2022; PRL 2023; Nietner et al., Quantum 2025) | Classical distribution of a circuit | Identifying against a class: classical samples of $\vert\langle x\vert U\vert 0\rangle\vert^2$ → a generator or an evaluator for the distribution | Sample (classical outcomes of the circuit): $O(n)$ for Clifford circuits; poly in general | Polynomial for Clifford circuits by Gaussian elimination; hard under LPN for an evaluator once a single $T$ gate is allowed, under pseudorandom functions for a generator at depth $n^{\Omega(1)}$; in the statistical-query model unconditionally $2^{\Omega(d)}$ queries from depth $d = \Omega(\log n)$, on average over random brickwork circuits with constant probability | poly | 🟢 🔴 🟢; the same cryptographic wall as the LWE rows, on the classical side of the measurement, and the only row with an unconditional average-case hardness result |
 | **Bernstein–Vazirani** | Classical function | Identifying: the class of $2^n$ linear functions → the label $\mathbf{s}$ | Query: one superposition query | $O(n)$ | $O(n)$ | 🟢 🟢 🟢; the noiseless limit of LWE |
 | **Identification with preparation circuits** | State, through its preparation circuit | Identifying: $M$ candidate circuits and a circuit for the unknown → one index, via overlaps on a SWAP test | Query: $\tilde O(M/\epsilon)$ calls at overlap precision $\epsilon$ by amplitude estimation | $\mathrm{poly}(M)$ | $\mathrm{poly}(M)$ | 🟢 🟢 🟢; queries buy the rate in $\epsilon$, not in $M$: copies alone need only $O(\log M/\epsilon^2)$ |
 
@@ -769,7 +2556,10 @@ Tasks whose answer is one bit or one index; the identifying column.
 
 * **Montanaro, de Wolf (2016):** Survey of quantum property testing.
 * **O'Donnell, Wright (STOC 2015) / Bubeck, Chen, Li (FOCS 2020) / Chen, Cotler, Huang, Li (FOCS 2021):** Spectrum, mixedness, and purity testing; where entanglement across copies is necessary.
-* **Gross, Nezami, Walter (CMP 2021):** Stabilizer testing with six copies. **Arunachalam, Dutt (2024) / Chen, Gong, Ye, Zhang (2024):** tolerant versions in polynomial time.
+* **Chen, Huang, Li, Liu (FOCS 2022):** Mixedness testing with incoherent measurements costs $\Theta(d^{3/2}/\epsilon^2)$, adaptive or not; instance-optimal bounds for certification against a known $\sigma$ in terms of $F(\sigma, I/d)$ and the effective dimension.
+* **Gross, Nezami, Walter (CMP 2021):** Stabilizer testing with six copies. **Arunachalam, Dutt (2024) / Chen, Gong, Ye, Zhang (2024):** tolerant versions in polynomial time. **Bao, van Dordrecht, Helsen (2024):** an unconditional polynomial gap, $\epsilon_2 \leq C'\epsilon_1^{672}$ with $O(\epsilon_1^{-12})$ Bell-difference rounds, from a generalized uncertainty relation through the Lovász theta number.
+* **Leone, Oliviero, Esposito, Hamma (PRA 2024):** Stabilizer-entropy phase transition at $t/f = 1$; in the localized phase the purity of a $t$-doped state is computable up to a factor $4^t$ with $\mathrm{poly}(n)$ resources, even when it is exponentially small.
+* **White, Pollock, Hollenberg, Modi, Hill (PRX Quantum 2022):** Process-tensor tomography for non-Markovian dynamics by maximum likelihood; $O(kN^\ell)$ circuits at Markov order $\ell$ instead of $O(N^k)$.
 * **Bădescu, O'Donnell (STOC 2021):** Threshold search and hypothesis selection with $O(\log M)$ copies.
 * **Huang, Preskill, Soleimanifar (FOCS 2024):** Certifying almost all states with few single-qubit measurements.
 
@@ -781,11 +2571,12 @@ Every 🟢 🟢 🟢 row in the identifying and searching tables names a class. 
 
 * **Stabilizer states** (subgroup structure): Aaronson, Gottesman (2004) with $O(n)$ collective or $O(n^2)$ single-copy measurements; Montanaro (2017) with $O(n)$ two-copy Bell samples; Rocchetto (2018) in the PAC model; Low (2009) for Clifford unitaries; Allcock, Doriguello, Ivanyos, Santha (2024) on qudits, where Bell sampling breaks.
 * **Few non-Clifford gates** (magic as the dial): Lai, Cheng (2022); Grewal, Iyer, Kretschmer, Liang (2023); Leone, Oliviero, Hamma (Quantum 2024); Hangleiter, Gullans (PRL 2024). Cost $\mathrm{poly}(n, 2^t)$ in copies and time.
-* **Agnostic and tolerant versions**: Grewal, Iyer, Kretschmer, Liang (2024) for stabilizer product states; Chen, Gong, Ye, Zhang (2024), stabilizer bootstrapping; Arunachalam, Dutt (2024), tolerant stabilizer testing in polynomial time. Both driven by Bell difference sampling, whose group-theoretic origin is the Clifford Schur–Weyl duality of Gross, Nezami, Walter (2021).
+* **Agnostic and tolerant versions**: Grewal, Iyer, Kretschmer, Liang (2024) for stabilizer product states; Chen, Gong, Ye, Zhang (2024), stabilizer bootstrapping; Arunachalam, Dutt (2024) and Bao, van Dordrecht, Helsen (2024), tolerant stabilizer testing in polynomial time. All driven by Bell difference sampling, whose group-theoretic origin is the Clifford Schur–Weyl duality of Gross, Nezami, Walter (2021).
 * **Gaussian and near-Gaussian states** (the continuous-variable analogue of stabilizer structure): Aaronson, Grewal (2023) for free fermions; Mele, Herasymenko (2024) with $t$ non-Gaussian gates; Mele et al. (2024) for bosonic and continuous-variable states with bounded energy. Displacement operators are the discrete shadow of this family.
-* **Matrix product and finitely correlated states** (area-law entanglement): Cramer et al. (Nat. Commun. 2010); Fanizza, Galke, Lumbreras, Muñoz-Gil, Winter (2023) with stability guarantees.
+* **Matrix product and finitely correlated states** (area-law entanglement): Cramer et al. (Nat. Commun. 2010); Fanizza, Galke, Lumbreras, Rouzé, Winter (2023) with stability guarantees, the first sample bound for matrix product density operators from local measurements.
+* **Processes with finite Markov order** (memory length as the dial): White, Pollock, Hollenberg, Modi, Hill (PRX Quantum 2022), process-tensor tomography with maximum likelihood, efficient once long-time correlations are truncated at order $\ell$.
 * **Shallow-circuit states and circuits** (light cones): Huang, Liu, Broughton, Kim, Anshu, Landau, McClean (STOC 2024) learn states $U\vert 0^n\rangle$ from copies with single-qubit measurements, and unknown constant-depth unitaries of arbitrary architecture from random product inputs, which is sample access to input–output pairs; both in polynomial time. The technique is local inversion: learn, for each qubit, a local unitary that undoes $U$ there, then sew these into a global inverse; the landscape of each local problem is benign, which is what makes the time budget polynomial. Landau, Liu (2024) extend the state result beyond the 2D lattice.
-* **Phase states of bounded degree** (algebraic structure): Arunachalam, Bravyi, Dutt, Yoder (TQC 2023), $\Theta(n^\ell)$ copies against $O(n^{\ell-1})$ queries, the cleanest proven sample-versus-query separation.
+* **Phase states of bounded degree** (algebraic structure): Arunachalam, Bravyi, Dutt, Yoder (TQC 2023), $\Theta(n^\ell)$ copies with separable measurements against $\Theta(n^{\ell-1})$ with entangled ones (pretty-good measurement); queries to the preparation circuit give the same counts, so the proven gap is between measurement classes, not between sample and query access.
 * **Juntas and low-degree objects** (few relevant qubits, few relevant Paulis): Chen, Nadimpalli, Yuen (SODA 2023); Arunachalam, Dutt, Escudero Gutiérrez (2024).
 * **Bounded gate complexity** (the class that is sample-easy and time-hard): Zhao, Lewis, Kannan, Quek, Huang, Caro (PRX Quantum 2024).
 
@@ -793,55 +2584,881 @@ The catalogue reads as a list of promises, and that is the point of the tables: 
 
 <br>
 
-# Identifying (Paper)
+# Identifying (Papers)
 
-## Learning Shallow Quantum Circuits (arXiv:2305.13409v5)
+Zusammenfassungen der wichtigen Paper zum Aufgabentyp **Identifying**: die Kandidaten sind der Input. Gegeben sind Kopien eines Zustands, Aufrufe eines Prozesses oder klassische Samples einer Verteilung, dazu eine Liste von Hypothesen oder eine Klasse, mit oder ohne das Versprechen, dass das Unbekannte in der Klasse liegt. Zurück kommt ein Index, ein Element der Klasse oder ein Bit. Die Sektion ordnet die Paper nach der Größe der Hypothesenmenge: erst die Klassen, deren Struktur den Decoder billig macht (Stabilizer, Gauß, Matrixprodukt, flache Schaltkreise, Phasenzustände), dann die Ein-Bit-Aufgaben (Testen und Zertifizieren), zuletzt die Härteresultate, in denen die Klasse exponentiell groß und parametrisiert ist und die Aufgabe in Searching übergeht (Pseudozufall, beschränkte Gatterkomplexität, Output-Verteilungen).
 
-Die Arbeit von **Hsin-Yuan Huang et al.**, erschienen unter dem Titel *„Learning Shallow Quantum Circuits“* auf dem Symposium on Theory of Computing (STOC 2024), stellt einen bedeutenden Durchbruch in der Quantenkomplexitätstheorie und dem Quanten-Maschinellen-Lernen dar. Die Autoren präsentieren den ersten **effizienten klassischen Algorithmus in Polynomialzeit**, um die vollständige Beschreibung unbekannter, flacher Quantenschaltkreise (engl. *shallow quantum circuits*) zu rekonstruieren.
+Jede Zusammenfassung folgt demselben Aufbau wie in den Sektionen Searching und Estimating: Einordnung in die Tabellen, Problem, Kernresultate, Methode, Bedeutung, Bezug zum eigenen Projekt, Grenzen und offene Fragen, Fragen zum Tieferbohren. Die Statusglyphen lesen sich in der Reihenfolge Kopien · Zeit · Speicher. Zwei Paper der Identifying-Tabelle sind bereits in der Searching-Sektion zusammengefasst, weil ihr algorithmischer Kern eine Trägersuche ist: Grewal, Iyer, Kretschmer, Liang (arXiv:2305.13409) und Hangleiter, Gullans (arXiv:2306.00083); die Übersicht verweist dorthin.
+
+## Übersicht
+
+| Paper | Objekt | Was identifiziert wird | Zugriff | Kosten | Status | Versprechen |
+| --- | --- | --- | --- | --- | --- | --- |
+| Grewal, Iyer, Kretschmer, Liang 2024 (Stabilizer-Produktzustände) | gemischter Zustand | der beste Stabilizer-Produktzustand, agnostisch | Sample, Bell-Difference-Sampling plus Einzelkopien | $n^{O(\log(2/\tau))}/\epsilon^2$ | 🟢 🟢 🟢 für konstantes $\tau$ | keines; $\tau$ ist die beste Fidelity in der Klasse |
+| Chen, Gong, Ye, Zhang 2024 (Stabilizer Bootstrapping) | gemischter Zustand | der beste Stabilizerzustand, agnostisch; Stabilizer-Fidelity | Sample, Ein- und Zweikopien-Messungen | $n(1/\tau)^{O(\log 1/\tau)} + O(\log^2(1/\tau)/\epsilon^2)$ Kopien, Zeit $O(n^2(n+1/\epsilon^2))(1/\tau)^{O(\log 1/\tau)}$ | 🟢 🟢 🟢 für $\tau\geq e^{-c\sqrt{\log n}}$ | keines; untere Schranke $\Omega(n/\tau)$ Kopien |
+| Grewal, Iyer, Kretschmer, Liang 2023 | Zustand | Stabilizerdimension $\geq n-t$, dann Tomographie | Sample, Bell-Differenz | $\mathrm{poly}(n, 2^t, 1/\epsilon)$ | 🟢 🟢 🟢 bis $t = O(\log n)$ | siehe Searching (Papers), arXiv:2305.13409 |
+| Hangleiter, Gullans 2024 | Zustand aus Schaltkreis | Clifford+T-Beschreibung, Nullity, Tiefe | Sample, Bell-Messung | $O(n/\epsilon) + O(2^t/\epsilon^2)$ | 🟢 🟢 🟢 bis $t = O(\log n)$ | siehe Searching (Papers), arXiv:2306.00083 |
+| Leone, Oliviero, Esposito, Hamma 2024 | Zustand aus $t$-dotiertem Clifford-Schaltkreis | Subsystem-Purity $\mathrm{Pur}(\psi_E)$, auch wenn exponentiell klein | Query an $C_t$ (Clifford Completion), dann Stabilizer-Messungen | $\mathrm{poly}(n)\,e^{O(t)}$, polynomiell für $t = O(\log^2 n)$; Faktor $d_Y^2 = 4^t$ Unschärfe | 🟢 🟢 🟢 für $t/f\leq 1$ (lokalisierte Phase) | $t$-dotiert, $t/f\leq 1$ |
+| Aaronson, Grewal 2023 | Zustand von $n$ freien Fermionen auf $m$ Moden | die Kernmatrix $K = AA^\dagger$, also den Zustand | Sample, $O(m)$ Messbasen aus Beamsplittern | $O(m^3n^2/\epsilon^4)$ Kopien, $O(m^4n^2/\epsilon^4)$ Zeit | 🟢 🟢 🟢 | teilchenzahlerhaltend gaußsch |
+| Mele, Herasymenko 2024 | Zustand aus Gauß-Schaltkreis mit $t$ nicht-gaußschen Gattern | Gauß-Unitary $G$ und $t$-Qubit-Kern $\vert\phi\rangle$ | Sample, Einzelkopien | $\mathrm{poly}(n, 2^t)$; hart für $t = \tilde\omega(\log n)$ unter PRS | 🟢 🟢 🟢 bis $t = O(\log n)$ | Gauß-Nullity $\leq\kappa t$ |
+| F. A. Mele, A. A. Mele, Bittel, Eisert, Giovannetti, Lami, Leone, Oliviero 2024 | CV-Zustand auf $n$ Moden | Gauß-Zustand, $t$-dotierter Gauß-Zustand; allgemein bei Energie $E$ | Sample, Homodyn/Heterodyn | Gauß $O(n^7E^4/\epsilon^4)$; $t$-dotiert $\mathrm{poly}(n) + O((nE/\epsilon)^{2\kappa t})$; allgemein $\Omega(\epsilon^{-2n})$ | 🟢 🟢 🟢 für Gauß und $\kappa t = O(1)$; 🔴 allgemein | Energieschranke, Gaußsches Versprechen |
+| Cramer, Plenio, Flammia, Somma, Gross, Bartlett, Landon-Cardinal, Poulin, Liu 2010 | Zustand auf einer Kette | Matrixproduktzustand mit Bonddimension $D$ | Sample, lokale Messungen (Schema 2) oder lokale Unitaries plus Messungen (Schema 1) | linear viele Messeinstellungen, $\mathrm{poly}(N)$ Nachverarbeitung, zertifizierte Fidelity | 🟢 🟢 🟢 | MPS mit kleinem $D$; Schema 2 braucht ein gapped Parent-Hamiltonian |
+| Fanizza, Galke, Lumbreras, Rouzé, Winter 2023 | translationsinvarianter Zustand auf der Kette | MPDO-Realisierung: $\rho$, $e$, Transfermatrizen $E_{k,l}$ | Sample, lokale Tomographie der Marginale auf $2s+1$ Plätzen | $\mathrm{poly}(t, m, 1/\eta, 1/\epsilon)$ Kopien, $O(m^2)$ Parameter | 🟢 🟢 🟢 | Dimension $m$, $s$-rekonstruierbar, Singulärwert $\geq\eta$ |
+| Huang, Liu, Broughton, Kim, Anshu, Landau, McClean 2024 | Unitary konstanter Tiefe; Zustand $U\vert 0^n\rangle$ auf 2D-Gitter | ein Schaltkreis konstanter Tiefe | Sample auf Produkt-Inputs und Pauli-Outputs; Query; Kopien | $O(n^2\log n/\epsilon^2)$ Samples, $\mathrm{poly}(n)/\epsilon^2$ Zeit; $\Theta(1)$ Queries bei endlichem Gatterset; Zustände $2^{O(d^2)}(n/\epsilon)^{O(1)}$ Kopien | 🟢 🟢 🟢 | konstante Tiefe; 2D für Zustände |
+| Landau, Liu 2024 | Zustand $U\vert 0^n\rangle$ auf $k$-dimensionalem Gitter | ein Schaltkreis der Tiefe $(2k+1)d$ | Sample, lokale Tomographie der Reduktionen | $\tilde O(n^4)2^{O(c)}/\epsilon^4$ Kopien, $c = O((3k)^{k+2}d)^k$ | 🟢 🟢 🟢 für $d = O(1)$ | Tiefe $d$ auf einem Gitter beliebiger Dimension |
+| Arunachalam, Bravyi, Dutt, Yoder 2023 | Phasenzustand vom Grad $\ell$ | das Polynom $f$ | Sample, separabel oder verschränkt; Query an das Präparationsunitary | $\Theta(n^\ell)$ separabel, $\Theta(n^{\ell-1})$ verschränkt (PGM) | 🟢 🟢 🟢 separabel; PGM zeitineffizient | Grad $\ell$ über $\mathbb{F}_2$ oder $\mathbb{Z}_q$ |
+| Gross, Nezami, Walter 2021 | Zustand | Stabilizer oder $\epsilon$-weit weg von allen | Sample, sechs Kopien, transversal | $O(1/\epsilon^2)$ Wiederholungen, drei Kopien für $d\equiv 1, 5 \bmod 6$ | 🟢 🟢 🟢 | keines; Ein-Bit-Test |
+| Bao, van Dordrecht, Helsen 2024 | Zustand | Stabilizer-Fidelity $\geq\epsilon_1$ oder $\leq\epsilon_2$ | Sample, Bell-Difference-Sampling | $O(\epsilon_1^{-12})$ Runden bei $\epsilon_2\leq C'\epsilon_1^{672}$ | 🟢 🟢 🟢 | keines; toleranter Test |
+| Chen, Cotler, Huang, Li 2021 | Zustand, Kanal | rein oder maximal gemischt; depolarisierend oder unitär; $U$, $O$ oder $Sp$ | Sample ohne Quantenspeicher (Baummodell), mit $k$ Qubits Speicher | $\Theta(2^{n/2})$ ohne Speicher, $O(1)$ mit; Shadow-Tomographie $\tilde\Theta(\min\{M, 2^n\}/\epsilon^2)$; $\Omega(2^{(n-k)/3})$ bei $k$ Qubits | 🟢 🔴 🟢 ohne Speicher | keines; Trennungen nach Speicher |
+| Chen, Huang, Li, Liu 2022 | gemischter Zustand | $\rho = \sigma$ oder $\Vert\rho-\sigma\Vert_1 > \epsilon$ | Sample, inkohärent, adaptiv erlaubt | $\Theta(d^{3/2}/\epsilon^2)$ für Mixedness; instanzoptimal in $F(\sigma, I/d)$ und effektiver Dimension | 🟢 🟢 🟢 mit Kopien $d^{3/2}$; Adaptivität hilft nicht | keines |
+| Aharonov, Cotler, Qi 2022 | Unitary als Lab-Orakel | fester oder frischer Haar-Unitary; $U$, $O$ oder $Sp$ | Orakel, kohärent oder inkohärent | $O(1)$ kohärent, $\Omega(2^{2\ell/7})$ inkohärent | 🟢 🟢 🟢 kohärent | keines; definiert QUALM |
+| Huang, Preskill, Soleimanifar 2024 | Zustand $\rho$ gegen bekanntes $\vert\psi\rangle$ | $\langle\psi\vert\rho\vert\psi\rangle\geq 1-\epsilon$ oder $< 1-\epsilon$ | Sample, Einzelqubit-Pauli-Messungen; Query an ein Amplitudenmodell | $O(\tau^2/\epsilon^2)$, $O(n^2/\epsilon)$ für fast alle Zustände | 🟢 🟢 🟢 | Relaxationszeit $\tau = \mathrm{poly}(n)$ |
+| White, Pollock, Hollenberg, Modi, Hill 2022 | nicht-Markovscher Prozess über $k$ Zeitschritte | Prozess-Tensor bei Markov-Ordnung $\ell$ | Query, Sequenzen von Kontrolloperationen | $O(N_{\mathrm{mle}}^k)$ Schaltkreise, $O(k N_{\mathrm{mle}}^\ell)$ bei Ordnung $\ell$; $d^{4k}$ Parameter | 🟢 🟢 🟢 für festes $\ell$ | endliche Markov-Ordnung |
+| Ji, Liu, Song 2018 | Zustandsfamilie $\{\vert\phi_k\rangle\}$ | PRS oder Haar-zufällig | Sample, polynomiell viele Kopien | poly Kopien reichen statistisch, kein poly-Zeit-Unterscheider | 🟢 🔴 🟢 | Existenz quantensicherer PRF |
+| Aaronson, Bouland, Fefferman, Ghosh, Vazirani, Zhang, Zhou 2022 | Zustandsfamilie | Verschränkung $\Theta(n)$ oder $\omega(\log n)$ über jeden Schnitt | Sample, polynomiell viele Kopien | kein poly-Zeit-Unterscheider; MPS-Test braucht $\Omega(\sqrt r)$ Kopien | 🟢 🔴 🟢 | quantensichere Einwegfunktion |
+| Zhao, Lewis, Kannan, Quek, Huang, Caro 2023 | Zustand oder Unitary mit $G$ Gattern | eine $\epsilon$-nahe Approximation | Sample; Query | $\tilde\Theta(G/\epsilon^2)$ Kopien; Zeit $e^{\Omega(\min\{G, n\})}$ unter RingLWE | 🟢 🔴 🟢 | Gatterzahl $G$ |
+| Hinsche, Ioannou, Nietner, Haferkamp, Quek, Hangleiter, Seifert, Eisert, Sweke 2023 | Output-Verteilung eines Schaltkreises | Generator oder Evaluator | Sample, klassische Bitstrings | Clifford: $O(n)$ Samples, poly Zeit; ein $T$-Gatter: LPN-hart | 🟢 🔴 🟢 | Clifford-Struktur |
+| Nietner, Sweke, Hinsche, Ioannou, Haferkamp, Quek, Hangleiter, Seifert, Eisert 2025 | Output-Verteilung eines zufälligen Brickwork-Schaltkreises | ein $\epsilon$-naher Generator, im Mittel | Statistical Queries | $2^{\Omega(d)}$ Queries ab Tiefe $d = \Omega(\log n)$ mit konstanter Wahrscheinlichkeit; $\Omega(2^n)$ bei linearer Tiefe | 🟢 🔴 🟢 im SQ-Modell | keines; Average-Case |
+
+Drei Familien. Die erste lernt eine Klasse, deren Struktur den Decoder trägt: Untergruppen (Stabilizer), Kovarianzmatrizen (Gauß), Transfermatrizen (Matrixprodukt), Lichtkegel (flache Schaltkreise), Polynome (Phasenzustände); die Kosten sind polynomiell, und die Härte sitzt in einem einzigen Parameter ($t$, $D$, $d$, $\ell$). Die zweite gibt ein Bit zurück, und dort entscheidet die Speicherachse: Bell-Differenz-Sampling und SWAP-Test brauchen zwei Kopien und konstant viele Runden, inkohärente Protokolle zahlen $d^{3/2}$ oder $2^{n/2}$. Die dritte beweist, dass außerhalb des Katalogs kein polynomieller Decoder existiert, jeweils bedingt auf eine kryptographische Annahme; das ist die Identifying-Version der LWE-Wand aus theory.md.
+
+## Agnostic tomography of stabilizer product states (arXiv:2404.03813)
+
+Die Arbeit von **Sabee Grewal, Vishnu Iyer, William Kretschmer und Daniel Liang** (UT Austin; Quantum 2026) führt das Modell der *agnostischen Tomographie* ein: Gegeben sind Kopien eines beliebigen, möglicherweise gemischten Zustands $\rho$ und eine Klasse $\mathcal{C}$; gesucht ist ein Element von $\mathcal{C}$, dessen Fidelity mit $\rho$ bis auf $\epsilon$ an das Maximum über $\mathcal{C}$ heranreicht. Für die Klasse der Stabilizer-Produktzustände geben die Autoren den ersten Algorithmus mit quasipolynomieller Laufzeit $n^{O(\log(2/\tau))}/\epsilon^2$, polynomiell sobald die beste Fidelity $\tau$ konstant ist.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse ohne Versprechen. Die Klasse ist der Input, zurück kommt ein Element der Klasse; das Versprechen $\rho\in\mathcal{C}$ fällt weg und wird durch die Fidelity-Garantie relativ zum besten Element ersetzt. Das ist das Quantenanalogon des agnostischen PAC-Lernens.
+* **Objekt:** gemischter $n$-Qubit-Zustand. **Zugriff:** Sample; Bell-Difference-Sampling auf vier Kopien plus Einzelkopien-Messungen in der Produktbasis.
+* **Status:** 🟢 🟢 🟢 für konstantes $\tau$; für $\tau = o(1)$ quasipolynomiell in $n$. Kopien und Zeit $n^{O(\log(2/\tau))}/\epsilon^2$, Speicher polynomiell (ein Pauli-String und eine Basis).
+* **Versprechen:** keines über $\rho$; $\tau$ ist ein Hilfsinput und lässt sich per Binärsuche finden.
 
 ### Das Problem
 
-Bisherige klassische Algorithmen scheiterten daran, flache Quantenschaltkreise (Schaltkreise mit konstanter Tiefe) effizient zu lernen. Da solche Schaltkreise Quantenzustände und Verteilungen erzeugen können, die klassisch extrem schwer zu simulieren oder zu sampeln sind, war unklar, ob ein Rekonstruktionsalgorithmus mit polynomieller Laufzeit überhaupt existieren kann.
+Realisierbares Lernen von Stabilizerzuständen (Montanaro 2017) setzt voraus, dass $\rho$ exakt in der Klasse liegt; schon schwache Depolarisierung bricht die Voraussetzung. Grewal, Iyer, Kretschmer, Liang (2023) hatten für allgemeine Stabilizerzustände einen agnostischen Algorithmus in exponentieller Zeit und einen polynomiellen nur oberhalb $\tau > \cos^2(\pi/8)$. Die Sample-Komplexität ist über Shadow-Tomographie immer polynomiell in $\log\vert\mathcal{C}\vert$; die Frage ist die Laufzeit. Schon für Produktzustände scheitert der naive Ansatz, jedes Qubit einzeln zu tomographieren: Beim GHZ-Zustand ist jede Ein-Qubit-Reduktion maximal gemischt, obwohl $\vert 0^n\rangle$ Fidelity $1/2$ hat.
 
-* Gegeben ist ein Klassenversprechen, nämlich konstante Tiefe. Zurück kommt ein Schaltkreis aus dieser Klasse. Das ist dieselbe Form wie bei Stabilizerzuständen, Matrixproduktzuständen oder wenigen T-Gattern.
-* Estimating ist es nicht, weil keine Liste von Observablen gegeben ist. Die Einzelqubit-Messdaten sind das Messprimitiv, nicht die Aufgabe.
-* Searching im Sinn der Tabellen ist es auch nicht, weil kein dünner Träger zurückkommt. Bei unbekannter Architektur steckt zwar eine Suche darin: welche Qubits in welchem Lichtkegel liegen. Konstante Tiefe begrenzt aber jeden Lichtkegel auf konstante Größe. Damit gibt es nur polynomiell viele Kandidaten, derselbe Mechanismus wie bei Juntas.
-* Das Paper enthält zwei Resultate mit unterschiedlichem Zugriff. Zustände aus Kopien zu lernen ist Sample-Zugriff. Ein Unitary auf selbstgewählte Produktzustände anzuwenden ist Query-Zugriff auf den Prozess. Das zweite Resultat ist damit ein echtes Literaturbeispiel für die Zelle Query × Identifying. Dort standen bisher nur Bernstein–Vazirani und meine eigene Konstruktion.
+### Kernresultate
 
-### Kernresultate der Arbeit
+* **Theorem 1.2 (agnostische Tomographie).** Für $\mathcal{C} = \{\vert 0\rangle, \vert 1\rangle, \vert +\rangle, \vert -\rangle, \vert i\rangle, \vert -i\rangle\}^{\otimes n}$ gibt es einen eigentlichen (proper) agnostischen Lerner, der ein $\vert\phi\rangle\in\mathcal{C}$ mit $\langle\phi\vert\rho\vert\phi\rangle\geq\max_{\varphi\in\mathcal{C}}\langle\varphi\vert\rho\vert\varphi\rangle - \epsilon$ ausgibt, in Zeit $n^{O(\log(2/\tau))}/\epsilon^2$, wenn das Maximum mindestens $\tau$ ist.
+* **Lemma 2.1 (Entropiezählung).** Aus einer Verteilung über $\{0,1\}^n$ mit $\max_x D(x)\leq C/2^n$ zeigen $k\geq\log_{1/b}(n/\delta)$ Ziehungen mit Wahrscheinlichkeit $1-\delta$ Einsen auf allen bis auf $\log_2(C)/(1-H(b))$ Positionen. Angewandt auf Bell-Differenz-Samples aus der Stabilizergruppe $S$ heißt das: $O(\log n)$ Samples aus $S$ decken alle bis auf $O(\log(1/\tau))$ Qubits mit einem nichttrivialen Pauli ab.
+* **Trägerlemma.** Die Wahrscheinlichkeit, dass ein Bell-Differenz-Sample in $S$ liegt, ist $p\geq\tau^4$; also reichen $O(\log n/\tau^4)$ Samples, damit $\Omega(\log n)$ davon aus $S$ kommen, und die Suche über alle lokal kommutierenden Teilmengen der Größe $O(\log n)$ kostet $\binom{\log n/\tau^4}{\log n}\mathrm{poly}(1/\tau)\leq n^{O(\log(2/\tau))}$.
+* **Theorem 3.5 (Algorithmus 1).** Aus dem Pauli-String vollen Gewichts wird die Produktbasis $B$ gebildet, $\rho$ wird $O(\log(1/\delta)/\epsilon^2)$-mal in $B$ gemessen, und der Modus ist die Ausgabe; die Fidelity-Garantie folgt, weil $B$ orthonormal ist.
 
-Das Paper liefert zwei zentrale polynomielle Algorithmen basierend auf einfachen, lokalen Messdaten:
-* **Rekonstruktion des Schaltkreises (Unitary):** Ein klassischer Algorithmus lernt die mathematische Beschreibung eines völlig unbekannten $n$-Qubit-Schaltkreises $U$ mit beliebiger Architektur. Gemessen an der *Diamond Distance* erzielt der Algorithmus eine präzise Annäherung. Als Input nutzt er lediglich Single-Qubit-Messdaten der Schaltkreis-Ausgänge.
-* **Zustandsrekonstruktion (State Learning):** Ein klassischer Algorithmus lernt die Beschreibung eines unbekannten $n$-Qubit-Quantenzustands $\vert{}\psi\rangle = U\vert{}0^n\rangle$, welcher durch einen flachen Schaltkreis auf einem 2D-Gitter präpariert wurde. Die Annäherung erfolgt hierbei innerhalb einer kleinen *Trace Distance* unter der Nutzung lokaler Single-Qubit-Messungen (wie z. B. Pauli-Messungen).
+### Methodischer Ansatz
 
-### Methodischer Ansatz: Lokale Inversion und „Circuit Sewing“
-
-Die größte Herausforderung beim Lernen von Quantenschaltkreisen ist die oft nicht-konvexe Optimierungslandschaft. Huang et al. umgehen dieses Problem durch zwei innovative Techniken:
-
-1. **Lokale Inversionen (Local Inversions):** Der Algorithmus versucht nicht, den globalen Schaltkreis auf einmal zu lösen. Stattdessen lernt er lokale Operatoren, die die Wirkung des Schaltkreises in kleinen, isolierten Regionen lokal „rückgängig machen“ (invertieren).
-2. **Circuit Sewing (Schaltkreis-Vernähung):** Diese lokalen Inversionen werden mathematisch über eine clevere Methode zu einer konsistenten globalen Beschreibung des gesamten inversen Schaltkreises „zusammengenäht“.
-
-Dadurch entsteht eine mathematische Optimierungslandschaft, die sich nachweislich **effizient und ohne lokale Minima** (Plateaus) navigieren lässt.
+* Die Stabilizergruppe eines Produktzustands ist bis auf Phasen durch einen einzigen Pauli-String des Gewichts $n$ festgelegt; man muss jedem Qubit nur $X$, $Y$ oder $Z$ zuordnen. Bell-Differenz-Samples liefern Elemente von $S$ mit Wahrscheinlichkeit $\geq\tau^4$, und lokale Kommutativität schließt widersprüchliche Zuordnungen aus.
+* Die Entropiezählung ersetzt die Suche nach $n$ unabhängigen Generatoren durch $O(\log n)$ Samples; die verbleibenden $O(\log(1/\tau))$ Qubits werden per Brute Force über $3^{O(\log(1/\tau))}$ Möglichkeiten ergänzt.
+* Ein Parameter $b\in(1/2, 1)$ steuert den Tausch zwischen Samplezahl und Restqubits; die Autoren empfehlen numerische Optimierung.
 
 ### Bedeutung und Anwendungen
 
-Die Arbeit zeigt, dass die physikalische Eigenschaft der **endlichen Korrelationslänge** in flachen Schaltkreisen ausreicht, um globale Quantenstrukturen aus rein lokalen Observablen effizient zu rekonstruieren. Wichtige Anwendungsbereiche sind:
+* Erstes Paper, das agnostische Tomographie als eigenständiges Modell formuliert und einen effizienten Fall angibt; die Folgearbeiten (Chen, Gong, Ye, Zhang 2024 für alle Stabilizerzustände und diskrete Produktzustände; Bakshi et al. für Produktzustände gemischter Form; agnostische Prozess-Tomographie) bauen darauf auf.
+* Anwendungsbild: eine Ansatzklasse für einen komplizierten Laborzustand finden und dann mit dem Ansatz weiterrechnen; auch als Unterroutine für Stabilizer-Zerlegungen magischer Zustände.
+* Briët und Castro-Silva haben die Ideen auf ein quadratisches Goldreich–Levin und den Gowers-Inverse-Satz übertragen: Die Brücke zur klassischen Fourier-Analyse, die dieses Dokument bei Montanaro–Osborne zieht, läuft auch rückwärts.
 
-* **Charakterisierung von Quantenhardware:** Effizientes Benchmarking und die Verifizierung von Quantencomputern (Schatten-Tomographie).
-* **Schaltkreiskompression (Circuit Compression):** Die Reduzierung tieferer, verrauschter Schaltkreise in äquivalente, flachere Strukturen.
-* **Lernen von Quantendynamiken:** Das Verstehen komplexer Quanten-Mehrkörpersysteme durch klassische Algorithmen.
+### Bezug zum eigenen Projekt
 
-Das Paper ist im **ACM Digital Library Eintrag zu STOC 2024** sowie als Vorabversion direkt auf [arXiv:2401.10095](https://arxiv.org/abs/2401.10095?utm_source=gemini) einsehbar.
+* Das Modell ist die richtige Sprache für Versprechensregime 3: Wenn der Zustand nicht exakt in der Klasse liegt, ist "die beste Approximation bis auf $\epsilon$" die einzige Garantie, die noch beweisbar ist. Für die Displacement-Spektren heißt das: Der Top-$k$-Träger ist agnostisch zu definieren, relativ zum besten $k$-sparsamen Spektrum.
+* Bell-Difference-Sampling auf $\rho^{\otimes 4}$ ist die Vier-Kopien-Verwandte des Zwei-Kopien-Protokolls auf $\rho\otimes\rho^*$: Beide ziehen aus der charakteristischen Verteilung, das eine aus $p_\psi * p_\psi$ (Faltung), das andere aus $\vert\mathrm{Tr}(\rho D)\vert^2$ selbst. Die Faltung ist der Preis dafür, ohne konjugierte Kopie auszukommen.
+* Der Faktor $\tau^4$ im Trägerlemma ist ein Vorbild dafür, wie eine Fidelity-Schwelle in eine Samplezahl übersetzt wird, wenn Phase 1 nur Beträge liefert.
 
-### Fragen zum Tieferbohren:
+### Grenzen und offene Fragen
 
-* Den genauen **Laufzeit- und Sample-Komplexitäten** (Abhängigkeiten von $n$ und der Fehlerschranke $\varepsilon$)
-* Einer genaueren Erklärung der mathematischen Funktionsweise des **Circuit Sewing**
-* Einem Vergleich zu nachfolgenden Arbeiten, die das Prinzip auf komplexere Gates (wie $\text{QAC}^0$) erweitert haben
+* Laufzeit quasipolynomiell für $\tau = o(1)$; Chen, Gong, Ye, Zhang erreichen $n^2(1/\tau)^{O(\log 1/\tau)}/\epsilon^2$ mit Ein- und Zweikopien-Messungen und geben für diskrete Produktzustände ein Verfahren mit Einzelkopien.
+* Nur Produktzustände; die Verallgemeinerung auf beliebige Stabilizerzustände braucht Bootstrapping.
+* $\tau$ muss bekannt oder per Suche geschätzt werden.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die Entropiezählung aus, wenn die Samples nicht aus $\{0,1\}^n$, sondern aus $\mathbb{Z}_d^{2n}$ kommen, und was ersetzt "nichttriviales Pauli auf Qubit $j$" bei Qudits?
+* Lässt sich die Schranke $p\geq\tau^4$ mit konjugierten Kopien $\rho\otimes\rho^*$ auf $\tau^2$ verbessern, weil die Faltung wegfällt?
+* Welche Klassen sind "stabilizer-artig" genug für den Trick, dass ein einziger Generator die Gruppe festlegt?
+
+Paper: [arXiv:2404.03813](https://arxiv.org/abs/2404.03813)
 
 ---
 
-## Quantum algorithmic measurement (Nat. Commun. 13:887, 2022)
+## Stabilizer bootstrapping: a recipe for efficient agnostic tomography and magic estimation (arXiv:2408.06967)
+
+Die Arbeit von **Sitan Chen, Weiyuan Gong, Qi Ye und Zhihan Zhang** (Harvard, Tsinghua; 2024) gibt einen allgemeinen Rahmen für agnostische Tomographie, das *Stabilizer Bootstrapping*, und löst damit die offene Frage nach einem polynomiellen agnostischen Lerner für Stabilizerzustände bei beliebiger bester Fidelity $\tau$ bis hinunter zu $\tau\geq\exp(-c\sqrt{\log n})$. Nebenprodukte sind der erste effiziente Schätzer der Stabilizer-Fidelity, eine Aussage über die Optimierungslandschaft und agnostische Lerner für Zustände hoher Stabilizerdimension und diskrete Produktzustände.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse ohne Versprechen; zusätzlich Estimating einer einzelnen Größe (Stabilizer-Fidelity, Theorem 1.3) als Korollar. Die Liste-Dekodierung (alle approximativen lokalen Maximierer) hat Searching-Charakter.
+* **Objekt:** gemischter $n$-Qubit-Zustand. **Zugriff:** Sample; Ein- und Zweikopien-Messungen, Bell-Difference-Sampling für die Stabilizerfälle, nur Einzelkopien für diskrete Produktzustände.
+* **Status:** 🟢 🟢 🟢 für $\tau\geq\exp(-c\sqrt{\log n})$: $n(1/\tau)^{O(\log 1/\tau)} + O(\log^2(1/\tau)/\epsilon^2)$ Kopien, Zeit $O(n^2(n + 1/\epsilon^2))(1/\tau)^{O(\log 1/\tau)}$. Untere Schranke $\Omega(n/\tau)$ Kopien für $\epsilon < \tau/3$.
+* **Versprechen:** keines über $\rho$; die Klasse liefert die Struktur.
+
+### Das Problem
+
+Montanaro lernt exakte Stabilizerzustände, Grewal et al. agnostisch nur für $\tau > \cos^2(\pi/8)$ in polynomieller Zeit. Für $\tau = o_n(1)$ war kein polynomieller agnostischer Algorithmus für irgendeine interessante Klasse bekannt. Zugleich fehlte ein effizienter Schätzer für die Stabilizer-Fidelity $\max_{S}\langle S\vert\rho\vert S\rangle$, das natürliche Magic-Maß.
+
+### Kernresultate
+
+* **Theorem 1.2 (Stabilizerzustände).** Für $1\geq\tau\geq\epsilon\geq 0$ und $\max_{\phi'\in\mathcal{C}}\langle\phi'\vert\rho\vert\phi'\rangle\geq\tau$ liefert der Algorithmus einen Stabilizerzustand mit $\langle\phi\vert\rho\vert\phi\rangle\geq\tau-\epsilon$; Kosten wie oben, passend zu Montanaro im realisierbaren Fall $\tau = 1$.
+* **Theorem 1.3 (Stabilizer-Fidelity).** Schätzung bis auf $\epsilon$ in Zeit $n^3(1/\epsilon)^{O(\log 1/\epsilon)}$ mit $n(1/\epsilon)^{O(\log 1/\epsilon)}$ Kopien.
+* **Korollar 6.2 (Liste).** Eine Liste der Länge $(1/\tau)^{O(\log 1/\tau)}$ enthält alle Stabilizerzustände mit Fidelity $\geq\tau$, die $(1/2+\xi)$-approximative lokale Maximierer sind; es gibt also nur $(\xi\tau)^{-O(\log 1/\tau)}$ davon, für beliebige gemischte $\rho$.
+* **Theorem 1.5 (Stabilizerdimension $\geq n-t$).** Kopien $n(2^t/\tau)^{O(\log 1/\epsilon)}$, Zeit $n^3(2^t/\tau)^{O(\log 1/\epsilon)}$; nahe $\tau = 1$ wieder $\mathrm{poly}(n, 2^t, 1/\epsilon)$. Erster agnostischer Lerner für dotierte Zustände, allerdings improper.
+* **Theorem 1.6 (diskrete Produktzustände).** Für $\mathcal{K}^{\otimes n}$ mit paarweise $\vert\langle\phi_1\vert\phi_2\rangle\vert^2\leq 1-\mu$: $(n\vert\mathcal{K}\vert)^{O((1+\log 1/\tau)/\mu)}/\epsilon^2$ mit Einzelkopien; **Theorem 1.7** verbessert für Stabilizer-Produktzustände auf $n^2(1/\tau)^{O(\log 1/\tau)}/\epsilon^2$.
+* **Theorem 1.8 (untere Schranke).** $\Omega(n/\tau)$ Kopien für agnostische Tomographie von Stabilizerzuständen, $\Omega(1/\tau)$ schon für reine $\rho$, $\Omega(1/\epsilon)$ für die Fidelity-Schätzung.
+
+### Methodischer Ansatz
+
+* Das Rezept: (1) eine Familie kommutierender Projektoren $\Pi$ mit $\mathrm{Tr}(\Pi\rho)\geq\Omega(1)$ sammeln ("hohe Korrelation"); (2) ist sie vollständig, in der gemeinsamen Eigenbasis messen, dann fällt $\vert\phi\rangle$ mit Wahrscheinlichkeit $\tau$; (3) sonst einen Projektor niedriger Korrelation ziehen, der $\vert\phi\rangle$ stabilisiert; (4) alle weiteren Kopien mit $\Pi_{\mathrm{low}}$ nachselektieren. Die Fidelity des nachselektierten Zustands wächst um einen konstanten Faktor, $\langle\phi\vert\rho'\vert\phi\rangle\geq c\tau$ mit $c > 1$, also endet die Rekursion nach $O(\log 1/\tau)$ Runden.
+* Der Preis ist die Erfolgswahrscheinlichkeit von Schritt (3) in jeder Runde; die Laufzeit ist von der Wiederholung dominiert, deshalb $(1/\tau)^{O(\log 1/\tau)}$.
+* Für Stabilizerzustände kommen die Projektoren aus Bell-Difference-Sampling; für Produktzustände aus lokalen Messungen.
+
+### Bedeutung und Anwendungen
+
+* Erster allgemeiner Rahmen für agnostische Tomographie mit Anwendungen auf vier Klassen; die Magic-Schätzung ist praktisch relevant für die Charakterisierung von Geräten.
+* Die Landschaftsaussage (nur quasipolynomiell viele approximative lokale Maximierer) ist ein algorithmischer Beweis eines Strukturresultats über die Stabilizer-Polytope.
+* Verbindung zu Kryptographie: Ein polynomieller Algorithmus für $\tau = 1/\mathrm{poly}(n)$ würde für Subset-Zustände das Finden eines $O(\log n)$-dimensionalen affinen Raums mit maximalem Schnitt lösen, verwandt mit LPN und LSN.
+
+### Bezug zum eigenen Projekt
+
+* Bootstrapping ist ein adaptives Zweikopien-Protokoll mit Nachselektion: Schritt (4) ist genau der "Probe"-Mechanismus von Phase 2, nur dass die Sonde ein Projektor auf den unbekannten Zustand ist und nicht ein separat präparierter Zustand. Die Fidelity-Verstärkung um $c > 1$ pro Runde ist ein Argument, das sich auf $\rho\otimes\rho^*$ übertragen lassen sollte.
+* Die Liste-Dekodierung ist die Top-$k$-Lokalisierung in Klassensprache: nicht ein Element, sondern alle Elemente über einer Schwelle, und die Schranke an ihre Zahl ersetzt die Sparsity-Annahme.
+* Die untere Schranke $\Omega(n/\tau)$ zeigt, dass unterhalb $\tau = 1/\mathrm{poly}(n)$ selbst die Kopienzahl bricht; für die Instanzenleiter markiert das die Stufe, ab der Regime 3 auch informationstheoretisch teuer wird.
+
+### Grenzen und offene Fragen
+
+* Ob $(1/\tau)^{O(\log 1/\tau)}$ nötig ist, bleibt offen; für $\tau = 1/\mathrm{poly}(n)$ gibt es keinen polynomiellen Algorithmus und keine Härtereduktion.
+* Der Lerner für Stabilizerdimension ist improper: Er gibt nicht notwendig einen $t$-dotierten Zustand aus.
+* Bell-Difference-Sampling braucht Zweikopien-Messungen; ob Computational-Difference-Sampling (Einzelkopien) agnostisch funktioniert, ist offen.
+* Zustände beschränkten Stabilizer-Rangs sind auch realisierbar ungelöst.
+
+### Fragen zum Tieferbohren
+
+* Wie genau wird in Schritt (3) die Unvollständigkeit der Projektorfamilie in eine nichtvernachlässigbare Wahrscheinlichkeit übersetzt, einen Stabilisator von $\vert\phi\rangle$ zu ziehen?
+* Welche Rolle spielt die Gowers-Norm oder die Uniformität von $p_\psi$ in der Analyse, und ist das die Brücke zu Arunachalam–Dutt?
+* Ist die Nachselektion auf $\rho\otimes\rho^*$ mit Displacement-Projektoren $\tfrac12(I + D)$ formulierbar, wenn $D$ nicht hermitesch ist?
+
+Paper: [arXiv:2408.06967](https://arxiv.org/abs/2408.06967)
+
+---
+
+## Phase transition in stabilizer entropy and efficient purity estimation (arXiv:2302.07895)
+
+Die Arbeit von **Lorenzo Leone, Salvatore F. E. Oliviero, Gianluca Esposito und Alioscia Hamma** (UMass Boston, Napoli; Phys. Rev. A 2024) zeigt, dass die Stabilizer-Entropie eines $t$-dotierten Clifford-Zustands durch eine Clifford-Abbildung in einem Teilsystem lokalisiert und dort gelöscht werden kann, solange die Dichte $t = t/n$ der nicht-Clifford-Gatter unter der Dichte $f = n_F/n$ der Hilfsqubits liegt; bei $t/f = 1$ liegt ein Phasenübergang mit kritischem Index eins. In der lokalisierten Phase erlaubt die "Reinigung" die Schätzung exponentiell kleiner Subsystem-Puritäten mit polynomiellen Ressourcen.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Estimating einer einzelnen Größe ($\mathrm{Pur}(\psi_E)$), aber über einen Identifying-Schritt: Zuerst wird die Clifford-Struktur des Schaltkreises gelernt (der Diagonalisierer $D$ mit $C_t = D^\dagger c_tDV$), dann rechnet der Stabilizerformalismus. Die Zeile steht bei Identifying, weil der Aufwand in der Klassenidentifikation sitzt.
+* **Objekt:** Zustand $\psi_t = C_t\vert 0\rangle\langle 0\vert C_t^\dagger$ aus einem $t$-dotierten Clifford-Schaltkreis. **Zugriff:** Query an $C_t$ für die Clifford Completion (Leone, Oliviero, Hamma 2022), $\mathrm{poly}(n)\,e^{O(t)}$ Aufrufe; danach $O(n^3)$ Stabilizer-Messungen.
+* **Status:** 🟢 🟢 🟢 für $t = O(\log^2 n)$ in der lokalisierten Phase; die Purität wird bis auf einen Faktor $d_Y^2 = 4^t$ bestimmt, also $\mathrm{Pur}(\psi_E) = 2^{-\alpha n + O(\log^2 n)}$.
+* **Versprechen:** $t$-dotiert mit $t/f\leq 1$; Bipartition nicht exakt halb ($f < 1/2$).
+
+### Das Problem
+
+Der SWAP-Test schätzt eine Purität bis auf $\epsilon$ mit $O(\epsilon^{-2})$ Kopien; bei Volumengesetz-Zuständen ist $\mathrm{Pur}(\psi_E) = \Theta(e^{-\beta n})$, und der Test braucht exponentiell viele Kopien. Zugleich verteilt ein Clifford-Schaltkreis die Stabilizer-Entropie (Nichtstabilizerheit) typischerweise vollständig in das größere Teilsystem $E$ (Proposition 1: $\mathbb{E}_C[M_{\mathrm{lin}}(\psi_E^C)] = M_{\mathrm{lin}}(\psi) + O(d_F/d_E)$, $\mathbb{E}_C[M_{\mathrm{lin}}(\psi_F^C)] = O(d_F/d_E)$). Kann man $E$ von dieser Komplexität reinigen?
+
+### Kernresultate
+
+* **Proposition 2 (Reinigung).** Für $n_Y\leq n_F$ gibt es eine Clifford-Abbildung $\mathcal{E}(\cdot) = \mathrm{Tr}_Y W(\cdot)W^\dagger$ mit $W = T_{\pi_Y}D$, die die $t$ nicht-Clifford-Gatter in ein Teilsystem $Y\subset F$ mit $n_Y = t$ verschiebt und durch Ausspuren löscht: $M_E[\mathcal{E}(\psi_t)] = 0$.
+* **Phasenübergang (Abschnitt III).** Gemittelt über Abbildungen und Stabilizer-Inputs gilt $\mathbb{E}[M_E(\mathcal{E}\circ\mathcal{C}_t[\omega])] = 0$ für $t/f\leq 1$ und $\geq g(n, t, f)$ für $t/f\geq 1$, mit $g_\infty\simeq n(1-2f)$ und $g/g_\infty\simeq\tfrac{f}{1-f}(t/f-1)$ nahe der Kritikalität.
+* **Propositionen 3 und 4 (Puritätsschranken).** Der re-verschränkte Stabilizerzustand $\rho = W^\dagger(\mathcal{E}(\psi_t)\otimes d_Y^{-1}I_Y)W$ erfüllt $\mathrm{Pur}(\rho_X)\leq\mathrm{Pur}(\psi_E)\leq d_Y^2\mathrm{Pur}(\rho_X)$.
+* **Protokoll.** $t = O(\log^2 n)$: Diagonalisierer lernen ($\mathrm{poly}(n)$), $\rho$ präparieren, Stabilizergruppe von $\rho$ mit $O(n^3)$ Messungen lernen, Purität exakt aus der Gruppe berechnen; dann entweder SWAP-Test mit bekannter Schusszahl (Fall $\mathrm{Pur} = \Omega(1/\mathrm{poly})$) oder direkte Schranke $2^{-\alpha n + O(\log^2 n)}$ (exponentiell kleiner Fall).
+
+### Methodischer Ansatz
+
+* Lemma 1 (Clifford-Mittelung): Über die Clifford-Bahn ist der Mittelwert des Verhältnisses $\mathrm{SP}/\mathrm{Pur}$ gleich dem Verhältnis der Mittelwerte bis auf relativen Fehler $O(2^{-n(1-2f)/2})$; deshalb sind die Aussagen für typische Schaltkreise scharf.
+* Die Reinigung benutzt Permutationen $T_\pi$ (selbst Clifford), um das $t$-Qubit-Stück $c_t$ in ein beliebiges Teilsystem $Y$ zu verschieben.
+* Die Analogie: Spreizen (Clifford-Tiefe) gegen Lokalisieren (Dichte $f$), wie ein Isolator–Supraflüssigkeits-Übergang.
+
+### Bedeutung und Anwendungen
+
+* Eine exponentiell kleine Purität mit polynomiellem Aufwand zu bestimmen, ist ein exponentieller Vorsprung gegenüber SWAP-Test und Klassischen Schatten für diese Klasse.
+* Die Stabilizer-Entropie wird als bewegliche Ressource verstanden; das ist die operationelle Seite der Magic-Kompression, die Grewal et al. und Hangleiter–Gullans zum Lernen benutzen.
+
+### Bezug zum eigenen Projekt
+
+* Der Weg "erst die Clifford-Hülle identifizieren, dann im Stabilizerformalismus rechnen" ist die Identifying-Variante des Zwei-Phasen-Schemas: Phase 1 findet die Struktur, Phase 2 misst innerhalb der Struktur exakt. Der Faktor $d_Y^2 = 4^t$ ist der Preis, den die unbekannte Magic kostet; er entspricht dem $2^t$-Faktor in der Estimating-Tabelle.
+* Purity ist $\sum_D\vert\mathrm{Tr}(\rho D)\vert^2/d$, also die $\ell_2$-Masse des Displacement-Spektrums; Bell-Sampling auf $\rho\otimes\rho^*$ zieht direkt aus dieser Verteilung, und die Frage nach exponentiell kleiner Purität ist die Frage nach einem sehr flachen Spektrum ohne schwere Adressen. Das Paper sagt, für dotierte Clifford-Zustände lässt sich die Flachheit exakt berechnen statt sampeln.
+* Die Bipartitionsbedingung $f < 1/2$ und die Phasengrenze $t/f = 1$ sind eine Instanzenleiter für Verschränkungsgrößen.
+
+### Grenzen und offene Fragen
+
+* Braucht Query-Zugriff auf den Schaltkreis $C_t$, nicht nur Kopien des Zustands; die Clifford Completion kostet $e^{O(t)}$.
+* Nur bis $t = O(\log^2 n)$ und in der lokalisierten Phase; für $t/f > 1$ bleibt die Entropie in $E$.
+* Die Puritätsschranke hat eine Unschärfe $4^t$; im polynomiellen Fall wird der SWAP-Test trotzdem gebraucht.
+* Übertragung auf Hamiltonsche Dynamik, Fehlerkorrektur und holographische Entropie sind als offene Fragen genannt.
+
+### Fragen zum Tieferbohren
+
+* Wie funktioniert die Clifford Completion konkret, und ist sie ein Bell-Sampling-Algorithmus auf dem Choi-Zustand von $C_t$?
+* Warum ist der kritische Index eins, und ist $g(n, t, f)$ eine Aussage über Erwartungswerte oder mit Konzentration?
+* Lässt sich die Reinigung mit Bell-Sampling auf $\rho\otimes\rho^*$ verifizieren, indem man prüft, ob das Spektrum des gereinigten Zustands auf einer Untergruppe konzentriert ist?
+
+Paper: [arXiv:2302.07895](https://arxiv.org/abs/2302.07895)
+
+---
+
+## Efficient tomography of non-interacting fermion states (arXiv:2102.10458)
+
+Die Arbeit von **Scott Aaronson und Sabee Grewal** (UT Austin; TQC 2023) gibt einen Tomographie-Algorithmus für Zustände von $n$ nicht wechselwirkenden Fermionen auf $m$ Moden: $O(m^3n^2\log(1/\delta)/\epsilon^4)$ Kopien, $O(m^4n^2\log(1/\delta)/\epsilon^4)$ klassische Zeit, $O(m)$ Messbasen, und die Ausgabe ist ein freier Fermionzustand mit Totalvariationsabstand $\leq\epsilon$ in der Besetzungsbasis. Der Algorithmus schätzt die Kernmatrix $K = AA^\dagger$ (Ein-Teilchen-Dichtematrix) aus Beamsplitter-Messungen und rundet sie auf eine Projektion.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse mit Versprechen. Die Klasse der Slater-Determinanten ist durch $O(mn)$ reelle Parameter beschrieben; zurück kommt eine spaltenorthonormale Matrix $\hat A$.
+* **Objekt:** reiner Zustand $\vert\Psi\rangle = \sum_S\det(A_S)\vert S\rangle$ über $\Lambda_{m,n}$. **Zugriff:** Sample; Messungen in der Besetzungsbasis nach Beamsplittern auf Modenpaaren $(i, j)$, also $O(m)$ Einstellungen mit je $O(\log(1/\delta)/\gamma^2)$ Schüssen.
+* **Status:** 🟢 🟢 🟢. Kopien $O(m^3n^2/\epsilon^4)$, Zeit $O(m^4n^2/\epsilon^4)$, Speicher $O(m^2)$ für $K$.
+* **Versprechen:** Teilchenzahlerhaltung und Gaußianität ($t = 0$); Mele–Herasymenko heben beides auf.
+
+### Das Problem
+
+Freie Fermionen sind klassisch simulierbar und durch die Kernmatrix vollständig bestimmt: Die Wahrscheinlichkeit einer Konfiguration $S$ ist der Hauptminor $\det(K_S)$, ein determinantaler Punktprozess. Kann man den Zustand aus polynomiell vielen Kopien und einfachen Messungen lernen, mit Garantie im Abstand?
+
+### Kernresultate
+
+* **Theorem 1.1 (Hauptresultat).** Kopien $O(m^3n^2\log(1/\delta)/\epsilon^4)$, Zeit $O(m^4n^2\log(1/\delta)/\epsilon^4)$, $O(m)$ Messbasen; Ausgabe $\vert\hat\Psi\rangle$ mit Totalvariationsabstand $\leq\epsilon$ mit Wahrscheinlichkeit $\geq 1-\delta$.
+* **Theorem 1.2 / 4.3 (Störungsschranke).** Sind die Kernmatrizen zweier Zustände nahe, so sind die Zustände nahe; der Beweis geht über Weyls Ungleichung (Theorem 4.4) für die Eigenwerte von $\hat K$.
+* **Abschnitt 5.** Anpassung auf Spurabstand statt Totalvariation, also konventionelle Tomographie.
+
+### Methodischer Ansatz
+
+* Diagonale $k_{ii}$ (Besetzungswahrscheinlichkeiten) aus der Standardbasis; $\mathrm{Re}\,k_{ij}$ und $\mathrm{Im}\,k_{ij}$ aus zwei Beamsplittern $\tfrac{1}{\sqrt2}\binom{1\ \ 1}{1\ -1}$ und $\tfrac{1}{\sqrt2}\binom{1\ \ i}{1\ -i}$ auf $(i, j)$, die $k_{ii}$ auf $\tfrac12(k_{ii} + k_{jj} + 2\mathrm{Re}\,k_{ij})$ abbilden. Alle Paare gleichzeitig in $O(m)$ Runden ("Round-Robin").
+* Eigenzerlegung $\hat K = Q\Lambda Q^\dagger$, die $n$ größten Eigenvektoren bilden $\hat A$; Weyl kontrolliert, wie Fehler in $\hat K$ in $\hat A$ eingehen.
+* Die Verbindung zu determinantalen Punktprozessen liefert die Interpretation der Messstatistik.
+
+### Bedeutung und Anwendungen
+
+* Freie Fermionen sind die Gauß-Klasse der Fermionen; das Paper ist der Referenzpunkt für Mele–Herasymenko ($t$ nicht-gaußsche Gatter, keine Teilchenzahlerhaltung) und für Matchgate-Schatten (Wan et al.).
+* Chemie- und Festkörperkontext: Hartree–Fock-Zustände sind genau diese Klasse.
+
+### Bezug zum eigenen Projekt
+
+* Der Algorithmus ist ein Estimating-Protokoll ($O(m^2)$ Observablen der Ein-Teilchen-Dichtematrix), gefolgt von einer Rundung auf die Klasse; das ist das "Identifying über Estimating"-Muster, das in Phase 1 mit dem Displacement-Spektrum und in Phase 2 mit der Rundung auf $k$-sparsam entsteht.
+* Die $O(m)$ Messbasen entsprechen einer Zerlegung der Observablen in kommutierende Familien; der Round-Robin über Modenpaare ist die fermionische Version der Kommutierungsklassen von Pauli-Strings.
+* Die $\epsilon^{-4}$-Rate kommt aus der Rundung (Weyl); wo Bell-Sampling die Beträge direkt liefert, ist das der Vergleichswert für die Kosten einer nachgeschalteten Klassenprojektion.
+
+### Grenzen und offene Fragen
+
+* $\epsilon^{-4}$ statt $\epsilon^{-2}$; Mele et al. erreichen für Gauß-Zustände mit Kovarianzschätzung dieselbe Ordnung, und die optimale Rate ist offen.
+* Nur reine, teilchenzahlerhaltende Zustände; gemischte Gauß-Zustände und Nicht-Gaußianität brauchen die Folgearbeiten.
+* Keine untere Schranke im Paper.
+
+### Fragen zum Tieferbohren
+
+* Ist die Störungsanalyse über Weyl scharf, oder gibt die Wedin-Schranke für Eigenräume eine bessere $\epsilon$-Abhängigkeit?
+* Was ist das Displacement-Analogon der Kernmatrix, also welche $O(m^2)$ Erwartungswerte bestimmen einen Gauß-Zustand im Qudit-Phasenraum?
+* Wie verhält sich die Beamsplitter-Strategie zu Matchgate-Schatten, die dieselben Größen mit Zufallsbasen schätzen?
+
+Paper: [arXiv:2102.10458](https://arxiv.org/abs/2102.10458)
+
+---
+
+## Efficient learning of quantum states prepared with few fermionic non-Gaussian gates (arXiv:2402.18665)
+
+Die Arbeit von **Antonio Anna Mele und Yaroslav Herasymenko** (FU Berlin; QuSoft/CWI, QuTech; PRX Quantum 2025) überträgt die Magic-Kompression von Clifford+T auf Fermionen: Jeder Zustand aus beliebig vielen Gauß-Gattern und höchstens $t$ lokalen nicht-gaußschen Gattern lässt sich durch eine Gauß-Unitary auf die Form $G(\vert\phi\rangle\otimes\vert 0^{n-\kappa t}\rangle)$ bringen. Daraus folgt ein Lernalgorithmus mit Einzelkopien-Messungen und Kosten $\mathrm{poly}(n, 2^t)$, eine Härteschranke $\exp(\Omega(t))$ unter RingLWE ab $t = \tilde\omega(\log n)$, ein Test auf Gauß-Dimension und eine verbesserte Schaltkreiskomplexität $O(n^2 + t^3)$.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse mit Versprechen ($t$-komprimierbar, äquivalent: Gauß-Nullity $\leq t$); dazu ein Ein-Bit-Test (nah oder fern von der Klasse) und eine Härteaussage, die die Klasse bei $t = \tilde\omega(\log n)$ in die 🔴-Zeilen schiebt.
+* **Objekt:** reiner Zustand auf $n$ Fermionmoden oder, per Jordan–Wigner, $n$ Qubits aus Matchgates mit $t$ SWAP-Gattern. **Zugriff:** Sample, ausschließlich Einzelkopien-Messungen; Pauli-Basis, Gauß-Clifford-Messungen oder fermionische Schatten für die Korrelationsmatrix.
+* **Status:** 🟢 🟢 🟢 bis $t = O(\log n)$: $O(n^5)$ für die Korrelationsmatrix plus $\exp(t)$ für die $t$-Qubit-Tomographie. Zeit exponentiell in $t$ notwendig (Theorem 5).
+* **Versprechen:** $(t, \kappa)$-dotiert oder allgemeiner $\kappa t$-komprimierbar; auch approximativ komprimierbare und gemischte Zustände.
+
+### Das Problem
+
+Freie Fermionen sind lernbar (Aaronson–Grewal), $t$-dotierte Stabilizerzustände auch; Gauß-Schaltkreise mit wenigen magischen Gattern sind seit kurzem klassisch simulierbar. Sind sie lernbar, und wo liegt die Grenze in $t$?
+
+### Kernresultate
+
+* **Theorem 3 (Kompression).** Jeder $(t, \kappa)$-dotierte Gauß-Zustand ist $\kappa t$-komprimierbar: $\vert\psi\rangle = G(\vert\phi\rangle\otimes\vert 0^{n-\kappa t}\rangle)$. Für Unitaries $U_t = G_A(u_t\otimes I)G_B$ mit $u_t$ auf $\lceil\kappa t/2\rceil$ Qubits; teilchenzahlerhaltend bleibt erhalten. Konstruktiver Beweis über die Existenz einer symplektisch-orthogonalen $O_{\mathrm{aux}}$.
+* **Theorem 4 (Lernen).** Algorithmus 1 lernt jeden $t$-komprimierbaren Zustand mit $O(\mathrm{poly}(n, 2^t))$ Einzelkopien-Messungen und Zeit bis auf Spurabstand $\epsilon$: Korrelationsmatrix mit $\lceil 256n^5\epsilon^{-4}\log(12n^2/\delta)\rceil$ Messungen, Normalform $\hat C = \hat O\hat\Lambda\hat O^T$, $\hat G^\dagger$ anwenden, letzte $n-t$ Qubits messen, auf $0^{n-t}$ nachselektieren, $t$-Qubit-Tomographie.
+* **Theorem 5 (Härte).** Kann ein Quantencomputer RingLWE nicht in subexponentieller Zeit lösen, dann gibt es keinen zeiteffizienten Lerner für $\tilde\omega(\log n)$-dotierte Gauß-Zustände; Beweis durch Einbettung pseudozufälliger Zustände über eine Qubit-zu-Fermion-Abbildung mit konstantem Overhead.
+* **Gl. (5) (Test).** $\tfrac12(1-\lambda_{t+1})\leq\min_{\phi\in\mathcal{G}_t}d_{\mathrm{tr}}(\psi, \phi)\leq\sqrt{\sum_{k>t}(1-\lambda_k)/2}$ mit den Normal-Eigenwerten $\lambda_k$ der Korrelationsmatrix; der Abstand zur Klasse ist aus der Korrelationsmatrix effizient schätzbar.
+* **Proposition 30.** Schaltkreiskomplexität $O(n^2 + t^3)$ statt $O(n^2t)$; Grundzustände von Störstellenmodellen sind approximativ $O(\log n)$-komprimierbar.
+
+### Methodischer Ansatz
+
+* Gauß-Dimension = Zahl der Normal-Eigenwerte gleich eins; Gauß-Nullity $\leq t$ genau dann, wenn $t$-komprimierbar. Die Korrelationsmatrix $C(\rho)_{jk} = -\tfrac{i}{2}\mathrm{Tr}(\gamma_j\gamma_k\rho)$ ist die einzige globale Größe, die geschätzt werden muss; alles Weitere ist lokal.
+* Quantum Union Bound und Chernoff für die Nachselektion; die $t$-Abhängigkeit ist optimal, weil ein beliebiger $t$-Qubit-Zustand enthalten ist.
+* Für die Härte werden PRS-Konstruktionen mit lokalen nicht-gaußschen Gattern realisiert, mit $O(1)$ Overhead pro Qubit.
+
+### Bedeutung und Anwendungen
+
+* Dasselbe Kompressionstheorem gilt für Stabilizer, Fermionen und (Mele et al. 2024) Bosonen; die drei Theorien haben eine gemeinsame Struktur, obwohl ihre Mathematik verschieden aussieht.
+* Physikalische Zielzustände: Störstellenmodelle, Zeitentwicklung unter Störstellen-Hamiltonians bis konstante Zeiten; experimentell nur einfache Fermion-Hamiltonians nötig, also für Analogsimulatoren geeignet.
+* Klassische Schatten lernen $t$-dotierte Zustände mit $\mathrm{poly}(n, t)$ Kopien, aber exponentieller Zeit in $n$; hier polynomiell in $n$, exponentiell in $t$: Die Sample–Zeit-Schere ist explizit.
+
+### Bezug zum eigenen Projekt
+
+* Die Logik "eine globale, aber quadratisch große Größe schätzen, dann ein kleines Restproblem lösen" ist die Struktur von Phase 1 (Displacement-Beträge) und Phase 2 (Vorzeichen auf dem Träger). Die Korrelationsmatrix ist der Gauß-Fall des Displacement-Spektrums: Für Gauß-Zustände ist $\vert\mathrm{Tr}(\rho D)\vert^2$ eine Gauß-Funktion der Adresse, vollständig durch die Kovarianz bestimmt.
+* Der Test auf Gauß-Dimension über die Eigenwerte $\lambda_k$ ist ein Beispiel für einen Klassentest, der aus derselben Messung wie das Lernen folgt; das ist die Rolle, die der Purity-Check aus Bell-Sampling in der eigenen Pipeline hat.
+* Die Härte bei $t = \tilde\omega(\log n)$ ist die fermionische Version der LWE-Wand; sie bestätigt, dass die Instanzenleiter in $t$ ab logarithmischer Höhe abbricht.
+
+### Grenzen und offene Fragen
+
+* $O(n^5)$ für die Korrelationsmatrix ist vermutlich verbesserbar; $\epsilon^{-4}$ wie bei Aaronson–Grewal.
+* Reine, exakt komprimierbare Zustände im Hauptteil; gemischte und approximative Fälle in der Ergänzung.
+* Die Lücke zwischen $O(\log n)$ (effizient) und $\tilde\omega(\log n)$ (hart) ist bis auf polyloglog-Faktoren geschlossen.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die symplektisch-orthogonale $O_{\mathrm{aux}}$ konkret aus, und ist die Konstruktion numerisch stabil?
+* Was ist der Displacement-Übersetzer des Kompressionstheorems für Qudits: Gibt es eine "Clifford-Kompression" von $t$ nicht-Clifford-Gattern auf $O(t)$ Qudits mit derselben Beweisidee?
+* Wie schnell verlässt die Zeitentwicklung unter einem Störstellenmodell die approximative Komprimierbarkeit, und ist das eine Aussage über das Wachstum des Displacement-Trägers?
+
+Paper: [arXiv:2402.18665](https://arxiv.org/abs/2402.18665)
+
+---
+
+## Learning quantum states of continuous-variable systems (arXiv:2405.01431)
+
+Die Arbeit von **Francesco A. Mele, Antonio A. Mele, Lennart Bittel, Jens Eisert, Vittorio Giovannetti, Ludovico Lami, Lorenzo Leone und Salvatore F. E. Oliviero** (SNS Pisa, FU Berlin, Amsterdam; 2024) ist die erste systematische Untersuchung der Tomographie kontinuierlicher Variablen mit Spurabstandsgarantie. Drei Resultate: Energiebeschränkte Zustände auf $n$ Moden brauchen mindestens $\epsilon^{-2n}$ Kopien ("extreme Ineffizienz"); Gauß-Zustände sind mit $O(n^7E^4/\epsilon^4)$ Kopien lernbar; $t$-dotierte Gauß-Zustände mit $\mathrm{poly}(n) + O((nE/\epsilon)^{2\kappa t})$, effizient für $\kappa t = O(1)$.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen die Klasse der Gauß- und $t$-dotierten Gauß-Zustände; für allgemeine energiebeschränkte Zustände ist es volle Tomographie mit einer unteren Schranke, also die 🔴-Referenz der CV-Welt.
+* **Objekt:** Zustand auf $n$ bosonischen Moden mit $\mathrm{Tr}[\hat E_n\rho]\leq nE$. **Zugriff:** Sample; Homodyn- und Heterodyndetektion für erste Momente und Kovarianzmatrix; CV-Schatten oder optimale Tomographie für den komprimierten Kern.
+* **Status:** Gauß 🟢 🟢 🟢 mit $O(n^7E^4/\epsilon^4)$ Kopien, $\mathrm{poly}(n)$ Zeit, $O(n^2)$ Parameter; $t$-dotiert 🟢 🟢 🟢 nur für $\kappa t = O(1)$; allgemein 🔴 mit $\Omega(\epsilon^{-2n})$ Kopien, schon für $n = 10$ Moden und $\epsilon = 0.1$ etwa 3000 Jahre bei einer Kopie pro Nanosekunde.
+* **Versprechen:** Energieschranke $E$ (allgemein), zweites Moment (für die Kovarianzschätzung), Gaußianität oder $t$-Dotierung.
+
+### Das Problem
+
+Ohne Energieschranke ist CV-Tomographie sinnlos (unendlich viele Parameter); mit Energieschranke wird sie zu einer endlichen, aber wie teuren Aufgabe? Und für welche physikalischen Klassen wird sie effizient?
+
+### Kernresultate
+
+* **Theorem 1 und 2 (energiebeschränkt).** Reine Zustände: Sample-Komplexität skaliert wie $\epsilon^{-2n}$ mit $E^n$-Faktoren; gemischte: $O(E^{2n}/\epsilon^{3n})$ hinreichend, $\Omega(E^{2n}/\epsilon^{2n})$ notwendig. Mechanismus: Jeder energiebeschränkte Zustand ist bis auf $\epsilon$ ein Zustand der Dimension $D = O(E^n/\epsilon^{2n})$ und des Rangs $r = O(E^n/\epsilon^n)$ (Gl. 3), und endlichdimensionale Tomographie kostet $O(Dr)$. Für $k$-te Momente wird der Exponent $2n/k$.
+* **Theorem 3 (Fehlerfortpflanzung).** Kennt man erstes Moment und Kovarianzmatrix bis auf $\epsilon$, ist der Spurabstand höchstens $O(\sqrt\epsilon)$ und mindestens $O(\epsilon)$; die Schranken (Theoreme 10, 11) sind eigenständige Werkzeuge.
+* **Theorem 4 (Gauß).** $O(n^7E^4/\epsilon^4)$ Kopien, Ausgabe erstes Moment und Kovarianz; robust gegen kleine nicht-gaußsche Störungen (kleine relative Entropie der Nicht-Gaußianität).
+* **Theorem 5 (Kompression).** $U = G(u_{\kappa t}\otimes I)G_{\mathrm{passive}}$, also $\vert\psi\rangle = G(\vert\phi_{\kappa t}\rangle\otimes\vert 0\rangle^{\otimes(n-\kappa t)})$: das bosonische Gegenstück zu Stabilizer- und Fermion-Kompression.
+* **Theorem 6 ($t$-dotiert).** $\mathrm{poly}(n) + O((nE/\epsilon)^{2\kappa t})$ Kopien, gleiche Ordnung in Zeit und Speicher; effizient genau dann, wenn $\kappa t = O(1)$, anders als bei Stabilizern und Fermionen ($t = O(\log n)$), weil der Kern unendlichdimensional ist.
+
+### Methodischer Ansatz
+
+* Momente per Homodyn schätzen, Gauß-Unitary konstruieren, invers anwenden, die Nicht-Gaußianität auf $\kappa t$ Moden komprimieren, dort tomographieren; alle Operationen sind Standard im Quantenoptiklabor.
+* Die untere Schranke kommt über die Reduktion auf endlichdimensionale Tomographie von Zuständen mit Dimension $D$ und Rang $r$; die Energiebeschränkung übersetzt sich in eine effektive Dimension.
+
+### Bedeutung und Anwendungen
+
+* Brücke zwischen Quantenlerntheorie und CV-Information; die Gauß-Klasse ist die Standardressource für Sensorik, Kommunikation und Rechnen mit Licht.
+* Die "extreme Ineffizienz" ist ein neues Phänomen: Die Kosten hängen exponentiell in $n$ von $1/\epsilon$ ab, nicht nur von der Dimension.
+
+### Bezug zum eigenen Projekt
+
+* Displacement-Operatoren auf Qudits sind die diskrete Version der Weyl-Operatoren im CV-Phasenraum; ein Gauß-Zustand hat dort ein gaußsches Displacement-Spektrum, das durch die Kovarianz allein bestimmt ist. Das Paper zeigt, was "Gaußsches Versprechen" auf der Instanzenleiter kostet: $O(n^2)$ Parameter, polynomielle Kopien, kein Träger zu suchen.
+* $\kappa t = O(1)$ als Effizienzgrenze ist strenger als $t = O(\log n)$; das ist ein Hinweis, dass die Höhe der Leiter vom Alphabet abhängt ($d\to\infty$ verkürzt sie).
+* Die Fehlerfortpflanzung $O(\sqrt\epsilon)$ von Momenten zum Spurabstand ist derselbe Wurzelverlust wie bei der Rundung einer geschätzten Kernmatrix; Phase 2 sollte ihn einkalkulieren.
+
+### Grenzen und offene Fragen
+
+* $n^7E^4/\epsilon^4$ ist nicht als optimal nachgewiesen; die obere Schranke für gemischte energiebeschränkte Zustände ($\epsilon^{-3n}$) passt nicht zur unteren ($\epsilon^{-2n}$).
+* Die Lernbarkeit für $\kappa t = \omega(1)$ ist nicht ausgeschlossen, nur der Algorithmus ist ineffizient.
+* Keine Härteschranke wie bei Mele–Herasymenko.
+
+### Fragen zum Tieferbohren
+
+* Wie geht die Energieschranke in die Konstruktion der Kovarianzschätzung ein, und warum reicht sie nicht ohne das zweite Moment?
+* Wie sehen die Schranken der Theoreme 10 und 11 (Spurabstand zweier Gauß-Zustände gegen Norm der Momentdifferenz) explizit aus?
+* Gibt es eine Qudit-Version der "extremen Ineffizienz", wenn $d$ mit $1/\epsilon$ wächst?
+
+Paper: [arXiv:2405.01431](https://arxiv.org/abs/2405.01431)
+
+---
+
+## Efficient quantum state tomography (arXiv:1101.4366)
+
+Die Arbeit von **Marcus Cramer, Martin B. Plenio, Steven T. Flammia, Rolando Somma, David Gross, Stephen D. Bartlett, Olivier Landon-Cardinal, David Poulin und Yi-Kai Liu** (Ulm, Perimeter, Hannover, Sydney, Sherbrooke, Caltech; Nat. Commun. 2010) ist die Gründungsarbeit der Matrixprodukt-Tomographie. Zwei Schemata rekonstruieren einen Zustand auf einer Kette von $N$ Qudits, der gut durch einen MPS beschrieben ist, aus linear vielen lokalen Messeinstellungen mit polynomieller Nachverarbeitung; die Genauigkeit lässt sich ohne Annahmen über den Laborzustand zertifizieren.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse (MPS mit Bonddimension $D$, Rang $R$ der Reduktionen) mit dem Versprechen, dass der Laborzustand nahe daran ist; das Zertifikat macht das Versprechen überprüfbar und damit zur $M = 1$-Aufgabe (Certification).
+* **Objekt:** Zustand auf einer Kette; reine MPS im Hauptteil, Verallgemeinerungen angedeutet. **Zugriff:** Sample; Schema 1 braucht Unitaries auf $\kappa = \lceil\log_dR\rceil + 1$ benachbarten Qudits plus lokale Messungen, Schema 2 nur lokale Messungen auf $k$ Nachbarn.
+* **Status:** 🟢 🟢 🟢. Linear viele Messeinstellungen in $N$, Nachverarbeitung $\mathrm{poly}(N)$, Speicher $O(ND^2)$; Schema 2 zusätzlich ein Fidelity-Zertifikat aus denselben Daten.
+* **Versprechen:** kleine Bonddimension; für Schema 2 die Existenz eines lokalen, gapped Parent-Hamiltonians, der für generische MPS gegeben ist.
+
+### Das Problem
+
+Volle Tomographie skaliert exponentiell in $N$; MPS haben polynomiell viele Parameter. Kann man diese Parameter aus lokalen Daten bestimmen und die Rekonstruktion verifizieren, ohne den Laborzustand als MPS vorauszusetzen?
+
+### Kernresultate
+
+* **Schema 1 (Unitaries).** Tomographie der ersten $\kappa$ Plätze, Unitary $\hat U_1$, die das erste Qudit entkoppelt, Wiederholung entlang der Kette; die Folge $\hat U_1, \ldots, \hat U_{N-\kappa+1}$ ist der Präparationsschaltkreis, aus dem der MPS folgt. Fehler durch Trunkierung auf Rang $R$ und Messungenauigkeit $\epsilon$ akkumulieren höchstens linear, Gesamtfehler $N\epsilon$, direkt aus den Daten ablesbar.
+* **Schema 2 (lokale Messungen).** Aus Schätzungen $\hat\sigma_i$ der Reduktionen auf $k$ Nachbarn wird per Singular Value Thresholding ein MPS $\vert\psi\rangle$ gesucht, dessen Reduktionen zu $\hat\sigma_i$ passen.
+* **Gl. (3)–(4) (Zertifikat).** Ist $\vert\psi\rangle$ eindeutiger Grundzustand (Energie null) eines lokalen $\hat H = \sum_i\hat h_i$ mit Gap $\Delta E$, dann $\langle\psi\vert\hat\varrho\vert\psi\rangle\geq 1 - \tfrac{1}{\Delta E}\sum_i(\mathrm{Tr}[\hat h_i\hat\sigma_i] + \epsilon_i)$; der Hamiltonian ist ein Zeuge, und für generische MPS existiert er und ist aus dem Schätzer konstruierbar.
+* **Beispiel Clusterzustand.** $k = 3$, $R = 4$, $\Delta E = 1$; Schema 1 mit $\kappa = 2$.
+
+### Methodischer Ansatz
+
+* Sequentielle Entkopplung: Die Rangschranke der Reduktionen erzwingt, dass ein Qudit durch eine Unitary auf $\kappa$ Plätzen abgespalten werden kann; das ist die Umkehrung der sequentiellen MPS-Präparation.
+* Das Zertifikat nutzt nur lokale Erwartungswerte; die Nichtexistenz eines Zeugen (GHZ verletzt die "generische" Bedingung) wird gesondert behandelt.
+
+### Bedeutung und Anwendungen
+
+* Erste polynomielle Tomographie einer physikalisch relevanten Klasse mit zertifizierter Ausgabe; die Idee, die Rekonstruktion durch einen Parent-Hamiltonian zu verifizieren, kehrt bei Huang–Preskill–Soleimanifar in anderer Form wieder.
+* Tensor-Netzwerk-Verallgemeinerungen (Baum, MERA) angedeutet; numerisch bis 20 Ionen demonstriert.
+
+### Bezug zum eigenen Projekt
+
+* Schema 1 lernt den Präparationsschaltkreis durch lokale Inversion, Qudit für Qudit; das ist die Ein-Dimensions-Version des Local-Inversion-Prinzips von Huang et al. und Landau–Liu und der Beweis, dass "eine Unitary, die ein Qudit abspaltet" ein Identifying-Primitiv ist, das ohne globale Suche auskommt.
+* Das Zertifikat ist eine Untergrenze der Fidelity aus lokalen Daten; für die eigene Pipeline ist die Frage, ob das Displacement-Spektrum einen ähnlichen Zeugen liefert, etwa über die $\ell_2$-Masse auf dem gefundenen Träger.
+* Die Klasse ist per Konstruktion Regime 1 (Versprechen erfüllt) mit einem eingebauten Test auf Regime 3.
+
+### Grenzen und offene Fragen
+
+* Keine explizite Sample-Komplexität in $D$, $\epsilon$; die erste rigorose Schranke für MPDO aus lokalen Messungen liefern Fanizza et al. (2023).
+* Schema 2 braucht die Existenz eines gapped Zeugen; für nicht-generische Zustände (GHZ) zusätzliche Behandlung.
+* Nur eindimensional; höhere Dimensionen führen auf die Constraint-Satisfaction-Probleme, die Landau–Liu umgehen.
+
+### Fragen zum Tieferbohren
+
+* Wie hängt $\kappa$ von $R$ ab, wenn der Laborzustand nur approximativ Rang $R$ hat, und wie wird die Trunkierung gewählt?
+* Wie wird der Parent-Hamiltonian aus dem MPS-Schätzer konstruiert, und wie berechnet man seinen Gap effizient?
+* Gibt es ein Zertifikat der Form (4) für Zustände, deren Struktur ein sparsames Displacement-Spektrum statt ein kleiner Bond-Rang ist?
+
+Paper: [arXiv:1101.4366](https://arxiv.org/abs/1101.4366)
+
+---
+
+## Learning finitely correlated states: stability of the spectral reconstruction (arXiv:2312.07516)
+
+Die Arbeit von **Marco Fanizza, Niklas Galke, Josep Lumbreras, Cambyse Rouzé und Andreas Winter** (Barcelona, Paris, Singapur; 2023) gibt die erste rigorose Sample-Komplexität für das Lernen von Matrixprodukt-Dichteoperatoren aus lokalen Messungen. Für translationsinvariante endlich korrelierte Zustände auf der unendlichen Kette wird eine Realisierung minimaler Dimension $m$ per *spektraler Rekonstruktion* aus den Marginalen auf $2s+1$ Plätzen gewonnen; der Fehler der Marginale auf $t$ Plätzen ist polynomiell in $t$, $m$, $1/\eta$ kontrolliert, wobei $\eta$ eine Schranke an den kleinsten Singulärwert der Hankel-artigen Matrix $\Omega$ ist.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse mit Versprechen: $S(m, s, \eta)$, Zustände mit Realisierung der Dimension $\leq m$, $s$-rekonstruierbar, $\sigma_m(\Omega, s)\geq\eta$; Ausgabe sind die Parameter der Realisierung ($\rho$, $e$, $K_{k,l}$), aus denen jede Marginale in linearer Zeit folgt.
+* **Objekt:** translationsinvarianter, möglicherweise gemischter Zustand auf der unendlichen Kette; auch nicht-translationsinvariante endliche Ketten (Anhang D) und Zustände mit quantenmechanischer Realisierung $S_q(d_B, s, \eta)$. **Zugriff:** Sample; beliebige Tomographie der Marginale $\omega_s$, $\omega_{2s}$, $\omega_{2s+1}$, lokal oder verschränkt.
+* **Status:** 🟢 🟢 🟢. Kopien polynomiell in $t$, $m$, $1/\eta$, $1/\epsilon$ (Theoreme 2.6 bis 2.8), Zeit lineare Algebra auf Matrizen der Größe $d^{2s}$, Speicher $O(m^2d^2)$.
+* **Versprechen:** endliche Korrelation mit Dimension $m$; die Parameter $s$ und $\eta$ sind Eingaben des Algorithmus, $m$ muss nicht bekannt sein.
+
+### Das Problem
+
+Für reine MPS gibt es zertifizierbare Tomographie (Cramer et al.), für MPDO Rekonstruktionsverfahren ohne Fehlerschranke. Klassisch liefern spektrale Algorithmen für Hidden-Markov-Modelle Garantien in Totalvariation, quadratisch in der Speichergröße. Gibt es dasselbe für Quantenzustände, deren Realisierung nicht einmal ein Quantenmodell zu sein braucht?
+
+### Kernresultate
+
+* **Definitionen 2.1, 2.2.** Klassen $S(m, s, \eta)$ und $S_q(d_B, s, \eta)\subseteq S(d_B^2, s, \eta)$; jeder Zustand mit Realisierung der Dimension $m$ ist $m$-rekonstruierbar, generisch $O(\mathrm{polylog}\,m)$-rekonstruierbar (Quantum-Wielandt).
+* **Algorithmus 1 (LearnFCS).** Schätze $\hat\Omega(1)$, $\hat\tau\Omega$, $\hat\Omega$, $\hat\Omega_{Z_k}$ aus $\hat\omega_s$, $\hat\omega_{2s}$, $\hat\omega_{2s+1}$; SVD $\hat\Omega = \hat U\hat D\hat O^T$, Spalten mit Singulärwert $\geq\eta/2$ behalten; $\hat e = \hat U^T\hat\Omega(1)$, $\hat\rho = \hat\tau\Omega(\hat U^T\hat\Omega)^+$, $\hat K_{Z_i} = \hat U^T\hat\Omega_{Z_i}(\hat U^T\hat\Omega)^+$.
+* **Theorem 2.6 (Stabilität).** Sind die Hilbert–Schmidt-Fehler der drei Marginale kleiner als $\epsilon\eta^3/(20tm\sqrt{d_A})$, dann $\tfrac12\Vert\hat\omega_t - \omega_t\Vert_1\leq\epsilon$. **Theorem 2.7:** mit Quantenrealisierung ersetzt $d_B$ das $m$. **Theorem 2.8:** daraus folgt die Sample-Komplexität aus jeder Tomographie-Routine für $d^{2s+1}$-dimensionale Zustände.
+* **Anhang C, D.** Fehlerfortpflanzung über vollständig beschränkte Normen und Kontraktivität der erzeugenden Abbildung; Verallgemeinerung auf nicht-translationsinvariante Ketten.
+
+### Methodischer Ansatz
+
+* Die Matrix $\Omega$ ist eine Umordnung der Koeffizienten von $\omega_{[t_1, t_2]}$ in einer Produktbasis; ihr Rang ist $\leq m$ und sättigt für $-t_1\geq m-1$, $t_2\geq m$. Die Realisierung folgt durch Moore–Penrose-Inversion; die Empfindlichkeit steckt im kleinsten Singulärwert, daher $\eta$.
+* Die Analyse arbeitet mit Operatorsystemen und CP-Abbildungen und deckt Realisierungen ab, für die kein endlichdimensionales Quantenmodell existiert (GPT-Speicher).
+
+### Bedeutung und Anwendungen
+
+* Erste Sample-Garantie für MPDO-Tomographie aus lokalen Messungen, auch für gemischte Zustände; klassische Nebenwirkung: Fehlerschranken für Hidden-Markov-Modelle jenseits der bisherigen Annahmen.
+* Ausgabe ist ein generatives Modell: Erwartungswerte von Produktobservablen auf beliebigen Längen in linearer Zeit.
+
+### Bezug zum eigenen Projekt
+
+* Die spektrale Rekonstruktion ist ein Estimating-Schritt (Marginale) plus lineare Algebra; die Klassenstruktur (Rang $m$) macht aus $d^{2s}$ Zahlen eine Beschreibung mit $O(m^2d^2)$ Parametern. Das ist die Tensor-Netzwerk-Version von "Träger finden, dann Koeffizienten": Die Spalten von $\hat U$ mit Singulärwert $\geq\eta/2$ sind der Träger.
+* $\eta$ ist eine Konditionszahl der Instanz und gehört auf die Instanzenleiter; die Faktoren $\eta^{-3}$ und $m$ zeigen, wie ein Versprechen quantitativ in Kopien übersetzt wird.
+* Für Displacement-Spektren stellt sich die analoge Frage: Welche Hankel-Struktur haben Bell-Statistiken translationsinvarianter Zustände, und lässt sich ein sparsames Spektrum als niedrigrangige $\Omega$ lesen?
+
+### Grenzen und offene Fragen
+
+* Die Konstanten sind grob (Faktor 20, $\eta^3$); Optimalität ungeklärt.
+* Übersetzung von "Rang $m$ und Singulärwert $\eta$" in physikalische Eigenschaften (Korrelationslänge, Gap) nur heuristisch.
+* Höhere Dimensionen und PEPS nicht behandelt.
+
+### Fragen zum Tieferbohren
+
+* Wie kommt die Potenz $\eta^3$ zustande, und welcher Schritt der Fehlerfortpflanzung ist verantwortlich?
+* Was leistet die Kontraktivität der erzeugenden Abbildung genau, und warum reicht sie auch für GPT-Realisierungen?
+* Lässt sich das Verfahren auf Bell-Sampling-Daten anwenden, also auf die Verteilung $\vert\mathrm{Tr}(\rho D_a)\vert^2$ statt auf die Dichtematrix der Marginale?
+
+Paper: [arXiv:2312.07516](https://arxiv.org/abs/2312.07516)
+
+---
+
+## Learning shallow quantum circuits (arXiv:2401.10095)
+
+Die Arbeit von **Hsin-Yuan Huang, Yunchao Liu, Michael Broughton, Isaac Kim, Anurag Anshu, Zeph Landau und Jarrod R. McClean** (Caltech, Google Quantum AI, Berkeley, UC Davis, Harvard; STOC 2024) gibt die ersten polynomiellen Algorithmen für zwei Aufgaben: eine unbekannte Unitary konstanter Tiefe mit beliebiger Konnektivität aus klassischen Zufallsdaten bis auf Diamantabstand $\epsilon$ zu lernen, und einen Zustand $U\vert 0^n\rangle$ eines flachen Schaltkreises auf einem 2D-Gitter aus Kopien bis auf Spurabstand $\epsilon$ zu lernen. Die Technik sind lokale Inversionen, die durch einen Ancilla-SWAP-Trick zu einem globalen Schaltkreis "vernäht" werden, ohne ein Constraint-Satisfaction-Problem zu lösen.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse mit Versprechen (konstante Tiefe). Zurück kommt ein Schaltkreis aus der Klasse, kein Träger und keine Liste von Erwartungswerten; das Versprechen begrenzt jeden Lichtkegel auf konstante Größe, daher nur polynomiell viele lokale Kandidaten, derselbe Mechanismus wie bei Juntas.
+* **Objekt:** Unitary $U$ (Theoreme 1 bis 3) oder Zustand $U\vert 0^n\rangle$ (Theorem 4). **Zugriff:** Sample auf Input–Output-Paaren (zufällige Produkt-Inputs, randomisierte Pauli-Messungen, der klassische Schatten von $U$); Query an $U$ für Theorem 3; Kopien für Theorem 4.
+* **Status:** 🟢 🟢 🟢. Unitary: $N = O(n^2\log n/\epsilon^2)$ Samples, $\mathrm{poly}(n)/\epsilon^2$ Zeit; endliches Gatterset $O(\log n)$ Samples, Fehler null; mit Quantenqueries $\Theta(1)$ Queries und $\Theta(n)$ Zeit, beides optimal. Zustand auf 2D: $2^{O(d^2)}(n/\epsilon)^{O(1)}$ Kopien, Zeit $(n^{d^3}/\epsilon)^{O(d^3)}$; endliches Gatterset $O(\log n)$ Kopien, $O(n\log n)$ Zeit.
+* **Versprechen:** Tiefe $d = O(1)$; bis $d = \mathrm{polylog}(n)$ quasipolynomiell; $\log$-Tiefe ohne Geometrie ist exponentiell hart (Prop. 3, Grover-Orakel).
+
+### Das Problem
+
+Flache Schaltkreise erzeugen Verteilungen, die klassisch schwer zu sampeln sind; die Optimierungslandschaft parametrisierter flacher Schaltkreise hat keine Barren Plateaus, aber exponentiell viele suboptimale lokale Minima, an denen Gradientenverfahren scheitern. Gibt es trotzdem einen Lerner in Polynomialzeit, und aus welchen Daten?
+
+### Kernresultate
+
+* **Theorem 1 (allgemeine flache Schaltkreise).** $U$ mit beliebigen Zwei-Qubit-Gattern zwischen beliebigen Paaren, auch mit $m$ Ancillas, aus $O(n^2\log n/\epsilon^2)$ Samples in $\mathrm{poly}(n)/\epsilon^2$ klassischer Zeit bis auf $\Vert V - U\otimes U^\dagger\Vert_\diamond\leq\epsilon$; $V$ wirkt auf $2n$ Qubits, $U$ folgt durch Ausspuren.
+* **Theorem 2 (geometrisch lokal, $k$-dimensionales Gitter).** Gleiche Samplezahl; entweder $O(n^3\log n/\epsilon^2)$ Zeit mit Tiefe $(k+1)4^{4(8kd)^k}+1$ oder $(n/\epsilon)^{O((8kd)^{k+1})}$ Zeit mit Tiefe $(k+1)(2d+1)+1$; endliches Gatterset $O(\log n)$ Samples, $O(n\log n)$ Zeit. Gilt unverändert für Quantenzellularautomaten.
+* **Theorem 3 (Quantenqueries).** Endliches Gatterset: Fehler null, Fehlerwahrscheinlichkeit null, $\Theta(1)$ Queries, $\Theta(n)$ Zeit.
+* **Theorem 4 (Zustände auf 2D).** Ein Schaltkreis der Tiefe $3d$, der $\vert\psi\rangle$ bis auf $\epsilon$ präpariert.
+* **Prop. 3 (Grenze).** Ohne Geometrie brauchen $\log$-tiefe Schaltkreise exponentiell viele Queries im Diamantabstand.
+* **Abschnitt 9 (Verifikation).** Ein effizienter Test aus denselben Daten, der den gelernten Schaltkreis im Average-Case-Abstand prüft; nützlich zur Schaltkreiskompression.
+
+### Methodischer Ansatz
+
+* Lokale Inversion: Für jedes Qubit $i$ existiert eine Unitary $V_i$ im Rückwärtslichtkegel mit $UV_i\approx U'\otimes I_i$; sie wird durch Enumeration über den konstant großen Suchraum und einen Test auf approximative lokale Identität gefunden. Die Menge $\mathcal{C}_i$ der gültigen Inversionen ist nicht eindeutig und Nachbarn müssen nicht konsistent sein.
+* Vernähen (Gl. 1 bis 4): Beliebiges $V_1\in\mathcal{C}_1$ anwenden, Qubit 1 mit einer frischen Ancilla tauschen, $V_1^\dagger$ anwenden; der Effekt ist ein SWAP nach $U$, und der Schaltkreis vor $U$ ist "repariert", sodass Qubit 2 mit einem beliebigen $V_2\in\mathcal{C}_2$ folgen kann. Nach $n$ Schritten ist ein $2n$-Qubit-Schaltkreis $\hat U$ gelernt.
+* Für Zustände dieselbe Idee mit $V_i\vert\psi\rangle\approx\vert\psi'\rangle\otimes\vert 0\rangle_i$; auf 2D wird das Gitter in 1D-Streifen entkoppelt, deren Konsistenzproblem effizient lösbar ist.
+
+### Bedeutung und Anwendungen
+
+* Endliche Korrelationslänge genügt, um globale Struktur aus lokalen Daten zu rekonstruieren, obwohl die Klasse klassisch nicht simulierbar ist; das unterscheidet sie von MPS und Stabilizern.
+* Anwendungen: Hardware-Charakterisierung, Schaltkreiskompression mit Verifikation, Lernen von Dynamik; die Datenquelle ist der klassische Schatten des Prozesses.
+* Erstes Literaturbeispiel für die Zelle Query × Identifying mit Prozessobjekt; bisher standen dort Bernstein–Vazirani und die eigene Konstruktion.
+
+### Bezug zum eigenen Projekt
+
+* Der Ancilla-SWAP-Trick ist eine Methode, lokale Teilinformationen zu einem globalen Objekt zu komponieren, ohne Konsistenz zu erzwingen; für die Top-$k$-Lokalisierung ist das ein Vorbild dafür, wie lokal gefundene Adressen ohne globales Matching zusammengesetzt werden können.
+* Der Test auf approximative lokale Identität ist ein Zertifikat aus lokalen Messungen, verwandt mit dem Parent-Hamiltonian-Zeugen bei Cramer et al.
+* Der Wechsel von Sample (Input–Output-Paare) zu Query ($\Theta(1)$ Aufrufe, Fehler null) ist die Zugriffsleiter für Prozesse in einem Paper; er bestätigt, dass Queries den Fehler, nicht die Instanzgröße kaufen.
+
+### Grenzen und offene Fragen
+
+* Zustände nur auf 2D; Landau–Liu heben das auf.
+* Der Exponent der Laufzeit ist groß; die gelernte Tiefe kann viel größer sein als die wahre.
+* Average-Case-Abstand statt Diamantabstand ist berechnungstheoretisch offen; tiefer als polylog ist nichts bekannt.
+
+### Fragen zum Tieferbohren
+
+* Wie genau funktioniert der Test auf approximative lokale Identität aus randomisierten Pauli-Daten, und wie viele Samples braucht er pro Kandidat?
+* Warum scheitert das Vernähen bei $\log$-Tiefe: Wächst der Lichtkegel oder die Zahl der Kandidaten?
+* Übertragen sich lokale Inversionen auf Qudit-Schaltkreise mit Displacement-Struktur, und ist die Adresse eines Displacement-Operators ein Lichtkegel-Begriff?
+
+Paper: [arXiv:2401.10095](https://arxiv.org/abs/2401.10095)
+
+---
+
+## Learning quantum states prepared by shallow circuits in polynomial time (arXiv:2410.23618)
+
+Die Arbeit von **Zeph Landau und Yunchao Liu** (UC Berkeley, Harvard; 2024) löst das Problem, das Huang et al. für 2D gelöst und für höhere Dimensionen offen gelassen hatten: Ein Zustand $\vert\psi\rangle = U\vert 0^n\rangle$ mit $U$ der Tiefe $d$ auf einem $k$-dimensionalen Gitter wird in Polynomialzeit gelernt, für jedes feste $k$, ohne ein Konsistenzproblem zu lösen. Die Ausgabe ist ein Schaltkreis der Tiefe $(2k+1)d$ mit $rn$ Ancillas; als Korollar ein Test auf Schaltkreiskomplexität.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse mit Versprechen (Tiefe $d$ auf einem Gitter); Korollar 1 ist ein Ein-Bit-Test (triviale Phase oder hohe Komplexität).
+* **Objekt:** reiner Zustand auf $n$ Qubits eines $k$-dimensionalen Gitters. **Zugriff:** Sample; Tomographie der Reduktionen auf konstant großen Regionen, danach rein klassische Verarbeitung.
+* **Status:** 🟢 🟢 🟢 für $d = O(1)$: $M = \tilde O(n^4)2^{O(c)}/\epsilon^4$ Kopien, Zeit $M + (nkd\cdot c/\epsilon)^{O(dc)}$ mit $c = O((3k)^{k+2}d)^k$; quasipolynomiell für $d = \mathrm{polylog}(n)$.
+* **Versprechen:** Geometrie und Tiefe; beliebige Zwei-Qubit-Gatter.
+
+### Das Problem
+
+Reduktionen ausreichender Größe bestimmen den Zustand informationstheoretisch; die Frage ist die Rechenzeit. Der naive Weg, lokale Schaltkreise für Regionen zu finden und über Konsistenz auf Überlappungen zu verkleben, ist ein Constraint-Satisfaction-Problem, in 2D und höher hart. Huang et al. reduzieren 2D auf ein effizientes 1D-Problem; ab 3D versagt das.
+
+### Kernresultate
+
+* **Theorem 1 / 4 (Hauptresultat).** Ausgabe eines Schaltkreises $W$ der Tiefe $(2k+1)d$, der $\vert\psi\rangle$ bis auf $\epsilon$ präpariert, mit $M$ und $T$ wie oben; $W$ nutzt $rn$ Ancillas für beliebig kleines $r > 0$.
+* **Fakt 1 und 2.** Für jede Region $A$ existiert eine lokale Inversion $V$ auf $B(A, d)$ der Tiefe $d$; und $\vert\psi\rangle$ ist invariant unter jedem "Replacement-Prozess" (Inversion anwenden, $A$ durch $\vert 0\rangle$ ersetzen, Inversion rückgängig machen).
+* **Theorem 2 (Überdeckung impliziert Lernen).** Existiert ein Überdeckungsschema mit $\ell$ Schichten, so dass der Rückwärtslichtkegel des Outputs vollständig von den Ersetzungsstücken überdeckt wird und nicht vom Inputzustand abhängt, dann lernt der Algorithmus.
+* **Theorem 3 (Gitterüberdeckung).** Für $k$-dimensionale Gitter existiert ein $(k+1, c, d)$-Überdeckungsschema; daher Tiefe $(2k+1)d$.
+* **Korollar 1 / Theorem 5 (Komplexitätstest).** Entscheide mit polynomiellen Kopien und Zeit, ob $\vert\psi\rangle$ von einem Schaltkreis der Tiefe $\leq L$ präpariert wird oder $0.01$-weit von allen Zuständen konstanter Tiefe mit $O(n)$ Ancillas ist.
+
+### Methodischer Ansatz
+
+* Erste Einsicht: Eine lokale Inversion anwenden und wieder rückgängig machen ändert den Zustand nicht, ersetzt aber einen Teil des unbekannten Zustands durch ein bekanntes Stück Schaltkreis. Zweite Einsicht: Mit einer geometrisch gewählten Reihenfolge von Regionen werden diese Stücke so geschichtet, dass der Rückwärtslichtkegel des Endzustands nur bekannte Stücke enthält.
+* Der gelernte Schaltkreis besteht aus Teilen lokaler Inversionen und ihrer Inversen; es wird nie verlangt, dass zwei Inversionen übereinstimmen.
+
+### Bedeutung und Anwendungen
+
+* Zustände der trivialen Phase (konstante oder polylog Tiefe) sind in Polynomialzeit lernbar, in jeder Dimension; und die Zugehörigkeit zur trivialen Phase ist effizient testbar.
+* Für NISQ-Algorithmen ein beweisbares Primitiv: einen flachen Schaltkreis für einen unbekannten Zustand finden.
+
+### Bezug zum eigenen Projekt
+
+* Der Replacement-Prozess ist eine Nichtstörungs-Technik: Man lernt, indem man Struktur einsetzt, die den Zustand invariant lässt; für Phase 2 ist das ein Muster, wie ein Probe-Zustand konstruiert werden kann, der die Zielgröße nicht verändert, aber die Messung linear macht.
+* Der Komplexitätstest ist ein Klassentest ohne Kenntnis des Schaltkreises; die Displacement-Version wäre ein Test, ob ein Zustand ein sparsames Spektrum hat, bevor man es sucht.
+* Die Exponenten $c = O((3k)^{k+2}d)^k$ zeigen, wie schnell die Konstanten mit der Geometrie wachsen; für die Instanzenleiter ist $k$ ein eigener Parameter.
+
+### Grenzen und offene Fragen
+
+* Konstanten und Tiefenaufblähung $(2k+1)d$; Ancillas werden gebraucht.
+* Nur Gitter; allgemeine Graphen beschränkten Grades nicht behandelt.
+* Keine unteren Schranken für die Zeit in $d$.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht das $(k+1)$-schichtige Überdeckungsschema in 3D konkret aus, und warum reichen $k+1$ Schichten?
+* Wie geht die approximative Inversion (Abschnitt 4) in die Fehlerakkumulation ein, und warum $\epsilon^{-4}$?
+* Lässt sich der Komplexitätstest auf "Tiefe $\leq L$ nach Konjugation mit einer Displacement-Basiswahl" erweitern?
+
+Paper: [arXiv:2410.23618](https://arxiv.org/abs/2410.23618)
+
+---
+
+## Optimal algorithms for learning quantum phase states (arXiv:2208.07851)
+
+Die Arbeit von **Srinivasan Arunachalam, Sergey Bravyi, Arkopal Dutt und Theodore J. Yoder** (IBM, MIT; TQC 2023) bestimmt die Sample-Komplexität des Lernens binärer Phasenzustände $\vert\psi_f\rangle = 2^{-n/2}\sum_x(-1)^{f(x)}\vert x\rangle$ mit $\deg f\leq d$ über $\mathbb{F}_2$: $\Theta(n^d)$ Kopien mit separablen Messungen (nur Einzelqubit-Gatter und Messungen), $\Theta(n^{d-1})$ mit verschränkten Messungen über die Pretty-Good-Measurement. Dazu verallgemeinerte Phasenzustände über $\mathbb{Z}_q$, sparsame und rauschbehaftete Varianten und Query-Zugriff auf das diagonale Präparationsunitary.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse mit Versprechen; die Klasse $P(n, d)$ hat $2^{\Theta(n^d)}$ Elemente, und die Ausgabe ist das Polynom $f$ exakt. Mit Query-Zugriff auf $C = \sum_x(-1)^{f(x)}\vert x\rangle\langle x\vert$ dieselben Zahlen, weil eine Query auf $\vert +\rangle^{\otimes n}$ eine Kopie erzeugt.
+* **Objekt:** Zustand. **Zugriff:** Sample, separabel (Einzelqubit-Messungen in $X$ und $Z$) oder verschränkt (PGM auf $\vert\psi_f\rangle^{\otimes M}$); Query an $C$ oder $V$ (Abschnitt 6).
+* **Status:** separabel 🟢 🟢 🟢 mit $O(n^d)$ Kopien und $O(n^{3d-2})$ Zeit; verschränkt $\Theta(n^{d-1})$ Kopien, aber Zeit $O(\exp(n^d\log 2))$, also 🟢 🔴 🟢.
+* **Versprechen:** Grad $d\leq n/2$; für $d = 1$ Bernstein–Vazirani mit $\Theta(1)$, für $d = 2$ Bell-Sampling mit $O(n)$.
+
+### Das Problem
+
+Grad-2-Phasenzustände (Graphzustände, Clifford-Outputs) lernt man per Bell-Sampling; auf zwei Kopien eines Grad-3-Zustands liefert Bell-Sampling eine einzelne Kopie eines zufälligen Grad-2-Zustands $\vert\psi_{g_y}\rangle$, und es bräuchte $\Omega(\sqrt{2^n})$ Kopien, um davon genug zu sammeln. Was ist die richtige Sample-Komplexität, und helfen verschränkte Messungen?
+
+### Kernresultate
+
+* **Theorem 3 (separabel, obere Schranke).** $M = O(2^dn^d)$ Kopien: Miss alle Qubits außer dem ersten in $Z$, erhalte $y$; das erste Qubit ist $\tfrac{1}{\sqrt2}((-1)^{f(0y)}\vert 0\rangle + (-1)^{f(1y)}\vert 1\rangle)$, und eine $X$-Messung gibt die Ableitung $p_1(y) = f(0y) + f(1y)$, ein Polynom vom Grad $\leq d-1$ in $n-1$ Variablen; $O(n^{d-1})$ Punkte pro Richtung, $n$ Richtungen, dann Interpolation.
+* **Theorem 5 (separabel, untere Schranke).** $\Omega(n^d)$ für beliebige Einzelkopien-Messungen: Für zufälliges $f$ ist $\mathbb{E}_f[H(x\vert f)]\geq n - O(1)$, jede Kopie liefert $O(1)$ Bit, $f$ hat $\Omega(n^d)$ Bit Entropie.
+* **Theorem 4 (verschränkt).** $O((2n)^{d-1})$ Kopien per PGM: Das Ensemble ist geometrisch uniform, die PGM-Erfolgswahrscheinlichkeit ist für alle $f$ gleich, und die Gewichtsverteilung von Polynomen (Schranke von Ben-Eliezer, Hod, Lovett) kontrolliert die Überlappungen. Holevo gibt $\Omega(n^{d-1})$.
+* **Theorem 8 (verallgemeinert, $\mathbb{Z}_q$).** $O(2^dq^3n^d\log q) = O(n^d)$ separabel; die POVM $\{\vert\phi_b\rangle\langle\phi_b\vert\}_{b\in\mathbb{Z}_q}$ schließt den wahren Wert $c$ mit Sicherheit aus und trifft jeden anderen mit Wahrscheinlichkeit $\Omega(q^{-3})$.
+* **Theoreme 6, 7, 9, 11.** Sparsame $f$ mit $O(2^dsn)$; Fourier-Grad $d$ mit $O(2^{2d})$; globale Depolarisierung $n^{1+O(\epsilon)}$; lokale Depolarisierung $\Theta((1-\epsilon)^{-n})$.
+* **Property Testing.** Lernen plus SWAP-Test testet Zugehörigkeit zu $P(n, d)$ mit $n^d$ Kopien.
+
+### Methodischer Ansatz
+
+* Ableitungen statt Bell-Sampling: Die Messung von $n-1$ Qubits in $Z$ reduziert den Grad um eins, und Interpolation über $\mathbb{F}_2$ setzt $f$ aus $n$ partiellen Ableitungen zusammen.
+* Für die PGM eine neue Beobachtung: Bei geometrisch uniformen Ensembles ist die Erfolgswahrscheinlichkeit unabhängig vom Element.
+* Die untere Schranke rechnet die Rényi-2-Entropie über eine explizite Formel für $\mathbb{E}_f[\vert\psi_f\rangle\langle\psi_f\vert^{\otimes 2}]$.
+
+### Bedeutung und Anwendungen
+
+* Graphzustände werden mit Einzelqubit-Operationen lernbar (bisher Bell-Messungen nötig); Grad 3 sind Hypergraphzustände für MBQC und IQP-Schaltkreise.
+* Die Klasse ist die Grundlage der PRS-Konstruktionen (Ji–Liu–Song, Brakerski–Shmueli): Bei polynomiellem Grad wäre Lernen kryptographisch hart; die Grad-Skala ist die Instanzenleiter dieser Familie.
+* Die Tabelle des Papers ist ein Modell dafür, wie Sample, Zeit und Messklasse getrennt zu führen sind.
+
+### Bezug zum eigenen Projekt
+
+* Der Vergleich separabel gegen verschränkt ist ein $n$-Faktor in den Kopien, die Zeit dreht sich um: PGM ist exponentiell. Das ist der Speicher–Zeit-Tausch der Tabellen in Reinform, und ein Warnzeichen, dass Zweikopien-Protokolle ihren Vorteil nur behalten, wenn die Nachverarbeitung linear-algebraisch bleibt (wie bei Bell-Sampling), nicht wenn sie eine PGM implementieren muss.
+* Die Ableitungsmessung ist ein Probe-Mechanismus: Konditionierung auf $y$ macht die verbleibende Amplitude zu einem Ein-Qubit-Problem erster Ordnung; Phase 2 konditioniert analog auf einen Träger.
+* Für $\mathbb{Z}_q$ ist die POVM, die einen Wert sicher ausschließt, ein Ausschlussdesign; für Displacement-Phasen $\omega_d^c$ ist dieselbe Konstruktion einsetzbar.
+
+### Grenzen und offene Fragen
+
+* Die verschränkte Variante ist zeitineffizient; ob $\Theta(n^{d-1})$ Kopien mit polynomieller Zeit erreichbar sind, ist offen.
+* Verallgemeinerte Phasenzustände nur separabel behandelt.
+* Nur exakte Identifikation von $f$; agnostische Varianten nicht.
+
+### Fragen zum Tieferbohren
+
+* Wie geht die Gewichtsschranke $\vert\{f: \mathrm{wt}(f)\leq(1-\epsilon)2^{-\ell}\}\vert\leq(1/\epsilon)^{C\ell\binom{n-\ell}{\leq d-\ell}}$ konkret in die PGM-Analyse ein?
+* Warum liefert Bell-Sampling auf Grad-$d$-Zuständen genau einen Grad-Abstieg um eins, und lässt sich das iterieren, wenn man Kopien der Zwischenzustände erzeugen kann (Query-Modell)?
+* Was ist die Displacement-Version eines Grad-$d$-Phasenzustands auf Qudits, und ist sein Spektrum sparsam?
+
+Paper: [arXiv:2208.07851](https://arxiv.org/abs/2208.07851)
+
+---
+
+## Schur–Weyl duality for the Clifford group with applications: property testing, a robust Hudson theorem, and de Finetti representations (arXiv:1712.08628)
+
+Die Arbeit von **David Gross, Sepehr Nezami und Michael Walter** (Köln, Stanford, Amsterdam; Commun. Math. Phys. 2021) bestimmt den Kommutanten der $t$-ten Tensorpotenz der Clifford-Gruppe: Er wird von Operatoren $R(T) = r(T)^{\otimes n}$ aufgespannt, die zu selbstdualen Codes $T\subseteq\mathbb{Z}_d^{2t}$ gehören, und seine Größe ist ab $n\geq t-1$ unabhängig von $n$. Als Anwendungen: ein Stabilizer-Test mit sechs Kopien für Qubits (Bell-Difference-Sampling), $2s$ Kopien für Qudits, drei Kopien für $d\equiv 1, 5 \bmod 6$; ein robuster Hudson-Satz; und de-Finetti-Sätze für Clifford-invariante Zustände.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying, Ein-Bit (Property Testing): Stabilizerzustand oder $\max_S\vert\langle S\vert\psi\rangle\vert^2\leq 1-\epsilon^2$. Perfekt vollständig, dimensionsunabhängig, transversal. Cliffordness von Unitaries folgt, ohne Zugriff auf die Inverse.
+* **Objekt:** reiner Zustand auf $n$ Qudits. **Zugriff:** Sample; Bell-Messungen auf Kopienpaaren und Weyl-Messungen auf Einzelkopien; kohärent nur über zwei Kopien und faktorisiert über die $n$ Qudits.
+* **Status:** 🟢 🟢 🟢. Sechs Kopien pro Runde, $O(1/\epsilon^2)$ Runden, $O(n)$ Gatter, Speicher $2n$ Qubits; optimal in der Kopienzahl unter perfekt vollständigen Tests.
+* **Versprechen:** keines; der Test ist agnostisch in dem Sinn, dass er die Fidelity zum nächsten Stabilizerzustand misst.
+
+### Das Problem
+
+Zweite und dritte Momente von Stabilizerzuständen stimmen mit Haar überein, vierte sind nicht dimensionsunabhängig unterscheidbar; bisherige Tests identifizierten den Zustand und brauchten $\Omega(n)$ Kopien. Gibt es einen Test mit konstant vielen Kopien, und was ist die Symmetriestruktur, die ihn erzwingt?
+
+### Kernresultate
+
+* **Theorem 3.2 (Bell-Difference-Sampling).** $\mathrm{Tr}(\Pi_a\psi^{\otimes 4}) = \sum_xp_\psi(x)p_\psi(x+a)$ mit $p_\psi(a) = \vert c_a\vert^2$ der charakteristischen Verteilung; für Stabilizerzustände gleich $p_S(a)$, also gleichverteilt auf der Stabilizergruppe. Löst das Problem, dass Bell-Sampling nur für reelle Zustände die charakteristische Verteilung liefert.
+* **Theorem 3.3 (Qubits).** Algorithmus 1: Bell-Differenz-Sample $a$, dann $W_a$ zweimal auf frischen Kopien messen, akzeptiere bei gleichem Ergebnis. $p_{\mathrm{accept}} = 1$ für Stabilizerzustände, $\leq 1-\epsilon^2/4$ sonst. Beweis: Hohe Akzeptanz erzwingt $p_\psi(a) > \tfrac12 2^{-n}$ auf einer großen Menge; die Unschärferelation (Fig. 1: $\vert\mathrm{Tr}\,Z\rho\vert$ und $\vert\mathrm{Tr}\,X\rho\vert$ können nicht beide $> 1/\sqrt2$ sein) erzwingt Kommutativität; also eine Stabilizer-Untergruppe.
+* **Theorem 3.11 (Qudits).** $\Pi_{s, \mathrm{accept}} = \tfrac12(I + V_s)$ mit $V_s = d^{-n}\sum_x(W_x\otimes W_x^\dagger)^{\otimes s}$, $(d, s) = 1$, $2s$ Kopien; $p_{\mathrm{accept}}\leq 1 - C_{d,s}\epsilon^2$ mit $C_{d,s} = (1-(1-1/4d^2)^{s-1})/2$. **Lemma 3.10:** $\vert\mathrm{Tr}\,\psi W_x\vert^2, \vert\mathrm{Tr}\,\psi W_y\vert^2 > 1 - 1/4d^2$ erzwingt $[W_x, W_y] = 0$.
+* **Theorem 8.6 (drei Kopien).** Für $d\equiv 1, 5 \bmod 6$ mit Phasenraum-Punktoperatoren $A_x$: $V = d^{-n}\sum_xA_x^{\otimes 3}$, $p_{\mathrm{accept}}\leq 1-\epsilon^2/16d^2$.
+* **Struktur (Theorem 4.3 ff.).** Der Kommutant von $\mathrm{Cl}_n^{\otimes t}$ wird von $R(T)$ für selbstduale Codes $T$ aufgespannt, mit der stochastischen orthogonalen Gruppe $O_t(d)$ als Symmetrie; die Anti-Identität $R(\bar 1) = 2^{-n}(I^{\otimes t} + X^{\otimes t} + Y^{\otimes t} + Z^{\otimes t})^{\otimes n}$ ist das einfachste nichttriviale Element.
+
+### Methodischer Ansatz
+
+* Clifford-invariante Tests müssen im Kommutanten liegen; die Klassifikation der Kommutanten macht die Suche nach Tests zu einer Suche über Codes.
+* Die Unschärferelation für Weyl-Operatoren ist das analytische Herz; sie übersetzt "viele schwere Adressen" in "kommutierende Adressen".
+* Für die de-Finetti-Sätze werden die $R(T)$ als Verallgemeinerung der Permutationen behandelt.
+
+### Bedeutung und Anwendungen
+
+* Bell-Difference-Sampling ist seit diesem Paper das Standardprimitiv für Stabilizer-Lernen und -Testen (Grewal et al., Chen–Gong–Ye–Zhang, Arunachalam–Dutt, Bao et al.).
+* Der Kommutant ist die Grundlage für Clifford-Designs, für Stabilizer-Entropie-Formeln (Leone et al.) und für Schatten-Varianzrechnungen.
+
+### Bezug zum eigenen Projekt
+
+* Theorem 3.2 ist die exakte Aussage, dass vier Kopien die Faltung $p_\psi * p_\psi$ liefern; zwei Kopien $\rho\otimes\rho^*$ liefern $p_\psi$ selbst. Das eigene Protokoll spart also die Faltung und die Hälfte der Kopien gegen den Preis einer konjugierten Kopie; die Unschärferelation überträgt sich direkt auf Displacement-Operatoren (Lemma 3.10 ist bereits für Qudits formuliert).
+* Die Fallunterscheidung $(d, s) = 1$ und $d\equiv 1, 5 \bmod 6$ zeigt, dass die Kopienzahl vom Alphabet abhängt; für ungerade Primzahlen $d$ ist die Situation günstiger als für Qubits.
+* Der Kommutant ist die Sprache, in der eine CNN-Symmetrie (Clifford-Invarianz der Bell-Statistik) formuliert werden sollte.
+
+### Grenzen und offene Fragen
+
+* Nur reine Zustände in den Testsätzen; gemischte Zustände und toleranter Test (Akzeptanz nahe eins) sind die Folgearbeiten.
+* Die Konstante $\epsilon^2/4$ ist nicht optimiert; die Kopienzahl sechs ist für perfekte Vollständigkeit optimal, nicht für Tests mit Fehler erster Art.
+* Der Kommutant für $d$ nicht prim ist nur teilweise behandelt.
+
+### Fragen zum Tieferbohren
+
+* Wie gehen die Codes $T$ und die Gruppe $O_t(d)$ in die Konstruktion des Sechs-Kopien-Operators $V = 2^{-n}\sum_xW_x^{\otimes 6}$ ein?
+* Warum ist Bell-Sampling nur für reelle Zustände die charakteristische Verteilung, und ist die konjugierte Kopie genau das, was Komplexität behebt?
+* Wie sieht der robuste Hudson-Satz aus, und ist er ein Aussage über die Sparsity der Wigner-Funktion, also ein Vorläufer für sparsame Displacement-Spektren?
+
+Paper: [arXiv:1712.08628](https://arxiv.org/abs/1712.08628)
+
+---
+
+## Tolerant testing of stabilizer states with a polynomial gap via a generalized uncertainty relation (arXiv:2410.21811)
+
+Die Arbeit von **Zongbo (Bob) Bao, Philippe van Dordrecht und Jonas Helsen** (QuSoft/CWI, Universität Amsterdam; 2024) macht den Stabilizer-Test von Gross, Nezami, Walter tolerant mit polynomieller Lücke: Hat ein Zustand Stabilizer-Fidelity $\geq\epsilon_1$ oder $\leq\epsilon_2$ mit $\epsilon_2\leq C'\epsilon_1^{672}$, dann entscheiden $O(\epsilon_1^{-12})$ Runden Bell-Difference-Sampling zwischen beiden Fällen. Das Werkzeug ist eine verallgemeinerte Unschärferelation $\sum_i\mathrm{Tr}(\psi A_i)^2\leq\vartheta(\Gamma_{\mathcal{A}})$ über die Lovász-Theta-Zahl des Antikommutationsgraphen; sie ersetzt eine Vermutung, die Arunachalam–Dutt für ihre Version brauchten.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying, Ein-Bit, tolerant: Beide Hypothesen sind Fidelity-Intervalle, keine ist "exakt in der Klasse". Das ist die Testversion der agnostischen Tomographie.
+* **Objekt:** reiner $n$-Qubit-Zustand. **Zugriff:** Sample; Bell-Difference-Sampling auf vier Kopien, sonst nichts.
+* **Status:** 🟢 🟢 🟢. $O(\epsilon_1^{-12})$ Runden, also $O(\epsilon_1^{-12})$ Kopien, polynomielle Zeit, Speicher $2n$ Qubits.
+* **Versprechen:** keines über den Zustand; die Lücke $\epsilon_2\leq C'\epsilon_1^{672}$ ist eine Bedingung an die Fragestellung.
+
+### Das Problem
+
+Der Test von Gross, Nezami, Walter akzeptiert Stabilizerzustände mit Sicherheit und weist Zustände mit Fidelity $\leq 1-\epsilon^2$ mit Wahrscheinlichkeit $\geq\epsilon^2/4$ ab; er sagt nichts über Zustände, die nahe, aber nicht exakt Stabilizer sind. Arunachalam und Dutt gaben einen toleranten Test, dessen Lücke von einer Vermutung über Gowers-Normen abhing (aus einer Fehlzitierung von Viola). Lässt sich die Lücke unbedingt und polynomiell machen?
+
+### Kernresultate
+
+* **Theorem 1.** $\epsilon_1, \epsilon_2\in[0, 1]$, $F_S(\psi) = \max_{S}\vert\langle\psi\vert S\rangle\vert^2$ entweder $\geq\epsilon_1$ oder $\leq\epsilon_2$; falls $\epsilon_2\leq C'\epsilon_1^{672}$, unterscheiden $O(\epsilon_1^{-12})$ Bell-Difference-Runden mit Wahrscheinlichkeit $> 2/3$.
+* **Lemma 15.** Für Weyl-Operatoren $\{A_i\}_{i=1}^M$ und reines $\psi$: $\sum_i\mathrm{Tr}(\psi A_i)^2\leq\Psi_0(\mathcal{A})$, das Maximum der Operatornorm normierter Hamiltonians $\sum_ia_iA_i$; der Beweis ist die Cauchy–Schwarz-Zeile (13), (14).
+* **Lemma 18 (verallgemeinerte Unschärfe).** $\sum_i\mathrm{Tr}(\psi A_i)^2\leq\Psi_0(\mathcal{A})\leq\Psi(\Gamma_{\mathcal{A}})\leq\vartheta(\Gamma_{\mathcal{A}})$ mit Hastings–O'Donnell (Prop. 4.8) für den letzten Schritt; für $M$ paarweise antikommutierende Operatoren ist $\vartheta = 1$, für $\Gamma = \sqcup$ und $\boxtimes$ von Graphen ist $\vartheta$ additiv bzw. multiplikativ (Fakten 3, 4).
+* **Theorem 19 (aus Arunachalam–Dutt).** $\mathbb{E}_{x\sim q_\psi}[2^np_\psi(x)]\geq\gamma$ und $2^n\geq C''\ln(C'''/\gamma)/\gamma^3$ liefern einen Unterraum $V$ mit $\sum_{x\in V}\vert\langle\psi\vert W_x\vert\psi\rangle\vert^2\geq C_1\gamma^{55}\vert V\vert$ und $\geq C_2\gamma^{57}2^n$; die Unschärferelation zeigt dann, dass eine große isotrope Untergruppe $V_0\subseteq V$ existiert, und Balog–Szemerédi–Gowers (Theorem 25) macht daraus einen Stabilizerzustand mit Fidelity $\mathrm{poly}(\gamma)$.
+
+### Methodischer Ansatz
+
+* Bell-Difference-Sampling akzeptiert mit Wahrscheinlichkeit, die die charakteristische Verteilung $p_\psi$ gegen ihre Faltung $q_\psi$ gewichtet; hohe Akzeptanz heißt viel Masse auf einer nahezu linearen Menge. Die Unschärferelation begrenzt, wie viel Masse auf antikommutierenden Adressen liegen kann, also ist die schwere Menge fast kommutativ.
+* Die Lovász-Theta-Zahl ersetzt die Gowers-Norm-Vermutung; sie ist berechenbar und über Produkte und disjunkte Vereinigungen von Antikommutationsgraphen multiplikativ und additiv.
+* Der Exponent 672 wird von den Autoren als "vermutlich stark suboptimal" bezeichnet; unabhängige Beweise (Arunachalam–Bravyi–Dutt; Mehraban–Tahmasbi) kamen kurz danach mit ähnlichen oder etwas schlechteren Graden.
+
+### Bedeutung und Anwendungen
+
+* Erster unbedingter toleranter Stabilizer-Test mit polynomieller Lücke; die Aufgabe, die bei Gross–Nezami–Walter perfekt vollständig war, wird robust gegen Rauschen.
+* Die Unschärferelation über $\vartheta$ ist ein eigenständiges Werkzeug für Pauli-Spektren; sie quantifiziert, wie viele nichtkommutierende Erwartungswerte gleichzeitig groß sein können.
+
+### Bezug zum eigenen Projekt
+
+* Lemma 18 ist genau die Aussage, die Phase 1 braucht, um aus "viele große Displacement-Beträge" auf "die Adressen liegen fast in einer isotropen Untergruppe" zu schließen; die Verallgemeinerung auf Weyl-Operatoren über $\mathbb{Z}_d$ ist im Beweis von Lemma 15 nicht qubit-spezifisch.
+* Die Kette "Akzeptanzwahrscheinlichkeit → Masse auf linearer Menge → Balog–Szemerédi–Gowers → Untergruppe" ist die Beweisstruktur, mit der ein toleranter Träger-Test für Displacement-Spektren aufzubauen wäre; die Exponenten (55, 57, 672) zeigen, was additive Kombinatorik gegenwärtig kostet.
+* Toleranz ist Regime 3 auf der Instanzenleiter; $O(\epsilon_1^{-12})$ Kopien ist der Preis, den ein Ein-Bit-Test dort zahlt.
+
+### Grenzen und offene Fragen
+
+* Exponenten 672 und 12 sind weit von der vermuteten Wahrheit; das Paper nennt die Verbesserung als nächstes Ziel.
+* Nur reine Zustände; gemischte Inputs und Qudits nicht behandelt.
+* Keine untere Schranke.
+
+### Fragen zum Tieferbohren
+
+* Wo genau im Beweis geht der Faktor $\gamma^{55}$ verloren, und welcher Schritt ist BSG-bedingt?
+* Gilt Lemma 18 mit derselben Konstante für Displacement-Operatoren auf Qudits, deren Antikommutation durch $\omega_d$-Kommutation ersetzt ist?
+* Lässt sich der Test mit $\rho\otimes\rho^*$ statt $\rho^{\otimes 4}$ führen, sodass die Akzeptanz $p_\psi$ direkt statt der Faltung gewichtet?
+
+Paper: [arXiv:2410.21811](https://arxiv.org/abs/2410.21811)
+
+---
+
+## Exponential separations between learning with and without quantum memory (arXiv:2111.05881)
+
+Die Arbeit von **Sitan Chen, Jordan Cotler, Hsin-Yuan Huang und Jerry Li** (Berkeley, Harvard, Caltech, Microsoft; FOCS 2021) beweist scharfe untere Schranken für Lernalgorithmen ohne Quantenspeicher: Shadow-Tomographie braucht $\tilde\Theta(\min\{M, 2^n\}/\epsilon^2)$ Kopien, alle Pauli-Erwartungswerte $\Omega(2^n)$, Purity-Testing $\Theta(2^{n/2})$; mit $k$ Qubits Speicher $\Omega(2^{(n-k)/3})$ für Pauli-Beträge. Für Kanäle: Unterscheidung des vollständig depolarisierenden Kanals von einem Haar-zufälligen unitären Kanal $\Omega(2^{n/3})$, Zeitumkehrsymmetrien $\Omega(2^{2n/7})$, jeweils gegen beliebige Algorithmen ohne Speicher, auch mit Ancillas. Das Werkzeug ist die Baumdarstellung adaptiver Protokolle und eine direkte Totalvariationsschranke über einseitige Likelihood-Verhältnisse.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying, Ein-Bit (Purity, Kanaltests) und Estimating (Shadow-Tomographie); die Zeile steht bei Identifying, weil die schärfsten Aussagen Unterscheidungsprobleme sind und die Estimating-Schranken über Le Cam auf sie reduziert werden.
+* **Objekt:** Zustand oder Kanal. **Zugriff:** Sample ohne Quantenspeicher (jede Kopie einzeln gemessen, adaptiv erlaubt), mit $k$ Qubits Speicher, oder mit vollem Speicher; für Kanäle beliebige Inputs mit $m > n$ Qubits und Ancillas.
+* **Status:** 🟢 🔴 🟢 ohne Speicher (Kopien exponentiell), 🟢 🟢 🟢 mit $O(n)$ Qubits Speicher: $O(1)$ Kopien für Purity (SWAP-Test), $O(n)$ für alle Pauli-Beträge, $O(1)$ Aufrufe für die Kanaltests.
+* **Versprechen:** keines; die Trennungen sind unbedingt und informationstheoretisch.
+
+### Das Problem
+
+Huang, Kueng, Preskill hatten $\Omega(M^{1/6}/\epsilon^2)$ bzw. $\Omega(2^{n/3}/\epsilon^2)$ ohne Speicher gezeigt, gegen obere Schranken $O(M\log M/\epsilon^2)$ und $\tilde O(2^n)$; Aharonov, Cotler, Qi hatten Kanaltrennungen nur ohne Ancillas. Wie groß sind die Lücken wirklich, und gilt die Trennung gegen alle speicherlosen Protokolle?
+
+### Kernresultate
+
+* **Theorem 1.1 (Shadow-Tomographie).** Es gibt $M$ Observablen, für die ohne Speicher $T = \tilde\Theta(\min\{M, 2^n\}/\epsilon^2)$ Kopien nötig sind; passend zur oberen Schranke aus klassischen Schatten bis auf Logarithmen. Beantwortet Aaronsons Frage.
+* **Theorem 1.2 (Paulis).** Alle $\mathrm{Tr}(P\rho)$ bis auf $\epsilon$: $\Omega(2^n/\epsilon^2)$ ohne Speicher; der Beweis ist eine halbe Seite.
+* **Theorem 1.3 (Purity).** Rein oder maximal gemischt: $\Omega(2^{n/2})$ ohne Speicher, mit passendem Algorithmus $O(2^{n/2})$ (Theorem 5.13); $O(1)$ mit SWAP-Test.
+* **Theorem 1.4 (beschränkter Speicher).** $k$ Qubits Speicher: $\Omega(2^{(n-k)/3})$ Kopien für alle Pauli-Beträge; $O(n)$ mit $n$ Qubits Speicher.
+* **Theoreme 1.5, 1.6 (Kanäle).** Depolarisierend gegen Haar-unitär $\Omega(2^{n/3})$; unitär, orthogonal oder symplektisch $\Omega(2^{2n/7})$; beides gegen beliebige speicherlose Protokolle mit Ancillas, wo Aharonov–Cotler–Qi nur ohne Ancillas gezeigt hatten.
+
+### Methodischer Ansatz
+
+* Le Cams Zwei-Punkt-Methode mit Nullhypothese $\rho_{\mathrm{mm}}$ und Mischung $\rho_P = 2^{-n}(I + \epsilon P)$; die Neuerung ist, direkt mit Totalvariation zu arbeiten statt mit $\chi^2$ oder KL (die für Paulis nur $\mathrm{poly}(n, 1/\epsilon)$ liefern würden) und Fakt 2.1 zu benutzen: eine einseitige Schranke $\mathbb{E}_P[q_1^P(x)]/q_0(x) > 1-\delta$ auf allen Blättern gibt $d_{\mathrm{TV}}\leq\delta$.
+* Baumdarstellung (Abschnitt 2.1): Ein adaptives Protokoll ohne Speicher ist ein Baum, Knoten sind POVMs auf frischen Kopien, Blätter sind Ausgaben; die Kantenwahrscheinlichkeiten hängen vom unbekannten Zustand ab, und die Likelihood-Verhältnisse werden entlang der Pfade kontrolliert.
+* Für Kanäle und beschränkten Speicher braucht es mehr (Matrixkonzentration, Martingale), weil die einseitige Schranke nicht überall gilt.
+
+### Bedeutung und Anwendungen
+
+* Die Schranken sind bei einigen Dutzend Qubits sichtbar; Quantencomputer mit unter hundert Qubits könnten als Speicher einen beweisbaren Vorteil beim Experimentieren liefern. Das ist die theoretische Grundlage des Sycamore-Experiments von Huang et al. (Science 2022).
+* Die Baumtechnik ist seit diesem Paper das Standardwerkzeug für Schranken gegen adaptive, speicherlose Protokolle (Chen–Huang–Li–Liu; Chen–Gong–Zhang; Lowe–Nayak).
+
+### Bezug zum eigenen Projekt
+
+* Der Zweikopien-Vorteil des eigenen Protokolls ist in Theorem 1.2 und 1.4 quantifiziert: Ohne Speicher $\Omega(2^n)$ Kopien für alle Pauli-Beträge, mit einer gespeicherten Kopie $O(n)$. Phase 1 (Beträge des Displacement-Spektrums) ist genau die Aufgabe von Theorem 1.4, und $\rho\otimes\rho^*$ ist die $k = n$-Stufe der Speicherachse.
+* Die Schranke $\Omega(2^{(n-k)/3})$ ist die Instanzenleiter in der Speicherdimension: Jeder Qubit Speicher kauft einen konstanten Faktor im Exponenten, und die Frage "Speicher zwischen null und zwei Kopien" hat hier ihre erste quantitative Antwort.
+* Die Beweistechnik zeigt, welche Verteilungen hart sind: $\rho_P = 2^{-n}(I + \epsilon P)$ ist ein Displacement-Spektrum mit einer einzigen schweren Adresse; die eigene Hardness-Instanz (LWE) ist die strukturierte Version davon.
+
+### Grenzen und offene Fragen
+
+* Die Speicher-Kopien-Kurve ist nur nach unten bekannt; zwischen $k = 0$ und $k = n$ ist die genaue Sample-Komplexität offen.
+* Die Kanaltrennungen sind unbedingt, aber nicht scharf ($2^{n/3}$, $2^{2n/7}$ gegen $O(1)$).
+* Rauschen im Speicher ist nicht modelliert.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die halbseitige Rechnung für Theorem 1.2 aus, und was ändert sich, wenn die Mischung über Displacement-Operatoren statt Paulis läuft?
+* Welche Rolle spielen Ancillas in den Kanalschranken, und warum bricht die Technik von Aharonov–Cotler–Qi schon bei einem Ancilla-Qubit?
+* Ist die Schranke $\Omega(2^{(n-k)/3})$ für Beträge mit einem Protokoll erreichbar, das $k$ Qubits einer konjugierten Kopie speichert?
+
+Paper: [arXiv:2111.05881](https://arxiv.org/abs/2111.05881)
+
+---
+
+## Tight bounds for quantum state certification with incoherent measurements (arXiv:2204.07155)
+
+Die Arbeit von **Sitan Chen, Brice Huang, Jerry Li und Allen Liu** (Berkeley, MIT, Microsoft; FOCS 2022) bestimmt die Kopienzahl des Mixedness-Testing mit inkohärenten Messungen: $\Theta(d^{3/2}/\epsilon^2)$, auch wenn die Messungen adaptiv gewählt werden. Adaptivität hilft also nicht, was eine offene Frage aus Wrights Dissertation und von Bubeck, Chen, Li beantwortet. Für die allgemeine Zertifizierung gegen ein bekanntes $\sigma$ gibt das Paper instanzoptimale Schranken in der Fidelity $F(\sigma, I/d)$ und der effektiven Dimension, mit einer neuen Beweistechnik über gaußsche Störungen und Matrix-Martingale.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying, $M = 1$ (Certification): $\rho = \sigma$ oder $\Vert\rho - \sigma\Vert_1 > \epsilon$; Mixedness-Testing ist der Fall $\sigma = I/d$.
+* **Objekt:** gemischter Zustand in $d$ Dimensionen. **Zugriff:** Sample, inkohärent: eine Kopie nach der anderen, beliebige POVMs, adaptiv erlaubt; kein Quantenspeicher.
+* **Status:** 🟢 🟢 🟢 mit $\Theta(d^{3/2}/\epsilon^2)$ Kopien, gegenüber $\Theta(d/\epsilon^2)$ mit verschränkten Messungen (O'Donnell–Wright; Bădescu–O'Donnell–Wright); der Speichervorteil ist ein Faktor $\sqrt d = 2^{n/2}$.
+* **Versprechen:** keines; $\sigma$ ist bekannt.
+
+### Das Problem
+
+Bubeck, Chen, Li hatten $\Theta(d^{3/2}/\epsilon^2)$ für nichtadaptive und $\Omega(d^{4/3}/\epsilon^2)$ für adaptive inkohärente Messungen gezeigt. Schließt sich die Lücke nach oben (Adaptivität hilft) oder nach unten (sie hilft nicht)? Und wie hängt die Kopienzahl vom Referenzzustand $\sigma$ ab, analog zum klassischen Identitätstest, dessen Komplexität durch die $\ell_{2/3}$-Quasinorm von $p$ bestimmt ist?
+
+### Kernresultate
+
+* **Theorem 1.1 / 6.1 (Mixedness).** Kopienzahl $\Theta(d^{3/2}/\epsilon^2)$ mit inkohärenten Messungen; Adaptivität ändert nur Konstanten.
+* **Theorem 1.2 / 8.1 (instanzoptimal).** Für jedes $\sigma$ und kleines $\epsilon$ liegt die Kopienzahl zwischen $\tilde\Omega\big(\sqrt{d\cdot\underline d_{\mathrm{eff}}}\,F(\underline\sigma, I/d)/\epsilon^2\big)$ und $\tilde O\big(\sqrt{d\cdot\overline d_{\mathrm{eff}}}\,F(\overline\sigma, I/d)/\epsilon^2\big)$, wobei $\underline\sigma$, $\overline\sigma$ durch Abschneiden von Eigenwerten der Masse $\Theta(\epsilon^2)$ bzw. $\Theta(\epsilon)$ entstehen und $d_{\mathrm{eff}}$ ihr Rang ist; für reines $\sigma$ ist $\Theta(1/\epsilon^2)$. Die obere Schranke war von Chen, Li, O'Donnell für nichtadaptive Messungen bekannt.
+* **Vermutung.** Für alle $\sigma$ stimmt die adaptive Komplexität mit der nichtadaptiven überein; bewiesen, wenn $\epsilon$ klein gegen den kleinsten Eigenwert von $\sigma$ ist.
+
+### Methodischer Ansatz
+
+* Statt der Paninski-Störung $I/d + \epsilon UZU^\dagger/d$ mit Haar-$U$ wird eine gaußsche Störung benutzt, deren Likelihood-Verhältnis eine selbstähnliche Form (Gl. 4) hat; das reduziert die Analyse auf die Konzentration eines Matrix-Martingals entlang des Baums und ein Matrix-Balancing-Problem.
+* Anders als bei allen früheren adaptiven Schranken wird keine punktweise Schranke an das Likelihood-Verhältnis gebraucht; genau das machte Bubeck–Chen–Li lose.
+* Die Technik vereinfacht auch die Rechnungen der Vorgänger deutlich und ist auf andere Probleme übertragbar.
+
+### Bedeutung und Anwendungen
+
+* Beantwortet "hilft Adaptivität?" für ein zentrales Testproblem negativ; die Folgearbeiten (Chen, Huang, Li, Liu, Sellke 2023 für Tomographie; Chen, Gong, Zhang 2024 für Shadow-Tomographie, wo Adaptivität hilft) benutzen dieselbe Baum-plus-Martingal-Methode.
+* Für NISQ-Verifikation ist $d^{3/2}$ die Referenz: Ohne Speicher zahlt man $\sqrt d$ gegenüber verschränkten Protokollen.
+
+### Bezug zum eigenen Projekt
+
+* Zertifizierung gegen ein bekanntes $\sigma$ ist Phase 2 im Grenzfall einer Hypothese: Der Probe-Zustand ist $\sigma$ selbst. Die Instanzabhängigkeit über $F(\sigma, I/d)$ und $d_{\mathrm{eff}}$ ist eine Instanzenleiter für Referenzzustände, von rein ($1/\epsilon^2$) bis maximal gemischt ($d^{3/2}/\epsilon^2$).
+* Die Aussage "Adaptivität hilft nicht" gilt für Einzelkopien; das eigene Protokoll ist zweikopig und nichtadaptiv in Phase 1, adaptiv in Phase 2. Dieses Paper sagt, dass der Gewinn von Phase 2 aus der zweiten Kopie kommen muss, nicht aus der Adaptivität allein.
+* Die gaußsche Störung als harte Instanz ist ein dichtes, zufälliges Displacement-Spektrum; die LWE-Instanz ist ihre strukturierte Verwandte mit einem sparsamen Träger.
+
+### Grenzen und offene Fragen
+
+* Die instanzoptimalen Schranken klaffen für manche $\sigma$ und $\epsilon$ polynomiell; die Vermutung der Adaptivitätsfreiheit ist nicht für alle $\sigma$ bewiesen.
+* Nur Testen, keine Schätzung; nur Zustände, keine Kanäle.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die selbstähnliche Form (4) des Likelihood-Verhältnisses aus, und warum verschwindet die Notwendigkeit punktweiser Schranken?
+* Welche Rolle spielt das Matrix-Balancing, und ist es die Stelle, an der die Instanzabhängigkeit in $F(\sigma, I/d)$ entsteht?
+* Wie lautet die Schranke, wenn eine Kopie von $\sigma$ (statt ihrer Beschreibung) mitgeliefert wird, also für den SWAP-Test-Zugriff?
+
+Paper: [arXiv:2204.07155](https://arxiv.org/abs/2204.07155)
+
+---
+
+## Quantum algorithmic measurement (arXiv:2101.04634)
 
 Die Arbeit von **Dorit Aharonov** (Hebrew University), **Jordan Cotler** (Harvard) und **Xiao-Liang Qi** (Stanford) stellt eine Frage, die vor jeder Lernschranke kommt: Was ist ein Experiment, formal? Die Antwort ist ein Rechenmodell, der **QUALM** (*quantum algorithmic measurement*), eine Mischung aus Black-Box-Algorithmus und interaktivem Protokoll. Mit diesem Modell beweisen die Autoren die erste exponentielle Trennung zwischen kohärenten und inkohärenten Experimenten für physikalisch motivierte Aufgaben, bei der die kohärente Seite in Aufrufen *und* Gattern effizient ist. Der Rahmen ist die gemeinsame Sprache, in der die Speicher-Trennungen der Bell-Sampling-Literatur formuliert sind.
 
@@ -916,7 +3533,396 @@ Ein Experiment soll eine Funktion eines physikalischen Systems berechnen, etwa d
 * Lässt sich Realität, Bedingung (C1), mit zwei identischen Kopien testen? Der SWAP-Test auf $\rho\otimes\rho$ liefert $\mathrm{Tr}(\rho^2)$, das Bell-Ergebnis $(0,0)$ auf $\rho\otimes\rho$ liefert $\mathrm{Tr}(\rho\rho^T)/d$, und die Differenz $\mathrm{Tr}(\rho^2)-\mathrm{Tr}(\rho\rho^T) = \tfrac12\Vert\rho-\rho^*\Vert_F^2$ verschwindet genau für reelles $\rho$. Der zweite Schätzer kostet aber $\Theta(d/\epsilon^2)$ Kopien. Gibt es einen effizienten Test, oder ist Theorem 2 ein Hinweis, dass es keinen gibt?
 * Was steht in der Supplementary Information? Die formalen Definitionen, der vollständige Beweis und das Verifikationsbeispiel, das die Notwendigkeit von $N$ zeigt, liegen nicht im Ordner.
 
-Paper: [doi:10.1038/s41467-021-27922-0](https://doi.org/10.1038/s41467-021-27922-0)
+Paper: [arXiv:2101.04634](https://arxiv.org/abs/2101.04634) · [doi:10.1038/s41467-021-27922-0](https://doi.org/10.1038/s41467-021-27922-0)
+
+---
+
+## Certifying almost all quantum states with few single-qubit measurements (arXiv:2404.07281)
+
+Die Arbeit von **Hsin-Yuan Huang, John Preskill und Mehdi Soleimanifar** (Caltech, Google Quantum AI; FOCS 2024) zertifiziert die Fidelity eines Laborzustands $\rho$ mit einem Zielzustand $\vert\psi\rangle$, der nur über ein Amplitudenmodell $\Psi(x)\propto\langle x\vert\psi\rangle$ zugänglich ist, aus Einzelqubit-Pauli-Messungen auf $O(\tau^2/\epsilon^2)$ Kopien; $\tau$ ist die Relaxationszeit einer Irrfahrt auf dem Hyperwürfel mit stationärer Verteilung $\vert\langle x\vert\psi\rangle\vert^2$. Für alle bis auf einen $2^{-\Omega(n)}$-Anteil der Zustände ist $\tau = O(n^2)$; Phasen- und GHZ-artige Zustände haben $\tau = O(n)$. Der Ersatzwert heißt *Shadow Overlap*.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying, $M = 1$ (Certification): Ausgabe "Certified" bei $\langle\psi\vert\rho\vert\psi\rangle\geq 1-\epsilon/(2\tau)$, "Failed" bei $< 1-\epsilon$; dazwischen keine Garantie. Die Lücke $\tau$ ist der Preis für Einzelqubit-Messungen.
+* **Objekt:** gemischter $n$-Qubit-Zustand gegen ein reines, klassisch beschriebenes Ziel. **Zugriff:** Sample mit Einzelqubit-Messungen ($n-1$ Qubits in $Z$, ein zufälliges Qubit in zufälliger Pauli-Basis); Query an das Modell $\Psi$, zwei Abfragen pro Kopie.
+* **Status:** 🟢 🟢 🟢 für $\tau = \mathrm{poly}(n)$: $T = O(\tau^2/\epsilon^2)$ Kopien mit Pauli-Messungen, $O(\tau/\epsilon)$ mit allgemeinen Einzelqubit-Messungen; $O(n^2/\epsilon)$ für fast alle Zustände (Theorem 2); Zeit $O(T)$ Modellabfragen; Speicher null.
+* **Versprechen:** polynomielle Relaxationszeit des Ziels; kein Versprechen über $\rho$.
+
+### Das Problem
+
+Frühere Zertifizierungen brauchten tiefe Schaltkreise (Schatten, Spektrumschätzung), exponentiell viele Einzelqubit-Messungen (direkte Fidelity-Schätzung) oder spezielle Zielklassen (Stabilizer, MPS), oder hatten keine Garantie (Cross-Entropy-Benchmarking). Kann man die Fidelity mit einem generischen, hochverschränkten Ziel aus wenigen Einzelqubit-Messungen zertifizieren?
+
+### Kernresultate
+
+* **Protokoll 1.** Qubit $k$ zufällig; $Z$-Messung der übrigen ergibt $z$; Pauli-Messung von $k$ ergibt $\vert s\rangle$; Modellabfragen $\Psi(z^{(0)}), \Psi(z^{(1)})$ definieren $\vert\Psi_{k,z}\rangle$; lokaler Overlap $\omega = \langle\Psi_{k,z}\vert(3\vert s\rangle\langle s\vert - I)\vert\Psi_{k,z}\rangle$; Mittelwert $\hat\omega$ über $T$ Runden; zertifiziere bei $\hat\omega\geq 1 - 3\epsilon/(4\tau)$.
+* **Gl. (1), (2).** $\mathbb{E}[\hat\omega]\geq 1-\epsilon\Rightarrow\langle\psi\vert\rho\vert\psi\rangle\geq 1-\tau\epsilon$ und $\langle\psi\vert\rho\vert\psi\rangle\geq 1-\epsilon\Rightarrow\mathbb{E}[\hat\omega]\geq 1-\epsilon$.
+* **Theorem 1.** $T = O(\tau^2/\epsilon^2)$ Kopien; $O(\tau/\epsilon)$ mit allgemeinen Einzelqubit-Messungen.
+* **Theorem 2.** Für alle bis auf $2^{-\Omega(n)}$ der Zustände ist $\tau\leq\tau^* = O(n^2)$, also $O(n^2/\epsilon)$ Kopien, auch für Zustände exponentieller Schaltkreiskomplexität.
+* **Theoreme 4 bis 7, Anhänge D, G, H, I.** $\mathbb{E}[\omega] = \mathrm{Tr}(L\rho)$ mit $L\vert\psi\rangle = \vert\psi\rangle$ und $\langle\psi^\perp\vert L\vert\psi^\perp\rangle\leq 1-1/\tau$; $L$ hat dasselbe Spektrum wie die Übergangsmatrix $P$ der Irrfahrt (Gl. 8); Relaxationszeiten für Haar-Zustände über Mehrgüterflüsse mit "local escape property", für Phasenzustände und GHZ $O(n)$, für Grundzustände; Level-$m$-Varianten (Protokoll 2) mit $2^{2m}/\epsilon^2$ Kopien.
+
+### Methodischer Ansatz
+
+* Die Messung des Qubits $k$ in einer zufälligen Pauli-Basis ist ein Einzelqubit-Schatten; gemittelt ist $3\vert s\rangle\langle s\vert - I$ ein unverzerrter Schätzer der Ein-Qubit-Reduktion nach Konditionierung auf $z$, deshalb $\mathbb{E}[\omega] = 1$ für $\rho = \vert\psi\rangle\langle\psi\vert$.
+* Das Modell wird nur für das bedingte Ein-Qubit-Verhältnis $\Psi(z^{(1)})/\Psi(z^{(0)})$ gebraucht; unnormierte Modelle (neuronale Netze, Tensor-Netze, Schaltkreise mit Amplitudenabfrage) genügen.
+* Die Irrfahrt ist nur Analysewerkzeug; ihr Gap $1/\tau$ misst, wie stark $L$ vom Projektor abweicht.
+
+### Bedeutung und Anwendungen
+
+* Verifikation generischer Zustände mit dem billigsten Messprimitiv; zugleich ein Lernprimitiv: Ein Modell, das den Shadow Overlap maximiert, lernt den Zustand (Anwendungen auf neuronale und Tensor-Netz-Modelle im Paper).
+* Der Nachweis, dass Zustände exponentieller Komplexität zertifizierbar sind, trennt Zertifizieren von Lernen deutlich.
+
+### Bezug zum eigenen Projekt
+
+* Der Shadow Overlap ist ein Zertifikat aus einer Ein-Qubit-Messung plus zwei Modellabfragen; für die eigene Pipeline ist die Frage, ob ein aus Bell-Sampling gelerntes sparsames Spektrum als Modell $\Psi$ dienen kann. Ein sparsames Displacement-Spektrum liefert Amplitudenverhältnisse in $O(k)$ Zeit, also wäre die Zertifizierung des Lernergebnisses billig.
+* Die Relaxationszeit ist eine Instanzgröße, die von der Struktur des Ziels abhängt, nicht von seiner Komplexität; das ist ein Vorbild für eine Instanzenleiter, die nicht in $t$ oder $k$, sondern in Mischzeiten gemessen wird.
+* Die Lücke zwischen "Certified" und "Failed" (Faktor $2\tau$) ist ein Toleranzparameter wie bei Bao et al.; beide zeigen, dass Ein-Bit-Aufgaben Toleranzlücken mit polynomiellem Faktor haben.
+
+### Grenzen und offene Fragen
+
+* Zustände mit exponentieller Relaxationszeit (etwa Superpositionen weit getrennter Basiszustände, wie $\vert 0^n\rangle + \vert 1^n\rangle$ ohne die Level-$m$-Variante) werden nicht abgedeckt; das Level-$m$-Protokoll kostet $2^{2m}$.
+* Das Modell muss Amplituden in der Rechenbasis liefern; für Zustände, die nur als Schaltkreis vorliegen, ist die Abfrage selbst teuer.
+* Die Lücke $\tau$ zwischen den beiden Schwellen ist inhärent, nicht nur eine Beweisartefakt.
+
+### Fragen zum Tieferbohren
+
+* Wie wird $L$ konstruiert, und warum hat es genau das Spektrum von $P$?
+* Wie funktioniert die "local escape property" für Haar-Zustände, und warum reicht sie für $\tau = O(n^2)$?
+* Kann Bell-Sampling auf $\rho\otimes\rho^*$ die Rolle der Einzelqubit-Messung übernehmen und die Lücke $\tau$ eliminieren, weil es den Overlap $\vert\mathrm{Tr}(\rho\sigma)\vert$ direkt sieht?
+
+Paper: [arXiv:2404.07281](https://arxiv.org/abs/2404.07281)
+
+---
+
+## Non-Markovian quantum process tomography (arXiv:2106.11722)
+
+Die Arbeit von **Gregory A. L. White, Felix A. Pollock, Lloyd C. L. Hollenberg, Kavan Modi und Charles D. Hill** (Melbourne, Monash; PRX Quantum 2022) formalisiert die Tomographie des *Prozess-Tensors*, der Verallgemeinerung der Prozess-Tomographie auf mehrzeitige Dynamik mit Gedächtnis. Sie baut eine Maximum-Likelihood-Rekonstruktion mit Positivitäts- und Kausalitätsprojektion, macht das Verfahren für Prozesse endlicher Markov-Ordnung $\ell$ effizient und zeigt auf IBM-Geräten, dass die Charakterisierung nicht-Markovscher Korrelationen die Fidelity mehrzeitiger Schaltkreise erhöht.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse (Prozesse der Markov-Ordnung $\ell$), verwirklicht als Estimating aller Parameter des Prozess-Tensors; die Zeile steht bei Identifying, weil die Effizienz aus der Klassenwahl kommt und das Paper einen Test liefert, welche Ordnung nötig ist.
+* **Objekt:** Prozess $\Upsilon_{k:0}$ über $k$ Zeitschritte auf einem Qubit, Choi-Zustand der Dimension $d^{2k+2}$. **Zugriff:** Query; Sequenzen von Kontrolloperationen aus einer überkompletten Basis ($N_{\mathrm{oc}} = 24$ pro Schritt) oder einer minimalen ($N_{\mathrm{mle}} = 10$), dann Messung.
+* **Status:** 🟢 🟢 🟢 für festes $\ell$: $O(kN_{\mathrm{mle}}^\ell)$ Schaltkreise statt $O(N_{\mathrm{oc}}^k)$; ohne Gedächtnisschranke exponentiell in $k$, allgemein $O(d^{4k})$ Experimente.
+* **Versprechen:** endliche Markov-Ordnung; die Verletzung ist selbst messbar (Trade-off Charakterisierungsaufwand gegen Genauigkeit).
+
+### Das Problem
+
+CPTP-Abbildungen beschreiben Zwei-Zeit-Fehler; reale Geräte zeigen zeitliche Korrelationen (die Wahl eines vergangenen Gatters beeinflusst das nächste), die die Summe der Gatterfehler unterschätzt und Fehlerkorrektur untergraben kann. Wie charakterisiert man einen Prozess mit Gedächtnis vollständig, statistisch robust und mit vertretbarem Aufwand?
+
+### Kernresultate
+
+* **Prozess-Tensor-Tomographie (Abschnitt II).** QST braucht $O(d^2)$, QPT $O(d^4)$, PTT $O(d^{4k})$ Experimente; lineare Inversion (LI-PTT) mit überkompletter Basis skaliert wie $O(N_{\mathrm{oc}}^k)$ Schaltkreise und ist empfindlich gegen Verstärkung kleiner Fehler in der Superoperatorbasis.
+* **MLE-PTT (Abschnitt III).** Konvexe Log-Likelihood mit projiziertem Gradientenabstieg auf den Schnitt der Bedingungen vollständig positiv und kausal (Gl. 13, 15); die Projektion ist nichttrivial und wird gegenüber Dykstras alternierender Projektion verbessert. Reduktion auf $O(N_{\mathrm{mle}}^k)$ mit $N_{\mathrm{mle}} = 10$; Rekonstruktionsfidelity auf IBM-Hardware im Bereich $0.999$ (Abschnitt III, Abb. 5).
+* **Markov-Ordnung (Abschnitt IV).** Adaptive Trunkierung schwacher Langzeitkorrelationen auf Ordnung $\ell$; Skalierung $O(kN_{\mathrm{mle}}^\ell)$; die Restabweichung quantifiziert, wie sehr ein Modell begrenzten Gedächtnisses die Vorhersage verfehlt.
+* **Kontrolle (Abschnitt V).** Charakterisierung für $\ell\in\{1, 2, 3\}$ und Nutzung der Korrelationen als Ressource erhöht die Fidelity mehrzeitiger Schaltkreise; höhere Ordnung, bessere Vorhersage.
+
+### Methodischer Ansatz
+
+* Der Prozess-Tensor ist ein Choi-Zustand über $k+1$ Ein- und Ausgängen; kausale Bedingungen (die Zukunft beeinflusst die Vergangenheit nicht) sind affine Nebenbedingungen; unvollständige Basen ("restricted" Tensoren) sind für Vorhersagen innerhalb der Basis dennoch nützlich.
+* Reconstruction Fidelity: Vergleich der Vorhersagen des rekonstruierten Tensors mit zufälligen Sequenzen, nicht mit einem Ground Truth, weil es keinen gibt.
+
+### Bedeutung und Anwendungen
+
+* Fehlende Kachel im Zoo der Charakterisierungsverfahren (QCVV); Grundlage für gedächtnisbewusste Kontrolle und Fehlerminderung, hardwareagnostisch.
+* Für die Lerntheorie das erste Protokoll, das Query-Zugriff auf Prozesse mit Gedächtnis als Lernproblem mit expliziter Klassenannahme (Markov-Ordnung) formuliert.
+
+### Bezug zum eigenen Projekt
+
+* Die Markov-Ordnung ist eine Instanzenleiter für Prozesse: $\ell$ spielt die Rolle von $t$ bei Clifford+T oder $D$ bei MPS, und $O(kN^\ell)$ gegen $O(N^k)$ ist der Effizienzgewinn eines Klassenversprechens.
+* Der Prozess-Tensor ist die Zeitachsen-Version eines Zustands auf $2k+2$ Registern; Bell-Sampling auf konjugierten Choi-Zuständen wäre das natürliche Zweikopien-Primitiv, um sein Displacement-Spektrum zu lernen, und die Kausalitätsbedingungen würden dort als Sparsity-Muster erscheinen.
+* Die MLE-Projektion auf den physikalischen Kegel ist das, was ein CNN-Decoder implizit lernen müsste; das Paper liefert die expliziten Nebenbedingungen.
+
+### Grenzen und offene Fragen
+
+* Ein Qubit, kleine $k$; Skalierung bleibt exponentiell in der Systemgröße und in $k$ ohne Ordnungsschranke.
+* Kontrollpulse müssen selbst hochfidel sein; SPAM-Fehler und Basisunvollständigkeit begrenzen die Rekonstruktion.
+* Keine Sample-Komplexitätsgarantie im lerntheoretischen Sinn.
+
+### Fragen zum Tieferbohren
+
+* Wie genau wird die Projektion auf den Schnitt aus Positivität und Kausalität berechnet, und wie skaliert sie?
+* Wie wird die Markov-Ordnung adaptiv gewählt, und gibt es ein Kriterium analog zur Singulärwertschwelle $\eta$ bei Fanizza et al.?
+* Lässt sich ein Prozess-Tensor endlicher Ordnung als endlich korrelierter Zustand in Zeitrichtung lesen, sodass die spektrale Rekonstruktion anwendbar ist?
+
+Paper: [arXiv:2106.11722](https://arxiv.org/abs/2106.11722)
+
+---
+
+## Pseudorandom quantum states (arXiv:1711.00385)
+
+Die Arbeit von **Zhengfeng Ji, Yi-Kai Liu und Fang Song** (UTS Sydney, NIST/Maryland, Portland State; CRYPTO 2018) definiert pseudozufällige Quantenzustände (PRS): Familien $\{\vert\phi_k\rangle\}_{k\in\mathcal{K}}$, effizient präparierbar, sodass polynomiell viele Kopien für jeden polynomiellen Quantenalgorithmus von ebenso vielen Kopien eines Haar-zufälligen Zustands ununterscheidbar sind. Die Konstruktion sind zufällige Phasenzustände $\vert\phi_k\rangle = N^{-1/2}\sum_x\omega_N^{\mathrm{PRF}_k(x)}\vert x\rangle$ aus quantensicheren Pseudozufallsfunktionen; Anwendungen sind ein kryptographischer Nichtklonierungssatz und Quantengeld mit privatem Schlüssel.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying, Ein-Bit (PRS oder Haar), und damit die Härtequelle für Identifying gegen große Klassen: Wer eine Klasse lernen kann, die PRS enthält, kann sie von Haar unterscheiden. Die Zeile ist die kryptographische Referenz der Identifying-Tabelle.
+* **Objekt:** Zustandsfamilie. **Zugriff:** Sample, polynomiell viele Kopien desselben $\vert\phi_k\rangle$; in der starken Variante (Theorem 4) zusätzlich Query an das Reflexionsorakel $I - 2\vert\phi_k\rangle\langle\phi_k\vert$, ohne Gewinn.
+* **Status:** 🟢 🔴 🟢: Statistisch sind die Zustände mit $O(n^d)$ Kopien lernbar (Phasenzustände, siehe Arunachalam et al.), aber kein polynomieller Unterscheider existiert; der Schlüssel ist polynomiell.
+* **Versprechen:** Existenz quantensicherer Einwegfunktionen (äquivalent: QPRF, QPRP).
+
+### Das Problem
+
+Klassische Pseudozufallsstrings sind für Quantenzustände zu schwach: Eine Familie zufälliger Basiszustände sieht in einer Kopie wie $I/2^n$ aus, ist aber trivial. Die richtige Definition muss viele Kopien zulassen. Was ist eine Familie, die auch mit polynomiell vielen Kopien Haar-zufällig aussieht, und was folgt daraus?
+
+### Kernresultate
+
+* **Definition 2 (PRS).** Effiziente Erzeugung $G(k) = \vert\phi_k\rangle$ und $\vert\Pr_k[A(\vert\phi_k\rangle^{\otimes m}) = 1] - \Pr_{\psi\sim\mu}[A(\vert\psi\rangle^{\otimes m}) = 1]\vert = \mathrm{negl}(\kappa)$ für alle effizienten $A$ und $m = \mathrm{poly}(\kappa)$.
+* **Theorem 1.** Für jede QPRF ist die Familie der zufälligen Phasenzustände (Gl. 6) eine PRS; Präparation mit einer Abfrage der PRF (Hadamard, QFT auf $\vert 1\rangle$, Subtraktion im zweiten Register).
+* **Lemma 2.** Für wahrhaft zufälliges $f$ ist $\vert f\rangle^{\otimes m}$ statistisch von Haar$^{\otimes m}$ ununterscheidbar; Beweis über die explizite Berechnung von $\rho^m = \mathbb{E}_f[\vert f\rangle\langle f\vert^{\otimes m}]$ in der Basis des symmetrischen Unterraums (Gl. 4, 5).
+* **Theorem 3 (Nichtklonieren).** Für jede PRS und $m < m'$ ist die Erfolgswahrscheinlichkeit, aus $m$ Kopien $m'$ zu erzeugen, vernachlässigbar; Beweis: ein Kloner plus SWAP-Test wäre ein Unterscheider.
+* **Theorem 4, 5.** Stark pseudozufällig (mit Reflexionsorakel) genau dann, wenn pseudozufällig; Orakelzugriff mit $q$ Abfragen lässt sich durch $O(q)$ Kopien simulieren.
+* **Theorem 7.** Das Quantengeldschema aus PRS ist sicher.
+
+### Methodischer Ansatz
+
+* Drei Hybride: PRF-Phasen, wahrhaft zufällige Phasen, Haar; der erste Übergang ist die PRF-Sicherheit, der zweite Lemma 2 mit Momentenrechnung im symmetrischen Unterraum.
+* Der Kern ist, dass die $m$-ten Momente zufälliger Phasenzustände die Haar-Momente bis auf $O(m^2/N)$ approximieren; das ist eine $m$-Design-Aussage über Phasenzustände.
+
+### Bedeutung und Anwendungen
+
+* Gründungsarbeit der Quantenpseudozufälligkeit; Brakerski–Shmueli (binäre Phasen), Kretschmer (Lernhärte aus PRS), Zhao et al. (Gatterkomplexität), Mele–Herasymenko (Fermionen) und Aaronson et al. (Pseudoverschränkung) bauen darauf auf.
+* Nichtklonieren und Quantengeld ohne Verifizierung durch den Emittenten; PRS sind die minimale Annahme für vieles, was zuvor Einwegfunktionen brauchte.
+
+### Bezug zum eigenen Projekt
+
+* PRS sind das Beispiel für Zustände, die informationstheoretisch trivial und rechnerisch undurchdringlich sind; die eigene LWE-Instanz ist die Displacement-Version: ein Spektrum, dessen Träger sparsam ist, aber nur mit dem Schlüssel gefunden wird. Beide zeigen, dass die Lernhärte im Decoder sitzt.
+* Zufällige Phasenzustände haben ein flaches Displacement-Spektrum (Betrag $\approx 2^{-n}$ auf allen Adressen); Bell-Sampling auf $\rho\otimes\rho^*$ zieht daraus nahezu gleichverteilt. Das ist der Grund, warum die Instanzenleiter bei Phasenzuständen hohen Grades endet: Es gibt keinen Träger zu finden.
+* Theorem 5 (Orakelzugriff bringt nichts gegenüber Kopien) ist eine Aussage über die Zugriffsleiter: Für PRS ist Query = Sample.
+
+### Grenzen und offene Fragen
+
+* Sicherheit ist bedingt (QPRF); keine unbedingten Trennungen.
+* PRS mit $\omega_N$-Phasen; die binäre Vereinfachung kam mit Brakerski–Shmueli.
+* Pseudozufällige Unitaries (PRU) werden vorgeschlagen, aber nicht konstruiert.
+
+### Fragen zum Tieferbohren
+
+* Wie sieht die Momentenrechnung in Lemma 2 konkret aus, und ist die Fehlerschranke $O(m^2/N)$ scharf?
+* Wie übersetzt sich Theorem 5 (Reflexionsorakel durch Kopien simulierbar) in die Sprache der Zugriffsleiter, und gilt es für nichtreflexive Orakel?
+* Was ist die minimale Struktur (Grad des Phasenpolynoms), ab der Phasenzustände pseudozufällig werden, verglichen mit $\Theta(n^d)$ Kopien für Grad $d$?
+
+Paper: [arXiv:1711.00385](https://arxiv.org/abs/1711.00385)
+
+---
+
+## Quantum pseudoentanglement (arXiv:2211.00747)
+
+Die Arbeit von **Scott Aaronson, Adam Bouland, Bill Fefferman, Soumik Ghosh, Umesh Vazirani, Chenyi Zhang und Zixin Zhou** (UT Austin, Stanford, Chicago, Berkeley; ITCS 2024) konstruiert pseudozufällige Zustände mit Verschränkungsentropie $\Theta(f(n))$ über jeden Schnitt gleichzeitig, für jedes $f(n) = \omega(\log n)$, aus quantensicheren Einwegfunktionen. Daraus folgt ein pseudoverschränktes Ensemblepaar mit Lücke $\Theta(n)$ gegen $\omega(\log n)$, ununterscheidbar in Polynomialzeit; Anwendungen sind untere Schranken für MPS-Testen ($\Omega(\sqrt r)$), Schmidt-Rang-Schätzung und Verschränkungsdestillation sowie Folgerungen für AdS/CFT.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying, Ein-Bit: hohe oder niedrige Verschränkung, MPS mit Bonddimension $r$ oder weit davon. Die Aussage ist eine Härte: Der Test ist statistisch möglich, rechnerisch nicht.
+* **Objekt:** Zustandsfamilien $\vert\Psi_k\rangle$, $\vert\Phi_k\rangle$ mit Schlüssel $k$. **Zugriff:** Sample, polynomiell viele Kopien.
+* **Status:** 🟢 🔴 🟢; für MPS-Testen zusätzlich informationstheoretisch $\Omega(\sqrt r)$ Kopien (Theorem 3.5), also 🔴 in den Kopien bei exponentiellem $r$.
+* **Versprechen:** quantensichere Einwegfunktion; die Konstruktion ist in logarithmischer Tiefe realisierbar.
+
+### Das Problem
+
+Ji–Liu–Song zeigen, dass PRS Verschränkung $\omega(\log n)$ über jeden Schnitt haben müssen; Gheorghiu–Hoban erreichen mit LWE eine Lücke $n$ gegen $n-k$ für konstantes $k$. Ist die maximale Lücke $\Theta(n)$ gegen $\omega(\log n)$ erreichbar, über alle Schnitte gleichzeitig, aus beliebigen Einwegfunktionen, und mit Haar-Ununterscheidbarkeit?
+
+### Kernresultate
+
+* **Definition (PES).** Zwei effizient präparierbare Ensembles mit Entropie $\Theta(f(n))$ bzw. $\Theta(g(n))$ über jeden Schnitt (mit Wahrscheinlichkeit $1 - 1/\mathrm{poly}$) und Ununterscheidbarkeit auf $p(n)$ Kopien.
+* **Konstruktion (Abschnitt 2.1 bis 2.3).** Subset-Phasenzustände $\vert\psi_{f,p}\rangle = 2^{-k/2}\sum_{x\in\{0,1\}^k}(-1)^{f(p(x0^{n-k}))}\vert p(x0^{n-k})\rangle$ mit QPRP $p$ und QPRF $f$; Präparation: $H^{\otimes k}$, $p$, Uncompute, Phasenorakel.
+* **Theorem 2.1.** Für $t < K\leq 2^n$ ist der Spurabstand zwischen $t$ Kopien eines zufälligen Subset-Phasenzustands mit $\vert S\vert = K$ und $t$ Kopien eines Haar-Zustands $O(t^2/K)$; also pseudozufällig, sobald $K = 2^{\omega(\log n)}$.
+* **Theorem 2.7 / Korollare 2.6.1, 2.6.2.** Für $\omega(\log n)\leq k\leq n$ und $\vert S\vert = 2^k$ ist die Verschränkungsentropie über jeden Schnitt $(X, Y)$ mit $\vert X\vert, \vert Y\vert\geq k$ gleich $\Theta(k)$; obere Schranke aus dem Schmidt-Rang, untere über 4-fach unabhängige Phasenfunktionen (Theorem B.7).
+* **Theorem 1 / Korollar 1.0.1.** PRS mit Entropie $\Theta(f(n))$ für jedes $f = \omega(\log n)$; PES mit Lücke $\Theta(n)$ gegen $\omega(\log n)$.
+* **Theorem 3.5 (MPS-Testen).** Für $r\leq 2^{n/8}$ braucht ein MPS$(r)$-Tester $\Omega(\sqrt r)$ Kopien, informationstheoretisch wie rechnerisch; unvergleichbar mit Soleimanifar–Wright ($\Omega(\sqrt n)$), stärker bei großem $r$.
+
+### Methodischer Ansatz
+
+* Die Verschränkung eines Subset-Zustands ist durch $\log\vert S\vert$ beschränkt; Pseudozufälligkeit verlangt nur $\vert S\vert$ superpolynomiell. Die Trennung zwischen "Haar-Momente" ($t$-Design-Eigenschaft bis $t\ll\sqrt K$) und "Entropie" ($\log K$) ist der ganze Mechanismus.
+* Die frühere Version (QIP 2023) reduzierte Verschränkung nur über einen Schnitt; die neue Konstruktion ist einfacher und stärker.
+
+### Bedeutung und Anwendungen
+
+* Verschränkung ist keine effizient beobachtbare Größe: Zwei Ensembles mit linear verschiedener Entropie sind ununterscheidbar. Für Property Testing (Schmidt-Rang, MPS), für Destillationsprotokolle über die Schur-Transformation und für die Berechenbarkeit holographischer Dualitäten.
+* Grundlage für Pseudomagie (Gu, Oliviero, Leone) und die Sample-Untergrenzen bei Chen–Gong–Ye–Zhang.
+
+### Bezug zum eigenen Projekt
+
+* Subset-Phasenzustände haben ein Displacement-Spektrum, das über die Größe $K$ des Trägers im Ortsraum gesteuert wird; für $K = 2^{\mathrm{polylog}}$ ist das Spektrum flach genug für Pseudozufälligkeit, aber der Zustand hat nur polylogarithmische Verschränkung. Das ist eine Instanz, bei der Sparsity im Ortsraum (Regime 1 in einer anderen Basis) rechnerisch unsichtbar bleibt: eine Warnung, dass Sparsity ohne Schlüssel keine Lernbarkeit garantiert.
+* Die $\Omega(\sqrt r)$-Schranke für MPS-Testen ist eine Sample-Schranke gegen ein Klassenversprechen; sie sagt, dass die Bonddimension als Instanzparameter in die Kopienzahl eingeht, nicht nur in die Zeit.
+* Pseudoverschränkung ist die Form von Härte, die kein Speicher aufhebt: Auch $\rho\otimes\rho^*$ sieht nur Haar-Momente.
+
+### Grenzen und offene Fragen
+
+* Die Konstruktion ist ein Ensemble, kein einzelner Zustand; Aussagen über "typische" physikalische Zustände folgen nicht.
+* Die Lücke gilt für Entropie; ob dieselbe Ununterscheidbarkeit für andere Verschränkungsmaße (Negativität, Rényi-$\alpha$) gilt, wird teilweise behandelt.
+* Bedingt auf Einwegfunktionen.
+
+### Fragen zum Tieferbohren
+
+* Wie geht die 4-fache Unabhängigkeit der Phasenfunktion in die untere Entropieschranke ein (Theorem B.7)?
+* Wie sieht der Beweis von Theorem 2.1 mit der Bedingung $t < K$ aus, und was passiert bei $t\approx\sqrt K$?
+* Ist das Displacement-Spektrum eines Subset-Phasenzustands mit $K = 2^k$ bis auf Faktor $2^{-k}$ flach, und was sieht Bell-Sampling auf $\rho\otimes\rho^*$ dann tatsächlich?
+
+Paper: [arXiv:2211.00747](https://arxiv.org/abs/2211.00747)
+
+---
+
+## Learning quantum states and unitaries of bounded gate complexity (arXiv:2310.19882)
+
+Die Arbeit von **Haimeng Zhao, Laura Lewis, Ishaan Kannan, Yihui Quek, Hsin-Yuan Huang und Matthias C. Caro** (Caltech, Tsinghua, Google Quantum AI, Harvard, MIT, FU Berlin; PRX Quantum 2024) bestimmt die Kosten des Lernens von Zuständen $U\vert 0^n\rangle$ und Unitaries $U$ aus $G$ Zwei-Qubit-Gattern: $\tilde\Theta(G/\epsilon^2)$ Kopien für Zustände, unabhängig von $n$; $\tilde O(G\min\{1/\epsilon^2, \sqrt{2^n}/\epsilon\})$ und $\Omega(G/\epsilon)$ Queries für Unitaries im Mittel über Inputs; $\Omega(2^{\min\{G/2C, n/2\}}/\epsilon)$ im Worst Case. Unter der Annahme, dass RingLWE quantenmechanisch nicht subexponentiell lösbar ist, braucht jeder Lerner Zeit $\exp(\Omega(\min\{G, n\}))$; $G = O(\log n)$ ist der Übergang zur Effizienz.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse mit Versprechen (Gatterzahl $G$); die Klasse ist exponentiell groß und parametrisiert, also der Punkt, an dem Identifying in Searching übergeht. Die Sample-Schranke ist informationstheoretisch, die Zeitschranke kryptographisch: die These dieses Dokuments in einem Satz.
+* **Objekt:** reiner Zustand oder Unitary. **Zugriff:** Sample (Kopien, Einzelkopien-Messungen genügen); Query an $U$, auch $U^\dagger$ und kontrolliertes $U$ in den unteren Schranken; klassisch beschriebene Input–Output-Paare (Theorem 5).
+* **Status:** 🟢 🔴 🟢. Kopien $\tilde\Theta(G/\epsilon^2)$, Zeit exponentiell in $\min\{G, n\}$, Speicher polynomiell (ein Schaltkreis mit $G$ Gattern).
+* **Versprechen:** Gatterzahl $G$; für $G = O(\log n)$ polynomielle Zeit über Junta-Lernen.
+
+### Das Problem
+
+Volle Tomographie kostet $\Theta(4^n/\epsilon^2)$; physikalische Zustände entstehen aus wenigen Gattern. Wie skalieren Kopien, Queries und Zeit mit $G$, und wo liegt die Effizienzgrenze? Und warum widersprechen Quantum-No-Free-Lunch-Sätze ($\Omega(2^n)$ Samples für generische Unitaries) nicht der linearen Schranke in $G$?
+
+### Kernresultate
+
+* **Theorem 1 (Zustände).** $N = \tilde\Theta(G/\epsilon^2)$ Kopien notwendig und hinreichend für Spurabstand $\epsilon$; obere Schranke über ein Überdeckungsnetz der $G$-Gatter-Zustände plus Quantum Hypothesis Selection, untere über ein Packungsnetz. Verbessert $\tilde O(nG^2/\epsilon^4)$ von Huang et al.
+* **Theorem 2 (Zeit, Zustände).** Unter RingLWE-Subexponentialhärte braucht jeder Lerner für $\tilde O(G)$-Gatter-Zustände Zeit $\exp(\Omega(\min\{G, n\}))$; für $G = O(\log n)$ polynomiell.
+* **Theorem 3 (Unitaries, Worst Case).** Diamantabstand: $\Omega(2^{\min\{G/2C, n/2\}}/\epsilon)$ Queries notwendig, $\tilde O(2^nG/\epsilon)$ hinreichend; Beweis über die Adversary-Methode.
+* **Theorem 4 (Unitaries, Average Case).** Root-mean-square-Spurabstand über Haar-Inputs, äquivalent über jedes lokal verwürfelte Ensemble: $\tilde O(G\min\{1/\epsilon^2, \sqrt{2^n}/\epsilon\})$ Queries mit maximal verschränkten Inputs und Choi–Jamiołkowski, $\Omega(G/\epsilon)$ notwendig; ohne Hilfssysteme $\tilde O(G\min\{1/\epsilon^4, (\sqrt{2^n})^3/\epsilon\})$.
+* **Theorem 5 (klassische Beschreibungen).** $O(2^n/r)$ Input–Output-Paare mit Inputs vom Rang $r$ genügen und sind nötig; das löst den scheinbaren Widerspruch zum No-Free-Lunch-Satz auf.
+* **Theorem 6 (Zeit, Unitaries).** Dieselbe Härte $\exp(\Omega(\min\{G, n\}))$; damit gibt es keinen polynomiellen Lerner für Clifford+T-Schaltkreise mit $\tilde\omega(\log n)$ T-Gattern, was die fünfte Frage des Anshu–Arunachalam-Surveys verneint.
+* **Theorem 7 (physikalische Funktionen).** Zum Approximieren beliebiger 1-beschränkter 1-Lipschitz-Funktionen auf $[0,1]^\nu$ braucht ein parametrisierter Schaltkreis $G\geq\tilde\Omega(\epsilon^{-\nu/2})$ Gatter und $\Omega(\epsilon^{-\nu})$ Samples; Quantenneuronale Netze umgehen den Fluch der Dimension nicht.
+
+### Methodischer Ansatz
+
+* Überdeckungsnetze über die Gatterparameter, Hypothesenauswahl (Bădescu–O'Donnell) für die optimale $\epsilon$-Rate; Packungsnetze für die untere Schranke.
+* Härte durch PRS-Konstruktionen mit $\tilde O(G)$ Gattern, die ununterscheidbar von Haar sind: Ein effizienter Lerner wäre ein Unterscheider.
+* Numerik mit flachen Clifford-Schatten bis $n = 10^4$ Qubits bestätigt die Linearität in $G$ und die Unabhängigkeit von $n$.
+
+### Bedeutung und Anwendungen
+
+* Eine feinkörnige Sicht auf Tomographie: Nicht die Dimension, sondern die Schaltkreiskomplexität zählt für die Kopien; die Zeit folgt einer anderen Logik.
+* Die Grenze $\log n$ ist scharf für Zustände und Unitaries gleichermaßen und stimmt mit der Grenze der Clifford+T-Lerner überein.
+
+### Bezug zum eigenen Projekt
+
+* Die Zeile ist die formale Fassung der These "Sample-leicht, Zeit-hart": Jede Aussage der eigenen Arbeit über die LWE-Instanz muss sich an $\exp(\Omega(\min\{G, n\}))$ messen lassen. Die Displacement-Instanz hat $G = \mathrm{poly}(n)$; sie liegt also im harten Regime dieses Theorems, und die Frage ist nur, ob die zusätzliche Sparsity-Struktur das ändert.
+* Theorem 5 ist die Zugriffsleiter für Prozesse: Rang $r$ der Inputs kauft einen Faktor $r$ in den Samples; das ist das Prozess-Gegenstück zur Speicherachse bei Zuständen.
+* Die Sample-Schranke $\tilde\Theta(G/\epsilon^2)$ mit Einzelkopien-Messungen sagt, dass für reine Zustände kein Zweikopien-Vorteil in der Kopienzahl existiert; der Vorteil des eigenen Protokolls muss in der Zeit oder bei gemischten Zuständen liegen.
+
+### Grenzen und offene Fragen
+
+* Reine Zustände und Unitaries; gemischte Zustände und Kanäle brauchen andere Methoden, und dort könnten Zweikopien-Protokolle einen Kopienvorteil haben.
+* Worst-Case-Härte; ob typische $G$-Gatter-Zustände hart sind, ist offen (Average-Case).
+* Constant-depth mit verteilten Gattern ist effizient lernbar (Huang et al.), obwohl $G = \Theta(n)$; die Gatterzahl ist also nicht der einzige Parameter.
+
+### Fragen zum Tieferbohren
+
+* Wie geht die Lokal-Verwürfelungs-Äquivalenz (Theorem in [71]) in Theorem 4 ein, und gilt sie für Displacement-verwürfelte Ensembles?
+* Wie wird die Adversary-Methode für Theorem 3 aufgesetzt, und wo entsteht $\min\{G/2C, n/2\}$?
+* Welche PRS-Konstruktion mit $\tilde O(G)$ Gattern wird benutzt, und ist ihre Displacement-Struktur analysierbar?
+
+Paper: [arXiv:2310.19882](https://arxiv.org/abs/2310.19882)
+
+---
+
+## A single T-gate makes distribution learning hard (arXiv:2207.03140)
+
+Die Arbeit von **Marcel Hinsche, Marios Ioannou, Alexander Nietner, Jonas Haferkamp, Yihui Quek, Dominik Hangleiter, Jean-Pierre Seifert, Jens Eisert und Ryan Sweke** (FU Berlin, Maryland, TU Berlin; PRL 2023) charakterisiert die Lernbarkeit der Output-Verteilungen $P_U(x) = \vert\langle x\vert U\vert 0^n\rangle\vert^2$ lokaler Schaltkreise aus klassischen Samples. Clifford-Verteilungen sind in jeder Tiefe effizient lernbar; ein einziges $T$-Gatter macht das Lernen eines Evaluators unter LPN hart; Generatoren sind unter PRF-Annahmen ab Tiefe $n^{\Omega(1)}$ hart; und im Statistical-Query-Modell beginnt die Härte bei Tiefe $\omega(\log n)$.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse mit Versprechen (Verteilungen einer Schaltkreisklasse); Ausgabe ist ein Generator oder ein Evaluator. Die Härte ist kryptographisch wie bei den LWE-Zeilen, aber auf der klassischen Seite der Messung.
+* **Objekt:** klassische Verteilung über $\{0,1\}^n$. **Zugriff:** Sample, klassische Bitstrings; im SQ-Modell nur Erwartungswerte bis auf $\tau = \Omega(1/\mathrm{poly})$.
+* **Status:** Clifford 🟢 🟢 🟢 mit $O(n)$ Samples und Gauß-Elimination; Clifford+$T$ 🟢 🔴 🟢 (Samples polynomiell, Zeit LPN-hart); allgemein 🟢 🔴 🟢 ab Tiefe $n^{\Omega(1)}$ (Generator) und $\omega(\log n)$ (SQ).
+* **Versprechen:** Gatterset und Tiefe; nächste-Nachbar-Gatter in 1D.
+
+### Das Problem
+
+Quantum Circuit Born Machines (QCBM) sollen Verteilungen lernen, die klassisch schwer zu sampeln sind; die Hoffnung war ein beweisbarer Vorteil bei natürlichen Verteilungen. Simulierbarkeit und Lernbarkeit fallen bei Clifford zusammen; gilt das auch bei "leicht nicht-Clifford"?
+
+### Kernresultate
+
+* **Theorem 1.** $\mathcal{D}_{\mathrm{Cl}}$ ist für jede Tiefe effizient lernbar (Generator und Evaluator): Clifford-Verteilungen sind uniform auf affinen Unterräumen von $\mathbb{F}_2^n$, und $O(n)$ Samples plus Gauß-Elimination finden den Unterraum mit Fehler $e^{-\Omega(n)}$.
+* **Theorem 2.** Unter LPN sind die Output-Verteilungen lokaler Clifford-Schaltkreise der Tiefe $n^{\Omega(1)}$ mit einem einzigen $T$-Gatter nicht effizient evaluator-lernbar; bei beliebiger Konnektivität schon in Tiefe $\Omega(1)$. Das LPN-Rauschen wird durch ein $T$-Gatter realisiert (Abb. 2); dasselbe gilt für Clifford mit Depolarisierung.
+* **Korollar 1.** Dieselbe Härte für alle lokalen Schaltkreise der Tiefe $n^{\Omega(1)}$.
+* **Theorem 3.** Unter klassisch- bzw. standard-sicheren PRF gibt es keinen effizienten klassischen bzw. Quantenalgorithmus für Generator-Lernen bei Tiefe $n^{\Omega(1)}$ und beliebigem universellen Gatterset; QCBM-Lerner eingeschlossen.
+* **Theorem 4 (SQ).** Keine query-effiziente SQ-Lernbarkeit für $\mathcal{D}_{\mathrm{Cl}}$ ab Tiefe $\omega(\log n)$ und für $\mathcal{D}_{\mathcal{G}}$ ab Tiefe $\omega(\log^k n)$, Generator wie Evaluator; Paritäten sind SQ-hart, lineare Clifford-Tiefe realisiert sie, Reskalierung tauscht Tiefe gegen Komplexität.
+
+### Methodischer Ansatz
+
+* Alle Härten sind Einbettungen klassischer harter Verteilungen (Paritäten mit Rauschen, PRF-Outputs) in Schaltkreise; die Schaltkreisstruktur bestimmt nur, welche Tiefe nötig ist.
+* Der scharfe Übergang bei einem $T$-Gatter kontrastiert mit der glatten Simulationskomplexität (exponentiell in der $T$-Zahl); Lernen und Simulieren trennen sich hier.
+
+### Bedeutung und Anwendungen
+
+* Output-Verteilungen lokaler Schaltkreise können keinen praktischen Lernvorteil von QCBMs gegenüber klassischen Lernern begründen; neue Strategien für Quantenvorteile im Lernen sind nötig.
+* Das SQ-Resultat trifft alle gradientenbasierten Trainer.
+
+### Bezug zum eigenen Projekt
+
+* Die Klasse ist die klassische Randverteilung der Zustände, deren Displacement-Spektren die eigene Arbeit lernt; die Härte mit einem $T$-Gatter zeigt, dass schon minimale Magic auf der Verteilungsseite eine Wand baut, während auf der Zustandsseite $t = O(\log n)$ noch lernbar ist. Bell-Sampling sieht mehr als die Rechenbasis-Verteilung; das ist der quantitative Grund, warum Zweikopien-Zugriff die Instanzenleiter verlängert.
+* LPN ist das $\mathbb{F}_2$-Gegenstück zu LWE; die Konstruktion "Rauschen durch ein Gatter" ist ein Rezept, harte Displacement-Instanzen aus einem Clifford-Gerüst plus einem einzigen nicht-Clifford-Element zu bauen.
+* Das SQ-Modell ist die Sprache für CNN-Decoder, die nur Statistiken sehen; Theorem 4 sagt, ab welcher Tiefe solche Decoder scheitern müssen.
+
+### Grenzen und offene Fragen
+
+* Evaluator-Härte braucht LPN, Generator-Härte PRF; unbedingte Aussagen nur im SQ-Modell.
+* Tiefe $O(\log n)$ bis $n^{\Omega(1)}$ ohne SQ-Einschränkung ist offen; die Autoren nennen Sample-Komplexität und Average-Case als nächste Fragen (Nietner et al. beantworten letztere).
+* Nur Rechenbasis-Verteilungen und feste Inputs.
+
+### Fragen zum Tieferbohren
+
+* Wie genau realisiert ein einzelnes $T$-Gatter mit $H$-Konjugation Bernoulli-Rauschen mit konstanter Rate, und lässt sich die Rate steuern?
+* Welche Reskalierung tauscht Tiefe gegen Komplexität, und warum ist sie auf $n^{\Omega(1)}$ begrenzt?
+* Was sehen Bell-Samples auf $\rho\otimes\rho^*$ für den Zustand aus Abb. 2, und ist der Träger dort trotz LPN sparsam und findbar?
+
+Paper: [arXiv:2207.03140](https://arxiv.org/abs/2207.03140)
+
+---
+
+## On the average-case complexity of learning output distributions of quantum circuits (arXiv:2305.05765)
+
+Die Arbeit von **Alexander Nietner, Marios Ioannou, Ryan Sweke, Richard Kueng, Jens Eisert, Marcel Hinsche und Jonas Haferkamp** (FU Berlin, Linz, Berkeley; Quantum 2025) verlegt die Härte des Verteilungslernens vom Worst Case in den Average Case: Für zufällige Brickwork-Schaltkreise der Tiefe $d$ ist das Lernen eines $\epsilon$-nahen Generators aus Statistical Queries ab $d = \Omega(\log n)$ hart mit konstanter Wahrscheinlichkeit über die Instanz ($2^{\Omega(d)}$ Queries), bei linearer Tiefe mit Wahrscheinlichkeit $1 - O(2^{-n})$ ($\Omega(2^n)$ Queries), bei unendlicher Tiefe mit Wahrscheinlichkeit $1 - 2^{-2^{\Omega(n)}}$ ($2^{2^{\Omega(n)}}$ Queries). Nebenprodukt: Die Output-Verteilung eines zufälligen Schaltkreises ist mit Wahrscheinlichkeit $1 - O(2^{-n})$ konstant weit von jeder festen Verteilung, eine Variante der Vermutung von Aaronson und Chen.
+
+### Einordnung in die Tabellen
+
+* **Task type:** Identifying gegen eine Klasse, im Average Case über die Klasse und mit Erfolgswahrscheinlichkeit $\beta$ über die Instanz; das ist genau die offene Frage (4) der Identifying-Tabelle, für Verteilungen beantwortet.
+* **Objekt:** klassische Verteilung eines zufälligen Brickwork-Schaltkreises. **Zugriff:** Statistical Queries mit Toleranz $\tau = \Omega(1/\mathrm{poly})$; die Schranken übertragen sich auf probabilistische und Quantenalgorithmen (Abschnitt F).
+* **Status:** 🟢 🔴 🟢 im SQ-Modell: Samples polynomiell, Queries exponentiell in $d$; der Preis ist unbedingt, keine kryptographische Annahme.
+* **Versprechen:** keines über die Instanz außer der Tiefe; $\beta$ interpoliert zwischen Worst Case ($\beta = 1$) und Average Case.
+
+### Das Problem
+
+Härte im Worst Case sagt nichts über heuristische Lerner, die auf typischen Instanzen laufen. Ist das Lernen von Output-Verteilungen für einen zufälligen Schaltkreis hart, und ab welcher Tiefe? Und wie hängt die Härte von der geforderten Erfolgswahrscheinlichkeit $\beta$ ab?
+
+### Kernresultate
+
+* **Informal Theorem 1.** (1) $d\to\infty$: $q = 2^{2^{\Omega(n)}}$ Queries für jedes $\beta > 2\exp(-2^{n-2}/9\pi^3)$ (Theorem 2). (2) Lineare Tiefe $d\geq d' = O(n)$: $q = \Omega(2^n)$ für $\beta > 3200\cdot 2^{-n}$ (Theorem 6). (3) Sublinear: für $c\log n\leq d\leq c(n+\log n)$ mit $c = 1/\log(5/4)$ ist $q = 2^{\Omega(d)} = 2^{\omega(\log n)}$ für $\beta > 4/5 + \epsilon + \tau$ (Theorem 12).
+* **Informal Theorem 2 / Theorem 36.** Für $d\geq d' = O(n)$, $\epsilon\leq 1/225$ und jede Verteilung $Q$: $\Pr_U[d_{\mathrm{TV}}(P_U, Q) > \epsilon]\geq 1 - O(2^{-n})$.
+* **SQ-Obergrenze.** Ein $\epsilon$-Netz über die Verteilungen liefert $q\leq\exp[O(nd\log(nd/\epsilon))]$ (Turnier); bei linearer Tiefe $\exp[O(n^2\log n)]$ gegen $\Omega(2^n)$, die Lücke bleibt offen.
+
+### Methodischer Ansatz
+
+* SQ-Dimension und Anti-Konzentration: Die Verteilungen zufälliger Schaltkreise sind ab logarithmischer Tiefe paarweise fast unkorreliert (approximative Designs), sodass jede Query nur wenige Instanzen ausschließt; die Tiefenabhängigkeit kommt aus der Design-Konvergenzrate.
+* Das Maß über Instanzen ist die Schaltkreisverteilung selbst, nicht uniform über Verteilungen; das ist die natürliche Wahl für QCBM-Analysen.
+* SQ-Lerner umfassen alle gradientenbasierten QCBM-Trainer (Parameter-Shift, SPSA), also trifft die Schranke die Praxis.
+
+### Bedeutung und Anwendungen
+
+* Das QCBM-Gegenstück zu Average-Case-Härte für tiefe neuronale Netze; heuristische Lerner können ab logarithmischer Tiefe auf typischen Instanzen nicht effizient sein.
+* Die "Far from uniform"-Eigenschaft stützt Heavy-Output-Generation als Vorteilsnachweis.
+
+### Bezug zum eigenen Projekt
+
+* Average-Case-Härte ist die Frage, die die eigene Arbeit für Displacement-Spektren offen lässt: LWE gibt Worst-Case-Härte über eine Reduktion, dieses Paper zeigt, wie unbedingte Average-Case-Schranken im SQ-Modell aussehen; für einen CNN-Decoder, der nur Bell-Statistiken sieht, ist das SQ-Modell die richtige Abstraktion.
+* Die Parameter $(d, \beta, \tau, \epsilon)$ sind eine vierdimensionale Instanzenleiter; die Trennung "konstante Wahrscheinlichkeit ab $\log n$, exponentiell nahe eins ab linearer Tiefe" ist ein Muster für die Stufen der eigenen Leiter.
+* Die Design-Eigenschaft ab logarithmischer Tiefe ist dieselbe, die Displacement-Spektren flach macht: Ab dieser Tiefe gibt es typischerweise keinen sparsamen Träger.
+
+### Grenzen und offene Fragen
+
+* Nur SQ; Sample-Komplexität und Härte für allgemeine Lerner mit Einzel-Samples offen.
+* Lücke zwischen $\Omega(2^n)$ und $\exp[O(n^2\log n)]$ bei linearer Tiefe.
+* Andere Verteilungsfamilien (freie Fermionen) und die Frage, ob Simulationshärte Lernhärte impliziert, offen.
+
+### Fragen zum Tieferbohren
+
+* Wie genau wird die SQ-Dimension aus der Design-Konvergenz des Brickwork-Ensembles abgeleitet, und woher kommt $c = 1/\log(5/4)$?
+* Wie überträgt sich die SQ-Schranke auf Quantenalgorithmen mit Einzel-Samples (Abschnitt F), und was geht dabei verloren?
+* Gilt eine analoge Average-Case-Schranke für Bell-Statistiken zufälliger Schaltkreise, also für das Lernen des Displacement-Spektrums aus Zweikopien-Samples?
+
+Paper: [arXiv:2305.05765](https://arxiv.org/abs/2305.05765)
 
 <br>
 
@@ -988,11 +3994,11 @@ Classical neural decoders on shadow data (bottom-left quadrant) as empirical heu
 | 2015–2017 | Spectrum testing (O'Donnell–Wright 2015) · Sample-optimal tomography $\Theta(d^2/\epsilon^2)$ (2016) · Property-testing survey (Montanaro–de Wolf 2016) · Stabilizer Bell sampling (Montanaro 2017) · Quantum PAC survey (Arunachalam–de Wolf 2017) |
 | 2018–2019 | Shadow tomography (Aaronson) · Online learning of states · Pseudorandom states (Ji–Liu–Song) · Neural-network tomography (Torlai et al.) · Stabilizer PAC learning (Rocchetto) · Gentle measurement and differential privacy (Aaronson–Rothblum) · LWE easy with quantum samples (Grilo–Kerenidis–Zijlstra) · Scalable PRS (Brakerski–Shmueli) |
 | 2020 | Classical shadows (Huang–Kueng–Preskill) · Entanglement necessary for property testing (Bubeck–Chen–Li) · Pauli channel estimation (Flammia–Wallman; Harper–Flammia–Wallman) · Quantum statistical queries (Arunachalam–Grilo–Yuen) |
-| 2021 | Memory separations (Chen–Cotler–Huang–Li) · Clifford Schur–Weyl duality and stabilizer testing (Gross–Nezami–Walter) · Improved shadow tomography and threshold search (Bădescu–O'Donnell) · Gibbs-state Hamiltonian learning (Anshu et al.) · Power of data and information-theoretic bounds (Huang et al.) · Pseudorandomness and learning hardness (Kretschmer) · Derandomized and fermionic shadows · Certification tutorial (Kliesch–Roth) |
-| 2022 | Learning from experiments, Sycamore demo (Huang et al., Science) · Provable ML on shadow data (Huang et al., Science) · Pauli-channel separation (Chen–Zhou–Seif–Jiang) · QUALM (Aharonov–Cotler–Qi) · High-temperature Hamiltonian learning in polynomial time (Haah–Kothari–Tang) · Few-T learning (Lai–Cheng) · Pseudoentanglement · Output-distribution learnability (Hinsche et al.) · Nonadaptive single-copy lower bound (Lowe–Nayak) |
-| 2023 | Heisenberg-limited Hamiltonian learning (Huang–Tong–Fang–Su) · Adaptivity does not help tomography (Chen et al.) · Unitary estimation at the Heisenberg rate (Haah–Kothari–O'Donnell–Tang) · Phase states (Arunachalam–Bravyi–Dutt–Yoder) · Juntas (Chen–Nadimpalli–Yuen) · Predicting processes (Huang–Chen–Preskill) · Bounded gate complexity (Zhao et al.) · One $T$ gate makes distribution learning hard (Hinsche et al.) · Few non-Clifford gates (Grewal–Iyer–Kretschmer–Liang) · Free-fermion tomography (Aaronson–Grewal) · Noncommutative Bohnenblust–Hille (Volberg–Zhang) · Randomized-measurement review (Elben et al.) |
-| 2024 | Triply efficient shadows (King–Gosset–Kothari–Babbush) · Conjugate pairs (King–Wan–McClean) · Adaptivity separations for shadow tomography (Chen–Gong–Zhang) · Agnostic tomography and stabilizer bootstrapping · Tolerant stabilizer testing (Arunachalam–Dutt) · Any-temperature Hamiltonian learning (Bakshi–Liu–Moitra–Tang) · Hamiltonian structure learning from real-time evolution (Bakshi–Liu–Moitra–Tang) · Shallow circuits in polynomial time (Huang et al.; Landau–Liu) · Qudit stabilizer learning beyond Bell sampling (Allcock et al.) · Low-degree objects · Certification with single-qubit measurements (Huang–Preskill–Soleimanifar) · Gaussian and CV state learning (Mele et al.) · AlphaQubit · State-learning survey (Anshu–Arunachalam) |
-| 2025–2026 | First empirical evaluation of a two-copy triply efficient scheme (arXiv:2508.11744) · Noise-robust two-copy hardware · Physical average-case decodability · Learned decoders as algorithm discovery |
+| 2021 | Memory separations (Chen–Cotler–Huang–Li) · Clifford Schur–Weyl duality and stabilizer testing (Gross–Nezami–Walter) · Improved shadow tomography and threshold search (Bădescu–O'Donnell) · Gibbs-state Hamiltonian learning (Anshu et al.) · Power of data and information-theoretic bounds (Huang et al.) · Pseudorandomness and learning hardness (Kretschmer) · Derandomized and fermionic shadows · Experimental classical shadows on four photonic qubits (Zhang et al.) · Certification tutorial (Kliesch–Roth) |
+| 2022 | Learning from experiments, Sycamore demo (Huang et al., Science) · Provable ML on shadow data (Huang et al., Science) · Pauli-channel separation (Chen–Zhou–Seif–Jiang) · QUALM (Aharonov–Cotler–Qi) · High-temperature Hamiltonian learning in polynomial time (Haah–Kothari–Tang) · Few-T learning (Lai–Cheng) · Pseudoentanglement · Output-distribution learnability (Hinsche et al.) · Nonadaptive single-copy lower bound (Lowe–Nayak) · Tight certification bounds with incoherent measurements (Chen–Huang–Li–Liu) · Non-Markovian process tensor tomography (White et al.) |
+| 2023 | Heisenberg-limited Hamiltonian learning (Huang–Tong–Fang–Su) · Adaptivity does not help tomography (Chen et al.) · Unitary estimation at the Heisenberg rate (Haah–Kothari–O'Donnell–Tang) · Phase states (Arunachalam–Bravyi–Dutt–Yoder) · Juntas (Chen–Nadimpalli–Yuen) · Predicting processes (Huang–Chen–Preskill) · Bounded gate complexity (Zhao et al.) · One $T$ gate makes distribution learning hard (Hinsche et al.) · Few non-Clifford gates (Grewal–Iyer–Kretschmer–Liang) · Free-fermion tomography (Aaronson–Grewal) · Noncommutative Bohnenblust–Hille (Volberg–Zhang) · Qudit low-degree learning via a dimension-free Remez inequality (Klein–Slote–Volberg–Zhang) · Matchgate shadows (Wan–Huggins–Lee–Babbush) · Locally scrambled shadows (Hu–Choi–You) · Randomized-measurement review (Elben et al.) · Stabilizer-entropy phase transition and purity estimation (Leone et al.) · Learning finitely correlated states (Fanizza et al.) · Average-case hardness of learning circuit output distributions (Nietner et al.) |
+| 2024 | Triply efficient shadows (King–Gosset–Kothari–Babbush) · Conjugate pairs (King–Wan–McClean) · Adaptivity separations for shadow tomography (Chen–Gong–Zhang) · Agnostic tomography and stabilizer bootstrapping · Tolerant stabilizer testing (Arunachalam–Dutt) · Any-temperature Hamiltonian learning (Bakshi–Liu–Moitra–Tang) · Hamiltonian structure learning from real-time evolution (Bakshi–Liu–Moitra–Tang) · Shallow circuits in polynomial time (Huang et al.; Landau–Liu) · Qudit stabilizer learning beyond Bell sampling (Allcock et al.) · Low-degree objects · Certification with single-qubit measurements (Huang–Preskill–Soleimanifar) · Gaussian and CV state learning (Mele et al.) · AlphaQubit · Bell and locally entangled shadows (Ippoliti) · Matchgate ensemble unification (Heyraud–Chomet–Tilly) · Qudit shadows with a magic gate (Mao–Yi–Zhu) · Tighter median-of-means constants (Fu et al.) · State-learning survey (Anshu–Arunachalam) · Tolerant stabilizer testing with a polynomial gap (Bao–van Dordrecht–Helsen) · Fermionic states with few non-Gaussian gates (Mele–Herasymenko) |
+| 2025–2026 | First empirical evaluation of a two-copy triply efficient scheme (arXiv:2508.11744) · Noise-robust two-copy hardware · Physical average-case decodability · Learned decoders as algorithm discovery · Online shadow tomography at the classical rates (Chen–O'Donnell–Pelecanos–Wright) · Heisenberg-limited Hamiltonian learning without short-time control (Shin–Lee–Oh) · Shadows over symmetric spaces (Chang et al.) · Channel learning with limited parallel access and the conjugate channel (Subramanian–Kwon–Jiang) |
 
 <br>
 
