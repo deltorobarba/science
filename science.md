@@ -115,6 +115,7 @@ When a protocol becomes efficient through a **structural promise**, this means: 
   1. Measure $O(n)$ Bell differences.
   2. **Classical decoder:** **Gaussian elimination over $\mathbb{F}_2$** in time $O(n^3)$.  
      Once $n$ linearly independent vectors are found, they span the Lagrangian subspace, i.e. the stabilizer group up to signs; a few further measurements fix the signs, and the state is fully identified.
+* **On qudits (Allcock, Doriguello, Ivanyos, Santha 2024):** for $d = p > 2$, Bell difference sampling on four copies returns only $\mathrm{col}(V)\times\mathrm{col}(W)$, uniform at full rank, so the subgroup is no longer visible. With copies of $|S^*\rangle$, Bell sampling on $|S\rangle\otimes|S^*\rangle$ is uniform on the Lagrangian subspace, and linear algebra works again for every $d$ ($O(n)$ copies, time $O(n^3)$); without the conjugate, a hidden-polynomial procedure for the quadratic phase does it for prime $d$ in time $O(n^4)$. This is the reason for the conjugate pair in this project.
 
 #### 2. Gaussian states (fermions and bosons)
 * **The promise:** the state is a ground or thermal state of a free (non-interacting) quadratic Hamiltonian.
@@ -206,6 +207,132 @@ When a protocol becomes efficient through a **structural promise**, this means: 
 
 Whenever this document shows green (🟢) in the time budget, one of these mechanisms is at work behind it, or a quantum resource, or a stronger access model (see the summary above). Without such a promise, no efficient decoder is known in general, and for LWE-type instances none can exist under standard cryptographic assumptions.
 
+### Proven classes by task type, and candidates for this project
+
+The four groups are a cross-task toolbox: a promise is a statement about the state, while the task type is fixed by what is returned. By their rows in the tables (LWE rule, Appendix, "Reading the tables"), the entries of this deep dive sort as follows.
+
+| Deep dive entry | Task type | Row in the tables |
+| :--- | :--- | :--- |
+| 1.1 Stabilizer states, also on qudits | Searching | "Stabilizer states"; "Stabilizer states on qudits, $d > 2$" |
+| 1.2 Gaussian states | Identifying | "Gaussian and near-Gaussian states" |
+| 1.3 Near-stabilizer states | Searching | "Clifford plus few non-Clifford gates"; "Approximate stabilizer support and stabilizer fidelity"; "Agnostic tomography" |
+| 2.1 $k$-local observables | Estimating | "Classical shadows, $k$-local Paulis" |
+| 2.2 Juntas, Hamiltonian structure, Ising models | Searching | "Quantum juntas"; "Hamiltonian structure learning from real-time evolution"; "Structure learning of Ising models and Markov random fields from samples" |
+| 3.1 Matrix product states | Identifying | "Matrix product and finitely correlated states" |
+| 3.2 Shallow circuits | Identifying | "States prepared by shallow circuits"; "Shallow circuits as unitaries" |
+| 3.3 Gapped phases | Estimating | "Ground-state properties across a phase from shadows" |
+| 4.1 Coprime factorization | Searching | "Factorized spectra over coprime factors" |
+| 4.2 Low-degree concentration | Searching | "Low-degree Pauli concentration of QAC⁰ channels" |
+
+#### What belongs only to searching
+
+In searching the promise has to make the *location* of the support decodable. A promise that only makes the answer short is not enough: the LWE instance is sparse and still hard. Four things exist only in this column.
+
+* **The decodable families for states under sample access.** For a state and i.i.d. copies (rungs 1–2), three families are proven.
+  * *Regime 1, dictionary:* the task becomes estimating over the list (King, Wan, McClean; classical original: Bresler; Klivans, Meka).
+  * *Regime 2, subgroup:* decoded by linear algebra (Montanaro; Allcock et al. on qudits; approximately Grewal, Iyer, Kretschmer, Liang and stabilizer bootstrapping; few non-Clifford gates).
+  * *Regime 3, factorized spectra over coprime factors:* decoded by a best-first heap. This is this project's own, elementary argument, not a result from the literature; it needs composite $d$ and a product state across the factors.
+* **Heaviness under unit normalization.** For unitaries, channels, and Boolean functions, $\sum_P|u_P|^2 = 1$, so a $k$-sparse spectrum is heavy, and Fourier sampling on the Choi state or on quantum examples finds it. Examples are quantum juntas (Chen, Nadimpalli, Yuen), the heavy Pauli coefficients of a unitary (Montanaro, Osborne), QAC⁰ channels (Nadimpalli et al.), and Boolean functions from quantum examples (Bshouty, Jackson; Arunachalam et al.). For states the same measurement sees $\sum_{q,p}|y_{q,p}|^2 = d\,\mathrm{tr}(\rho^2)$: top-$k$ over a flat remainder is not heavy, and the mechanism does not apply (normalization paragraph in the appendix, "What is learned").
+* **The query route.** With chosen evaluation points, search is easy far beyond the three regimes. Examples are Goldreich–Levin, Kushilevitz–Mansour, sparse FFT, Simon, LWE with superposition queries (Grilo, Kerenidis, Zijlstra), Hamiltonian structure learning (Bakshi, Liu, Moitra, Tang; Shin, Lee, Oh), and sparse Pauli noise (Harper, Yu, Flammia). This route is not available at rung 2.
+* **The proven walls.** Three hardness results are specific to this column: the LWE displacement instance, pseudomagic states, and stabilizer states under noisy PAC access (LPN; Gollakota, Liang). Outside these instances and outside the families above, the status is open, not hard, and this open region is where the conjecture of this project sits.
+
+#### Proven efficient classes (🟢 🟢 🟢) by task type
+
+**Identifying** (the candidates or a class are the input):
+* Gaussian and near-Gaussian states (Aaronson, Grewal; Mele, Herasymenko; bosonic: Mele et al.).
+* Matrix product and finitely correlated states (Cramer et al.; Fanizza et al.).
+* States and unitaries of shallow circuits (Huang et al.; Landau, Liu).
+* Phase states of degree $\ell$ (Arunachalam, Bravyi, Dutt, Yoder).
+* Non-Markovian processes of bounded memory (White et al.).
+* One-bit tasks:
+  * stabilizer testing, also tolerant (Gross, Nezami, Walter; Arunachalam, Dutt; Bao et al.; Chen et al.);
+  * certification (Huang, Preskill, Soleimanifar; Chen, Huang, Li, Liu);
+  * purity testing with two-copy memory;
+  * the QUALM distinctions with coherent access;
+  * subsystem purity of $t$-doped states (Leone et al.).
+* Proven walls: pseudorandom states and pseudoentanglement; bounded gate complexity beyond $G = \tilde\omega(\log n)$ (Zhao et al.); output distributions of circuits (Hinsche et al.; Nietner et al.).
+
+**Estimating** (the observables are the input):
+* Classical shadows under locality or bounded Hilbert–Schmidt norm, with ensembles for fermions, local entanglement, and qudits (Huang, Kueng, Preskill; Wan et al.; Ippoliti; Mao, Yi, Zhu).
+* All $4^n$ Paulis with two-copy memory (King, Gosset, Kothari, Babbush); displacement amplitudes over a dictionary with conjugate pairs (King, Wan, McClean).
+* Ground-state properties across a gapped phase (Huang et al.; Lewis et al.); thermal phases and single Gibbs states (Onorati et al.).
+* Hamiltonian coefficients for known terms:
+  * from Gibbs states at high temperature (Haah, Kothari, Tang) and at any constant temperature (Bakshi et al.);
+  * Heisenberg-limited from the dynamics (Huang, Tong, Fang, Su).
+* Low-degree objects (Arunachalam et al.; Klein et al. on qudits); arbitrary processes on average over locally flat inputs (Huang, Chen, Preskill).
+* Channels: Pauli channels (Flammia, Wallman; entanglement-assisted: Chen, Zhou, Seif, Jiang); the Heisenberg–Weyl transfer matrix with the conjugate channel (Subramanian, Kwon, Jiang).
+* Not efficient without a promise: full QST, general shadow tomography, PAC and online learning.
+
+**Searching** (the observables are the output):
+* States under sample access (rungs 1–2):
+  * *Regime 1, dictionary:* displacement amplitudes over a known list with conjugate pairs (King, Wan, McClean); the task becomes estimating over the list.
+  * *Regime 2, subgroup:*
+    * stabilizer states (Montanaro);
+    * stabilizer states on qudits, $d > 2$ (Allcock, Doriguello, Ivanyos, Santha);
+    * Clifford plus few non-Clifford gates, stabilizer dimension at least $n - t$ with $t = O(\log n)$ (Lai, Cheng; Grewal, Iyer, Kretschmer, Liang; Leone et al.);
+    * approximate stabilizer support, polynomial above fidelity $\cos^2(\pi/8)$ (Grewal, Iyer, Kretschmer, Liang);
+    * agnostic tomography, quasipolynomial for any fidelity (Grewal, Iyer, Kretschmer, Liang 2024; Chen, Gong, Ye, Zhang).
+  * *Regime 3:* factorized spectra over coprime factors (this project; own argument).
+* Operators and functions with a unit-normalized spectrum (heaviness), with sample access to the Choi state or to quantum examples:
+  * quantum juntas (Chen, Nadimpalli, Yuen);
+  * heavy Pauli coefficients of a unitary (Montanaro, Osborne);
+  * low-degree Pauli concentration of QAC⁰ channels (Nadimpalli, Parham, Vasconcelos, Yuen);
+  * DNF and heavy Fourier coefficients from quantum examples (Bshouty, Jackson);
+  * $k$-Fourier-sparse Boolean functions from quantum examples (Arunachalam, Chakraborty, Lee, Paraashar, de Wolf).
+* Classical samples under a degree promise: Ising models and Markov random fields (Bresler; Klivans, Meka).
+* The query route:
+  * heavy Fourier coefficients (Goldreich–Levin, Kushilevitz–Mansour, sparse FFT);
+  * Simon's problem and hidden subgroups;
+  * LWE with superposition queries (Grilo, Kerenidis, Zijlstra);
+  * Hamiltonian structure learning from real-time evolution (Bakshi, Liu, Moitra, Tang), also without short-time control (Shin, Lee, Oh);
+  * sparse Pauli noise (Harper, Yu, Flammia).
+* Proven walls:
+  * LWE from i.i.d. samples and its displacement instance (Regev; this project's theorem);
+  * pseudomagic states (Gu, Leone, Ghosh, Eisert, Yelin, Quek);
+  * stabilizer states from noisy PAC examples (Gollakota, Liang).
+
+#### Candidate classes for this project's instance ladder
+
+All classes in one table, sorted by increasing complexity of the search task. The table merges two sources: the ladder of research.md ("10. Die Instanzen-Leiter", rungs 0–7, together with the dials in "6. Was wir suchen", point (b)), and further candidates suggested by the proven classes above. Everything without a named source is an own proposal or inference. Entries marked "own computation" were checked numerically with exact spectra for $d = 13$ and $d = 31$.
+
+The table has five levels:
+* **A, calibration:** the support is known, and nothing is searched.
+* **B, proven decodable:** the support is unknown but falls under Regime 1, 2, or 3.
+* **C, tolerant versions:** a proven promise holds only approximately.
+* **D, conjecture territory:** physically generated states without a proven promise.
+* **E, endpoint controls:** proven hard, statistically hopeless, or with nothing to find.
+
+Two standard facts shape the table:
+* **Normalization.** Every coefficient satisfies $\vert y_z\vert\leq 1$, and $\sum_z\vert y_z\vert^2 = d\,\mathrm{Tr}\rho^2$. A pure state therefore has at least $d$ nonzero coefficients, exactly $d$ only for a stabilizer state, and a top-$k$ with $k < d$ always sits above a remainder of mass at least $d - k$.
+* **Bell statistics.** For pure states, the Bell outcomes on $\rho\otimes\rho^*$ follow $\vert y\vert^2/d$. For mixed states they follow the symplectic Fourier transform of $\vert y\vert^2$ and are spread over all addresses.
+
+| # | Class and construction | What the displacement spectrum looks like | Mechanism: why easy or hard | What it tests (failure mode) | Source, status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| A1 | **Basis and Fourier-basis states** (rung 0): $\vert j\rangle$, or $d^{-1/2}\sum_x\omega^{ax}\vert x\rangle$ (a phase state of degree 1) | plateau of $d$ coefficients of magnitude one on a *known* line: $q = 0$ for $\vert j\rangle$, $p = 0$ for the Fourier states; both are stabilizer states | nothing to search | tie handling (`defn:validtopk`) and calibration of the noise floor; identifiability | research.md, rung 0 |
+| A2 | **Displaced states** (rung 1): $\rho = D_v\rho_0D_v^\dagger$ for a known reference $\rho_0$ | magnitudes identical to those of $\rho_0$; phases shifted by $\omega^{\langle u,v\rangle}$ | Phase 1 is trivial; all information sits in the phases | Phase 2 in isolation, decoupled from Phase 1 | research.md, rung 1 |
+| B1 | **Dictionary** (rung 7, first step): the top-$k$ support is drawn from a known list of $M = \mathrm{poly}(\log d)$ candidates | top-$k$ inside the list, arbitrary remainder | Regime 1: character means over the list, $N = O(g^{-2}\log(M/\delta))$ (`prop:dictionary`) | whether the CNN beats the trivial baseline; for $d\leq 10$ the full grid ($d^2\leq 100$) is itself a dictionary, the starting point of the program | King, Wan, McClean; research.md, sections 9 and 10 |
+| B2 | **Hot Gibbs states of the harmonic background** (new; rung 5 at small $\beta$): $e^{-\beta H_{\mathrm{base}}}/Z$ | concentrated on the origin and its nearest neighbours. Own computation, $d = 31$, $\beta = 2$: $\vert y\vert = 0.38$ on $(\pm1,0)$, $0.29$ on $(0,\pm1)$, $0.12$ on $(\pm1,\pm1)$ | Regime 1 in natural form: a ball around the origin is a known dictionary. Only mixed states can be concentrated like this (normalization) | separating the background from injected signals; whether the CNN learns more than the neighbourhood of the origin | Klein, Slote, Volberg, Zhang (low degree in $(q,p)$); own computation |
+| B3 | **Translation-invariant Hamiltonians** (research.md, section 11, factor E): $H$ commutes with $X$, i.e. $H = \sum_qc_qX^q$ | Gibbs states are diagonal in the $X$ eigenbasis, so the spectrum lies on the *known* line $p = 0$ ($d$ addresses); the ground state is a Fourier-basis state (A1) | a known subgroup cuts the search from $d^2$ to $d$ addresses; enumeration is cheap in practice, but not $\mathrm{poly}(\log d)$ | a control for "support on a known line"; the reason for open boundary conditions in the generator | research.md, section 11 |
+| B4 | **Stabilizer states** (rung 2), including the quadratic phase states $d^{-1/2}\sum_x\omega^{bx^2+ax}\vert x\rangle$ and the ground state of a single injection without background, $H = D_v + D_v^\dagger$ | plateau of $d$ coefficients of magnitude one on an *unknown* line $\{mv\}$. Own computation: for prime $d$ the single-injection ground state is an eigenstate of $D_v$, hence a stabilizer state | Regime 2: linear algebra. The phase space $\mathbb{Z}_d^2$ has rank 2, so a constant number of samples and a Hermite normal form suffice | whether the CNN finds subgroup structure without being trained on it; the ordered list is ill-defined (identifiability, `cor:plateau`, P3) | Montanaro; Allcock et al.; research.md, rung 2 and F2 |
+| B5 | **Ground states of commuting Hamiltonians** (rung 3) | for prime $d$ as in B4. Own observation: on $\mathbb{Z}_d^2$ with $d$ prime, $\langle u,v\rangle = 0$ forces $v\in\mathrm{span}(u)$, so commuting terms are powers of one $D_u$; the rung differs from B4 only for composite $d$ (isotropic subgroups of smaller order) | Regime 2 as long as the terms commute | the dial "crystal → generic": add one non-commuting term and follow the plateau as it breaks up | research.md, rung 3; own observation |
+| B6 | **Factorized spectra** (rung 7, third step): composite $d = d_1d_2\cdots$ with coprime factors, product state across the CRT factors | $y_{u_1\dots u_m} = \prod_jy_{u_j}$ | Regime 3: one top list per factor, combined by a best-first heap; own elementary argument | whether the coprime-folding CNN exploits the factorization it carries as an inductive bias (the explainability hypothesis of section 10) | research.md, rung 7 and section 10; this project |
+| C1 | **Approximate subgroup, noise model 1** (research.md, section 6, point (b)): a fraction of exact samples, e.g. $(1-\lambda)\vert S\rangle\langle S\vert + \lambda\sigma$, or stabilizer fidelity $\tau$ | a plateau of height about $1-\lambda$ above a remainder | tolerant Regime 2: polynomial above fidelity $\cos^2(\pi/8)$, quasipolynomial for any $\tau$ (proven in the tensor basis) | how far the plateau survives; the first half of the wall between Regime 2 and LWE | Grewal, Iyer, Kretschmer, Liang; stabilizer bootstrapping; "Where the wall begins", point 1 |
+| C2 | **Entanglement between the coprime factors** (new): Schmidt rank $r$ across the CRT factors | a sum of at most $r^2$ product terms instead of one product | tolerant Regime 3: whether the best-first heap survives is open | the robustness of the CNN's CRT prior | analogy to matrix product and finitely correlated states (Cramer et al.; Fanizza et al.); own proposal |
+| C3 | **Magic** (research.md, factor E and section 6, point (b)): non-Clifford phases | own computation: the cubic phase state $d^{-1/2}\sum_x\omega^{cx^3}\vert x\rangle$ (prime $d > 3$) has $\vert y\vert = 1/\sqrt d$ on every address with $q\neq 0$ (quadratic Gauss sum), a flat spectrum. On one cyclic qudit the dial therefore jumps from plateau to flat. A gradual dial uses mixtures or superpositions of a stabilizer and a cubic phase state, or cubic phases on some of the CRT factors | near-stabilizer, i.e. tolerant Regime 2, for little magic; the boundary $t = O(\log n)$ non-Clifford gates is known in the tensor basis | where the plateau is lost as magic grows | Grewal, Iyer, Kretschmer, Liang (few non-Clifford gates); pseudomagic states; own computation |
+| D1 | **Signal injection without background, $k\geq 2$** (rung 4): $H = \sum_iw_is_i(D_{v_i} + D_{v_i}^\dagger)$ with decay $\alpha$ | pure ground state: the injected peaks sit above a remainder of mass at least $d - k$ (normalization); for $k = 1$ this is B4 | no proven promise once the addresses do not commute; placement on a line or in a coset brings back Regime 2 | the dials $k$, $\alpha$, and the placement (random, line, coset) | research.md, rung 4 |
+| D2 | **The current generator** (rung 5): harmonic background plus injection, ground and Gibbs states, with $\beta$ as the dial | own computation ($d = 31$, one injection, $\epsilon = 0.3$): the injected address is the largest coefficient off the origin for $\beta\leq 8$ and drops to rank 9 at $\beta = 32$. At high temperature the spectrum is, to first order, proportional to $\beta$ times the displacement coefficients of $H$ | no proven promise. At high temperature the search is Hamiltonian structure learning from Gibbs states, which is open without known terms (Haah, Kothari, Tang need known terms) | P2, the hot-Gibbs threshold: amplitudes $O(\beta)$ cost statistics, while low temperature spreads the background | research.md, rung 5; own computation |
+| D3 | **Deformations** (rung 6): anharmonic (quartic) potential, double well, random local Hamiltonians | no structural guarantee | none | generalization beyond the training distribution (P4); dials: deformation strength, spectral gap | research.md, rung 6 |
+| D4 | **Generic sparse support** (rung 7, fourth step): uniformly random top-$k$ addresses without structure | top-$k$ above a remainder, no algebraic relation between the addresses | none proven: this is the conjecture | the conjecture itself: does the CNN stay efficient as $d$ grows, where the baseline needs $\mathrm{poly}(d)$ time? | research.md, rung 7; "The repaired success criterion and the three failure modes" |
+| E1 | **Noise model 2 on a hidden line** (research.md, section 6, point (b); the noise dial B3 of the feedback): a small error on every sample, noise level $e$ | the support sits next to a hidden line, not on it | $e = 0$ is Regime 2; growing $e$ leads into LWE | the second half of the wall between Regime 2 and LWE | "Where the wall begins", point 1; research.md, B3 |
+| E2 | **LWE-planted line** (rung 7, endpoint; `thm:lwe-displacement`) | real-diagonal, $\mathrm{poly}(\log D)$ nonzero coefficients, peaks above the noise floor | LWE-hard in the tensor-product Weyl basis; open in the cyclic basis (Q1; candidate: dihedral hidden shift) | the decoder must fail here; success elsewhere is informative only against this reference | this project; "Where the wall begins", point 4 |
+| E3 | **Pseudomagic and subset phase states** (tensor basis) | a concentrated Pauli spectrum whose support cannot be found efficiently | hard under quantum-secure one-way functions, without a lattice assumption | a second hard endpoint besides LWE | Gu, Leone, Ghosh, Eisert, Yelin, Quek; Aaronson et al. |
+| E4 | **Flat endpoints:** cubic phase states on one qudit (C3), random phase states | flat: $\vert y\vert\approx 1/\sqrt d$ off the origin; exactly so for the cubic phase state, off the axis $q = 0$ | nothing to find: an identifiability failure, not a search failure | the decoder should report "no top-$k$" instead of an arbitrary list | Ji, Liu, Song (random phase states); own computation |
+| E5 | **Local depolarizing noise** (tensor basis; research.md, section 6, point (b)) | every coefficient damped by $(1-\epsilon)^{\mathrm{weight}}$ | statistically expensive: $\Omega((1-\epsilon)^{-n})$ copies for stabilizer learning | the statistical-detectability failure mode, kept separate from the search failure | Arunachalam, Bravyi, Dutt, Yoder (arXiv:2208.07851, Theorem 11) |
+
+The order of the table is the proposed order of the experiments: A, then B1 to B6, then C, then D. The endpoint controls in E are best run from the start, alongside the other levels: a decoder that "succeeds" on E2 or reports a top-$k$ list on E4 is broken. For real states ($\rho = \rho^*$, for example real Gibbs states), $\rho\otimes\rho$ replaces $\rho\otimes\rho^*$ in every row.
+
+Spatial locality does not carry over to a single cyclic qudit: classical shadows of $k$-local observables, shallow circuits, and matrix product states along a chain all need a geometry that one qudit does not have. They become available only across the coprime factors or in the tensor-product basis.
+
 <br>
 
 # Searching
@@ -296,7 +423,7 @@ The searching column has its endpoints; these four statements fix the shape of t
 
 **1. The noise model separates "agnostically easy" from "LWE-hard".** The LWE instance is itself a subgroup instance: its support lies on a hidden line, the very structure that Montanaro's Gaussian elimination recovers. It is hard because every sample lies next to the line by $e_i$. The approximate-stabilizer results say the opposite for a different noise: if a constant fraction of the Bell difference samples lies exactly in the subgroup, with probability at least $\tau^4$ for stabilizer fidelity $\tau$, the support is recoverable in time $\exp(O(n/\tau^4))$ (Grewal, Iyer, Kretschmer, Liang 2023), polynomial above $\cos^2(\pi/8)$, and quasipolynomial for any $\tau$ by stabilizer bootstrapping (Chen, Gong, Ye, Zhang 2024). In coding terms: Goldreich–Levin is local list decoding of the Hadamard code with queries; stabilizer bootstrapping is list decoding from samples under erasure-type noise, where clean samples exist and only have to be identified; LPN and LWE are decoding of random linear codes under additive noise on every sample. The three are the map between Regime 2 and the wall, and they tell the instance generator which perturbation makes an instance hard: not a fraction of corrupted samples, but a small error on all of them.
 
-**2. What "sparse" has to mean.** For a pure state $\sum_z\vert y_z\vert^2 = d$. A spectrum with exactly $k$ nonzero coefficients has $\vert y\vert^2 = d/k$ on each, a Bell draw on $\rho\otimes\rho^*$ hits the support with probability $1/k$, and coupon collecting localizes it in $O(k\log k)$ shots with no decoder at all; for a mixed state the mass is $d\,\mathrm{Tr}\rho^2$ and the argument survives as long as the purity is not tiny. The Boolean case says the same in stronger form: a $k$-Fourier-sparse Boolean function has every nonzero coefficient a multiple of $2^{1-\lfloor\log k\rfloor}$, so sparsity under unit normalization is heaviness and Fourier sampling finds the support (Arunachalam, Chakraborty, Lee, Paraashar, de Wolf 2021). The hard regime of this project is therefore not "$k$-sparse" but "$k$ coefficients of size $\Theta(1)$ over a flat remainder that carries the mass $d - k$". The remainder's mass and the purity are the dials of the instance ladder, and the promise in the first row of the table is to be read this way.
+**2. What "sparse" has to mean.** Every coefficient satisfies $\vert y_z\vert\leq 1$, and $\sum_z\vert y_z\vert^2 = d\,\mathrm{Tr}\rho^2$. A pure state therefore has at least $d$ nonzero coefficients, and exactly $d$ only when all of them have magnitude one, i.e. for a stabilizer state; a pure state with a $k$-sparse spectrum, $k < d$, does not exist. For pure states the Bell draw on $\rho\otimes\rho^*$ samples $\vert y_z\vert^2/d$ directly; every address has probability at most $1/d$, so reading the support off the counts costs $\Omega(d)$ shots even for a stabilizer state, whose support is instead found by linear algebra (Regime 2). The character-mean estimator needs only $O(\log d/\epsilon^4)$ shots for all magnitudes, but it has to be evaluated at all $d^2$ addresses, which is the time problem of refinement 3. A mixed state can be exactly sparse, but then the Bell outcomes follow the symplectic Fourier transform of $\vert y\vert^2$ and are spread over all addresses: localization becomes sparse recovery from random Fourier samples, which is the form of the LWE instance, a sparse, diagonal, mixed state. The Boolean case is the opposite: a $k$-Fourier-sparse Boolean function has every nonzero coefficient a multiple of $2^{1-\lfloor\log k\rfloor}$, so sparsity under unit normalization is heaviness and Fourier sampling finds the support (Arunachalam, Chakraborty, Lee, Paraashar, de Wolf 2021). The hard regime of this project is therefore not "$k$-sparse" but "$k$ coefficients of size $\Theta(1)$ over a remainder that carries the mass $d\,\mathrm{Tr}\rho^2$ minus the top-$k$ mass", at least $d - k$ for a pure state. The purity and the distribution of the remainder are the dials of the instance ladder, and the promise in the first row of the table is to be read this way.
 
 **3. The scale of the time wall, and the query cell for states.** Brute force over the $d^2$ addresses costs $O(d^2N)$, polynomial in $d$; "LWE-hard" means no algorithm in $\mathrm{poly}(\log d)$. The classical mirror is compressed sensing with random Fourier samples: with $O(k\,\mathrm{polylog}\,d)$ random rows of the Fourier matrix the restricted isometry property holds (Candès, Tao 2006; Rudelson, Vershynin 2008) and $\ell_1$ minimization recovers a $k$-sparse vector in time $\mathrm{poly}(d)$, while sublinear time needs chosen sampling positions, which is what sparse FFT uses and what the peeling decoder of Harper, Yu, Flammia uses on the channel side through chosen stabilizer groups. A Bell record delivers random positions; that is the same trichotomy as Theorem 5 of King, Wan, McClean (signs in $\mathrm{poly}(d)$) against the wall. The query cell of the quadrant is populated for functions and for Pauli channels; for a state with a preparation oracle it is not: amplitude amplification on the coherent Bell measurement finds a top-$k$ address in $O(\sqrt{d/k})$ calls, amplitude estimation makes each single address cheap at the Heisenberg rate, the LWE instance falls to superposition queries (Grilo, Kerenidis, Zijlstra 2019), and no general $\mathrm{poly}(n)$ localizer with queries is known. Rung 3 of the access ladder breaks the LWE endpoint, not the corner.
 
