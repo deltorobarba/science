@@ -334,6 +334,8 @@ Spatial locality does not carry over to a single cyclic qudit: classical shadows
 
 # Searching
 
+## Summary
+
 **Searching** (observables are *output*). Given: copies of $\rho$ and a promise about the spectrum, typically a few heavy coefficients over a flat remainder, or a structural constraint on the support; what "sparse" has to mean for the task to be hard is made precise below under "Where the wall begins". Returned: the addresses $(q,p)$ that carry the weight, and then their values. Nothing else is handed over, no list of candidates and no parametrization. Like a GWAS: first find which loci matter, then measure their effect. The error factorizes accordingly into localization and estimation, and the estimation guarantees of the Estimating section apply only after localization has succeeded. That is why searching is genuinely harder than estimating, and it is the column in which LWE hardness sits.
 
 **What is known.** The sample side is settled. Bell sampling on conjugate pairs estimates all $d^2$ squared magnitudes with $O(\log d/\epsilon^4)$ copies, exponentially fewer than any strategy without the conjugate copy, at constant quantum memory (King, Wan, McClean 2024). The information is therefore always there. 
@@ -362,6 +364,8 @@ Spatial locality does not carry over to a single cyclic qudit: classical shadows
 * (4) Where searching ends and identifying begins. A parametrized exponential class, the LWE secret, is both at once. No theorem separates the two beyond the size of the candidate list. The tables settle this with the LWE rule (Appendix, "Reading the tables"): if the parameter of the class is the location of the support, the row sits under searching; this is why the stabilizer family and its agnostic variants are here as well.
 * (5) The magic threshold. $t = O(\log n)$ non-Clifford gates is the frontier of polynomial time; whether $\mathrm{poly}(n, 2^t)$ is optimal is open.
 
+## Table with Papers
+
 | Protocol or class | Object | Task type: given → returned | Copies or queries (access) | Time | Memory | Status & Condition |
 | --- | --- | --- | --- | --- | --- | --- |
 | **Sparse displacement spectra from Bell samples** (this project; see the structure-learning protocol) | State | Searching: sparsity promise → support and values of the spectrum | Sample: $O(\log d/\epsilon^4)$ | Generic localization LWE-hard | $O(k \log d)$ bits, the sparse list | 🟢 🔴 🟢; search too hard, **this project's cell** |
@@ -387,9 +391,7 @@ Spatial locality does not carry over to a single cyclic qudit: classical shadows
 | **Heisenberg-limited learning without short-time control** (Shin, Lee, Oh 2026) | Hamiltonian, $m$-sparse in the Pauli basis, support unknown | Searching: sparsity promise, support *not* given → the $m$ terms present and their coefficients; the continuation of the row above on the access axis | Query to $e^{-iHt}$ with every query of duration at least a fixed constant $T$: $t_{\mathrm{tot}} = \tilde O(\min\{4^m T^3/\epsilon, 4^m T/\epsilon^2\})$, polynomial for $m = O(\log n)$; for $m = \mathrm{poly}(n)$ a tradeoff $t_{\mathrm{tot}} = \tilde O(m^{K+2}T/\epsilon)$ at $T = \Theta(m^{-1/K})$ | poly | poly | 🟢 🟢 🟢 for logarithmic sparsity; short Trotter steps are rewritten as long evolutions plus a learned correction generator; resolves the open problem of Bakshi et al. on time resolution |
 | **Sparse Pauli noise** (Harper, Yu, Flammia 2021) | Pauli channel with $s$-sparse error rates | Searching: sparsity promise → the $s$ Pauli errors and their rates, $\Vert\hat p - p\Vert_\infty \leq 2\xi/\sqrt{2^n}$ | Query: $O(sn)$ eigenvalue queries, each a randomized-benchmarking-style Clifford experiment on a chosen stabilizer group; $O(n^2/\xi^2)$ measurements at eigenvalue noise $\xi$ | $O(sn^2)$ classical: subsample onto $2^n$ bins, alias with $2n+1$ offsets, peel | $O(s)$ | 🟢 🟢 🟢; the sparse Walsh–Hadamard algorithm ported to Paulis; compressed sensing would need $O(s\log 4^n)$ measurements but $\mathrm{poly}(4^n)$ time, and the chosen stabilizer groups are the query access that makes localization sublinear |
 
-## Searching protocols
-
-The observables are the output. Two families: structure learning from measurement data on quantum states, and the older Fourier-sampling family on quantum examples of classical functions, which shows what a favourable normalization buys.
+Searching protocols: The observables are the output. Two families: structure learning from measurement data on quantum states, and the older Fourier-sampling family on quantum examples of classical functions, which shows what a favourable normalization buys.
 
 ## Structure learning (observables as output)
 
@@ -1609,6 +1611,8 @@ Paper: [arXiv:1706.06274](https://arxiv.org/abs/1706.06274)
 
 # Identifying
 
+## Summary
+
 **Identifying** (candidate *states* or functions are *input*). Given: copies of $\rho$ and a list of $M$ candidate states, or a class $\mathcal{C}$ with or without the promise that $\rho \in \mathcal{C}$. Returned: one index, one object from the class, or one bit. Like matching a sample against a database of known genomes: the hypotheses exist before the data. Sub-cases by the size of the list: $M = 2$ is state discrimination, general $M$ is hypothesis selection, a class with a promise is learning that class, a class without the promise is agnostic tomography, one bit is property testing, and $M = 1$ is certification. Identifying behaves like estimating in every budget as long as the list is polynomial and the candidates are efficiently representable. Once the class is exponentially large and parametrized, the task shades into searching, which is where the hardness rows of this table come from. This is why identifying follows searching directly in this document: where the parameter of the class is the location of the support, the LWE rule (Appendix, "Reading the tables") decides for searching. In its budgets, by contrast, identifying behaves like estimating, and that is how the quadrant in the appendix groups it.
 
 **What is known.** The two-hypothesis case is solved exactly: Helstrom for minimum error, unambiguous discrimination for zero error with abstention, and the quantum Chernoff exponent for many copies. Hypothesis selection needs only $O(\log M)$ copies through threshold search. A catalogue of classes is learnable in polynomial time, each by exploiting the structure that defines it: stabilizer states and Clifford circuits by linear algebra, states with $t$ non-Clifford gates at cost $2^t$, Gaussian and near-Gaussian states, matrix product states, states of shallow circuits, phase states of bounded degree, juntas, low-degree objects. The stabilizer family among them sits in the searching table by the LWE rule (Appendix, "Reading the tables"), because its parameter is the support of the Pauli spectrum. Property testing shows the memory axis at its sharpest: purity costs $O(1)$ copies with a SWAP test and $\Omega(2^{n/2})$ without, and mixedness testing with incoherent measurements costs $\Theta(d^{3/2}/\epsilon^2)$ whether or not the measurements are adaptive, against $\Theta(d/\epsilon^2)$ with entangled ones. Certification of almost all states is possible with single-qubit measurements.
@@ -1619,6 +1623,8 @@ Paper: [arXiv:1706.06274](https://arxiv.org/abs/1706.06274)
 * (1) Depth. Constant-depth circuits are learnable and polynomial-depth ones are hard; everything in between is uncharted.
 * (2) Agnostic and tolerant learning beyond stabilizer-type classes.
 * (3) Average-case hardness. The pseudorandomness constructions are worst-case; whether physically motivated classes sit on the easy side is the same question as in the searching column.
+
+## Table with Papers
 
 | Protocol or class | Object | Task type: given → returned | Copies or queries (access) | Time | Memory | Status & Condition |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -1641,9 +1647,7 @@ Paper: [arXiv:1706.06274](https://arxiv.org/abs/1706.06274)
 | **Bernstein–Vazirani** | Classical function | Identifying: the class of $2^n$ linear functions → the label $\mathbf{s}$ | Query: one superposition query | $O(n)$ | $O(n)$ | 🟢 🟢 🟢; the noiseless limit of LWE |
 | **Identification with preparation circuits** | State, through its preparation circuit | Identifying: $M$ candidate circuits and a circuit for the unknown → one index, via overlaps on a SWAP test | Query: $\tilde O(M/\epsilon)$ calls at overlap precision $\epsilon$ by amplitude estimation | $\mathrm{poly}(M)$ | $\mathrm{poly}(M)$ | 🟢 🟢 🟢; queries buy the rate in $\epsilon$, not in $M$: copies alone need only $O(\log M/\epsilon^2)$ |
 
-## Identifying protocols
-
-Candidate states, or a class, are the input. Two hypotheses first, then many, then a class with or without a promise, then the one-bit tasks of testing and certification.
+Identifying protocols: Candidate states, or a class, are the input. Two hypotheses first, then many, then a class with or without a promise, then the one-bit tasks of testing and certification.
 
 ## State discrimination: Helstrom vs. USD
 
@@ -2987,6 +2991,8 @@ Paper: [arXiv:2305.05765](https://arxiv.org/abs/2305.05765)
 
 # Estimating
 
+## Summary
+
 **Estimating** (observables are *input*). Given: copies of $\rho$ and a list of $M$ observables, explicit or implicit. Returned: the $M$ expectation values to precision $\epsilon$. Like a panel of predefined SNPs: the loci are fixed in advance, only their values are unknown. Full tomography is the limit $M = d^2$, sequencing the whole genome. The list can be explicit and polynomial (a dictionary), implicit and exponential (all Paulis), drawn from a distribution (PAC learning and average-case prediction), or revealed one observable at a time (online learning). The task type is the same in each case; the budgets differ.
 
 **What is known.** This is the best-charted column of the field, almost entirely on the sample side. Full tomography costs $\Theta(d^2/\epsilon^2)$ copies with entangled measurements and $\Theta(d^3/\epsilon^2)$ with single copies, adaptivity included. Shadow tomography answers $M$ questions with $\mathrm{poly}(\log M, n, 1/\epsilon)$ copies, since 2026 at the classical adaptive-data-analysis rates $O(\log M\sqrt{\log d}/\epsilon^3)$ and $O(\sqrt M/\epsilon^2)$ (Chen, O'Donnell, Pelecanos, Wright), down from $\tilde O(\log^2 M \cdot \log d/\epsilon^4)$ (Bădescu, O'Donnell 2021); classical shadows do it with single-copy random measurements at a cost set by the shadow norm, cheap for local observables and exponential for global ones. Two-copy memory closes that gap: $\Theta(n)$ copies for all Pauli expectations against $2^{\Omega(n)}$ without memory, the strongest proven separation in the field, demonstrated in hardware. Conjugate pairs deliver the clean squared spectrum at constant memory. Under query access the precision rate improves from $1/\epsilon^2$ to $1/\epsilon$, for observables, for unitaries, and for Hamiltonian couplings.
@@ -2998,6 +3004,8 @@ Paper: [arXiv:2305.05765](https://arxiv.org/abs/2305.05765)
 * (2) Memory between zero and two. The sample complexity interpolates smoothly with $k$ qubits of memory (Chen, Cotler, Huang, Li), but no protocol family is known that uses a fixed small memory budget for structured observable sets.
 * (3) Triply efficient schemes beyond Paulis and local fermionic observables, and whether a learned decoder can replace the graph-coloring step on which the current schemes rely.
 * (4) Noise. The two-copy separations are stated for ideal Bell measurements; robustness to preparation, crosstalk, and readout errors is the practically decisive axis, and the first empirical evaluation of a two-copy triply efficient scheme dates from 2025.
+
+## Table with Papers
 
 | Protocol or class | Object | Task type: given → returned | Copies or queries (access) | Time | Memory | Status & Condition |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -3026,9 +3034,7 @@ Paper: [arXiv:2305.05765](https://arxiv.org/abs/2305.05765)
 | **Pauli channel estimation, sequence-based** (Flammia, Wallman 2020; Harper, Flammia, Wallman 2020) | Channel | Estimating: Pauli eigenvalues of a noise channel under a sparse or local model → values | Query: repeated application of the channel in sequences of varying length, interleaved with random Pauli twirls | poly for sparse or local noise | poly | 🟢 🟢 🟢; sparse or local noise model; sequential use buys robustness against state-preparation and measurement errors |
 | **Unitary estimation in diamond distance** (Haah, Kothari, O'Donnell, Tang 2023) | Unitary | Estimating, $M = d^2$: unknown unitary → $U$ to error $\epsilon$ | Query: $\Theta(d^2/\epsilon)$ uses of $U$, the Heisenberg rate at tomography scale | $\mathrm{poly}(d)$ | $d^2$ | 🔴 🔴 🔴 in $n$; queries buy $1/\epsilon$, not the dimension |
 
-## Estimating protocols
-
-Observables are the input. The baseline is full tomography; every protocol below exists to escape its scaling, by changing the question (shadows), by adding a resource (two-copy memory, queries), or by naming a promise (locality, a phase, a Hamiltonian family).
+Estimating protocols: Observables are the input. The baseline is full tomography; every protocol below exists to escape its scaling, by changing the question (shadows), by adding a resource (two-copy memory, queries), or by naming a promise (locality, a phase, a Hamiltonian family).
 
 ## Full QST: the exponential baseline
 
