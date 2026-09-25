@@ -257,7 +257,7 @@ def build(src, mode, banner, katex_dir):
                 counts[task] += 1
                 subs = []
                 for h3, h3lines in p["subs"]:
-                    own = " own" if h3.startswith("Relation to this project") else ""
+                    own = " own" if h3.startswith("Connections") else ""
                     open_attr = "" if h3.startswith("Questions for further study") else " open"
                     subs.append(
                         f'<details class="sub{own}"{open_attr}><summary><h3>{html.escape(h3)}</h3></summary>'

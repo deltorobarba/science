@@ -51,7 +51,7 @@ Every quantum learning protocol is charged in three budgets, and they scale inde
 3. **By a stronger access model:**
    * **Query access** (evaluation points chosen by the learner, oracle access to the preparation circuit or to the dynamics $e^{-iHt}$, including superposition queries), which enables divide-and-conquer methods (Goldreich–Levin, peeling). An adaptive choice of measurement basis is adaptivity, not query access (Appendix, "Measurement power").
 
-**Conclusion:** When quantum learning theory says "everything else is solved", it means: for estimating and identifying, **precise classes of promises have been identified** under which efficient protocols exist. For *searching*, by contrast, the map between the subgroup case (Montanaro) and the cryptographic LWE wall is only sparsely charted, and it is exactly in this no man's land that the author's project looks for new decodable classes.
+**Conclusion:** When quantum learning theory says "everything else is solved", it means: for estimating and identifying, **precise classes of promises have been identified** under which efficient protocols exist. For *searching*, by contrast, the map between the subgroup case (Montanaro) and the cryptographic LWE wall is only sparsely charted, and new decodable classes would have to be found in exactly this no man's land.
 
 **Almost without exception, it is efficient special cases (under so-called *promises*) that make quantum learning efficient!** For fully arbitrary, generic quantum states without any promise, there are **hardly any general protocols that are efficient in all three budgets**.
 
@@ -93,7 +93,7 @@ When general shadow tomography needs exponential time, this is simply because th
 When searching for the $k$ strongest peaks of a displacement spectrum, the answer is extremely short:
 * The memory is **tiny**: a list of $k$ peaks needs only $O(k \log d)$ bits (🟢).
 * The information is **there**: Bell sampling on $\rho \otimes \rho^*$ yields all squared magnitudes from $O(\log d / \epsilon^4)$ copies (🟢).
-* **Yet time fails (🔴)!** Even with memory perfectly under control, generic localization of the addresses from random Bell samples contains **LWE (Learning With Errors)**, and on qubits **LPN**, as a special case: the displacement instance of `thm:lwe-displacement` embeds LWE. Under the LWE assumption, no efficient decoder exists, classical or quantum (proven in the tensor-product Weyl basis; open for the cyclic single-qudit basis).
+* **Yet time fails (🔴)!** Even with memory perfectly under control, generic localization of the addresses from random Bell samples contains **LWE (Learning With Errors)**, and on qubits **LPN**, as a special case: a real-diagonal displacement instance embeds LWE. Under the LWE assumption, no efficient decoder exists, classical or quantum (shown in the tensor-product Weyl basis; open for the cyclic single-qudit basis).
 
 
 ## Deep Dive: Efficiency through a structural promise (a special class of states)
@@ -112,7 +112,7 @@ When a protocol becomes efficient through a **structural promise**, this means: 
   1. Measure $O(n)$ Bell differences.
   2. **Classical decoder:** **Gaussian elimination over $\mathbb{F}_2$** in time $O(n^3)$.  
      Once $n$ linearly independent vectors are found, they span the Lagrangian subspace, i.e. the stabilizer group up to signs; a few further measurements fix the signs, and the state is fully identified.
-* **On qudits (Allcock, Doriguello, Ivanyos, Santha 2024):** for $d = p > 2$, Bell difference sampling on four copies returns only $\mathrm{col}(V)\times\mathrm{col}(W)$, uniform at full rank, so the subgroup is no longer visible. With copies of $|S^*\rangle$, Bell sampling on $|S\rangle\otimes|S^*\rangle$ is uniform on the Lagrangian subspace, and linear algebra works again for every $d$ ($O(n)$ copies, time $O(n^3)$); without the conjugate, a hidden-polynomial procedure for the quadratic phase does it for prime $d$ in time $O(n^4)$. This is the reason for the conjugate pair in this project.
+* **On qudits (Allcock, Doriguello, Ivanyos, Santha 2024):** for $d = p > 2$, Bell difference sampling on four copies returns only $\mathrm{col}(V)\times\mathrm{col}(W)$, uniform at full rank, so the subgroup is no longer visible. With copies of $|S^*\rangle$, Bell sampling on $|S\rangle\otimes|S^*\rangle$ is uniform on the Lagrangian subspace, and linear algebra works again for every $d$ ($O(n)$ copies, time $O(n^3)$); without the conjugate, a hidden-polynomial procedure for the quadratic phase does it for prime $d$ in time $O(n^4)$. This is the reason to work with the conjugate pair $\rho\otimes\rho^*$ on qudits.
 
 #### 2. Gaussian states (fermions and bosons)
 * **The promise:** the state is a ground or thermal state of a free (non-interacting) quadratic Hamiltonian.
@@ -178,7 +178,7 @@ When a protocol becomes efficient through a **structural promise**, this means: 
 *Here number-theoretic or harmonic properties of the spectrum are exploited.*
 
 #### 1. Coprime factorization (Chinese remainder theorem, CRT)
-*(Regime 3 of the author's own project)*
+*(Regime 3; an elementary argument, not from the literature)*
 * **The promise:** the Hilbert-space dimension factors into coprime factors $d = d_1 \cdot d_2 \cdots d_m$, and the displacement spectrum factorizes as a product: $y_{u_1 \dots u_m} = \prod_j y_{u_j}$.
 * **The procedure:**
   1. Perform Bell measurements separately for each small factor $d_j$ ($O(\log d_j/\epsilon^4)$ copies each).
@@ -204,7 +204,7 @@ When a protocol becomes efficient through a **structural promise**, this means: 
 
 Whenever this document shows green (🟢) in the time budget, one of these mechanisms is at work behind it, or a quantum resource, or a stronger access model (see the summary above). Without such a promise, no efficient decoder is known in general, and for LWE-type instances none can exist under standard cryptographic assumptions.
 
-### Proven classes by task type, and candidates for this project
+### Proven classes by task type, and candidate instance classes
 
 The four groups are a cross-task toolbox: a promise is a statement about the state, while the task type is fixed by what is returned. By their rows in the tables (LWE rule, Appendix, "Reading the tables"), the entries of this deep dive sort as follows.
 
@@ -228,10 +228,10 @@ In searching the promise has to make the *location* of the support decodable. A 
 * **The decodable families for states under sample access.** For a state and i.i.d. copies (rungs 1–2), three families are proven.
   * *Regime 1, dictionary:* the task becomes estimating over the list (King, Wan, McClean; classical original: Bresler; Klivans, Meka).
   * *Regime 2, subgroup:* decoded by linear algebra (Montanaro; Allcock et al. on qudits; approximately Grewal, Iyer, Kretschmer, Liang and stabilizer bootstrapping; few non-Clifford gates).
-  * *Regime 3, factorized spectra over coprime factors:* decoded by a best-first heap. This is this project's own, elementary argument, not a result from the literature; it needs composite $d$ and a product state across the factors.
+  * *Regime 3, factorized spectra over coprime factors:* decoded by a best-first heap. This is an elementary argument, not a result from the literature; it needs composite $d$ and a product state across the factors.
 * **Heaviness under unit normalization.** For unitaries, channels, and Boolean functions, $\sum_P|u_P|^2 = 1$, so a $k$-sparse spectrum is heavy, and Fourier sampling on the Choi state or on quantum examples finds it. Examples are quantum juntas (Chen, Nadimpalli, Yuen), the heavy Pauli coefficients of a unitary (Montanaro, Osborne), QAC⁰ channels (Nadimpalli et al.), and Boolean functions from quantum examples (Bshouty, Jackson; Arunachalam et al.). For states the same measurement sees $\sum_{q,p}|y_{q,p}|^2 = d\,\mathrm{tr}(\rho^2)$: top-$k$ over a flat remainder is not heavy, and the mechanism does not apply (normalization paragraph in the appendix, "What is learned").
 * **The query route.** With chosen evaluation points, search is easy far beyond the three regimes. Examples are Goldreich–Levin, Kushilevitz–Mansour, sparse FFT, Simon, LWE with superposition queries (Grilo, Kerenidis, Zijlstra), Hamiltonian structure learning (Bakshi, Liu, Moitra, Tang; Shin, Lee, Oh), and sparse Pauli noise (Harper, Yu, Flammia). This route is not available at rung 2.
-* **The proven walls.** Three hardness results are specific to this column: the LWE displacement instance, pseudomagic states, and stabilizer states under noisy PAC access (LPN; Gollakota, Liang). Outside these instances and outside the families above, the status is open, not hard, and this open region is where the conjecture of this project sits.
+* **The proven walls.** Three hardness results are specific to this column: the LWE displacement instance, pseudomagic states, and stabilizer states under noisy PAC access (LPN; Gollakota, Liang). Outside these instances and outside the families above, the status is open, not hard, and this open region is where the conjecture that uniformly random top-$k$ supports are decodable sits.
 
 #### Proven efficient classes (🟢 🟢 🟢) by task type
 
@@ -269,7 +269,7 @@ In searching the promise has to make the *location* of the support decodable. A 
     * Clifford plus few non-Clifford gates, stabilizer dimension at least $n - t$ with $t = O(\log n)$ (Lai, Cheng; Grewal, Iyer, Kretschmer, Liang; Leone et al.);
     * approximate stabilizer support, polynomial above fidelity $\cos^2(\pi/8)$ (Grewal, Iyer, Kretschmer, Liang);
     * agnostic tomography, quasipolynomial for any fidelity (Grewal, Iyer, Kretschmer, Liang 2024; Chen, Gong, Ye, Zhang).
-  * *Regime 3:* factorized spectra over coprime factors (this project; own argument).
+  * *Regime 3:* factorized spectra over coprime factors (elementary argument, not from the literature).
 * Operators and functions with a unit-normalized spectrum (heaviness), with sample access to the Choi state or to quantum examples:
   * quantum juntas (Chen, Nadimpalli, Yuen);
   * heavy Pauli coefficients of a unitary (Montanaro, Osborne);
@@ -284,13 +284,13 @@ In searching the promise has to make the *location* of the support decodable. A 
   * Hamiltonian structure learning from real-time evolution (Bakshi, Liu, Moitra, Tang), also without short-time control (Shin, Lee, Oh);
   * sparse Pauli noise (Harper, Yu, Flammia).
 * Proven walls:
-  * LWE from i.i.d. samples and its displacement instance (Regev; this project's theorem);
+  * LWE from i.i.d. samples and its real-diagonal displacement instance (Regev);
   * pseudomagic states (Gu, Leone, Ghosh, Eisert, Yelin, Quek);
   * stabilizer states from noisy PAC examples (Gollakota, Liang).
 
-#### Candidate classes for this project's instance ladder
+#### Candidate instance classes, ordered by complexity
 
-All classes in one table, sorted by increasing complexity of the search task. The table merges two sources: the ladder of research.md ("10. Die Instanzen-Leiter", rungs 0–7, together with the dials in "6. Was wir suchen", point (b)), and further candidates suggested by the proven classes above. Everything without a named source is an own proposal or inference. Entries marked "own computation" were checked numerically with exact spectra for $d = 13$ and $d = 31$.
+All classes in one table, sorted by increasing complexity of the search task: standard test instances, and further candidates suggested by the proven classes above. Everything without a named source is an own proposal or inference. Entries marked "own computation" were checked numerically with exact spectra for $d = 13$ and $d = 31$.
 
 The table has five levels:
 * **A, calibration:** the support is known, and nothing is searched.
@@ -305,28 +305,28 @@ Two standard facts shape the table:
 
 | # | Class and construction | What the displacement spectrum looks like | Mechanism: why easy or hard | What it tests (failure mode) | Source, status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| A1 | **Basis and Fourier-basis states** (rung 0): $\vert j\rangle$, or $d^{-1/2}\sum_x\omega^{ax}\vert x\rangle$ (a phase state of degree 1) | plateau of $d$ coefficients of magnitude one on a *known* line: $q = 0$ for $\vert j\rangle$, $p = 0$ for the Fourier states; both are stabilizer states | nothing to search | tie handling (`defn:validtopk`) and calibration of the noise floor; identifiability | research.md, rung 0 |
-| A2 | **Displaced states** (rung 1): $\rho = D_v\rho_0D_v^\dagger$ for a known reference $\rho_0$ | magnitudes identical to those of $\rho_0$; phases shifted by $\omega^{\langle u,v\rangle}$ | Phase 1 is trivial; all information sits in the phases | Phase 2 in isolation, decoupled from Phase 1 | research.md, rung 1 |
-| B1 | **Dictionary** (rung 7, first step): the top-$k$ support is drawn from a known list of $M = \mathrm{poly}(\log d)$ candidates | top-$k$ inside the list, arbitrary remainder | Regime 1: character means over the list, $N = O(g^{-2}\log(M/\delta))$ (`prop:dictionary`) | whether the CNN beats the trivial baseline; for $d\leq 10$ the full grid ($d^2\leq 100$) is itself a dictionary, the starting point of the program | King, Wan, McClean; research.md, sections 9 and 10 |
-| B2 | **Hot Gibbs states of the harmonic background** (new; rung 5 at small $\beta$): $e^{-\beta H_{\mathrm{base}}}/Z$ | concentrated on the origin and its nearest neighbours. Own computation, $d = 31$, $\beta = 2$: $\vert y\vert = 0.38$ on $(\pm1,0)$, $0.29$ on $(0,\pm1)$, $0.12$ on $(\pm1,\pm1)$ | Regime 1 in natural form: a ball around the origin is a known dictionary. Only mixed states can be concentrated like this (normalization) | separating the background from injected signals; whether the CNN learns more than the neighbourhood of the origin | Klein, Slote, Volberg, Zhang (low degree in $(q,p)$); own computation |
-| B3 | **Translation-invariant Hamiltonians** (research.md, section 11, factor E): $H$ commutes with $X$, i.e. $H = \sum_qc_qX^q$ | Gibbs states are diagonal in the $X$ eigenbasis, so the spectrum lies on the *known* line $p = 0$ ($d$ addresses); the ground state is a Fourier-basis state (A1) | a known subgroup cuts the search from $d^2$ to $d$ addresses; enumeration is cheap in practice, but not $\mathrm{poly}(\log d)$ | a control for "support on a known line"; the reason for open boundary conditions in the generator | research.md, section 11 |
-| B4 | **Stabilizer states** (rung 2), including the quadratic phase states $d^{-1/2}\sum_x\omega^{bx^2+ax}\vert x\rangle$ and the ground state of a single injection without background, $H = D_v + D_v^\dagger$ | plateau of $d$ coefficients of magnitude one on an *unknown* line $\{mv\}$. Own computation: for prime $d$ the single-injection ground state is an eigenstate of $D_v$, hence a stabilizer state | Regime 2: linear algebra. The phase space $\mathbb{Z}_d^2$ has rank 2, so a constant number of samples and a Hermite normal form suffice | whether the CNN finds subgroup structure without being trained on it; the ordered list is ill-defined (identifiability, `cor:plateau`, P3) | Montanaro; Allcock et al.; research.md, rung 2 and F2 |
-| B5 | **Ground states of commuting Hamiltonians** (rung 3) | for prime $d$ as in B4. Own observation: on $\mathbb{Z}_d^2$ with $d$ prime, $\langle u,v\rangle = 0$ forces $v\in\mathrm{span}(u)$, so commuting terms are powers of one $D_u$; the rung differs from B4 only for composite $d$ (isotropic subgroups of smaller order) | Regime 2 as long as the terms commute | the dial "crystal → generic": add one non-commuting term and follow the plateau as it breaks up | research.md, rung 3; own observation |
-| B6 | **Factorized spectra** (rung 7, third step): composite $d = d_1d_2\cdots$ with coprime factors, product state across the CRT factors | $y_{u_1\dots u_m} = \prod_jy_{u_j}$ | Regime 3: one top list per factor, combined by a best-first heap; own elementary argument | whether the coprime-folding CNN exploits the factorization it carries as an inductive bias (the explainability hypothesis of section 10) | research.md, rung 7 and section 10; this project |
-| C1 | **Approximate subgroup, noise model 1** (research.md, section 6, point (b)): a fraction of exact samples, e.g. $(1-\lambda)\vert S\rangle\langle S\vert + \lambda\sigma$, or stabilizer fidelity $\tau$ | a plateau of height about $1-\lambda$ above a remainder | tolerant Regime 2: polynomial above fidelity $\cos^2(\pi/8)$, quasipolynomial for any $\tau$ (proven in the tensor basis) | how far the plateau survives; the first half of the wall between Regime 2 and LWE | Grewal, Iyer, Kretschmer, Liang; stabilizer bootstrapping; "Where the wall begins", point 1 |
-| C2 | **Entanglement between the coprime factors** (new): Schmidt rank $r$ across the CRT factors | a sum of at most $r^2$ product terms instead of one product | tolerant Regime 3: whether the best-first heap survives is open | the robustness of the CNN's CRT prior | analogy to matrix product and finitely correlated states (Cramer et al.; Fanizza et al.); own proposal |
-| C3 | **Magic** (research.md, factor E and section 6, point (b)): non-Clifford phases | own computation: the cubic phase state $d^{-1/2}\sum_x\omega^{cx^3}\vert x\rangle$ (prime $d > 3$) has $\vert y\vert = 1/\sqrt d$ on every address with $q\neq 0$ (quadratic Gauss sum), a flat spectrum. On one cyclic qudit the dial therefore jumps from plateau to flat. A gradual dial uses mixtures or superpositions of a stabilizer and a cubic phase state, or cubic phases on some of the CRT factors | near-stabilizer, i.e. tolerant Regime 2, for little magic; the boundary $t = O(\log n)$ non-Clifford gates is known in the tensor basis | where the plateau is lost as magic grows | Grewal, Iyer, Kretschmer, Liang (few non-Clifford gates); pseudomagic states; own computation |
-| D1 | **Signal injection without background, $k\geq 2$** (rung 4): $H = \sum_iw_is_i(D_{v_i} + D_{v_i}^\dagger)$ with decay $\alpha$ | pure ground state: the injected peaks sit above a remainder of mass at least $d - k$ (normalization); for $k = 1$ this is B4 | no proven promise once the addresses do not commute; placement on a line or in a coset brings back Regime 2 | the dials $k$, $\alpha$, and the placement (random, line, coset) | research.md, rung 4 |
-| D2 | **The current generator** (rung 5): harmonic background plus injection, ground and Gibbs states, with $\beta$ as the dial | own computation ($d = 31$, one injection, $\epsilon = 0.3$): the injected address is the largest coefficient off the origin for $\beta\leq 8$ and drops to rank 9 at $\beta = 32$. At high temperature the spectrum is, to first order, proportional to $\beta$ times the displacement coefficients of $H$ | no proven promise. At high temperature the search is Hamiltonian structure learning from Gibbs states, which is open without known terms (Haah, Kothari, Tang need known terms) | P2, the hot-Gibbs threshold: amplitudes $O(\beta)$ cost statistics, while low temperature spreads the background | research.md, rung 5; own computation |
-| D3 | **Deformations** (rung 6): anharmonic (quartic) potential, double well, random local Hamiltonians | no structural guarantee | none | generalization beyond the training distribution (P4); dials: deformation strength, spectral gap | research.md, rung 6 |
-| D4 | **Generic sparse support** (rung 7, fourth step): uniformly random top-$k$ addresses without structure | top-$k$ above a remainder, no algebraic relation between the addresses | none proven: this is the conjecture | the conjecture itself: does the CNN stay efficient as $d$ grows, where the baseline needs $\mathrm{poly}(d)$ time? | research.md, rung 7; "The repaired success criterion and the three failure modes" |
-| E1 | **Noise model 2 on a hidden line** (research.md, section 6, point (b); the noise dial B3 of the feedback): a small error on every sample, noise level $e$ | the support sits next to a hidden line, not on it | $e = 0$ is Regime 2; growing $e$ leads into LWE | the second half of the wall between Regime 2 and LWE | "Where the wall begins", point 1; research.md, B3 |
-| E2 | **LWE-planted line** (rung 7, endpoint; `thm:lwe-displacement`) | real-diagonal, $\mathrm{poly}(\log D)$ nonzero coefficients, peaks above the noise floor | LWE-hard in the tensor-product Weyl basis; open in the cyclic basis (Q1; candidate: dihedral hidden shift) | the decoder must fail here; success elsewhere is informative only against this reference | this project; "Where the wall begins", point 4 |
+| A1 | **Basis and Fourier-basis states:** $\vert j\rangle$, or $d^{-1/2}\sum_x\omega^{ax}\vert x\rangle$ (a phase state of degree 1) | plateau of $d$ coefficients of magnitude one on a *known* line: $q = 0$ for $\vert j\rangle$, $p = 0$ for the Fourier states; both are stabilizer states | nothing to search | tie handling in the top-$k$ output and calibration of the noise floor; identifiability | standard |
+| A2 | **Displaced states:** $\rho = D_v\rho_0D_v^\dagger$ for a known reference $\rho_0$ | magnitudes identical to those of $\rho_0$; phases shifted by $\omega^{\langle u,v\rangle}$ | magnitude estimation is trivial; all information sits in the phases | sign or phase recovery in isolation, decoupled from localization | standard |
+| B1 | **Dictionary:** the top-$k$ support is drawn from a known list of $M = \mathrm{poly}(\log d)$ candidates | top-$k$ inside the list, arbitrary remainder | Regime 1: character means over the list, $N = O(g^{-2}\log(M/\delta))$ | whether a learned decoder beats the trivial character-mean baseline; for $d\leq 10$ the full grid ($d^2\leq 100$) is itself a dictionary | King, Wan, McClean |
+| B2 | **Hot Gibbs states of a harmonic background:** $e^{-\beta H_{\mathrm{base}}}/Z$ with a discretized oscillator $H_{\mathrm{base}}$ | concentrated on the origin and its nearest neighbours. Own computation, $d = 31$, $\beta = 2$: $\vert y\vert = 0.38$ on $(\pm1,0)$, $0.29$ on $(0,\pm1)$, $0.12$ on $(\pm1,\pm1)$ | Regime 1 in natural form: a ball around the origin is a known dictionary. Only mixed states can be concentrated like this (normalization) | separating a background from injected signals; whether a learned decoder learns more than the neighbourhood of the origin | Klein, Slote, Volberg, Zhang (low degree in $(q,p)$); own computation |
+| B3 | **Translation-invariant Hamiltonians:** $H$ commutes with $X$, i.e. $H = \sum_qc_qX^q$ | Gibbs states are diagonal in the $X$ eigenbasis, so the spectrum lies on the *known* line $p = 0$ ($d$ addresses); the ground state is a Fourier-basis state (A1) | a known subgroup cuts the search from $d^2$ to $d$ addresses; enumeration is cheap in practice, but not $\mathrm{poly}(\log d)$ | a control for "support on a known line"; a reason to prefer open boundary conditions in test Hamiltonians | standard |
+| B4 | **Stabilizer states**, including the quadratic phase states $d^{-1/2}\sum_x\omega^{bx^2+ax}\vert x\rangle$ and the ground state of a single injected term without background, $H = D_v + D_v^\dagger$ | plateau of $d$ coefficients of magnitude one on an *unknown* line $\{mv\}$. Own computation: for prime $d$ the single-term ground state is an eigenstate of $D_v$, hence a stabilizer state | Regime 2: linear algebra. The phase space $\mathbb{Z}_d^2$ has rank 2, so a constant number of samples and a Hermite normal form suffice | whether a learned decoder finds subgroup structure without being trained on it; the ordered list is ill-defined (identifiability at plateaus) | Montanaro; Allcock et al. |
+| B5 | **Ground states of commuting Hamiltonians** | for prime $d$ as in B4. Own observation: on $\mathbb{Z}_d^2$ with $d$ prime, $\langle u,v\rangle = 0$ forces $v\in\mathrm{span}(u)$, so commuting terms are powers of one $D_u$; the class differs from B4 only for composite $d$ (isotropic subgroups of smaller order) | Regime 2 as long as the terms commute | the dial "crystal → generic": add one non-commuting term and follow the plateau as it breaks up | own observation |
+| B6 | **Factorized spectra:** composite $d = d_1d_2\cdots$ with coprime factors, product state across the CRT factors | $y_{u_1\dots u_m} = \prod_jy_{u_j}$ | Regime 3: one top list per factor, combined by a best-first heap; elementary argument | whether a decoder with a CRT-factorized input exploits the factorization it carries as an inductive bias | elementary argument |
+| C1 | **Approximate subgroup, noise model 1:** a fraction of exact samples, e.g. $(1-\lambda)\vert S\rangle\langle S\vert + \lambda\sigma$, or stabilizer fidelity $\tau$ | a plateau of height about $1-\lambda$ above a remainder | tolerant Regime 2: polynomial above fidelity $\cos^2(\pi/8)$, quasipolynomial for any $\tau$ (proven in the tensor basis) | how far the plateau survives; the first half of the wall between Regime 2 and LWE | Grewal, Iyer, Kretschmer, Liang; stabilizer bootstrapping; "Where the wall begins", point 1 |
+| C2 | **Entanglement between the coprime factors** (new): Schmidt rank $r$ across the CRT factors | a sum of at most $r^2$ product terms instead of one product | tolerant Regime 3: whether the best-first heap survives is open | the robustness of a CRT prior in a decoder | analogy to matrix product and finitely correlated states (Cramer et al.; Fanizza et al.); own proposal |
+| C3 | **Magic:** non-Clifford phases | own computation: the cubic phase state $d^{-1/2}\sum_x\omega^{cx^3}\vert x\rangle$ (prime $d > 3$) has $\vert y\vert = 1/\sqrt d$ on every address with $q\neq 0$ (quadratic Gauss sum), a flat spectrum. On one cyclic qudit the dial therefore jumps from plateau to flat. A gradual dial uses mixtures or superpositions of a stabilizer and a cubic phase state, or cubic phases on some of the CRT factors | near-stabilizer, i.e. tolerant Regime 2, for little magic; the boundary $t = O(\log n)$ non-Clifford gates is known in the tensor basis | where the plateau is lost as magic grows | Grewal, Iyer, Kretschmer, Liang (few non-Clifford gates); pseudomagic states; own computation |
+| D1 | **Injected displacement terms without background, $k\geq 2$:** $H = \sum_iw_is_i(D_{v_i} + D_{v_i}^\dagger)$ with decay $\alpha$ | pure ground state: the injected peaks sit above a remainder of mass at least $d - k$ (normalization); for $k = 1$ this is B4 | no proven promise once the addresses do not commute; placement on a line or in a coset brings back Regime 2 | the dials $k$, $\alpha$, and the placement (random, line, coset) | standard |
+| D2 | **Harmonic background plus injected terms**, ground and Gibbs states, with $\beta$ as the dial | own computation ($d = 31$, one injected term, $\epsilon = 0.3$): the injected address is the largest coefficient off the origin for $\beta\leq 8$ and drops to rank 9 at $\beta = 32$. At high temperature the spectrum is, to first order, proportional to $\beta$ times the displacement coefficients of $H$ | no proven promise. At high temperature the search is Hamiltonian structure learning from Gibbs states, which is open without known terms (Haah, Kothari, Tang need known terms) | a hot-Gibbs threshold: amplitudes $O(\beta)$ cost statistics, while low temperature spreads the background | own computation |
+| D3 | **Deformations:** anharmonic (quartic) potential, double well, random local Hamiltonians | no structural guarantee | none | generalization beyond a training distribution; dials: deformation strength, spectral gap | standard |
+| D4 | **Generic sparse support:** uniformly random top-$k$ addresses without structure | top-$k$ above a remainder, no algebraic relation between the addresses | none proven: this is the open conjecture | the conjecture itself: does a learned decoder stay efficient as $d$ grows, where the baseline needs $\mathrm{poly}(d)$ time? | "The repaired success criterion and the three failure modes" |
+| E1 | **Noise model 2 on a hidden line:** a small error on every sample, noise level $e$ | the support sits next to a hidden line, not on it | $e = 0$ is Regime 2; growing $e$ leads into LWE | the second half of the wall between Regime 2 and LWE | "Where the wall begins", point 1 |
+| E2 | **LWE-planted line** | real-diagonal, $\mathrm{poly}(\log D)$ nonzero coefficients, peaks above the noise floor | LWE-hard in the tensor-product Weyl basis; open in the cyclic basis (candidate: dihedral hidden shift) | a decoder must fail here; success elsewhere is informative only against this reference | Regev (LWE); "Where the wall begins", point 4 |
 | E3 | **Pseudomagic and subset phase states** (tensor basis) | a concentrated Pauli spectrum whose support cannot be found efficiently | hard under quantum-secure one-way functions, without a lattice assumption | a second hard endpoint besides LWE | Gu, Leone, Ghosh, Eisert, Yelin, Quek; Aaronson et al. |
 | E4 | **Flat endpoints:** cubic phase states on one qudit (C3), random phase states | flat: $\vert y\vert\approx 1/\sqrt d$ off the origin; exactly so for the cubic phase state, off the axis $q = 0$ | nothing to find: an identifiability failure, not a search failure | the decoder should report "no top-$k$" instead of an arbitrary list | Ji, Liu, Song (random phase states); own computation |
-| E5 | **Local depolarizing noise** (tensor basis; research.md, section 6, point (b)) | every coefficient damped by $(1-\epsilon)^{\mathrm{weight}}$ | statistically expensive: $\Omega((1-\epsilon)^{-n})$ copies for stabilizer learning | the statistical-detectability failure mode, kept separate from the search failure | Arunachalam, Bravyi, Dutt, Yoder (arXiv:2208.07851, Theorem 11) |
+| E5 | **Local depolarizing noise** (tensor basis) | every coefficient damped by $(1-\epsilon)^{\mathrm{weight}}$ | statistically expensive: $\Omega((1-\epsilon)^{-n})$ copies for stabilizer learning | the statistical-detectability failure mode, kept separate from the search failure | Arunachalam, Bravyi, Dutt, Yoder (arXiv:2208.07851, Theorem 11) |
 
-The order of the table is the proposed order of the experiments: A, then B1 to B6, then C, then D. The endpoint controls in E are best run from the start, alongside the other levels: a decoder that "succeeds" on E2 or reports a top-$k$ list on E4 is broken. For real states ($\rho = \rho^*$, for example real Gibbs states), $\rho\otimes\rho$ replaces $\rho\otimes\rho^*$ in every row.
+Read top to bottom, the table runs from calibration to the open conjecture: A, then B1 to B6, then C, then D. The endpoint controls in E belong alongside every level: a decoder that "succeeds" on E2 or reports a top-$k$ list on E4 is broken. For real states ($\rho = \rho^*$, for example real Gibbs states), $\rho\otimes\rho$ replaces $\rho\otimes\rho^*$ in every row.
 
 Spatial locality does not carry over to a single cyclic qudit: classical shadows of $k$-local observables, shallow circuits, and matrix product states along a chain all need a geometry that one qudit does not have. They become available only across the coprime factors or in the tensor-product basis.
 
@@ -336,16 +336,16 @@ Crossing the access axis with the task axis gives four cells. All four are popul
 
 | | **Estimating / Identifying** (a list is given) | **Searching** (observables are output) |
 | --- | --- | --- |
-| **Sampling access** (i.i.d. copies, rungs 1–2) | Shadow tomography, classical shadows; with conjugate pairs the character mean over a dictionary of size $M$. *Regime 1.*<br>• **Copies**: $\mathrm{poly}(\log M, n, 1/\epsilon)$; with conjugate pairs $N = O(g^{-2}\log(M/\delta))$ for gap $g$.<br>• **Time**: $\mathrm{poly}(M)$ for an explicit list; $\exp(n)$ when a dense hypothesis is kept (general shadow tomography).<br>• **Memory**: $O(M)$ values for the list; $\exp(n)$ for the dense hypothesis. | Structure learning from Bell samples. *Regime 2 where provable.* **This project.**<br>• **Copies**: $O(\log d/\epsilon^4)$; a union bound over all $d^2$ coefficients stays logarithmic in $d$.<br>• **Time**: generic localization **LWE-hard**; polynomial under subgroup support via Gaussian elimination (Montanaro); empirical in the conjectured class.<br>• **Memory**: $O(k \log d)$ bits, the sparse list. |
+| **Sampling access** (i.i.d. copies, rungs 1–2) | Shadow tomography, classical shadows; with conjugate pairs the character mean over a dictionary of size $M$. *Regime 1.*<br>• **Copies**: $\mathrm{poly}(\log M, n, 1/\epsilon)$; with conjugate pairs $N = O(g^{-2}\log(M/\delta))$ for gap $g$.<br>• **Time**: $\mathrm{poly}(M)$ for an explicit list; $\exp(n)$ when a dense hypothesis is kept (general shadow tomography).<br>• **Memory**: $O(M)$ values for the list; $\exp(n)$ for the dense hypothesis. | Structure learning from Bell samples. *Regime 2 where provable.* **The hard cell.**<br>• **Copies**: $O(\log d/\epsilon^4)$; a union bound over all $d^2$ coefficients stays logarithmic in $d$.<br>• **Time**: generic localization **LWE-hard**; polynomial under subgroup support via Gaussian elimination (Montanaro); open for other classes.<br>• **Memory**: $O(k \log d)$ bits, the sparse list. |
 | **Query access** (white-box circuit, rung 3) | Amplitude estimation.<br>• **Queries**: $O(1/\epsilon)$ at the Heisenberg rate, instead of $O(1/\epsilon^2)$ samples.<br>• **Time**: poly.<br>• **Memory**: poly. | Goldreich–Levin, Kushilevitz–Mansour, sparse FFT; Bernstein–Vazirani / QFT against LWE; peeling on chosen stabilizer groups for sparse Pauli noise. *The query route, not available at rung 2.* Populated for functions and channels; for states with a preparation oracle only the LWE instance is known to fall, and generic localization has amplitude amplification at $O(\sqrt{d/k})$ and nothing better.<br>• **Queries**: $\tilde O(k\log\vert{}V\vert{})$, resp. $\mathrm{poly}(n, 1/\tau)$.<br>• **Time**: poly.<br>• **Memory**: $O(k)$. |
 
 Three statements carry the synthesis.
 
 1. **Only one cell is hard, and it is hard in time alone.** The first line of every cell is green: Hoeffding plus a union bound over all $d^2$ coefficients costs $O(\log d/\epsilon^4)$ copies, the information is there. The memory line of the hard cell is green as well: the sparse list fits. The single red entry in the table is the time line of the sampling-searching cell, and the green memory entry next to it shows that the hardness is not a representation problem but a decoder problem, a cryptographic average-case statement. This is why the three budgets (Efficiency Boundaries) must be kept apart before the quadrant is read: "sample-efficient" and "hard" are statements about different budgets, and both hold in the same cell. The estimating column carries its own split, visible in its time and memory lines: an explicit polynomial-size list is efficient, which is exactly the dictionary promise, while a dense hypothesis is not.
 
-2. **The hard cell is left to the left only by a promise, and never downward.** The row cannot be changed: nature delivers copies. The column changes only through a promise about the state. A dictionary promise moves the task to the left (Regime 1). A subgroup promise keeps the task in the cell but turns decoding into linear algebra (Regime 2). A factorization promise over coprime factors keeps it in the cell as well and turns decoding into a best-first merge of the per-factor top lists (Regime 3, composite $d$ only). Query access would move downward (the query route), but it is not available at rung 2. The provable escape routes are therefore three promises and one access change. The conjecture of this project claims that a *uniformly random* top-$k$ support is a further promise that suffices, although it falls under none of the three regimes.
+2. **The hard cell is left to the left only by a promise, and never downward.** The row cannot be changed: nature delivers copies. The column changes only through a promise about the state. A dictionary promise moves the task to the left (Regime 1). A subgroup promise keeps the task in the cell but turns decoding into linear algebra (Regime 2). A factorization promise over coprime factors keeps it in the cell as well and turns decoding into a best-first merge of the per-factor top lists (Regime 3, composite $d$ only). Query access would move downward (the query route), but it is not available at rung 2. The provable escape routes are therefore three promises and one access change. An open conjecture claims that a *uniformly random* top-$k$ support is a further promise that suffices, although it falls under none of the three regimes.
 
-3. **Neither adaptivity nor quantum memory changes the row.** Phase 2 of the own protocol chooses probes adaptively, but each probe consumes fresh i.i.d. copies. For the diagonal LWE instance behind the hardness theorem, any measurement, adaptive or not, is classical post-processing of i.i.d. draws from a classical distribution. The same holds for coherent measurements across any number of copies. The instance $\rho_s = \mathbb{E}\,\vert a,b\rangle\langle a,b\vert$ is diagonal, so dephasing each copy in the computational basis leaves $\rho_s^{\otimes k}$ unchanged, and each dephased copy is one classical LWE sample. In QUALM terms (Aharonov, Cotler, Qi 2022), every coherent protocol on copies of $\rho_s$ is simulated, at the extra cost of re-preparing basis states, by a quantum algorithm on classical LWE samples, which the post-quantum LWE assumption rules out. The hardness sits in the lab oracle, not in the coherence of access; only a different oracle, quantum examples in superposition (Grilo, Kerenidis, Zijlstra 2019) or the preparation circuit, removes it. The argument uses diagonality and says nothing about non-diagonal hard instances, for example in the cyclic single-qudit basis. A reader who takes Phase 2 for query access will conclude, wrongly, that the hardness has been circumvented. It has not; it has been *promised away* for a restricted state class, which is what the promise-problem formulation of the positioning section states.
+3. **Neither adaptivity nor quantum memory changes the row.** A sign step that chooses probe states adaptively still consumes fresh i.i.d. copies for each probe. For the diagonal LWE instance behind the hardness theorem, any measurement, adaptive or not, is classical post-processing of i.i.d. draws from a classical distribution. The same holds for coherent measurements across any number of copies. The instance $\rho_s = \mathbb{E}\,\vert a,b\rangle\langle a,b\vert$ is diagonal, so dephasing each copy in the computational basis leaves $\rho_s^{\otimes k}$ unchanged, and each dephased copy is one classical LWE sample. In QUALM terms (Aharonov, Cotler, Qi 2022), every coherent protocol on copies of $\rho_s$ is simulated, at the extra cost of re-preparing basis states, by a quantum algorithm on classical LWE samples, which the post-quantum LWE assumption rules out. The hardness sits in the lab oracle, not in the coherence of access; only a different oracle, quantum examples in superposition (Grilo, Kerenidis, Zijlstra 2019) or the preparation circuit, removes it. The argument uses diagonality and says nothing about non-diagonal hard instances, for example in the cyclic single-qudit basis. Whoever takes an adaptive probe step for query access will conclude, wrongly, that the hardness has been circumvented. It has not; it can only be *promised away* for a restricted state class, i.e. in a promise-problem formulation.
 
 **The classical instance of the same quadrant.** Goldreich–Levin sits in the query-searching cell, Learning Parity with Noise in the sampling-searching cell (see the classical mirror below). The thirty-year-old Boolean dichotomy is the same picture with the same hard corner; LWE is its lattice generalization and Bell sampling its quantum instance.
 
@@ -359,7 +359,7 @@ What the world *hands over*. Three rungs, each strictly stronger than the one be
 | **2. Copies of $\rho$ and $\rho^*$** | Sample (efficient in copies) |**Sample boundary:** $\Omega(\sqrt d)$ without the conjugate copy, $O(\log d/\epsilon^4)$ with it, at constant quantum memory | Conjugate pair as a physical resource | Clean spectrum $\vert{}\mathrm{Tr}(D_{q,p}\rho)\vert{}^2$ for every $d$ |
 | **3. White-box circuit** | Query (efficient in compute) | **Computational boundary:** the LWE instance becomes polynomial by Bernstein–Vazirani on superposition queries; generic localization for states is not known to follow, see the searching refinements | $U$, $U^\dagger$, controlled-$U$ preparing $\rho$ | Amplitude estimation at the Heisenberg rate $1/\epsilon$; superposition queries; $\rho^*$ by conjugating every gate |
 
-This project stands on rung 2: past the sample boundary, in front of the computational one.
+Top-$k$ localization from conjugate-pair Bell samples stands on rung 2: past the sample boundary, in front of the computational one.
 
 **Processes on the same ladder.** The rungs are stated for states. A process enters them through its Choi state or its input–output data state: nonadaptive use on fixed or random inputs is rung 1 or 2, with an entangled ancilla playing the role of the second copy; adaptive, controlled, inverted, or sequential use is rung 3. See "What is learned" above in this appendix.
 
@@ -393,7 +393,7 @@ What the learner may *do* on the quantum side. These are the knobs that move the
 * *Adaptivity* means that the measurement setting on the next copy may depend on the outcomes of earlier copies. Every copy is still an i.i.d. draw of $\rho$; only the POVM changes. 
 * *Query access* (the access ladder) means the learner chooses the point at which a function is evaluated, or holds the circuit that prepares the state. 
 * Both involve a choice by the learner; only the second changes the access model. Sparse-FFT and Goldreich–Levin decoders are often called "adaptive" because they choose their evaluation points; in the vocabulary of this document they are *query-based*. 
-* The distinction matters for Phase 2 of the own protocol: the probe $\sigma$ is chosen adaptively, but each probe is measured against fresh i.i.d. copies of $\rho$, so the protocol stays on the sampling side of the access ladder.
+* The distinction matters for adaptive sign protocols: a probe $\sigma$ may be chosen adaptively, but each probe is measured against fresh i.i.d. copies of $\rho$, so the protocol stays on the sampling side of the access ladder.
 
 **The formal model: QUALM** (Aharonov, Cotler, Qi, Nat. Commun. 2022). An experiment is a quantum circuit on three registers, Nature $N$ (hidden), lab $L$ (accessible and coupled to $N$), and workspace $W$, with slots for an unknown *lab oracle*, a channel on $N\otimes L$. Its cost is the number of gates plus the number of oracle calls, and the width of $W$ is the memory parameter; the three budgets of Efficiency Boundaries are these three numbers. The two knobs of this appendix map onto two separate parts of the model:
 * *The access ladder is the choice of lab oracle.* Copies of $\rho$, pairs $\rho\otimes\rho^*$, and the preparation circuit with superposition inputs are three different oracles.
@@ -403,7 +403,7 @@ The two parts are independent, and all four combinations occur:
 
 | | **Incoherent** (each call measured before the next) | **Coherent** (outputs of several calls held jointly) |
 | --- | --- | --- |
-| **Sample oracle** (copies of $\rho$, pairs $\rho\otimes\rho^*$, a process on fixed inputs) | Classical shadows; Phase 1 of the own protocol under a pair oracle, since the Bell measurement completes on each pair; Phase 2, equivalent to an adaptive single-copy POVM because the probe $\sigma^*$ is known | Bell sampling on $\rho\otimes\rho$ or $\rho\otimes\rho^*$ from a single-copy oracle, the first copy waiting for the second; SWAP and purity tests; the fixed-unitary problem |
+| **Sample oracle** (copies of $\rho$, pairs $\rho\otimes\rho^*$, a process on fixed inputs) | Classical shadows; magnitude estimation by Bell sampling under a pair oracle, since the Bell measurement completes on each pair; an adaptive probe step for the signs, equivalent to an adaptive single-copy POVM because the probe $\sigma^*$ is known | Bell sampling on $\rho\otimes\rho$ or $\rho\otimes\rho^*$ from a single-copy oracle, the first copy waiting for the second; SWAP and purity tests; the fixed-unitary problem |
 | **Query oracle** (preparation circuit, superposition inputs) | Simon's algorithm, each call measured on its own (read as a QUALM in the paper) | Amplitude estimation and Grover search, sequential calls without intermediate measurement |
 
 The same Bell measurement is therefore incoherent or coherent depending on the oracle written down, which is why the access model has to be stated explicitly. King, Wan, McClean (2024) is a separation between two oracles at the same small memory, not between coherent and incoherent access.
@@ -437,9 +437,9 @@ The same Bell measurement is therefore incoherent or coherent depending on the o
 **Efficiency status.** Copies: 🟢 in every row, the union bound over $d^2$ addresses stays logarithmic. Memory: 🟢 in every row, a sparse list fits. Time: 🟢 only where the status column names a promise or query access; 🔴 for the generic case, by a theorem in the tensor-product Weyl basis and by the LPN mirror on the Boolean side.
 
 **What is open.**
-* (1) Which classes of states and channels are time-efficient for structure learning? A generic state is most likely not both sample- and time-efficient in the Heisenberg–Weyl basis; the map of decodable classes between "subgroup-easy" and "LWE-hard" is the research question of this project.
+* (1) Which classes of states and channels are time-efficient for structure learning? A generic state is most likely not both sample- and time-efficient in the Heisenberg–Weyl basis; the map of decodable classes between "subgroup-easy" and "LWE-hard" is the central open question.
 * (2) What is the LWE counterpart for the conjugate-pair Bell protocol in the Heisenberg–Weyl basis? The hardness theorem lives in the tensor-product basis. A sample-efficient but computationally hard boundary most likely exists in the cyclic single-qudit basis too, but the naive transfer is the hidden number problem, against which lattice attacks exist; composite $d$ with coprime factors approaches the tensor structure via the CRT. The cleanest candidate for a hard endpoint in the cyclic basis is the dihedral hidden-shift problem over $\mathbb{Z}_N$: subexponential for quantum algorithms, $2^{O(\sqrt{\log N})}$ (Kuperberg 2005), and at least as hard as unique-SVP (Regev 2004); see refinement 4 below.
-* (3) Average case. The hardness constructions are adversarial. Whether natural states, ground and Gibbs states of local Hamiltonians, are generically decodable is open in both directions; the conjecture of this project, a uniformly random top-$k$ support on the decodable side, is a claim about exactly this gap, and the learned decoder is its only evidence so far.
+* (3) Average case. The hardness constructions are adversarial. Whether natural states, ground and Gibbs states of local Hamiltonians, are generically decodable is open in both directions; the conjecture that a uniformly random top-$k$ support lies on the decodable side is a claim about exactly this gap, and so far only learned decoders give (empirical) evidence for it.
 * (4) Where searching ends and identifying begins. A parametrized exponential class, the LWE secret, is both at once. No theorem separates the two beyond the size of the candidate list. The tables settle this with the LWE rule (Appendix, "Reading the tables"): if the parameter of the class is the location of the support, the row sits under searching; this is why the stabilizer family and its agnostic variants are here as well.
 * (5) The magic threshold. $t = O(\log n)$ non-Clifford gates is the frontier of polynomial time; whether $\mathrm{poly}(n, 2^t)$ is optimal is open.
 
@@ -447,12 +447,12 @@ The same Bell measurement is therefore incoherent or coherent depending on the o
 
 | Protocol or class | Object | Task type: given → returned | Copies or queries (access) | Time | Memory | Status & Condition |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Sparse displacement spectra from Bell samples** (this project; see the structure-learning protocol) | State | Searching: sparsity promise → support and values of the spectrum | Sample: $O(\log d/\epsilon^4)$ | Generic localization LWE-hard | $O(k \log d)$ bits, the sparse list | 🟢 🔴 🟢; search too hard, **this project's cell** |
-| **LWE from i.i.d. samples** (Regev 2005) and its displacement instance: a real-diagonal state whose Bell outcomes are LWE samples | Classical function; a state in the displacement instance | Searching: noisy linear samples $(\mathbf{a}_i, \langle\mathbf{a}_i,\mathbf{s}\rangle + e_i)$ → the secret $\mathbf{s}$, i.e. the hidden line that carries the support | Sample: poly, information-theoretically sufficient | Hard under the LWE assumption; classical mirror LPN, best known $2^{O(n/\log n)}$ (Blum–Kalai–Wasserman 2003) | poly, the secret | 🟢 🔴 🟢; the generic hard case, **the theorem behind this project's cell** |
+| **Sparse displacement spectra from Bell samples** (see the structure-learning protocol) | State | Searching: sparsity promise → support and values of the spectrum | Sample: $O(\log d/\epsilon^4)$ | Generic localization LWE-hard | $O(k \log d)$ bits, the sparse list | 🟢 🔴 🟢; search too hard, **the hard cell** |
+| **LWE from i.i.d. samples** (Regev 2005) and its displacement instance: a real-diagonal state whose Bell outcomes are LWE samples | Classical function; a state in the displacement instance | Searching: noisy linear samples $(\mathbf{a}_i, \langle\mathbf{a}_i,\mathbf{s}\rangle + e_i)$ → the secret $\mathbf{s}$, i.e. the hidden line that carries the support | Sample: poly, information-theoretically sufficient | Hard under the LWE assumption; classical mirror LPN, best known $2^{O(n/\log n)}$ (Blum–Kalai–Wasserman 2003) | poly, the secret | 🟢 🔴 🟢; the generic hard case, **the hardness behind the hard cell** |
 | **Pseudomagic states** (Gu, Leone, Ghosh, Eisert, Yelin, Quek 2023) | State ensemble: subset phase states on $2^k$ strings | Searching in one-bit form: stabilizer entropy $\omega(\log n)$ or $\Theta(n)$, i.e. a Pauli spectrum with participation number $2^{n+\omega(\log n)}$ or $4^n$ → one bit; finding the concentrated support would decide it | Sample: poly copies suffice information-theoretically | No polynomial-time distinguisher under quantum-secure one-way functions; magic and entanglement are tunable independently | poly, the key | 🟢 🔴 🟢; the second hard endpoint of this column, from one-way functions instead of lattices; below stabilizer entropy $O(\log n)$ the class becomes distinguishable (Grewal et al. 2023), so the threshold in participation number is $2^n\mathrm{poly}(n)$ |
 | **Stabilizer states** (Montanaro 2017) | State | Searching: subgroup promise → the stabilizer group, i.e. the support | Sample: $O(n)$ | $O(n^3)$, Gaussian elimination on Bell differences | $O(n^2)$, the tableau | 🟢 🟢 🟢; subgroup promise |
-| **Factorized spectra over coprime factors** (Regime 3 of the own conjecture, extension G3) | State | Searching: product promise $y_{u_1\dots u_m} = \prod_j y_{u_j}(\rho_j)$ across the CRT factors of $d$ → the top-$k$ of the product from the per-factor top lists by a best-first heap | Sample: one Bell record per factor, $O(\log d_j/\epsilon^4)$ each | $\mathrm{poly}(k, \log d)$ heap operations | $O(k)$ | 🟢 🟢 🟢; factorization promise, composite $d$ only |
-| **Stabilizer states on qudits, $d > 2$** (Allcock, Doriguello, Ivanyos, Santha 2024) | State | Searching: subgroup promise → the stabilizer group, where Bell difference sampling on $\rho^{\otimes 4}$ returns only $\mathrm{col}(V)\times\mathrm{col}(W)$ and can be uniform | Sample: $9n + 3\lceil\log_p \mathrm{rank}\,W\rceil + 4$ copies of $\vert S\rangle$, computational-basis measurements plus a coherent step on three copies that learns the quadratic phase ($d = p$ prime); $3n$ copies of $\vert S\rangle$ and $2n$ of $\vert S^*\rangle$ by Bell sampling, any $d$ | $O(n^3\,\mathrm{rank}\,W) \leq O(n^4)$; $O(n^3)$ with the conjugate | $O(n^2)$, the generators | 🟢 🟢 🟢; subgroup promise; the qudit caveat behind the conjugate-pair choice of this project |
+| **Factorized spectra over coprime factors** (Regime 3; elementary argument, not from the literature) | State | Searching: product promise $y_{u_1\dots u_m} = \prod_j y_{u_j}(\rho_j)$ across the CRT factors of $d$ → the top-$k$ of the product from the per-factor top lists by a best-first heap | Sample: one Bell record per factor, $O(\log d_j/\epsilon^4)$ each | $\mathrm{poly}(k, \log d)$ heap operations | $O(k)$ | 🟢 🟢 🟢; factorization promise, composite $d$ only |
+| **Stabilizer states on qudits, $d > 2$** (Allcock, Doriguello, Ivanyos, Santha 2024) | State | Searching: subgroup promise → the stabilizer group, where Bell difference sampling on $\rho^{\otimes 4}$ returns only $\mathrm{col}(V)\times\mathrm{col}(W)$ and can be uniform | Sample: $9n + 3\lceil\log_p \mathrm{rank}\,W\rceil + 4$ copies of $\vert S\rangle$, computational-basis measurements plus a coherent step on three copies that learns the quadratic phase ($d = p$ prime); $3n$ copies of $\vert S\rangle$ and $2n$ of $\vert S^*\rangle$ by Bell sampling, any $d$ | $O(n^3\,\mathrm{rank}\,W) \leq O(n^4)$; $O(n^3)$ with the conjugate | $O(n^2)$, the generators | 🟢 🟢 🟢; subgroup promise; the qudit caveat behind the conjugate pair $\rho\otimes\rho^*$ |
 | **Clifford plus few non-Clifford gates** (Lai, Cheng 2022; Grewal, Iyer, Kretschmer, Liang 2023; Leone, Oliviero, Hamma 2024; Hangleiter, Gullans 2024) | State | Searching by the LWE rule: stabilizer dimension $\geq n-t$, e.g. at most $t$ non-Clifford gates → a Pauli subgroup of size $2^{n-t}$ that stabilizes the state, i.e. the support, then the remainder on $t$ qubits by tomography | Sample: $\mathrm{poly}(n, 2^t)$ | $\mathrm{poly}(n, 2^t)$, polynomial for $t = O(\log n)$ | poly | 🟢 🟢 🟢 up to logarithmic magic; the time budget grows as $2^t$, magic is the hardness dial |
 | **Approximate stabilizer support and stabilizer fidelity** (Grewal, Iyer, Kretschmer, Liang 2023) | State | Searching: fidelity $\tau$ with some stabilizer state → the Lagrangian subspace $\mathrm{Weyl}(\vert\phi\rangle)$ of the best stabilizer state, then a stabilizer state witnessing fidelity $\geq F_S - \epsilon$; also: fewer than $n/2$ non-Clifford gates or Haar-random → one bit | Sample: Bell difference sampling, $O(n/(\epsilon^2\tau^4))$ copies; $O(n + \log n/\gamma^2)$ for $\tau \geq \cos^2(\pi/8) + \gamma$; $O(n)$ for the rank test | $\exp(O(n/\tau^4))/\epsilon^2$ via maximal cliques of the commutation graph; $O(n^3 + n^2\log n/\gamma^2)$ above $\cos^2(\pi/8)$, where the closest stabilizer state is unique and $x \in \mathrm{Weyl}(\vert\phi\rangle)$ iff $\langle\psi\vert W_x\vert\psi\rangle^2 > 1/2$ | poly | 🟢 🟢 🟢 above $\cos^2(\pi/8)$, 🟢 🔴 🟢 for small constant $\tau$; an approximate subgroup promise stays searchable because a constant fraction of the samples lies exactly in the subgroup, which is what the LWE instance destroys |
 | **Agnostic tomography** (Grewal, Iyer, Kretschmer, Liang 2024; Chen, Gong, Ye, Zhang 2024) | State, mixed | Searching by the LWE rule, agnostic: class $\mathcal{C}$ (stabilizer or stabilizer product states), no promise that $\rho \in \mathcal{C}$ → the Lagrangian subspace of the best candidate, then $\sigma\in\mathcal{C}$ with $F(\rho,\sigma) \geq \max_{\tau\in\mathcal{C}} F(\rho,\tau) - \epsilon$; by task type agnostic identifying | Sample: stabilizer product states $n^{O(\log(2/\tau))}/\epsilon^2$ by Bell difference sampling (Grewal et al.), improved to $n^2(1/\tau)^{O(\log 1/\tau)}/\epsilon^2$; all stabilizer states $n(1/\tau)^{O(\log 1/\tau)} + O(\log^2(1/\tau)/\epsilon^2)$ copies by stabilizer bootstrapping; stabilizer dimension $\geq n-t$ with $n(2^t/\tau)^{O(\log 1/\epsilon)}$; lower bound $\Omega(n/\tau)$ | $O(n^2(n+1/\epsilon^2))(1/\tau)^{O(\log 1/\tau)}$, polynomial for $\tau \geq e^{-c\sqrt{\log n}}$ | poly, a tableau | 🟢 🟢 🟢 for best fidelity $\tau$ down to slightly sub-polynomial; the same algorithm estimates stabilizer fidelity, the first efficient magic estimator; the quasipolynomial continuation of the row above |
@@ -499,9 +499,9 @@ Searching protocols: The observables are the output. Two families: structure lea
 
 The searching column has its endpoints; these four statements fix the shape of the region between them. Each one is a consequence of results already in the tables, stated here because the tables cannot carry it.
 
-**1. The noise model separates "agnostically easy" from "LWE-hard".** The LWE instance is itself a subgroup instance: its support lies on a hidden line, the very structure that Montanaro's Gaussian elimination recovers. It is hard because every sample lies next to the line by $e_i$. The approximate-stabilizer results say the opposite for a different noise: if a constant fraction of the Bell difference samples lies exactly in the subgroup, with probability at least $\tau^4$ for stabilizer fidelity $\tau$, the support is recoverable in time $\exp(O(n/\tau^4))$ (Grewal, Iyer, Kretschmer, Liang 2023), polynomial above $\cos^2(\pi/8)$, and quasipolynomial for any $\tau$ by stabilizer bootstrapping (Chen, Gong, Ye, Zhang 2024). In coding terms: Goldreich–Levin is local list decoding of the Hadamard code with queries; stabilizer bootstrapping is list decoding from samples under erasure-type noise, where clean samples exist and only have to be identified; LPN and LWE are decoding of random linear codes under additive noise on every sample. The three are the map between Regime 2 and the wall, and they tell the instance generator which perturbation makes an instance hard: not a fraction of corrupted samples, but a small error on all of them.
+**1. The noise model separates "agnostically easy" from "LWE-hard".** The LWE instance is itself a subgroup instance: its support lies on a hidden line, the very structure that Montanaro's Gaussian elimination recovers. It is hard because every sample lies next to the line by $e_i$. The approximate-stabilizer results say the opposite for a different noise: if a constant fraction of the Bell difference samples lies exactly in the subgroup, with probability at least $\tau^4$ for stabilizer fidelity $\tau$, the support is recoverable in time $\exp(O(n/\tau^4))$ (Grewal, Iyer, Kretschmer, Liang 2023), polynomial above $\cos^2(\pi/8)$, and quasipolynomial for any $\tau$ by stabilizer bootstrapping (Chen, Gong, Ye, Zhang 2024). In coding terms: Goldreich–Levin is local list decoding of the Hadamard code with queries; stabilizer bootstrapping is list decoding from samples under erasure-type noise, where clean samples exist and only have to be identified; LPN and LWE are decoding of random linear codes under additive noise on every sample. The three are the map between Regime 2 and the wall, and they tell a generator of test instances which perturbation makes an instance hard: not a fraction of corrupted samples, but a small error on all of them.
 
-**2. What "sparse" has to mean.** Every coefficient satisfies $\vert y_z\vert\leq 1$, and $\sum_z\vert y_z\vert^2 = d\,\mathrm{Tr}\rho^2$. A pure state therefore has at least $d$ nonzero coefficients, and exactly $d$ only when all of them have magnitude one, i.e. for a stabilizer state; a pure state with a $k$-sparse spectrum, $k < d$, does not exist. For pure states the Bell draw on $\rho\otimes\rho^*$ samples $\vert y_z\vert^2/d$ directly; every address has probability at most $1/d$, so reading the support off the counts costs $\Omega(d)$ shots even for a stabilizer state, whose support is instead found by linear algebra (Regime 2). The character-mean estimator needs only $O(\log d/\epsilon^4)$ shots for all magnitudes, but it has to be evaluated at all $d^2$ addresses, which is the time problem of refinement 3. A mixed state can be exactly sparse, but then the Bell outcomes follow the symplectic Fourier transform of $\vert y\vert^2$ and are spread over all addresses: localization becomes sparse recovery from random Fourier samples, which is the form of the LWE instance, a sparse, diagonal, mixed state. The Boolean case is the opposite: a $k$-Fourier-sparse Boolean function has every nonzero coefficient a multiple of $2^{1-\lfloor\log k\rfloor}$, so sparsity under unit normalization is heaviness and Fourier sampling finds the support (Arunachalam, Chakraborty, Lee, Paraashar, de Wolf 2021). The hard regime of this project is therefore not "$k$-sparse" but "$k$ coefficients of size $\Theta(1)$ over a remainder that carries the mass $d\,\mathrm{Tr}\rho^2$ minus the top-$k$ mass", at least $d - k$ for a pure state. The purity and the distribution of the remainder are the dials of the instance ladder, and the promise in the first row of the table is to be read this way.
+**2. What "sparse" has to mean.** Every coefficient satisfies $\vert y_z\vert\leq 1$, and $\sum_z\vert y_z\vert^2 = d\,\mathrm{Tr}\rho^2$. A pure state therefore has at least $d$ nonzero coefficients, and exactly $d$ only when all of them have magnitude one, i.e. for a stabilizer state; a pure state with a $k$-sparse spectrum, $k < d$, does not exist. For pure states the Bell draw on $\rho\otimes\rho^*$ samples $\vert y_z\vert^2/d$ directly; every address has probability at most $1/d$, so reading the support off the counts costs $\Omega(d)$ shots even for a stabilizer state, whose support is instead found by linear algebra (Regime 2). The character-mean estimator needs only $O(\log d/\epsilon^4)$ shots for all magnitudes, but it has to be evaluated at all $d^2$ addresses, which is the time problem of refinement 3. A mixed state can be exactly sparse, but then the Bell outcomes follow the symplectic Fourier transform of $\vert y\vert^2$ and are spread over all addresses: localization becomes sparse recovery from random Fourier samples, which is the form of the LWE instance, a sparse, diagonal, mixed state. The Boolean case is the opposite: a $k$-Fourier-sparse Boolean function has every nonzero coefficient a multiple of $2^{1-\lfloor\log k\rfloor}$, so sparsity under unit normalization is heaviness and Fourier sampling finds the support (Arunachalam, Chakraborty, Lee, Paraashar, de Wolf 2021). The hard regime is therefore not "$k$-sparse" but "$k$ coefficients of size $\Theta(1)$ over a remainder that carries the mass $d\,\mathrm{Tr}\rho^2$ minus the top-$k$ mass", at least $d - k$ for a pure state. The purity and the distribution of the remainder are the dials of the instance ladder, and the promise in the first row of the table is to be read this way.
 
 **3. The scale of the time wall, and the query cell for states.** Brute force over the $d^2$ addresses costs $O(d^2N)$, polynomial in $d$; "LWE-hard" means no algorithm in $\mathrm{poly}(\log d)$. The classical mirror is compressed sensing with random Fourier samples: with $O(k\,\mathrm{polylog}\,d)$ random rows of the Fourier matrix the restricted isometry property holds (Candès, Tao 2006; Rudelson, Vershynin 2008) and $\ell_1$ minimization recovers a $k$-sparse vector in time $\mathrm{poly}(d)$, while sublinear time needs chosen sampling positions, which is what sparse FFT uses and what the peeling decoder of Harper, Yu, Flammia uses on the channel side through chosen stabilizer groups. A Bell record delivers random positions; that is the same trichotomy as Theorem 5 of King, Wan, McClean (signs in $\mathrm{poly}(d)$) against the wall. The query cell of the quadrant is populated for functions and for Pauli channels; for a state with a preparation oracle it is not: amplitude amplification on the coherent Bell measurement finds a top-$k$ address in $O(\sqrt{d/k})$ calls, amplitude estimation makes each single address cheap at the Heisenberg rate, the LWE instance falls to superposition queries (Grilo, Kerenidis, Zijlstra 2019), and no general $\mathrm{poly}(n)$ localizer with queries is known. Rung 3 of the access ladder breaks the LWE endpoint, not the corner.
 
@@ -509,9 +509,9 @@ The searching column has its endpoints; these four statements fix the shape of t
 
 ## The repaired success criterion and the three failure modes
 
-The refinements above and the LWE row show that sparsity is not a success criterion. The displacement instance behind `thm:lwe-displacement` is sparse, its peaks lie far above the shot-noise floor, it is available from conjugate pairs, and its support still cannot be located in polynomial time. The central conjecture therefore needs a third condition, and that condition is computational rather than statistical (mentor feedback, Block C).
+The refinements above and the LWE row show that sparsity is not a success criterion. The real-diagonal LWE displacement instance is sparse, its peaks lie far above the shot-noise floor, it is available from conjugate pairs, and its support still cannot be located in polynomial time. A conjecture about efficient top-$k$ localization therefore needs a third condition, and that condition is computational rather than statistical.
 
-**Three conditions.** The pipeline finds the peaks efficiently when all three hold:
+**Three conditions.** A decoder finds the peaks efficiently when all three hold:
 
 | Condition | Budget it secures | Where the tables supply it | Without it |
 | --- | --- | --- | --- |
@@ -519,12 +519,12 @@ The refinements above and the LWE row show that sparsity is not a success criter
 | **(ii) Signal-to-noise and margin:** the dominant amplitudes lie above the shot-noise floor and stand out from the background | Copies: statistical detectability of each peak and of the top-$k$ boundary | Hoeffding plus a union bound over the $d^2$ addresses; a gap $g$ between the $k$-th and the $(k+1)$-th magnitude costs $N = O(g^{-2}\log(d^2/\delta))$ (the quadrant in the appendix); condition (C2a) in the table of the next subsection | Peaks sink below $1/\sqrt N$, or the top-$k$ boundary is not resolved |
 | **(iii) Structural decodability:** the support comes from a family that is computationally decodable under the *actual* sample-access model | Time: the computational boundary | Polynomial dictionaries and local observables (Regime 1: Bresler; Klivans, Meka; Bakshi, Liu, Moitra, Tang; the degree promise of QAC⁰); subgroups and stabilizer groups (Regime 2: Montanaro; Allcock et al. on qudits; approximate subgroups by Grewal, Iyer, Kretschmer, Liang and by stabilizer bootstrapping); factorized spectra over coprime factors (Regime 3, the best-first heap) | The LWE displacement instance and LWE from samples; pseudomagic states; LPN as the classical mirror |
 
-**The logical form.** The LWE instance satisfies (i) and (ii) and is still hard, so the two together are not sufficient. That is the content of Block B, and it is why (iii) is needed. With an explicit list of families, (iii) turns the criterion into a sufficiency theorem for a promise problem, the form stated in the positioning section. It is not a proven necessary condition:
+**The logical form.** The LWE instance satisfies (i) and (ii) and is still hard, so the two together are not sufficient; this is why (iii) is needed. With an explicit list of families, (iii) turns the criterion into a sufficiency theorem for a promise problem. It is not a proven necessary condition:
 * (i) is not needed on qubits or for real states.
 * The approximate-subgroup rows show that the list of decodable families is open-ended.
 * Under query access (rung 3) the access itself replaces (iii) for the LWE endpoint (Grilo, Kerenidis, Zijlstra 2019).
 
-Without an explicit list, "decodable under the access model" only restates the conclusion. The conjecture of this project is then a membership claim: the uniformly random top-$k$ supports of the instance generator belong to the decodable side of (iii), although they are none of the three listed families.
+Without an explicit list, "decodable under the access model" only restates the conclusion. The conjecture that uniformly random top-$k$ supports are decodable is then a membership claim: such supports belong to the decodable side of (iii), although they are none of the three listed families.
 
 **Three failure modes.** Instead of one undifferentiated error, the failures separate cleanly, each with its own kind of bound:
 
@@ -532,13 +532,13 @@ Without an explicit list, "decodable under the access model" only restates the c
 | --- | --- | --- | --- |
 | **Statistical detectability** | Is the signal large enough compared with the number of samples $N$? | Information-theoretic and unconditional: Holevo and packing, the tree method, Hoeffding | Without the conjugate: King, Wan, McClean, Thms. 1 and 3; peaks below the noise floor: (C2a) |
 | **Computational search** | Can the frequencies be found in $\mathrm{poly}(n)$ time, or are they cryptographically hidden as in LWE? | Computational and conditional: LWE, LPN, one-way functions | The LWE displacement instance and LWE from samples; pseudomagic states; bounded gate complexity. Escapes: the promises of (iii), or query access |
-| **Identifiability at ties and plateaus** | Is "the top-$k$" a well-defined answer? | Neither: a property of the target, fixed by the output format | Stabilizer plateaus, $2^n$ equal coefficients (the linear cluster state); the mirror pair $(q,p)\leftrightarrow(q,-p)$ of real states, an exact tie for `defn:validtopk`; the threshold $\cos^2(\pi/8)$ above which the nearest stabilizer state is unique (Grewal, Iyer, Kretschmer, Liang 2023) |
+| **Identifiability at ties and plateaus** | Is "the top-$k$" a well-defined answer? | Neither: a property of the target, fixed by the output format | Stabilizer plateaus, $2^n$ equal coefficients (the linear cluster state); the mirror pair $(q,p)\leftrightarrow(q,-p)$ of real states, an exact tie for any top-$k$ list; the threshold $\cos^2(\pi/8)$ above which the nearest stabilizer state is unique (Grewal, Iyer, Kretschmer, Liang 2023) |
 
 A tie breaks the uniqueness of a ranking but not the physical localization of the subspace. Montanaro's decoder returns the stabilizer group, the whole plateau, and never ranks inside it. For such targets the output is a level set or a subspace, and success is measured on that set; top-$k$ accuracy with $k$ inside a plateau only measures an arbitrary tie-break.
 
 **Relation to the two ways to fail.** The appendix separates "hypothesis too large" (memory) from "search too hard" (time). The trichotomy lives inside the sparse-list representation. Statistical detectability is the copies budget, computational search is "search too hard", and identifiability belongs to no budget because it concerns the definition of the output. The representation failure is orthogonal and is already solved by the sparse list of $O(k\log d)$ bits.
 
-**The three blocks of the feedback in one sentence each.** A explains why standard signal processing does not carry over one-to-one to quantum samples. B shows through LWE that a sparse spectrum can still be hopelessly hard to search. C draws the consequence and names the conditions under which the pipeline provably works.
+**The three steps in one sentence each.** First, standard signal processing does not carry over one-to-one to quantum samples. Second, LWE shows that a sparse spectrum can still be hopelessly hard to search. Third, the consequence: the conditions under which top-$k$ localization provably works.
 
 ## Which spectrum? The Heisenberg–Weyl restriction and the conjugate
 
@@ -554,7 +554,7 @@ A tie breaks the uniqueness of a ranking but not the physical localization of th
 | The conjugate copy is available ($d > 2$) | With $K$ copies of $\rho$ held at once, $\Omega(\sqrt d/(K^2\epsilon^2))$ measurements for $d$ prime (Thm. 1 of the paper); with single copies $\Omega(d/\epsilon^2)$, even when single copies of $\rho^*$ are allowed (Thm. 3). |
 | The heavy coefficients are at least $\epsilon$, with $1/\epsilon$ polynomial | They sink below the noise floor, condition (C2a). |
 
-Sample efficiency secures neither the signs nor the search. Theorem 5 of the paper learns all signs from $O(\log d/\epsilon^4)$ copies but in time $\mathrm{poly}(d)$, exponential in $n$, which is why Phase 2 of the own protocol exists. The time of localization is the LWE question of this section.
+Sample efficiency secures neither the signs nor the search. Theorem 5 of the paper learns all signs from $O(\log d/\epsilon^4)$ copies but in time $\mathrm{poly}(d)$, exponential in $n$; a cheaper sign step for known addresses is therefore a separate question. The time of localization is the LWE question of this section.
 
 *Outside Heisenberg–Weyl.* Coefficients in another operator basis, for example the Gell-Mann matrices of $\mathfrak{su}(d)$, are linear combinations of displacement coefficients. The squared magnitudes alone do not determine them, because the combination needs the phases. That is the practical content of the restriction: the Bell record answers questions about the Weyl spectrum and about nothing else directly.
 
@@ -573,15 +573,15 @@ Sample efficiency secures neither the signs nor the search. Theorem 5 of the pap
 | Generators | one pair: $X\vert j\rangle = \vert j+1\rangle$, $Z\vert j\rangle = \omega^j\vert j\rangle$ | one pair $(X_i, Z_i)$ per factor |
 | Phase space | the torus $\mathbb{Z}_d\times\mathbb{Z}_d$ | $\mathbb{Z}_q^{2n}$, for qubits $\mathbb{F}_2^{2n}$ |
 | Physical picture | discrete position and momentum of one particle or mode on a ring | registers of spins or qubits, quantum circuits |
-| Hardness of localization | open (Q1); the naive transfer is the hidden number problem, against which lattice attacks exist | LWE-hard for prime $q$ under the LWE assumption (`thm:lwe-displacement`); for qubits the same construction rests on LPN |
+| Hardness of localization | open; the naive transfer is the hidden number problem, against which lattice attacks exist | LWE-hard for prime $q$ under the LWE assumption (real-diagonal displacement instance); for qubits the same construction rests on LPN |
 
-This project uses the cyclic basis because its indices are the physical displacements in a two-dimensional phase space, the natural coordinates for a discretized mode, a vibrational coordinate, or a real-space sensor array.
+The cyclic basis is the natural one here because its indices are the physical displacements in a two-dimensional phase space, the natural coordinates for a discretized mode, a vibrational coordinate, or a real-space sensor array.
 
 **Sparsity is relative to the basis.** Searching presupposes a few heavy coefficients. For a pure state $\sum_{q,p}\vert y_{q,p}\vert^2 = d$, so a perfectly flat spectrum has $\vert y_{q,p}\vert = 1/\sqrt d$ everywhere, and a coefficient of size $\Theta(1)$ stands out. Which states have such coefficients depends on the basis. Numbers for $n = 6$, $d = 64$, with the participation number $(\sum\vert y\vert^2)^2/\sum\vert y\vert^4$ as the effective count of coefficients out of $4096$:
 * *Linear cluster state.* In the Pauli basis exactly $64$ coefficients of magnitude one, the stabilizer group; in the cyclic basis about $776$ effective coefficients. It is a stabilizer object: a plateau of $2^n$ equal entries in its own basis, not a top-$k$ object.
 * *Discrete Gaussian and coherent states.* The characteristic function is concentrated at the origin: about $128$ effective coefficients in the cyclic basis, largest at $(q,p) = (0,0)$, and identical for the Gaussian and every displaced copy of it. A displacement multiplies each $y_u$ by a phase and leaves the magnitudes unchanged. In the Pauli basis the count is about $100$ for the centred Gaussian and about $218$ after the displacement used here. Neither basis makes these states $k$-sparse. ⚠️ The Wigner function of a coherent state peaks at its phase-space position $(q_0, p_0)$; the displacement spectrum, which is the symplectic Fourier transform of the Wigner function, does not. The position of a coherent state is phase information, the object of Stufe 1 of the instance ladder, not a searching object.
 
-**Consequence for the instance generator.** The harmonic base Hamiltonian is real, but an injection $D_{q,p}+D_{q,p}^\dagger$ with $q\neq0$ and $p\neq0$ is complex, so the generated ground and Gibbs states are complex, and `np.conjugate(rho)` in the simulation stands for white-box access. A real family needs symmetric injections, $D_{q,p}+D_{q,-p}+\mathrm{h.c.}$, since $D_{q,p}^* = D_{q,-p}$. The price is a symmetric support: for real $\rho$, $y_{q,-p} = \overline{y_{q,p}}$, and together with Hermiticity the magnitudes $\vert y_{\pm q,\pm p}\vert$ coincide exactly (checked at $d = 7$, $(q,p) = (2,3)$: all equal to $0.5876$; the complex state from a single injection gives $0.41$ and $0.19$ at $(2,\pm3)$). The conjugate deduplication handles $(q,p)\leftrightarrow(-q,-p)$ only, so the mirror pair $(q,p)\leftrightarrow(q,-p)$ arrives as an exact tie, an identifiability case for `defn:validtopk`. Real states are therefore a natural step of their own on the instance ladder: conjugate access for free, paid for with a symmetric support.
+**Consequence for generating test instances.** A harmonic base Hamiltonian is real, but an injection $D_{q,p}+D_{q,p}^\dagger$ with $q\neq0$ and $p\neq0$ is complex, so the resulting ground and Gibbs states are complex, and computing $\rho^*$ in a simulation stands for white-box access. A real family needs symmetric injections, $D_{q,p}+D_{q,-p}+\mathrm{h.c.}$, since $D_{q,p}^* = D_{q,-p}$. The price is a symmetric support: for real $\rho$, $y_{q,-p} = \overline{y_{q,p}}$, and together with Hermiticity the magnitudes $\vert y_{\pm q,\pm p}\vert$ coincide exactly (checked at $d = 7$, $(q,p) = (2,3)$: all equal to $0.5876$; the complex state from a single injection gives $0.41$ and $0.19$ at $(2,\pm3)$). Deduplicating conjugate addresses handles $(q,p)\leftrightarrow(-q,-p)$ only, so the mirror pair $(q,p)\leftrightarrow(q,-p)$ arrives as an exact tie, an identifiability case for any top-$k$ list. Real states are therefore a natural step of their own on the instance ladder: conjugate access for free, paid for with a symmetric support.
 
 ## Quantum PAC learning and quantum examples
 
@@ -603,7 +603,7 @@ The oldest access model in the field: the learner receives copies of the example
 
 Summaries of the key papers on the task type **searching**: the observables are the output. Given are copies of a state, uses of a unitary or of a dynamics, and a promise about the structure. Returned is the support, i.e. which addresses carry the weight, and then their values.
 
-Every summary follows the same structure: placement in the tables, problem, key results, method, significance, relation to this project, limitations and open questions, questions for further study. The status glyphs read as in the appendix ("Reading the tables"), in the order copies · time · memory.
+Every summary follows the same structure: placement in the tables, problem, key results, method, significance, connections, limitations and open questions, questions for further study. The status glyphs read as in the appendix ("Reading the tables"), in the order copies · time · memory.
 
 ## Overview
 
@@ -634,7 +634,7 @@ Three families. The first papers search for the support of a *state* by Bell sam
 
 ## Learning stabilizer states by Bell sampling (arXiv:1707.04012)
 
-The paper by **Ashley Montanaro** (Bristol, 2017) is a three-page note with a single theorem: an unknown stabilizer state on $n$ qubits can be identified from $O(n)$ copies, and the measurement this requires is the simplest imaginable, a transversal Bell measurement on pairs of copies. The paper is the root of the entire Bell-sampling literature, on which the next two summaries and the conjugate-pair method of this project build.
+The paper by **Ashley Montanaro** (Bristol, 2017) is a three-page note with a single theorem: an unknown stabilizer state on $n$ qubits can be identified from $O(n)$ copies, and the measurement this requires is the simplest imaginable, a transversal Bell measurement on pairs of copies. The paper is the root of the entire Bell-sampling literature, on which the next two summaries and the conjugate-pair method build.
 
 ### Placement in the tables
 
@@ -666,14 +666,14 @@ The Bell measurement itself is a depth-one circuit: CNOT between corresponding q
 ### Significance and applications
 
 * **The measurement primitive for everything that follows.** Bell difference sampling in Gross, Nezami, and Walter, learning with few T gates in Grewal et al., the circuit shadows of Hangleiter and Gullans, and agnostic learning by stabilizer bootstrapping all use exactly this mechanism.
-* **Locality of the measurement.** The advance over Aaronson and Gottesman is not the copy count but that never more than two copies are entangled. This is the two-copy restriction under which this project also operates.
-* **The plateau is not a hardness problem.** All $2^n$ coefficients on $T$ have magnitude one. The support can be reconstructed by linear algebra; only an *ordered* ranking is ill-defined. This is the content of `cor:plateau` in this project's paper.
+* **Locality of the measurement.** The advance over Aaronson and Gottesman is not the copy count but that never more than two copies are entangled. This is the two-copy restriction under which conjugate-pair protocols also operate.
+* **The plateau is not a hardness problem.** All $2^n$ coefficients on $T$ have magnitude one. The support can be reconstructed by linear algebra; only an *ordered* ranking is ill-defined.
 
-### Relation to this project
+### Connections
 
-* The algorithm is the provably correct decoder for rung 2 of the instance ladder in research.md and one of the three reference decoders for every experiment: trivial baseline, provable specialist, learned CNN.
-* Bell sampling on two *identical* copies works here because $\psi^*$ is a Pauli image of $\psi$. This fails for generic states and for qudits with $d > 2$; there the conjugate pair $\rho \otimes \rho^*$ is needed (Allcock et al. 2024; King, Wan, McClean 2024). This is the justification for the measurement of Phase 1.
-* The statistics here are the exception, not the rule: because the spectrum is spread over $2^n$ addresses of magnitude one, every sample sees a uniformly distributed element of the coset. For a sparse spectrum with $k$ coefficients of size $\Theta(1)$, each address has probability $\Theta(1/d)$, and the same measurement yields nothing directly readable. This is why Phase 1 needs the Fourier transform and the CNN decoder.
+* The algorithm is the provably correct decoder for stabilizer instances and a natural reference decoder in any comparison: trivial baseline, provable specialist, learned decoder.
+* Bell sampling on two *identical* copies works here because $\psi^*$ is a Pauli image of $\psi$. This fails for generic states and for qudits with $d > 2$; there the conjugate pair $\rho \otimes \rho^*$ is needed (Allcock et al. 2024; King, Wan, McClean 2024). This is the justification for measuring magnitudes on conjugate pairs.
+* The statistics here are the exception, not the rule: because the spectrum is spread over $2^n$ addresses of magnitude one, every sample sees a uniformly distributed element of the coset. For a sparse spectrum with $k$ coefficients of size $\Theta(1)$, each address has probability $\Theta(1/d)$, and the same measurement yields nothing directly readable. This is why top-$k$ localization needs an estimator over the whole record (a Fourier transform or character means) and a decoder on top.
 
 ### Limitations and open questions
 
@@ -683,7 +683,7 @@ The Bell measurement itself is a depth-one circuit: CNOT between corresponding q
 
 ### Questions for further study
 
-* What does the coset structure of the Bell distribution look like in the cyclic qudit case, when $\mathbb{Z}_d$ is not a field? (Rank 2 instead of $n$, Hermite normal form instead of Gaussian elimination; see research.md, section "Conjecture Feedback".)
+* What does the coset structure of the Bell distribution look like in the cyclic qudit case, when $\mathbb{Z}_d$ is not a field? (Rank 2 instead of $n$, Hermite normal form instead of Gaussian elimination.)
 * What role does the choice $\rho \otimes \rho$ versus $\rho \otimes \rho^*$ play for the sign information that Lemma 2 makes visible?
 * What is the precise relation between the union bound over subspaces here and the sample bound $N = O(g^{-2}\log(M/\delta))$ of the dictionary regime?
 
@@ -730,12 +730,12 @@ Optimal tomography costs $\Theta(d^2)$ copies with entangled and $\Theta(d^3)$ w
 * The hardware requirements match those of classical shadows: measure Bell pairs, apply Cliffords, measure in the computational basis, tomography on $t$ qubits.
 * Leone, Oliviero, Hamma and Hangleiter, Gullans appeared at the same time with similar Bell-sampling procedures; this paper is the most general one and has the additive runtime.
 
-### Relation to this project
+### Connections
 
-* This is the decoder for the rungs between "perfect crystal" and "generic" on the instance ladder: stabilizer ground states plus a few non-commuting terms. Stabilizer dimension is a measurable state property that belongs as an influencing factor in the taxonomy in research.md.
+* This is the decoder for the classes between "perfect crystal" and "generic" on an instance ladder: stabilizer ground states plus a few non-commuting terms. Stabilizer dimension is a measurable state property and a natural dial for such a ladder.
 * The property test for stabilizer dimension is a tool to check, per instance class, *whether* a subgroup structure is present before the specialist decoder is applied.
 * The footnote on Lai and Cheng is a warning for everyone who uses Bell difference sampling: it samples from $q_\psi = p_\psi * p_\psi$, the convolution of the characteristic distribution with itself, not from $p_\psi$.
-* The hardness result shows the shape of the boundary: everything stays sample-efficient, and time explodes as $2^t$. This is the same signature as in this project's cell, only with magic instead of LWE as the cause.
+* The hardness result shows the shape of the boundary: everything stays sample-efficient, and time explodes as $2^t$. This is the same signature as in the hard cell of top-$k$ localization, only with magic instead of LWE as the cause.
 
 ### Limitations and open questions
 
@@ -748,7 +748,7 @@ Optimal tomography costs $\Theta(d^2)$ copies with entangled and $\Theta(d^3)$ w
 
 * How exactly does Lemma 4.x guarantee that a subspace with large $p_\psi$ mass is isotropic, and what is the qudit analogue?
 * How does the construction $C|\psi\rangle = |\varphi\rangle|x\rangle$ carry over to $\mathbb{Z}_d$ with composite $d$?
-* Can this project's CNN read off the stabilizer dimension implicitly from the folded Bell record, and is that the mechanism at work on rung 2 of the ladder?
+* Can a learned decoder read off the stabilizer dimension implicitly from a (folded) Bell record, and would that explain success on stabilizer-like instances?
 
 Paper: [arXiv:2305.13409](https://arxiv.org/abs/2305.13409)
 
@@ -791,11 +791,11 @@ Everything follows from one observation: the Bell basis is the joint eigenbasis 
 * **Bridge to error correction.** Transversal Bell measurements between code blocks; first experiments on a logical-qubit processor (Ref. 53 of the paper) came out of a collaboration with the authors.
 * **A model of computation with built-in verification.** If the hardness of Bell sampling stays robust against noise, for which the authors give first indications in the supplement, this would be a scalable demonstration of quantum advantage with classical validation.
 
-### Relation to this project
+### Connections
 
-* The formula $P_C(r) = |\langle\bar C|\sigma_r|C\rangle|^2/2^n$ is the same as in Montanaro and shows the conjugate effect that this project exploits physically through $\rho \otimes \rho^*$. For real amplitudes the difference disappears, which explains why the demonstrations work with GHZ and Clifford states.
-* The purity estimator from the Y-parity is a certificate that follows directly from the Bell record of Phase 1, without additional measurements. It could calibrate the noise floor and the mixedness factor A in the taxonomy in research.md.
-* The nullity estimate is a measurable version of the factor "stabilizer rank / magic" from the same taxonomy.
+* The formula $P_C(r) = |\langle\bar C|\sigma_r|C\rangle|^2/2^n$ is the same as in Montanaro and shows the conjugate effect that $\rho \otimes \rho^*$ removes physically. For real amplitudes the difference disappears, which explains why demonstrations work with GHZ and Clifford states.
+* The purity estimator from the Y-parity is a certificate that follows directly from a Bell record, without additional measurements. It could calibrate the noise floor and serve as a mixedness dial.
+* The nullity estimate is a measurable version of the dial "stabilizer rank / magic".
 * Hardware realism: the discussion of ion traps, Rydberg arrays, and the SWAP cost of geometrically local architectures is the most concrete description of the cost of a transversal Bell measurement among the papers in this collection.
 
 ### Limitations and open questions
@@ -854,11 +854,11 @@ Boolean functions have a mature theory: Fourier analysis, property testing, lear
 * Prop. 41 is the precursor of Hamiltonian learning from dynamics: locality plus Lieb–Robinson make the spectrum sparse, and a Fourier search algorithm finds it.
 * The stabilizer test is the operator-side precursor of the stabilizer test of Gross, Nezami, and Walter.
 
-### Relation to this project
+### Connections
 
-* The paper is the cleanest source for the statement that organizes the searching table: for an operator, $\sum_s \hat f_s^2 = 1$, a coefficient of size $\gamma$ appears in Choi sampling with probability $\gamma^2$, and the search is polynomial. For a pure state, the squared displacement coefficients sum to $d$, and the same measurement carries only $1/d$ per address. That is the whole difference between this row and this project's LWE cell.
-* The branch and bound over prefixes is structurally the same as Kushilevitz–Mansour and the bucket refinement of the sparse FFT. This project's coprime folding is the dual of it: instead of *querying* weights on prefixes, it folds the spectrum and lets the CNN decode the residues. A comparison of the two strategies would deserve its own paragraph in the paper.
-* Lemma 24 is the query version of Phase 2: a Hadamard test with a controlled operator estimates a single coefficient including its sign. This project's eigenprobe achieves the same with sample access and a conjugate pair.
+* The paper is the cleanest source for the statement that organizes the searching table: for an operator, $\sum_s \hat f_s^2 = 1$, a coefficient of size $\gamma$ appears in Choi sampling with probability $\gamma^2$, and the search is polynomial. For a pure state, the squared displacement coefficients sum to $d$, and the same measurement carries only $1/d$ per address. That is the whole difference between this row and the LWE cell for states.
+* The branch and bound over prefixes is structurally the same as Kushilevitz–Mansour and the bucket refinement of the sparse FFT. Folding the spectrum over coprime moduli is the dual of it: instead of *querying* weights on prefixes, one folds the spectrum and lets a decoder resolve the residues. A comparison of the two strategies would be worth working out.
+* Lemma 24 is the query version of a sign step: a Hadamard test with a controlled operator estimates a single coefficient including its sign. An eigenprobe on a conjugate pair achieves the same with sample access.
 
 ### Limitations and open questions
 
@@ -912,9 +912,9 @@ Process tomography of an arbitrary $n$-qubit unitary needs $\Omega(4^n)$ queries
 * Table 1 of the paper places classical testing, quantum testing, and quantum learning for Boolean and quantum juntas side by side and is a compact map of the transition from functions to operators.
 * Starting point for later work on low-degree objects and on junta channels.
 
-### Relation to this project
+### Connections
 
-* The support search happens here at the coarsest level, the qubits, and is therefore cheap: $\log k$ rounds of Pauli sampling. This project's search happens at the finest level, the $d^2$ addresses, and is therefore hard. Between the two lies the idea of bundling addresses hierarchically, which is exactly what the coprime folding does.
+* The support search happens here at the coarsest level, the qubits, and is therefore cheap: $\log k$ rounds of Pauli sampling. Top-$k$ localization in a displacement spectrum happens at the finest level, the $d^2$ addresses, and is therefore hard. Between the two lies the idea of bundling addresses hierarchically, which is what folding over coprime moduli does.
 * The lower bound via input guessing is a template for a sample lower bound for the top-$k$ task: an $\epsilon$-packing of the candidate states whose size forces the copy count.
 * The paper shows a genuine query-sample asymmetry within one topic: the tester needs $U^\dagger$, learning does not. In the tables these are two different rows.
 
@@ -972,11 +972,11 @@ Derivative estimation learns Hamiltonians without structural knowledge, but with
 * Characterization of quantum devices without an assumed locality structure; benchmarking and error diagnosis.
 * A new tool, the observable-centric view of classical shadows in the dual access model (Huang, Chen, Preskill), which is more efficient than the state-centric $n^K$.
 
-### Relation to this project
+### Connections
 
-* This is the most precise description of what "search under a locality promise" means: the terms form a dictionary of size $n^{O(K)}$, but the algorithm does not enumerate it; it refines weights over prefixes. This is exactly the Kushilevitz–Mansour strategy that the mentor feedback describes as the query-access regime.
-* The separation "dynamics easy, Gibbs hard" in the classical case ($\tilde O(n^2)$ versus $n^K$ under sparse-parity hardness) is an example of this project's thesis that the access, not the object, shifts the computational boundary.
-* The time resolution $t_{\min}$ is an axis missing from the taxonomy in research.md and would matter for hardware realism (factor F).
+* This is the most precise description of what "search under a locality promise" means: the terms form a dictionary of size $n^{O(K)}$, but the algorithm does not enumerate it; it refines weights over prefixes. This is exactly the Kushilevitz–Mansour strategy of the query-access route.
+* The separation "dynamics easy, Gibbs hard" in the classical case ($\tilde O(n^2)$ versus $n^K$ under sparse-parity hardness) is an example of the thesis that the access, not the object, shifts the computational boundary.
+* The time resolution $t_{\min}$ is an axis that a taxonomy of influencing factors should include; it matters for hardware realism.
 * The GL data structure with coupled randomness is a model for the question whether a single Bell record can answer all candidate queries; the character mean over a dictionary does exactly that, but without the hierarchical refinement.
 
 ### Limitations and open questions
@@ -1030,10 +1030,10 @@ Iterative refinement learns the residual $\Delta H_j = H - H_j$ in round $j$ and
 * Resolves open problem 3 of Bakshi et al. (arbitrarily large time resolution) for the logarithmically sparse case and gives the first tradeoff for the many-body case.
 * Connections to quantum probe tomography (local probes) and ancilla-free methods as next steps.
 
-### Relation to this project
+### Connections
 
-* The axis $t_{\min}$ is exactly the axis that the Bakshi summary names as missing from the taxonomy in research.md (factor hardware realism); this paper turns it into a resource of its own with a tradeoff curve.
-* The two-stage scheme "learn the correction generator, then learn the residual" is structurally this project's two-phase scheme with a probe state: the unknown is moved into an environment in which the measurement is first order; here the environment is called $\Delta H_j$, there $\rho\otimes\tilde\rho^*$.
+* The axis $t_{\min}$ is exactly the axis that the Bakshi summary names as missing; this paper turns it into a resource of its own with a tradeoff curve.
+* The two-stage scheme "learn the correction generator, then learn the residual" is structurally a two-step scheme with a probe state: the unknown is moved into an environment in which the measurement is first order; here the environment is called $\Delta H_j$, for sign probes on conjugate pairs $\rho\otimes\tilde\rho^*$.
 * Encoding Pauli coefficients as first-order amplitudes on a Bell pair is Choi sampling; the sparse tomography behind it is the query version of top-$k$ localization, with $4^m$ as the size of the candidate space.
 
 ### Limitations and open questions
@@ -1087,11 +1087,11 @@ Montanaro learns exact stabilizer states; Grewal et al. (2023, the stabilizer-di
 * The duality theorems and the $\tau^4$-type bounds are the ingredients of all later tolerant tests (Arunachalam–Dutt; Bao, van Dordrecht, Helsen).
 * Application to stabilizer decompositions of magic states and hence to simulation algorithms for near-Clifford circuits.
 
-### Relation to this project
+### Connections
 
 * The paper is the map between Regime 2 and the wall: an *approximate* subgroup promise stays searchable as long as a constant fraction of the samples lies exactly in the subgroup. The LWE instance also has a subgroup as its support, but every sample lies next to it; that is the whole difference between $\exp(O(n/\tau^4))$ and "no algorithm". The trichotomy is worked out in the section "Where the wall begins".
 * The rank test for pseudorandomness is a searching primitive without support search: it measures only the dimension of the support of $q_\psi$. For the displacement spectrum, the question is whether the rank of the Bell records over $\mathbb{Z}_d$ carries the same information; that would be a cheap pre-test of whether a subgroup regime is present at all.
-* The duality "mass on $T$ equals mass on $T^\perp$" is the same symplectic Fourier structure that underlies the character mean of this project's protocol; it holds over $\mathbb{Z}_d$ unchanged.
+* The duality "mass on $T$ equals mass on $T^\perp$" is the same symplectic Fourier structure that underlies the character mean over conjugate-pair Bell records; it holds over $\mathbb{Z}_d$ unchanged.
 
 ### Limitations and open questions
 
@@ -1143,11 +1143,11 @@ Realizable learning of stabilizer states (Montanaro 2017) assumes that $\rho$ li
 * Application picture: find an ansatz class for a complicated laboratory state and then continue computing with the ansatz; also as a subroutine for stabilizer decompositions of magic states.
 * Briët and Castro-Silva transferred the ideas to a quadratic Goldreich–Levin and the Gowers inverse theorem: the bridge to classical Fourier analysis that this document draws at Montanaro–Osborne also runs backwards.
 
-### Relation to this project
+### Connections
 
 * The model is the right language for the tolerant (agnostic) version of every promise: when the state does not lie exactly in the class, "the best approximation up to $\epsilon$" is the only guarantee that can still be proven. For displacement spectra this means: the top-$k$ support has to be defined agnostically, relative to the best $k$-sparse spectrum.
 * Bell difference sampling on $\rho^{\otimes 4}$ is the four-copy relative of the two-copy protocol on $\rho\otimes\rho^*$: both draw from the characteristic distribution, the one from $p_\psi * p_\psi$ (convolution), the other from $\vert\mathrm{Tr}(\rho D)\vert^2$ itself. The convolution is the price for doing without the conjugate copy.
-* The factor $\tau^4$ in the support lemma is a model for how a fidelity threshold translates into a sample count when Phase 1 delivers only magnitudes.
+* The factor $\tau^4$ in the support lemma is a model for how a fidelity threshold translates into a sample count when the measurement delivers only magnitudes.
 
 ### Limitations and open questions
 
@@ -1201,9 +1201,9 @@ Montanaro learns exact stabilizer states, Grewal et al. agnostically only for $\
 * The landscape statement (only quasipolynomially many approximate local maximizers) is an algorithmic proof of a structural result about the stabilizer polytope.
 * Connection to cryptography: a polynomial-time algorithm for $\tau = 1/\mathrm{poly}(n)$ would, for subset states, solve finding an $O(\log n)$-dimensional affine space with maximal intersection, related to LPN and LSN.
 
-### Relation to this project
+### Connections
 
-* Bootstrapping is an adaptive two-copy protocol with postselection: step (4) is exactly the "probe" mechanism of Phase 2, except that the probe is a projector onto the unknown state rather than a separately prepared state. The fidelity amplification by $c > 1$ per round is an argument that should carry over to $\rho\otimes\rho^*$.
+* Bootstrapping is an adaptive two-copy protocol with postselection: step (4) is exactly a "probe" mechanism, except that the probe is a projector onto the unknown state rather than a separately prepared state. The fidelity amplification by $c > 1$ per round is an argument that should carry over to $\rho\otimes\rho^*$.
 * List decoding is top-$k$ localization in the language of classes: not one element, but all elements above a threshold, and the bound on their number replaces the sparsity assumption.
 * The lower bound $\Omega(n/\tau)$ shows that below $\tau = 1/\mathrm{poly}(n)$ even the copy count breaks down; on the instance ladder this marks the rung from which the tolerant version of the subgroup promise (Regime 2) also becomes expensive information-theoretically.
 
@@ -1263,12 +1263,12 @@ Montanaro's algorithm relies on Bell difference sampling on $\vert S\rangle^{\ot
 * Method 2 provides a conjugate-free route that needs only computational-basis measurements and a circuit of shifts and QFTs. This is relevant for hardware with native qudits.
 * Carries the pseudorandomness bounds of Grewal et al. over to qudits, with a different tool.
 
-### Relation to this project
+### Connections
 
-* Lemma 34 and Theorem 40 are the justification of the Phase 1 measurement in formulas: on $\rho\otimes\rho^*$ the Bell distribution is the characteristic distribution, i.e. the squared displacement spectrum; on $\rho\otimes\rho$ it is the overlap with $\psi^*$. Theorem 39 shows that four identical copies do not repair the loss either. This is why the project relies on conjugate pairs rather than on more copies.
-* Theorem 40 holds for every $d$, hence also for the project's single cyclic qudit with composite $d$. Under the stabilizer promise, the support there occupies $d$ of the $d^2$ addresses: the plateau, not the top-$k$ case (see Montanaro above).
-* Method 2 shows a conjugate-free way out, but only under the subgroup promise and only for $d$ prime: the computational basis sees the affine support directly, and the phase is a quadratic polynomial. For the project's top-$k$ promise there is no such normal form. This supports the decision for conjugate access instead of a conjugate-free decoder.
-* The involution $J$ is, up to the sign convention, the same reflection that appears in the project as $D_{q,p}^* = D_{q,-p}$ (section "Consequence for the instance generator").
+* Lemma 34 and Theorem 40 are the justification of magnitude estimation on conjugate pairs in formulas: on $\rho\otimes\rho^*$ the Bell distribution is the characteristic distribution, i.e. the squared displacement spectrum; on $\rho\otimes\rho$ it is the overlap with $\psi^*$. Theorem 39 shows that four identical copies do not repair the loss either. This is why conjugate pairs, rather than more copies, are the right resource.
+* Theorem 40 holds for every $d$, hence also for a single cyclic qudit with composite $d$. Under the stabilizer promise, the support there occupies $d$ of the $d^2$ addresses: the plateau, not the top-$k$ case (see Montanaro above).
+* Method 2 shows a conjugate-free way out, but only under the subgroup promise and only for $d$ prime: the computational basis sees the affine support directly, and the phase is a quadratic polynomial. For a top-$k$ promise there is no such normal form. This supports conjugate access over a conjugate-free decoder.
+* The involution $J$ is, up to the sign convention, the same reflection as $D_{q,p}^* = D_{q,-p}$ (section "Consequence for generating test instances").
 * For the instance ladder: qudit states from Clifford circuits with $O(\log n/\log p)$ non-Clifford gates are distinguishable from Haar; they are no good as hard instances.
 
 ### Limitations and open questions
@@ -1330,13 +1330,13 @@ Aaronson (2007) showed that $O(n)$ examples suffice statistically to predict an 
 * A critique of the PAC framework: because it reduces state learning to a classical problem, it also inherits that problem's hardness.
 * The SQ model fits experiments that deliver only expectation values, and brings noise tolerance and differential privacy at no extra cost.
 
-### Relation to this project
+### Connections
 
 The following points are own conclusions, not statements of the paper.
 
 * The hard instance is a pure sign search. For $\vert y\rangle$ all magnitudes $\vert\mathrm{Tr}(P_x\rho)\vert = 1$ on the $Z$ strings are known; only the sign pattern $(-1)^{x\cdot y}$ is unknown, and already that is LPN-hard under noisy PAC access. With copies and freely chosen measurements, $\vert y\rangle$ is trivial: one $Z$ measurement per qubit, a majority vote under readout noise. The hardness of the sign therefore depends on the access model, not on the state class, and every statement of the conjecture "magnitude and sign are efficiently learnable" needs the access model stated.
 * Sharpening of refinement 1 in "Where the wall begins": it says hardness comes not from a fraction of corrupted samples but from a small error on all of them. LPN, however, is exactly a fraction $\eta$ of corrupted labels: the clean examples $(x, x\cdot y)$ lie exactly in a hyperplane of $\mathbb{F}_2^{n+1}$, a fraction $1-\eta$. What separates LPN from stabilizer bootstrapping is rather the ratio of the subspace fraction to the random fraction: there a fraction $\tau^4$ lies in an $n$-dimensional subspace of $\mathbb{F}_2^{2n}$ that a random point hits only with probability $2^{-n}$; for LPN a fraction $1-\eta$ lies in a hyperplane that a random point hits with probability $1/2$. Chen, Gong, Ye, Zhang (arXiv:2408.06967, Section 10.2) support this: finding an affine space of dimension $t$ with maximal intersection is considered LPN-hard for $t = n-1$ and LSN-hard for $t = \beta n$.
-* The character mean of this project's protocol is a statistical query over Bell records. Conjecture: a decoder that only forms such averages fails on a parity-hidden support just as SQ learners fail on parities (Corollary 4.11); localization needs steps outside SQ, such as Gaussian elimination on individual samples as in Montanaro.
+* The character mean over Bell records is a statistical query. Conjecture: a decoder that only forms such averages fails on a parity-hidden support just as SQ learners fail on parities (Corollary 4.11); localization needs steps outside SQ, such as Gaussian elimination on individual samples as in Montanaro.
 * Global depolarizing noise is harmless for SQ learners (Theorem 3.4); local noise is named as open. In the copy model, Arunachalam, Bravyi, Dutt, Yoder (arXiv:2208.07851, Theorem 11) show that exact identification under local depolarizing noise needs $\Omega((1-\epsilon)^{-n})$ copies already information-theoretically. On the instance ladder, qubit-wise noise is therefore the more expensive dial.
 
 ### Limitations and open questions
@@ -1391,10 +1391,10 @@ Linear functions are the case $k = 1$ (Bernstein–Vazirani, one sample), $\ell$
 * The first $n$-independent sample result for a sparsity class; Chang's lemma and additive combinatorics appear as tools of quantum learning theory before they return in the tolerant stabilizer tests.
 * The query simulation bounds how much quantum membership queries can save at all: at most quadratically, up to $\log\vert\mathcal{C}\vert$.
 
-### Relation to this project
+### Connections
 
-* The paper is the proof that "sparsity" under unit normalization is automatically "heaviness": granularity $2^{1-\lfloor\log k\rfloor}$ means a minimum weight of $1/k^2$ per support point. For pure states the same holds with $\sum\vert y\vert^2 = d$: exactly $k$-sparse means $\vert y\vert^2 = d/k$, and Bell sampling finds the support by coupon collecting. The hard regime of this project is therefore not sparsity but top-$k$ over a flat remainder; the precise statement is in "Where the wall begins".
-* The two-phase structure, first the span from quantum examples, then classical refinement, is the function version of Phase 1 and Phase 2.
+* The paper is the proof that "sparsity" under unit normalization is automatically "heaviness": granularity $2^{1-\lfloor\log k\rfloor}$ means a minimum weight of $1/k^2$ per support point. For pure states this fails: $\vert y\vert\leq 1$ and $\sum\vert y\vert^2 = d$ force at least $d$ nonzero coefficients, so a top-$k$ with $k < d$ always sits over a remainder. The hard regime is therefore not sparsity but top-$k$ over a flat remainder; the precise statement is in "Where the wall begins".
+* The two-phase structure, first the span from quantum examples, then classical refinement, is the function version of "localize first, then estimate".
 * The lower bound $\Omega(k\log k)$ is the sample lower bound of the support search itself, not of estimation; in the displacement case such a bound is missing.
 
 ### Limitations and open questions
@@ -1407,7 +1407,7 @@ Linear functions are the case $k = 1$ (Bernstein–Vazirani, one sample), $\ell$
 
 * How does the Fourier dimension $r = O(\sqrt k\log k)$ (Sanyal) come about, and is there an analogue for the symplectic span of a displacement support?
 * What is the Chang lemma for the characteristic distribution of a state whose mass is $d$ instead of one?
-* How much does Phase 1 cost when the examples are noisy at rate $\eta$, and from which $\eta$ does this become LPN?
+* How much does the first phase cost when the examples are noisy at rate $\eta$, and from which $\eta$ does this become LPN?
 
 Paper: [arXiv:1810.00481](https://arxiv.org/abs/1810.00481)
 
@@ -1446,11 +1446,11 @@ Learning all $4^n$ rates costs $O(n2^n/\epsilon^2)$ measurements (Flammia–Wall
 * Practical noise characterization for 10 to 20 qubits with $10^6$ to $10^7$ measurements; a basis for tailored codes and decoders.
 * For learning theory, the channel example of the searching column: a sparse-FFT algorithm that works because the experimenter chooses the sampling positions.
 
-### Relation to this project
+### Connections
 
 * The paper is the query cell of the quadrant for channels. The decoder is exactly what the Bell record does not allow: subsampling on a chosen subgroup and shifting by chosen offsets. On $\rho\otimes\rho^*$, a Clifford conjugation before the Bell measurement could play the role of the stabilizer group; the LWE wall says that this does not suffice in general, and the paper says what it would take for it to suffice: coherent control over the aliasing offsets.
 * The error bound $2\xi/\sqrt B$ is the gain of binning: noise is averaged over $B = 2^n$ bins. This is the same mechanism as the character mean, only with chosen instead of random characters.
-* The assumption "random support" is the average-case assumption that this project's conjecture (a uniformly random top-$k$ support) also makes; here it is needed for peeling and proven sufficient.
+* The assumption "random support" is the same average-case assumption as in the conjecture that uniformly random top-$k$ supports are decodable; here it is needed for peeling and proven sufficient.
 
 ### Limitations and open questions
 
@@ -1502,11 +1502,11 @@ Pseudoentanglement (Aaronson et al.) shows that entanglement can be hidden. Does
 * Together with pseudoentanglement: for bounded observers, resource measures are not physical observables; only computationally accessible quantities have operational meaning.
 * EFI pairs from pseudomagic strengthen the thesis that EFI is the fundamental primitive of quantum cryptography.
 
-### Relation to this project
+### Connections
 
 * The class has a Pauli spectrum with participation number $2^{n+\omega(\log n)}$ instead of $4^n$: the support is smaller than generic by a superpolynomial factor, and still nobody finds it efficiently. This is a hardness statement about searching that needs no lattice assumption and names the sparsity threshold below which "small support" does not help: only at $M = O(\log n)$, i.e. participation number $2^n\mathrm{poly}(n)$, does the class become distinguishable (Grewal et al.). This is the instance ladder along the axis "participation number".
 * For the displacement version: subset phase states over $\mathbb{Z}_d$ would have the same structure; their displacement spectrum is flat up to $2^{-k}$, and Bell sampling on $\rho\otimes\rho^*$ sees Haar statistics.
-* Theorem 4 is a warning for Phase 2: efficiently "distilling" structure from unknown states is logarithmically limited when there is no class promise.
+* Theorem 4 is a warning for adaptive probe steps: efficiently "distilling" structure from unknown states is logarithmically limited when there is no class promise.
 
 ### Limitations and open questions
 
@@ -1557,9 +1557,9 @@ LMN: functions in AC⁰ have Fourier mass $\leq s\cdot 2^{-\Theta(k^{1/d})}$ bey
 * The first learning result for QAC⁰; a new definition of the Pauli spectrum that correlates with complexity; tools for bounds beyond light cones, which fail for wide gates.
 * Connection to quantum boolean functions (Montanaro–Osborne), low-degree learning (Arunachalam, Dutt, Escudero Gutiérrez, Palazuelos), and junta tests (Chen–Nadimpalli–Yuen).
 
-### Relation to this project
+### Connections
 
-* The paper provides a degree dial that follows from a physical property (depth) instead of being assumed; this is the kind of promise that could justify Regime 1 of this project, if a concentration statement for displacement spectra could be proven from the preparation depth.
+* The paper provides a degree dial that follows from a physical property (depth) instead of being assumed; this is the kind of promise that could justify Regime 1 for displacement spectra, if a concentration statement could be proven from the preparation depth.
 * "Degree" is defined in the tensor-product phase space; in the cyclic basis the notion is missing. A displacement version would have to replace "degree" by a norm on $\mathbb{Z}_d\times\mathbb{Z}_d$, for instance the distance to the origin, and then concentration on small displacements would be exactly what Gaussian-like states show.
 * The Choi state with traced-out registers is a model for how to turn a process object into a state object without losing the normalization.
 
@@ -1611,7 +1611,7 @@ Chow–Liu learns trees in $p^2$; for graphs with cycles, neighbours can be marg
 * The first efficient structure learning for arbitrary graphs of bounded degree; the template for Klivans–Meka (optimal samples), Vuffray et al. (interaction screening), and Hamilton–Koehler–Moitra (higher order, larger alphabets).
 * Separation of sampling complexity and learning complexity: sampling becomes NP-hard without correlation decay, learning stays easy.
 
-### Relation to this project
+### Connections
 
 * This is Regime 1 in classical form: a degree promise makes the candidate dictionary polynomial, and the search decomposes into $p$ local problems. The quantum version with a known set of terms (Anshu et al.; Haah–Kothari–Tang; Bakshi et al.) inherits exactly this logic; Bakshi et al. (structure learning) is the quantum counterpart without known geometry.
 * The structural property is what is missing for displacement spectra: a statement of the form "every heavy address has a locally visible signature". Without it the search stays global, and that is exactly where the LWE wall sets in.
@@ -1666,11 +1666,11 @@ Bresler needs doubly exponentially many samples in $d$, Vuffray et al. time $\ti
 * Subsumes all predecessors for Ising models and gives the first efficient methods for higher order; Hamilton–Koehler–Moitra achieve something similar at the same time with Bresler's method and doubly exponential samples.
 * The hardness statement $n^{\Omega(t)}$ under sparse parity with noise is the classical time wall of structure learning: from order $t$ on one pays $n^t$, and a sparse-LPN algorithm would break it.
 
-### Relation to this project
+### Connections
 
-* The Sparsitron is a learned decoder with a proof: multiplicative weights on a candidate space of size $2n$ per node, with a regret bound instead of combinatorics. It is the pattern for how a CNN decoder of this project could be framed theoretically: online learning over a candidate list with a loss function whose minimum is the structure.
+* The Sparsitron is a learned decoder with a proof: multiplicative weights on a candidate space of size $2n$ per node, with a regret bound instead of combinatorics. It is the pattern for how a learned (e.g. CNN) decoder for displacement spectra could be framed theoretically: online learning over a candidate list with a loss function whose minimum is the structure.
 * $n^{O(t)}$ against sparse parity with noise is the classical form of "Regime 1 up to the wall": order $t$ is a dial with cost $n^t$, and the wall is cryptographic. For displacement spectra the dial is the number $k$ of addresses, and the question is whether $d^{O(k)}$ is the right scale.
-* $\delta$-unbiasedness is the condition that turns prediction quality into parameter identification; this project's protocol needs a counterpart that turns a fit to Bell statistics into support identification.
+* $\delta$-unbiasedness is the condition that turns prediction quality into parameter identification; top-$k$ localization would need a counterpart that turns a fit to Bell statistics into support identification.
 
 ### Limitations and open questions
 
@@ -1779,7 +1779,7 @@ The catalogue reads as a list of promises, and that is the point of the tables: 
 
 Summaries of the key papers on the task type **identifying**: the candidates are the input. Given are copies of a state, calls to a process, or classical samples of a distribution, together with a list of hypotheses or a class, with or without the promise that the unknown lies in the class. Returned is an index, an element of the class, or one bit. The section orders the papers by the size of the hypothesis set: first the classes whose structure makes the decoder cheap (Gaussian, matrix product, shallow circuits, phase states), then the one-bit tasks (testing and certification), finally the hardness results, in which the class is exponentially large and parametrized and the task shades into searching (pseudorandomness, bounded gate complexity, output distributions).
 
-Every summary follows the same structure as in the searching and estimating sections: placement in the tables, problem, key results, method, significance, relation to this project, limitations and open questions, questions for further study. The status glyphs read in the order copies · time · memory. The stabilizer family, including few non-Clifford gates (arXiv:2305.13409, arXiv:2306.00083) and agnostic tomography (arXiv:2404.03813, arXiv:2408.06967), sits in the searching section by the LWE rule (Appendix, "Reading the tables").
+Every summary follows the same structure as in the searching and estimating sections: placement in the tables, problem, key results, method, significance, connections, limitations and open questions, questions for further study. The status glyphs read in the order copies · time · memory. The stabilizer family, including few non-Clifford gates (arXiv:2305.13409, arXiv:2306.00083) and agnostic tomography (arXiv:2404.03813, arXiv:2408.06967), sits in the searching section by the LWE rule (Appendix, "Reading the tables").
 
 ## Overview
 
@@ -1843,9 +1843,9 @@ The SWAP test estimates a purity to $\epsilon$ with $O(\epsilon^{-2})$ copies; f
 * Determining an exponentially small purity with polynomial effort is an exponential advantage over the SWAP test and classical shadows for this class.
 * Stabilizer entropy is understood as a movable resource; this is the operational side of the magic compression that Grewal et al. and Hangleiter–Gullans use for learning.
 
-### Relation to this project
+### Connections
 
-* The route "first identify the Clifford hull, then compute in the stabilizer formalism" is the identifying variant of the two-phase scheme: Phase 1 finds the structure, Phase 2 measures exactly within the structure. The factor $d_Y^2 = 4^t$ is the price of the unknown magic; it corresponds to the $2^t$ factor in the searching table (row "Clifford plus few non-Clifford gates").
+* The route "first identify the Clifford hull, then compute in the stabilizer formalism" is the identifying variant of "localize first, then estimate": the first step finds the structure, the second measures exactly within it. The factor $d_Y^2 = 4^t$ is the price of the unknown magic; it corresponds to the $2^t$ factor in the searching table (row "Clifford plus few non-Clifford gates").
 * Purity is $\sum_D\vert\mathrm{Tr}(\rho D)\vert^2/d$, i.e. the $\ell_2$ mass of the displacement spectrum; Bell sampling on $\rho\otimes\rho^*$ draws directly from this distribution, and the question of exponentially small purity is the question of a very flat spectrum without heavy addresses. The paper says that for doped Clifford states the flatness can be computed exactly instead of sampled.
 * The bipartition condition $f < 1/2$ and the phase boundary $t/f = 1$ form an instance ladder for entanglement quantities.
 
@@ -1898,9 +1898,9 @@ Free fermions are classically simulable and fully determined by the kernel matri
 * Free fermions are the Gaussian class of fermions; the paper is the reference point for Mele–Herasymenko ($t$ non-Gaussian gates, no particle-number conservation) and for matchgate shadows (Wan et al.).
 * Chemistry and condensed-matter context: Hartree–Fock states are exactly this class.
 
-### Relation to this project
+### Connections
 
-* The algorithm is an estimating protocol ($O(m^2)$ observables of the one-particle density matrix), followed by rounding onto the class; this is the "identifying via estimating" pattern that arises in Phase 1 with the displacement spectrum and in Phase 2 with the rounding to $k$-sparse.
+* The algorithm is an estimating protocol ($O(m^2)$ observables of the one-particle density matrix), followed by rounding onto the class; this is the "identifying via estimating" pattern that also arises for displacement spectra, first in the magnitudes and then in the rounding to $k$-sparse.
 * The $O(m)$ measurement bases correspond to a decomposition of the observables into commuting families; the round robin over mode pairs is the fermionic version of the commutation classes of Pauli strings.
 * The $\epsilon^{-4}$ rate comes from the rounding (Weyl); where Bell sampling delivers the magnitudes directly, this is the reference value for the cost of a subsequent class projection.
 
@@ -1955,10 +1955,10 @@ Free fermions are learnable (Aaronson–Grewal), and so are $t$-doped stabilizer
 * Physical target states: impurity models, time evolution under impurity Hamiltonians up to constant times; experimentally only simple fermion Hamiltonians are needed, hence suited to analogue simulators.
 * Classical shadows learn $t$-doped states with $\mathrm{poly}(n, t)$ copies but time exponential in $n$; here polynomial in $n$, exponential in $t$: the sample–time gap is explicit.
 
-### Relation to this project
+### Connections
 
-* The logic "estimate one global but quadratically large quantity, then solve a small residual problem" is the structure of Phase 1 (displacement magnitudes) and Phase 2 (signs on the support). The correlation matrix is the Gaussian case of the displacement spectrum: for Gaussian states, $\vert\mathrm{Tr}(\rho D)\vert^2$ is a Gaussian function of the address, fully determined by the covariance.
-* The test for Gaussian dimension via the eigenvalues $\lambda_k$ is an example of a class test that follows from the same measurement as learning; this is the role that the purity check from Bell sampling plays in this project's pipeline.
+* The logic "estimate one global but quadratically large quantity, then solve a small residual problem" is the structure of "displacement magnitudes first, signs on the support second". The correlation matrix is the Gaussian case of the displacement spectrum: for Gaussian states, $\vert\mathrm{Tr}(\rho D)\vert^2$ is a Gaussian function of the address, fully determined by the covariance.
+* The test for Gaussian dimension via the eigenvalues $\lambda_k$ is an example of a class test that follows from the same measurement as learning; a purity check from a Bell record plays the same role for displacement spectra.
 * The hardness at $t = \tilde\omega(\log n)$ is the fermionic version of the LWE wall; it confirms that the instance ladder in $t$ breaks off at logarithmic height.
 
 ### Limitations and open questions
@@ -2010,11 +2010,11 @@ Without an energy bound, CV tomography is meaningless (infinitely many parameter
 * A bridge between quantum learning theory and CV information; the Gaussian class is the standard resource for sensing, communication, and computing with light.
 * The "extreme inefficiency" is a new phenomenon: the cost depends on $1/\epsilon$ exponentially in $n$, not only on the dimension.
 
-### Relation to this project
+### Connections
 
 * Displacement operators on qudits are the discrete version of the Weyl operators in the CV phase space; a Gaussian state there has a Gaussian displacement spectrum determined by the covariance alone. The paper shows what the "Gaussian promise" costs on the instance ladder: $O(n^2)$ parameters, polynomially many copies, no support to search.
 * $\kappa t = O(1)$ as the efficiency boundary is stricter than $t = O(\log n)$; this suggests that the height of the ladder depends on the alphabet ($d\to\infty$ shortens it).
-* The error propagation $O(\sqrt\epsilon)$ from moments to trace distance is the same square-root loss as in the rounding of an estimated kernel matrix; Phase 2 should account for it.
+* The error propagation $O(\sqrt\epsilon)$ from moments to trace distance is the same square-root loss as in the rounding of an estimated kernel matrix; a sign step on top of estimated magnitudes should account for it.
 
 ### Limitations and open questions
 
@@ -2064,10 +2064,10 @@ Full tomography scales exponentially in $N$; MPS have polynomially many paramete
 * The first polynomial-time tomography of a physically relevant class with certified output; the idea of verifying the reconstruction through a parent Hamiltonian returns in a different form in Huang–Preskill–Soleimanifar.
 * Tensor network generalizations (tree, MERA) indicated; demonstrated numerically up to 20 ions.
 
-### Relation to this project
+### Connections
 
 * Scheme 1 learns the preparation circuit by local inversion, qudit by qudit; this is the one-dimensional version of the local-inversion principle of Huang et al. and Landau–Liu, and proof that "a unitary that splits off one qudit" is an identifying primitive that needs no global search.
-* The certificate is a lower bound on the fidelity from local data; for this project's pipeline the question is whether the displacement spectrum supplies a similar witness, for instance via the $\ell_2$ mass on the support found.
+* The certificate is a lower bound on the fidelity from local data; the open question is whether the displacement spectrum supplies a similar witness, for instance via the $\ell_2$ mass on the support found.
 * The class is a promise class by construction (the MPS promise is assumed), and the certificate is a built-in test of whether the promise actually holds for the lab state.
 
 ### Limitations and open questions
@@ -2118,7 +2118,7 @@ For pure MPS there is certifiable tomography (Cramer et al.), for MPDOs reconstr
 * The first sample guarantee for MPDO tomography from local measurements, including mixed states; a classical side effect: error bounds for hidden Markov models beyond the previous assumptions.
 * The output is a generative model: expectation values of product observables at arbitrary lengths in linear time.
 
-### Relation to this project
+### Connections
 
 * The spectral reconstruction is an estimating step (marginals) plus linear algebra; the class structure (rank $m$) turns $d^{2s}$ numbers into a description with $O(m^2d^2)$ parameters. This is the tensor-network version of "find the support, then the coefficients": the columns of $\hat U$ with singular value $\geq\eta/2$ are the support.
 * $\eta$ is a condition number of the instance and belongs on the instance ladder; the factors $\eta^{-3}$ and $m$ show how a promise translates quantitatively into copies.
@@ -2176,7 +2176,7 @@ Shallow circuits produce distributions that are classically hard to sample; the 
 * Applications: hardware characterization, circuit compression with verification, learning dynamics; the data source is the classical shadow of the process.
 * The first literature example for the cell query × identifying with a process object; previously that cell held Bernstein–Vazirani and the document's own construction.
 
-### Relation to this project
+### Connections
 
 * The ancilla-SWAP trick is a method for composing local pieces of information into a global object without enforcing consistency; for top-$k$ localization it is a model of how locally found addresses can be assembled without global matching.
 * The test for approximate local identity is a certificate from local measurements, related to the parent-Hamiltonian witness of Cramer et al.
@@ -2231,9 +2231,9 @@ Reductions of sufficient size determine the state information-theoretically; the
 * States of the trivial phase (constant or polylog depth) are learnable in polynomial time, in every dimension; and membership in the trivial phase is efficiently testable.
 * For NISQ algorithms a provable primitive: find a shallow circuit for an unknown state.
 
-### Relation to this project
+### Connections
 
-* The replacement process is a non-disturbance technique: one learns by inserting structure that leaves the state invariant; for Phase 2 this is a pattern for constructing a probe state that does not change the target quantity but makes the measurement linear.
+* The replacement process is a non-disturbance technique: one learns by inserting structure that leaves the state invariant; for sign probes this is a pattern for constructing a probe state that does not change the target quantity but makes the measurement linear.
 * The complexity test is a class test without knowledge of the circuit; the displacement version would be a test of whether a state has a sparse spectrum, before searching for it.
 * The exponents $c = O((3k)^{k+2}d)^k$ show how quickly the constants grow with the geometry; for the instance ladder, $k$ is a parameter of its own.
 
@@ -2289,10 +2289,10 @@ Degree-2 phase states (graph states, Clifford outputs) are learned by Bell sampl
 * The class is the basis of the PRS constructions (Ji–Liu–Song, Brakerski–Shmueli): at polynomial degree, learning would be cryptographically hard; the degree scale is the instance ladder of this family.
 * The paper's table is a model for keeping samples, time, and measurement class separate.
 
-### Relation to this project
+### Connections
 
 * Separable against entangled is a factor $n$ in the copies, and the time turns around: the PGM is exponential. This is the memory–time tradeoff of the tables in pure form, and a warning that two-copy protocols keep their advantage only if the post-processing stays linear-algebraic (as in Bell sampling), not if it has to implement a PGM.
-* The derivative measurement is a probe mechanism: conditioning on $y$ turns the remaining amplitude into a first-order single-qubit problem; Phase 2 conditions analogously on a support.
+* The derivative measurement is a probe mechanism: conditioning on $y$ turns the remaining amplitude into a first-order single-qubit problem; a sign step can condition analogously on a support.
 * For $\mathbb{Z}_q$, the POVM that rules out one value with certainty is an exclusion design; the same construction can be used for displacement phases $\omega_d^c$.
 
 ### Limitations and open questions
@@ -2345,11 +2345,11 @@ Second and third moments of stabilizer states agree with Haar, and fourth moment
 * Since this paper, Bell difference sampling is the standard primitive for stabilizer learning and testing (Grewal et al., Chen–Gong–Ye–Zhang, Arunachalam–Dutt, Bao et al.).
 * The commutant is the basis for Clifford designs, for stabilizer entropy formulas (Leone et al.), and for shadow variance calculations.
 
-### Relation to this project
+### Connections
 
-* Theorem 3.2 is the exact statement that four copies deliver the convolution $p_\psi * p_\psi$; two copies $\rho\otimes\rho^*$ deliver $p_\psi$ itself. This project's protocol therefore saves the convolution and half of the copies at the price of a conjugate copy; the uncertainty relation carries over directly to displacement operators (Lemma 3.10 is already formulated for qudits).
+* Theorem 3.2 is the exact statement that four copies deliver the convolution $p_\psi * p_\psi$; two copies $\rho\otimes\rho^*$ deliver $p_\psi$ itself. Conjugate pairs therefore save the convolution and half of the copies at the price of a conjugate copy; the uncertainty relation carries over directly to displacement operators (Lemma 3.10 is already formulated for qudits).
 * The case distinctions $(d, s) = 1$ and $d\equiv 1, 5 \bmod 6$ show that the copy count depends on the alphabet; for odd primes $d$ the situation is more favourable than for qubits.
-* The commutant is the language in which a CNN symmetry (Clifford invariance of the Bell statistics) should be formulated.
+* The commutant is the language in which a symmetry of a learned decoder (Clifford invariance of the Bell statistics) should be formulated.
 
 ### Limitations and open questions
 
@@ -2400,9 +2400,9 @@ The test of Gross, Nezami, Walter accepts stabilizer states with certainty and r
 * The first unconditional tolerant stabilizer test with a polynomial gap; the task that was perfectly complete in Gross–Nezami–Walter becomes robust against noise.
 * The uncertainty relation via $\vartheta$ is a tool in its own right for Pauli spectra; it quantifies how many non-commuting expectation values can be large simultaneously.
 
-### Relation to this project
+### Connections
 
-* Lemma 18 is exactly the statement that Phase 1 needs to conclude from "many large displacement magnitudes" that "the addresses lie almost in an isotropic subgroup"; in the proof of Lemma 15, the generalization to Weyl operators over $\mathbb{Z}_d$ is not qubit-specific.
+* Lemma 18 is exactly the statement needed to conclude from "many large displacement magnitudes" that "the addresses lie almost in an isotropic subgroup"; in the proof of Lemma 15, the generalization to Weyl operators over $\mathbb{Z}_d$ is not qubit-specific.
 * The chain "acceptance probability → mass on a linear set → Balog–Szemerédi–Gowers → subgroup" is the proof structure with which a tolerant support test for displacement spectra would have to be built; the exponents (55, 57, 672) show what additive combinatorics currently costs.
 * Tolerance, closeness to the class instead of exact membership, is the agnostic version of the subgroup promise (Regime 2); $O(\epsilon_1^{-12})$ copies is the price a one-bit test pays there.
 
@@ -2456,11 +2456,11 @@ Huang, Kueng, Preskill had shown $\Omega(M^{1/6}/\epsilon^2)$ and $\Omega(2^{n/3
 * The bounds are visible at a few dozen qubits; quantum computers with fewer than a hundred qubits could provide a provable advantage in experimentation as memory. This is the theoretical basis of the Sycamore experiment of Huang et al. (Science 2022).
 * Since this paper, the tree technique is the standard tool for bounds against adaptive memoryless protocols (Chen–Huang–Li–Liu; Chen–Gong–Zhang; Lowe–Nayak).
 
-### Relation to this project
+### Connections
 
-* The two-copy advantage of this project's protocol is quantified in Theorems 1.2 and 1.4: without memory $\Omega(2^n)$ copies for all Pauli magnitudes, with one stored copy $O(n)$. Phase 1 (magnitudes of the displacement spectrum) is exactly the task of Theorem 1.4, and $\rho\otimes\rho^*$ is the $k = n$ rung of the memory axis.
+* The two-copy advantage of conjugate-pair protocols is quantified in Theorems 1.2 and 1.4: without memory $\Omega(2^n)$ copies for all Pauli magnitudes, with one stored copy $O(n)$. Estimating the magnitudes of a displacement spectrum is exactly the task of Theorem 1.4, and $\rho\otimes\rho^*$ is the $k = n$ rung of the memory axis.
 * The bound $\Omega(2^{(n-k)/3})$ is the instance ladder in the memory dimension: every qubit of memory buys a constant factor in the exponent, and the question "memory between zero and two copies" gets its first quantitative answer here.
-* The proof technique shows which distributions are hard: $\rho_P = 2^{-n}(I + \epsilon P)$ is a displacement spectrum with a single heavy address; this project's hardness instance (LWE) is the structured version of it.
+* The proof technique shows which distributions are hard: $\rho_P = 2^{-n}(I + \epsilon P)$ is a displacement spectrum with a single heavy address; the LWE displacement instance is the structured version of it.
 
 ### Limitations and open questions
 
@@ -2518,13 +2518,13 @@ Chen, Cotler, Huang, Li (2021) and Huang, Kueng, Preskill (2021) had proven expo
 * Settles the dequantization debate for quantum PCA (Tang; Chia et al.): their classical algorithms assume access to entries with exponential precision, and that itself costs exponentially many experiments.
 * The advantage occurs for unentangled states. Its source is the incompatibility of the observables, not the entanglement of the state.
 
-### Relation to this project
+### Connections
 
-* Phase 1 of the project is the qudit version of Experiment 1: Bell measurement on two copies, snapshots into a neural network trained on small systems and applied to larger ones. Training on noiseless simulations for small $n$ and testing on larger instances is a model for the generalization of the CNN decoder across $d$.
+* Magnitude estimation on a qudit by conjugate-pair Bell sampling is the qudit version of Experiment 1: Bell measurement on two copies, snapshots into a neural network trained on small systems and applied to larger ones. Training on noiseless simulations for small $n$ and testing on larger instances is a model for the generalization of a learned decoder across $d$.
 * The difference: here two identical copies suffice, because on qubits all $P\otimes P$ commute; for $d > 2$ one needs $\rho\otimes\rho^*$ (King, Wan, McClean; Allcock et al.). The hardware evidence of this paper therefore does not carry over automatically to the conjugate pair.
-* The task here is estimating with a single heavy address $P$ that is revealed after the measurement. The project has to find the address itself (searching). The instance $\rho = 2^{-n}(I + 0.9sP)$ is a spectrum with exactly one heavy coefficient, the lowest rung of the instance ladder.
-* In Experiment 2, time-reversal symmetry means real amplitudes. This is the same condition under which the conjugate is free in the project (section "The conjugate: real with respect to a basis").
-* Theorem 5 holds for every bound in the tree model, hence also for the single-copy bounds of King, Wan, McClean on which Phase 1 relies: noise does not make single-copy protocols better.
+* The task here is estimating with a single heavy address $P$ that is revealed after the measurement. Top-$k$ localization has to find the address itself (searching). The instance $\rho = 2^{-n}(I + 0.9sP)$ is a spectrum with exactly one heavy coefficient, the lowest rung of an instance ladder.
+* In Experiment 2, time-reversal symmetry means real amplitudes. This is the same condition under which the conjugate is free (section "The conjugate: real with respect to a basis").
+* Theorem 5 holds for every bound in the tree model, hence also for the single-copy bounds of King, Wan, McClean that motivate conjugate pairs: noise does not make single-copy protocols better.
 
 ### Limitations and open questions
 
@@ -2539,7 +2539,7 @@ Chen, Cotler, Huang, Li (2021) and Huang, Kueng, Preskill (2021) had proven expo
 
 * How many experiments does the GRU decoder actually need at $n = 20$, and how does this scale against the lower bound from Theorem 7?
 * Can Experiment 1 be repeated for a qudit with $\rho\otimes\rho^*$, for instance with a real state for which the conjugate is free?
-* What changes in the proof of Theorem 6 if $P$ is not named, i.e. the learner has to find the heavy address itself? Does this become the project's LWE question?
+* What changes in the proof of Theorem 6 if $P$ is not named, i.e. the learner has to find the heavy address itself? Does this become the LWE question of top-$k$ localization?
 * What does the near-term PCA $\mathrm{Tr}(Z\rho^2)/\mathrm{Tr}(\rho^2)$ look like in the displacement picture? Is purification by virtual distillation a way to damp the flat remainder?
 
 Paper: [arXiv:2112.00778](https://arxiv.org/abs/2112.00778)
@@ -2578,10 +2578,10 @@ Bubeck, Chen, Li had shown $\Theta(d^{3/2}/\epsilon^2)$ for nonadaptive and $\Om
 * Answers "does adaptivity help?" negatively for a central testing problem; the follow-up works (Chen, Huang, Li, Liu, Sellke 2023 for tomography; Chen, Gong, Zhang 2024 for shadow tomography, where adaptivity does help) use the same tree-plus-martingale method.
 * For NISQ verification, $d^{3/2}$ is the reference: without memory one pays $\sqrt d$ relative to entangled protocols.
 
-### Relation to this project
+### Connections
 
-* Certification against a known $\sigma$ is Phase 2 in the limiting case of a single hypothesis: the probe state is $\sigma$ itself. The instance dependence via $F(\sigma, I/d)$ and $d_{\mathrm{eff}}$ is an instance ladder for reference states, from pure ($1/\epsilon^2$) to maximally mixed ($d^{3/2}/\epsilon^2$).
-* The statement "adaptivity does not help" holds for single copies; this project's protocol is two-copy and nonadaptive in Phase 1, adaptive in Phase 2. This paper says that the gain of Phase 2 has to come from the second copy, not from adaptivity alone.
+* Certification against a known $\sigma$ is a sign probe in the limiting case of a single hypothesis: the probe state is $\sigma$ itself. The instance dependence via $F(\sigma, I/d)$ and $d_{\mathrm{eff}}$ is an instance ladder for reference states, from pure ($1/\epsilon^2$) to maximally mixed ($d^{3/2}/\epsilon^2$).
+* The statement "adaptivity does not help" holds for single copies; a conjugate-pair protocol is two-copy and nonadaptive in its magnitude step and adaptive in its sign step. This paper says that the gain of the sign step has to come from the second copy, not from adaptivity alone.
 * The Gaussian perturbation as a hard instance is a dense, random displacement spectrum; the LWE instance is its structured relative with a sparse support.
 
 ### Limitations and open questions
@@ -2641,28 +2641,28 @@ An experiment is supposed to compute a function of a physical system, for instan
 * **Precursor of the hardware demonstration.** Huang et al. (Science 2022, in the folder as 2112.00778, with Cotler as coauthor) show such separations on Sycamore. The memory separations of Chen, Cotler, Huang, Li (2021) for purity and Pauli shadow tomography and of Chen, Zhou, Seif, Jiang (2022) for Pauli channels have exactly this form: coherent with small memory against incoherent.
 * **Vocabulary.** The model separates two things that in the literature are often both called "access": which oracle nature supplies, and whether its outputs are processed coherently. The appendix of this document adopts this separation (*Measurement power*, the table of the four combinations).
 
-### Relation to this project
+### Connections
 
-**The pipeline as a QUALM.**
-* How Phase 1 is classified depends on which oracle one writes down. If nature supplies a pair $\rho \otimes \rho^*$ per call, Phase 1 measures the register $L$ completely and immediately in the generalized Bell basis, an orthonormal basis of $L$: an incoherent QUALM, even a simple-measurement QUALM. If nature supplies only $\rho$ and the laboratory produces $\rho^*$ itself, for instance because $\rho$ is real, the first copy has to wait unmeasured until the second one is there: a coherent QUALM with one copy of memory. The same measurement, two classifications. QUALM forces one to state the oracle explicitly, and that is exactly the paragraph *Access model* that Jarrod's feedback demanded (point A in research.md).
-* Phase 2 measures $\rho \otimes \sigma^*$ with a known probe prepared by the laboratory. Because $\sigma^*$ is fixed, this is the same as a POVM on $\rho$ alone, with elements $\mathrm{Tr}_W[(\mathbb{1} \otimes \sigma^*)\,\Pi_u]$. The adaptive choice of probe is therefore an adaptive single-copy measurement, and the reduction from step 1 of the method is the formal version of the statement in the quadrant that adaptivity does not change the row.
-* The QUALM complexity counts calls and gates, and the width of $W$ counts the memory. Triple efficiency means polynomiality in all three. CNN training lies outside the model: the trained weights are part of the fixed gate sequence, an *advice* that does not depend on the oracle. What counts is the evaluation of the CNN, and that is exactly what "triple efficiency at inference only" means.
+**A conjugate-pair Bell protocol as a QUALM.**
+* How the magnitude step is classified depends on which oracle one writes down. If nature supplies a pair $\rho \otimes \rho^*$ per call, the step measures the register $L$ completely and immediately in the generalized Bell basis, an orthonormal basis of $L$: an incoherent QUALM, even a simple-measurement QUALM. If nature supplies only $\rho$ and the laboratory produces $\rho^*$ itself, for instance because $\rho$ is real, the first copy has to wait unmeasured until the second one is there: a coherent QUALM with one copy of memory. The same measurement, two classifications. QUALM forces one to state the oracle explicitly, i.e. to name the access model.
+* A sign step measures $\rho \otimes \sigma^*$ with a known probe prepared by the laboratory. Because $\sigma^*$ is fixed, this is the same as a POVM on $\rho$ alone, with elements $\mathrm{Tr}_W[(\mathbb{1} \otimes \sigma^*)\,\Pi_u]$. The adaptive choice of probe is therefore an adaptive single-copy measurement, and the reduction from step 1 of the method is the formal version of the statement in the quadrant that adaptivity does not change the row.
+* The QUALM complexity counts calls and gates, and the width of $W$ counts the memory. Triple efficiency means polynomiality in all three. Training a learned decoder lies outside the model: the trained weights are part of the fixed gate sequence, an *advice* that does not depend on the oracle. What counts is the evaluation of the decoder, and that is exactly what "triple efficiency at inference only" means.
 
 **Bell measurement and SWAP test.**
 * On qubits, SWAP is diagonal in the Bell basis. The singlet has eigenvalue $-1$, the three other Bell states $+1$, and transversally over $n$ qubits the Bell outcome $P$ has SWAP eigenvalue $(-1)^{\#Y(P)}$. The SWAP test from Theorem 1 is therefore a coarse-grained Bell measurement: draw a Bell sample, output the parity of the $Y$ factors.
 * On qudits with $d \ge 3$ this does not hold (checked numerically for $d = 3, 4, 5$): $\mathrm{SWAP} = \tfrac1d\sum_v D_v \otimes D_v^\dagger$ is not diagonal in the basis $(D_{q,p}\otimes\mathbb{1})\vert\Phi^+\rangle$. This basis instead diagonalizes the $D_v \otimes \bar D_v$, and $\sum_v D_v \otimes \bar D_v = d^2\,\vert\Phi^+\rangle\langle\Phi^+\vert$ is $d$ times the partial transpose of SWAP. This fits the observation of Allcock et al. that Bell sampling on two identical qudit copies loses its qubit properties.
-* What remains of the SWAP test is an identity: the Bell outcome $(0,0)$ has probability $\mathrm{Tr}(\rho^2)/d$ on $\rho \otimes \rho^*$, the term at $(a,b) = (0,0)$ in the formula $P(a,b) = d^{-2}\sum_{q,p}\vert y_{q,p}\vert^2\omega^{ap-bq}$. On two identical copies, $\mathrm{Tr}(\rho\rho^{T})/d$ appears there instead, and for complex $\rho$ that is not the purity (both checked numerically). The statistical efficiency of the SWAP test is not preserved: an event of probability $O(1/d)$ used as a purity estimator costs $\Theta(d/\epsilon^2)$ copies. For Phase 1 this is irrelevant, because there the $\vert y_v\vert^2$ count individually, not their sum.
+* What remains of the SWAP test is an identity: the Bell outcome $(0,0)$ has probability $\mathrm{Tr}(\rho^2)/d$ on $\rho \otimes \rho^*$, the term at $(a,b) = (0,0)$ in the formula $P(a,b) = d^{-2}\sum_{q,p}\vert y_{q,p}\vert^2\omega^{ap-bq}$. On two identical copies, $\mathrm{Tr}(\rho\rho^{T})/d$ appears there instead, and for complex $\rho$ that is not the purity (both checked numerically). The statistical efficiency of the SWAP test is not preserved: an event of probability $O(1/d)$ used as a purity estimator costs $\Theta(d/\epsilon^2)$ copies. For magnitude estimation this is irrelevant, because there the $\vert y_v\vert^2$ count individually, not their sum.
 
 **Searching and the LWE wall.**
-* In the fixed-unitary problem, coherence decides everything. In the project's searching problem it decides nothing, at least on the hard instance from `thm:lwe-displacement`. The state $\rho_s = \mathbb{E}\,\vert a,b\rangle\langle a,b\vert$ is diagonal. Dephasing in the computational basis leaves $\rho_s^{\otimes k}$ unchanged, and every dephased copy is a classical LWE sample. Every coherent QUALM on copies of $\rho_s$, with arbitrarily much quantum memory, can therefore be simulated by a quantum algorithm on classical LWE samples that re-prepares the basis states itself. The post-quantum LWE assumption rules out such an algorithm in polynomial time.
+* In the fixed-unitary problem, coherence decides everything. In top-$k$ localization it decides nothing, at least on the real-diagonal LWE displacement instance. The state $\rho_s = \mathbb{E}\,\vert a,b\rangle\langle a,b\vert$ is diagonal. Dephasing in the computational basis leaves $\rho_s^{\otimes k}$ unchanged, and every dephased copy is a classical LWE sample. Every coherent QUALM on copies of $\rho_s$, with arbitrarily much quantum memory, can therefore be simulated by a quantum algorithm on classical LWE samples that re-prepares the basis states itself. The post-quantum LWE assumption rules out such an algorithm in polynomial time.
 * The hardness therefore sits in the oracle, not in the coherence. The task becomes easy only with a different oracle: quantum samples in superposition (Grilo, Kerenidis, Zijlstra 2019) or the preparation circuit. This is the QUALM version of the statement in the quadrant that the hard cell is left only by a promise or by query access.
-* For the paper, this would be a one-sentence addition to `thm:lwe-displacement`: the reduction rules out not only every processing of the Bell outcomes, but every coherent multi-copy measurement. This defuses an obvious objection, namely that a protocol with more quantum memory could circumvent the wall. The caveat: the argument needs diagonality. For non-diagonal hard instances, for instance in the cyclic single-qudit basis (Q1), it is open whether memory helps.
+* This extends the LWE hardness of the displacement instance by one sentence: the reduction rules out not only every processing of the Bell outcomes, but every coherent multi-copy measurement. This defuses an obvious objection, namely that a protocol with more quantum memory could circumvent the wall. The caveat: the argument needs diagonality. For non-diagonal hard instances, for instance in the cyclic single-qudit basis, it is open whether memory helps.
 
-**Symmetry class and the conjugate.** Theorem 2 asks for dynamics whether they are orthogonal, i.e. real and time-reversal symmetric. In the taxonomy of influencing factors (research.md, factor A), reality is exactly the condition under which $\rho^* = \rho$ holds and the conjugate costs nothing. For Haar-random dynamics, the theorem says that this property cannot be checked cheaply without coherence. Condition (C1) is therefore rather prior knowledge from physics (for instance a real Hamiltonian without a magnetic field) than something the pipeline verifies on the side.
+**Symmetry class and the conjugate.** Theorem 2 asks for dynamics whether they are orthogonal, i.e. real and time-reversal symmetric. Reality is exactly the condition under which $\rho^* = \rho$ holds and the conjugate costs nothing. For Haar-random dynamics, the theorem says that this property cannot be checked cheaply without coherence. Reality is therefore rather prior knowledge from physics (for instance a real Hamiltonian without a magnetic field) than something a protocol verifies on the side.
 
 ### Limitations and open questions
 
-* **Toy problems.** Haar-random unitaries are themselves not efficiently implementable, so the lab oracle is exponentially complex. The authors themselves ask for advantages with efficient oracles. Ground and Gibbs states of local Hamiltonians, as in the project, would be such oracles.
+* **Toy problems.** Haar-random unitaries are themselves not efficiently implementable, so the lab oracle is exponentially complex. The authors themselves ask for advantages with efficient oracles. Ground and Gibbs states of local Hamiltonians would be such oracles.
 * **Noise.** According to the authors, the exponential advantages of their examples disappear under noise; whether QUALM advantages can be shown in the NISQ era is open.
 * **Tightness.** The exponent $2/7$ comes from the range of validity of the Weingarten estimate; the main text leaves open whether the bound is tight.
 * **Adaptivity.** Whether adaptivity helps in general in the incoherent case is listed by the authors as open; for their two tasks the bound is proven against adaptive protocols.
@@ -2670,7 +2670,7 @@ An experiment is supposed to compute a function of a physical system, for instan
 
 ### Questions for further study
 
-* Does the diagonal reduction also hold in the cyclic single-qudit basis? More concretely: is there a non-diagonal hard instance there against which a protocol with three or more coherently held copies helps? (Q1)
+* Does the diagonal reduction also hold in the cyclic single-qudit basis? More concretely: is there a non-diagonal hard instance there against which a protocol with three or more coherently held copies helps?
 * At which rung of the instance ladder does more memory than the pair first lower the QUALM complexity? The authors ask in general how much a larger work space brings; the open frontier *Memory between zero and two* is the same question from below.
 * Can reality, condition (C1), be tested with two identical copies? The SWAP test on $\rho\otimes\rho$ gives $\mathrm{Tr}(\rho^2)$, the Bell outcome $(0,0)$ on $\rho\otimes\rho$ gives $\mathrm{Tr}(\rho\rho^T)/d$, and the difference $\mathrm{Tr}(\rho^2)-\mathrm{Tr}(\rho\rho^T) = \tfrac12\Vert\rho-\rho^*\Vert_F^2$ vanishes exactly for real $\rho$. The second estimator, however, costs $\Theta(d/\epsilon^2)$ copies. Is there an efficient test, or is Theorem 2 a hint that there is none?
 * What is in the Supplementary Information? The formal definitions, the complete proof, and the verification example that shows the necessity of $N$ are not in the folder.
@@ -2713,9 +2713,9 @@ Earlier certification methods needed deep circuits (shadows, spectrum estimation
 * Verification of generic states with the cheapest measurement primitive; at the same time a learning primitive: a model that maximizes the shadow overlap learns the state (applications to neural and tensor network models in the paper).
 * The proof that states of exponential complexity are certifiable clearly separates certification from learning.
 
-### Relation to this project
+### Connections
 
-* The shadow overlap is a certificate from a single-qubit measurement plus two model queries; for this project's pipeline, the question is whether a sparse spectrum learned from Bell sampling can serve as the model $\Psi$. A sparse displacement spectrum delivers amplitude ratios in $O(k)$ time, so certification of the learning result would be cheap.
+* The shadow overlap is a certificate from a single-qubit measurement plus two model queries; the question is whether a sparse spectrum learned from Bell sampling can serve as the model $\Psi$. A sparse displacement spectrum delivers amplitude ratios in $O(k)$ time, so certification of the learning result would be cheap.
 * The relaxation time is an instance quantity that depends on the structure of the target, not on its complexity; this is a model for an instance ladder measured not in $t$ or $k$ but in mixing times.
 * The gap between "Certified" and "Failed" (factor $2\tau$) is a tolerance parameter as in Bao et al.; both show that one-bit tasks have tolerance gaps with a polynomial factor.
 
@@ -2767,11 +2767,11 @@ CPTP maps describe two-time errors; real devices show temporal correlations (the
 * A missing piece in the zoo of characterization methods (QCVV); a basis for memory-aware control and error mitigation, hardware-agnostic.
 * For learning theory, the first protocol that formulates query access to processes with memory as a learning problem with an explicit class assumption (Markov order).
 
-### Relation to this project
+### Connections
 
 * The Markov order is an instance ladder for processes: $\ell$ plays the role of $t$ for Clifford+T or of $D$ for MPS, and $O(kN^\ell)$ against $O(N^k)$ is the efficiency gain of a class promise.
 * The process tensor is the time-axis version of a state on $2k+2$ registers; Bell sampling on conjugate Choi states would be the natural two-copy primitive to learn its displacement spectrum, and the causality constraints would appear there as sparsity patterns.
-* The MLE projection onto the physical cone is what a CNN decoder would have to learn implicitly; the paper supplies the explicit constraints.
+* The MLE projection onto the physical cone is what a learned decoder would have to learn implicitly; the paper supplies the explicit constraints.
 
 ### Limitations and open questions
 
@@ -2823,9 +2823,9 @@ Classical pseudorandom strings are too weak for quantum states: a family of rand
 * The founding paper of quantum pseudorandomness; Brakerski–Shmueli (binary phases), Kretschmer (learning hardness from PRS), Zhao et al. (gate complexity), Mele–Herasymenko (fermions), and Aaronson et al. (pseudoentanglement) build on it.
 * No-cloning and quantum money without verification by the issuer; PRS are the minimal assumption for much of what previously required one-way functions.
 
-### Relation to this project
+### Connections
 
-* PRS are the example of states that are information-theoretically trivial and computationally impenetrable; this project's LWE instance is the displacement version: a spectrum whose support is sparse but can be found only with the key. Both show that the learning hardness sits in the decoder.
+* PRS are the example of states that are information-theoretically trivial and computationally impenetrable; the LWE displacement instance is the displacement version: a spectrum whose support is sparse but can be found only with the key. Both show that the learning hardness sits in the decoder.
 * Random phase states have a flat displacement spectrum (magnitude $\approx 2^{-n}$ on all addresses); Bell sampling on $\rho\otimes\rho^*$ samples from it almost uniformly. This is why the instance ladder ends at phase states of high degree: there is no support to find.
 * Theorem 5 (oracle access gives nothing beyond copies) is a statement about the access ladder: for PRS, query = sample.
 
@@ -2879,7 +2879,7 @@ Ji–Liu–Song show that PRS must have entanglement $\omega(\log n)$ across eve
 * Entanglement is not an efficiently observable quantity: two ensembles with linearly different entropy are indistinguishable. Relevant for property testing (Schmidt rank, MPS), for distillation protocols via the Schur transform, and for the computability of holographic dualities.
 * Basis for pseudomagic (Gu, Leone, Ghosh, Eisert, Yelin, Quek 2023) and for the sample lower bounds in Chen–Gong–Ye–Zhang.
 
-### Relation to this project
+### Connections
 
 * Subset phase states have a displacement spectrum that is controlled by the size $K$ of the support in the computational basis; for $K = 2^{\mathrm{polylog}}$ the spectrum is flat enough for pseudorandomness, but the state has only polylogarithmic entanglement. This is an instance in which sparsity in the computational basis, without a dictionary that names the support, remains computationally invisible: a warning that sparsity without the key does not guarantee learnability.
 * The $\Omega(\sqrt r)$ bound for MPS testing is a sample bound against a class promise; it says that the bond dimension enters the copy count as an instance parameter, not only the time.
@@ -2937,11 +2937,11 @@ Full tomography costs $\Theta(4^n/\epsilon^2)$; physical states arise from few g
 * A fine-grained view of tomography: for the copies, what counts is not the dimension but the circuit complexity; the time follows a different logic.
 * The boundary $\log n$ is sharp for states and unitaries alike and coincides with the boundary of the Clifford+T learners.
 
-### Relation to this project
+### Connections
 
-* The row is the formal version of the thesis "sample-easy, time-hard": every statement of this project about the LWE instance has to be measured against $\exp(\Omega(\min\{G, n\}))$. The displacement instance has $G = \mathrm{poly}(n)$; it therefore lies in the hard regime of this theorem, and the only question is whether the additional sparsity structure changes that.
+* The row is the formal version of the thesis "sample-easy, time-hard": every statement about the LWE displacement instance has to be measured against $\exp(\Omega(\min\{G, n\}))$. The displacement instance has $G = \mathrm{poly}(n)$; it therefore lies in the hard regime of this theorem, and the only question is whether the additional sparsity structure changes that.
 * Theorem 5 is the access ladder for processes: rank $r$ of the inputs buys a factor $r$ in the samples; this is the process counterpart of the memory axis for states.
-* The sample bound $\tilde\Theta(G/\epsilon^2)$ with single-copy measurements says that for pure states there is no two-copy advantage in the copy count; the advantage of this project's protocol has to lie in the time or in mixed states.
+* The sample bound $\tilde\Theta(G/\epsilon^2)$ with single-copy measurements says that for pure states there is no two-copy advantage in the copy count; the advantage of conjugate-pair protocols has to lie in the time or in mixed states.
 
 ### Limitations and open questions
 
@@ -2992,11 +2992,11 @@ Quantum circuit Born machines (QCBMs) are meant to learn distributions that are 
 * Output distributions of local circuits cannot justify a practical learning advantage of QCBMs over classical learners; new strategies for quantum advantages in learning are needed.
 * The SQ result applies to all gradient-based trainers.
 
-### Relation to this project
+### Connections
 
-* The class is the classical marginal distribution of the states whose displacement spectra this project learns; the hardness with a single $T$ gate shows that even minimal magic builds a wall on the distribution side, while on the state side $t = O(\log n)$ is still learnable. Bell sampling sees more than the computational-basis distribution; this is the quantitative reason why two-copy access extends the instance ladder.
+* The class is the classical marginal distribution of states whose displacement spectra one wants to learn; the hardness with a single $T$ gate shows that even minimal magic builds a wall on the distribution side, while on the state side $t = O(\log n)$ is still learnable. Bell sampling sees more than the computational-basis distribution; this is the quantitative reason why two-copy access extends the instance ladder.
 * LPN is the $\mathbb{F}_2$ counterpart of LWE; the construction "noise from a gate" is a recipe for building hard displacement instances from a Clifford scaffold plus a single non-Clifford element.
-* The SQ model is the language for CNN decoders that see only statistics; Theorem 4 says from which depth on such decoders must fail.
+* The SQ model is the language for learned decoders that see only statistics; Theorem 4 says from which depth on such decoders must fail.
 
 ### Limitations and open questions
 
@@ -3046,10 +3046,10 @@ Worst-case hardness says nothing about heuristic learners that run on typical in
 * The QCBM counterpart of average-case hardness for deep neural networks; heuristic learners cannot be efficient on typical instances from logarithmic depth on.
 * The "far from uniform" property supports heavy output generation as a proof of advantage.
 
-### Relation to this project
+### Connections
 
-* Average-case hardness is the question this project leaves open for displacement spectra: LWE gives worst-case hardness via a reduction, and this paper shows what unconditional average-case bounds look like in the SQ model; for a CNN decoder that sees only Bell statistics, the SQ model is the right abstraction.
-* The parameters $(d, \beta, \tau, \epsilon)$ are a four-dimensional instance ladder; the separation "constant probability from $\log n$ on, exponentially close to one from linear depth on" is a pattern for the rungs of this project's ladder.
+* Average-case hardness is the open question for displacement spectra: LWE gives worst-case hardness via a reduction, and this paper shows what unconditional average-case bounds look like in the SQ model; for a learned decoder that sees only Bell statistics, the SQ model is the right abstraction.
+* The parameters $(d, \beta, \tau, \epsilon)$ are a four-dimensional instance ladder; the separation "constant probability from $\log n$ on, exponentially close to one from linear depth on" is a pattern for the rungs of a ladder for displacement spectra.
 * The design property from logarithmic depth on is the same one that makes displacement spectra flat: from this depth on there is typically no sparse support.
 
 ### Limitations and open questions
@@ -3158,12 +3158,12 @@ Literature:
 
 ## Continuous-variable systems: CV shadows and Gaussian learning
 
-The displacement operators of this project are the finite Weyl–Heisenberg group; the continuous-variable Weyl group is their infinite-dimensional parent, and the characteristic function $\chi(\alpha) = \mathrm{Tr}(D(\alpha)\rho)$ is the CV displacement spectrum. Learning it is the CV version of the searching and estimating rows.
+The finite displacement operators form the Weyl–Heisenberg group; the continuous-variable Weyl group is their infinite-dimensional parent, and the characteristic function $\chi(\alpha) = \mathrm{Tr}(D(\alpha)\rho)$ is the CV displacement spectrum. Learning it is the CV version of the searching and estimating rows.
 
 * **Homodyne tomography** (Vogel, Risken 1989; Smithey et al. 1993): a quadrature scan and an inverse Radon transform reconstruct the Wigner function, the CV baseline, with no finite dimension to count against; energy bounds take the place of $d$.
 * **CV classical shadows** (Becker, Datta, Lami, Rouzé 2024; Gandhari et al. 2024): randomized Gaussian measurements with rigorous error bounds under an energy or photon-number constraint; the shadow-norm role is played by the energy.
 * **Gaussian and near-Gaussian state learning** (Mele et al. 2024; Bittel et al. 2024): bosonic Gaussian states are learned from their covariance matrix and displacement vector in polynomial time in the number of modes; $t$ non-Gaussian gates cost $2^t$, the bosonic mirror of the magic dial. Fermionic Gaussian states behave the same way (Aaronson, Grewal 2023; Mele, Herasymenko 2024).
-* **The bridge to this project.** Heterodyne outcomes sample the Husimi function, whose Fourier transform is the characteristic function; the CV analogue of the Bell record is therefore a heterodyne record, and the CV analogue of the search for a sparse displacement support is the search for a few dominant $\alpha$ in $\chi(\alpha)$. Whether an LWE-type wall exists there is as open as the cyclic-qudit question in the searching table.
+* **The bridge to finite displacement spectra.** Heterodyne outcomes sample the Husimi function, whose Fourier transform is the characteristic function; the CV analogue of the Bell record is therefore a heterodyne record, and the CV analogue of the search for a sparse displacement support is the search for a few dominant $\alpha$ in $\chi(\alpha)$. Whether an LWE-type wall exists there is as open as the cyclic-qudit question in the searching table.
 
 ## Estimating processes: Hamiltonian coefficients, channels, unitaries
 
@@ -3180,7 +3180,7 @@ The estimating tasks whose object is a process. The object axis is defined in th
 * **Chung, Lin (2021) / Huang, Chen, Preskill (PRX Quantum 2023):** PAC learning of channels; predicting arbitrary processes on average with polynomial data.
 * **Subramanian, Kwon, Jiang (2026):** Heisenberg–Weyl transfer matrices of qudit and bosonic channels under $c$-copy parallel access: efficient with the conjugate channel $\mathcal{E}\otimes\mathcal{E}^*$ at a tight $\epsilon^{-4}$, exponential for $c < d$ without it, a master lower bound for all $c$-copy protocols.
 
-**Two practical anchors.** *Heisenberg limit* means total evolution time $T \sim 1/\epsilon$ for precision $\epsilon$ on a coupling, versus the standard quantum limit $T \sim 1/\epsilon^2$ of incoherent repetition; the PRL 2023 protocol reaches it with product-state inputs plus a decoupling pulse sequence, no entangled probes. On the noise side, the field-standard protocols are **randomized benchmarking** (Emerson et al. 2005; Magesan et al. 2011), which extracts an average gate fidelity from the exponential decay of survival probability under random Cliffords, and **gate set tomography** (Blume-Kohout et al. 2013; Nielsen et al. 2021), the self-consistent full characterization; Flammia–Wallman's Pauli channel estimation is the sparse, scalable middle ground and the one that maps onto the noise-learning transfer named in the positioning section.
+**Two practical anchors.** *Heisenberg limit* means total evolution time $T \sim 1/\epsilon$ for precision $\epsilon$ on a coupling, versus the standard quantum limit $T \sim 1/\epsilon^2$ of incoherent repetition; the PRL 2023 protocol reaches it with product-state inputs plus a decoupling pulse sequence, no entangled probes. On the noise side, the field-standard protocols are **randomized benchmarking** (Emerson et al. 2005; Magesan et al. 2011), which extracts an average gate fidelity from the exponential decay of survival probability under random Cliffords, and **gate set tomography** (Blume-Kohout et al. 2013; Nielsen et al. 2021), the self-consistent full characterization; Flammia–Wallman's Pauli channel estimation is the sparse, scalable middle ground and the one that maps most directly onto learning displacement noise.
 
 <br>
 
@@ -3188,7 +3188,7 @@ The estimating tasks whose object is a process. The object axis is defined in th
 
 Summaries of the key papers on the task type **estimating**: the observables are the input. Given are copies of a state, applications of a channel or a dynamics, together with a list of $M$ observables, explicit or implicit, or a distribution from which they are drawn. Returned are the $M$ expectation values up to $\epsilon$. The list can be polynomial and explicit (a dictionary), implicit and exponential (all Paulis), drawn from a distribution (PAC), or sequential (online). The task type stays the same; the budgets change.
 
-Every summary follows the same structure as in the searching section: placement in the tables, problem, key results, method, significance, relation to this project, limitations and open questions, questions for further study. The status glyphs read in the order copies · time · memory.
+Every summary follows the same structure as in the searching section: placement in the tables, problem, key results, method, significance, connections, limitations and open questions, questions for further study. The status glyphs read in the order copies · time · memory.
 
 ## Overview
 
@@ -3225,7 +3225,7 @@ Every summary follows the same structure as in the searching section: placement 
 | Chen, Zhou, Seif, Jiang 2022 | Pauli channel | all $4^n$ eigenvalues | Sample on the Choi state with $k$ ancilla qubits | $O(n2^{n-k}/\epsilon^2)$, $O(n/\epsilon^2)$ at $k=n$; $\Omega(2^{n/3})$ without ancilla | 🟢 🟢 🟢 with ancilla | entangled ancilla memory |
 | Subramanian, Kwon, Jiang 2026 | Qudit and bosonic channel | magnitudes of the Heisenberg–Weyl transfer matrix | $c$ parallel copies of $\mathcal{E}$ or of $\mathcal{E}\otimes\mathcal{E}^*$ | $O(\log(M/\delta)/\epsilon^4)$ with $\mathcal{E}^*$; $\Omega(d^{2m})$ for $c < d$; $\epsilon^{-2d}$ at $c = d$ | 🟢 🟢 🟢 with conjugate | conjugate access or $d$-copy memory |
 
-Six families. The first five papers are generic shadow tomography: sample-efficient for every list, with a $2^n\times 2^n$ hypothesis as the price. The next nine are classical shadows and their ensembles: the shadow norm of the ensemble decides which observables are cheap. Then come the two-copy papers, which close the gap for global Paulis and introduce conjugate access; the four tomography limiting cases (rank, spectrum, full tomography, unitary); the five papers on learning across a phase and on low-degree structure; and finally Hamiltonians and channels. The common thread for this project: wherever a row is 🟢 🟢 🟢, a promise or a resource stands next to it; two-copy memory and conjugate access are the two resources that appear in several rows at once.
+Six families. The first five papers are generic shadow tomography: sample-efficient for every list, with a $2^n\times 2^n$ hypothesis as the price. The next nine are classical shadows and their ensembles: the shadow norm of the ensemble decides which observables are cheap. Then come the two-copy papers, which close the gap for global Paulis and introduce conjugate access; the four tomography limiting cases (rank, spectrum, full tomography, unitary); the five papers on learning across a phase and on low-degree structure; and finally Hamiltonians and channels. The common thread: wherever a row is 🟢 🟢 🟢, a promise or a resource stands next to it; two-copy memory and conjugate access are the two resources that appear in several rows at once.
 
 ---
 ## Shadow Tomography of Quantum States (arXiv:1711.01053)
@@ -3263,11 +3263,11 @@ Full tomography needs $\Theta(D^2)$ copies (O'Donnell–Wright, Haah et al.), i.
 * It separates the information-theoretic from the computational problem and names the running time explicitly as open; classical shadows and triply efficient shadow tomography are answers to exactly this gap.
 * Epistemically: for every polynomial-size family of circuits, an $n$-qubit state contains only $\mathrm{poly}(n)$ bits of learnable information.
 
-### Relation to this project
+### Connections
 
-* The row is the reference point against which the "triply efficient" formulation of this project's paper is defined: sample efficiency is settled here, time and memory efficiency are not. The instance ladder in research.md asks precisely for which classes of states the $2^n\times 2^n$ hypothesis can be replaced by a sparse surrogate.
-* The distinction "all $M$" versus "most $M$" (shadow tomography versus PAC) is the same as that between a worst-case guarantee for every $(q,p)$ and an average-case guarantee over the top-$k$ distribution in this project's protocol.
-* Postselected learning is the conceptual precursor of the MMW step that this project's CNN replaces; the $\Theta(\log D)$ iterations are the number of adaptive rounds that a learned decoder has to go through at least implicitly.
+* The row is the reference point against which "triply efficient" is defined: sample efficiency is settled here, time and memory efficiency are not. An instance ladder asks precisely for which classes of states the $2^n\times 2^n$ hypothesis can be replaced by a sparse surrogate.
+* The distinction "all $M$" versus "most $M$" (shadow tomography versus PAC) is the same as that between a worst-case guarantee for every $(q,p)$ and an average-case guarantee over a top-$k$ distribution.
+* Postselected learning is the conceptual precursor of the MMW step that a learned decoder would replace; the $\Theta(\log D)$ iterations are the number of adaptive rounds that a learned decoder has to go through at least implicitly.
 
 ### Limitations and open questions
 
@@ -3321,11 +3321,11 @@ Tomography needs $4^n$ observables; Häffner et al. needed 656,100 experiments f
 * Objection 3 first raises the question of time-efficient special cases, which Rocchetto (stabilizer), Grewal et al. (few T gates), and the promise catalogs of the searching and identifying tables later answer; the GGM reduction shows that generically efficient learning would break one-way functions.
 * Realized experimentally by Rocchetto et al. (2019).
 
-### Relation to this project
+### Connections
 
-* The average-case formulation is the right language for a learned decoder pipeline: the CNN is trained and evaluated on a distribution of instances, and the generalization guarantee is a statement about this distribution, not about every address $(q,p)$.
-* The fat-shattering bound $O(n/\gamma^2)$ is the clean argument for why $\mathrm{poly}(n)$ copies always suffice information-theoretically; as in Objection 3, the hardness of this project's problem lies solely in finding the hypothesis.
-* Objection 2 is the answer to the question "Phase 2 is adaptive; does the theorem still hold?": yes, with a factor $r$ for the number of rounds.
+* The average-case formulation is the right language for a learned decoder: it is trained and evaluated on a distribution of instances, and the generalization guarantee is a statement about this distribution, not about every address $(q,p)$.
+* The fat-shattering bound $O(n/\gamma^2)$ is the clean argument for why $\mathrm{poly}(n)$ copies always suffice information-theoretically; as in Objection 3, the hardness of top-$k$ localization lies solely in finding the hypothesis.
+* Objection 2 is the answer to the question "an adaptive sign step; does the theorem still hold?": yes, with a factor $r$ for the number of rounds.
 
 ### Limitations and open questions
 
@@ -3338,7 +3338,7 @@ Tomography needs $4^n$ observables; Häffner et al. needed 656,100 experiments f
 
 * What does the fat-shattering calculation look like for displacement observables $D_{q,p}$ on a single qudit, where there is no $n$, only $\log d$?
 * Can the random access code argument be repeated for $\rho\otimes\rho^*$ access, and does conjugate access change the effective dimension?
-* Which distribution $\mathcal{D}$ over observables corresponds to the top-$k$ distribution of this project's protocol, and what is its effective fat-shattering dimension?
+* Which distribution $\mathcal{D}$ over observables corresponds to a top-$k$ distribution over displacement addresses, and what is its effective fat-shattering dimension?
 
 Paper: [arXiv:quant-ph/0608142](https://arxiv.org/abs/quant-ph/0608142)
 
@@ -3378,11 +3378,11 @@ The PAC theorem assumes that training and test measurements are i.i.d. from the 
 * Only single-copy measurements and noisy feedback: closer to the lab than optimal tomography or certification, which need entangled measurements across exponentially many copies.
 * The regret formulation covers the non-realizable case: the data do not have to come from a state.
 
-### Relation to this project
+### Connections
 
-* This is the algorithm that this project's paper explicitly replaces: "the Matrix Multiplicative Weights update that drives their adaptivity". The hypothesis $\omega_t$ is the $d\times d$ matrix that has become the sparse surrogate with $O(k)$ weights in this project's protocol.
-* The mistake bound $O(n/\epsilon^2)$ is an upper bound on the number of adaptive rounds a Phase 2 strategy needs; it says that the sequential sign integrator can be "surprised" at most $O(\log d/\epsilon^2)$ times.
-* The exponential running time per round is the failure mode "hypothesis too large" in the appendix to the tables: memory forces time. A CNN with fixed input size $6\times 64\times 64$ is the counter-design, without a guarantee.
+* This is the algorithm that a sparse top-$k$ approach would replace: the Matrix Multiplicative Weights update that drives adaptivity here. The hypothesis $\omega_t$ is the $d\times d$ matrix that a sparse surrogate with $O(k)$ weights would stand in for.
+* The mistake bound $O(n/\epsilon^2)$ is an upper bound on the number of adaptive rounds an adaptive sign strategy needs; it says that a sequential sign integrator can be "surprised" at most $O(\log d/\epsilon^2)$ times.
+* The exponential running time per round is the failure mode "hypothesis too large" in the appendix to the tables: memory forces time. A learned decoder with a fixed input size is the counter-design, without a guarantee.
 
 ### Limitations and open questions
 
@@ -3395,7 +3395,7 @@ The PAC theorem assumes that training and test measurements are i.i.d. from the 
 
 * What does the RFTL update look like concretely if the hypothesis is restricted to a support of $k$ displacement addresses, and is the mistake bound preserved?
 * What is the sequential fat-shattering dimension of the class "states with a $k$-sparse displacement spectrum"?
-* How does the regret behave if the feedback comes from Bell measurements on $\rho\otimes\sigma^*$ with *known* $\sigma$, i.e. from exactly the measurement of Phase 2?
+* How does the regret behave if the feedback comes from Bell measurements on $\rho\otimes\sigma^*$ with *known* $\sigma$, i.e. from exactly the measurement of an adaptive sign probe?
 
 Paper: [arXiv:1802.09025](https://arxiv.org/abs/1802.09025)
 
@@ -3436,11 +3436,11 @@ Classically, one estimates $m$ expectation values from $O(\log m/\epsilon^2)$ sa
 * Hypothesis selection with polylogarithmically many copies in $M$ is the basis of all identifying rows with a polynomial list of candidates.
 * The perspective "adaptive data analysis instead of differential privacy" is the conceptual bridge that also carries the Efron–Stein view of 2026.
 
-### Relation to this project
+### Connections
 
-* Threshold search is the formal version of "is there an address with $|y_{q,p}| \geq \theta$?": exactly the question that Phase 1 answers for all $d^2$ addresses simultaneously, but there non-adaptively from the Bell record. The copy count $O(\log^2 m/\epsilon^2)$ with $m = d^2$ is a reference value for the $O(\log d/\epsilon^4)$ of the conjugate-pair method: better in $\epsilon$, worse in $\log d$, and without the conjugate.
-* Hypothesis selection with $3.01\eta + \epsilon$ is the agnostic framework in which a list of candidate supports from the CNN could be evaluated: $M$ surrogate states, $\mathrm{polylog}(M)$ copies.
-* The $\chi^2$ stability is a clean tool for quantifying how much Phase 2 "uses up" the copies when probe measurements run sequentially on the same register; this project's protocol takes fresh copies instead, which makes the analysis trivial but the copy count larger.
+* Threshold search is the formal version of "is there an address with $|y_{q,p}| \geq \theta$?": exactly the question that conjugate-pair magnitude estimation answers for all $d^2$ addresses simultaneously, but there non-adaptively from the Bell record. The copy count $O(\log^2 m/\epsilon^2)$ with $m = d^2$ is a reference value for the $O(\log d/\epsilon^4)$ of the conjugate-pair method: better in $\epsilon$, worse in $\log d$, and without the conjugate.
+* Hypothesis selection with $3.01\eta + \epsilon$ is the agnostic framework in which a list of candidate supports from a learned decoder could be evaluated: $M$ surrogate states, $\mathrm{polylog}(M)$ copies.
+* The $\chi^2$ stability is a clean tool for quantifying how much a sign step "uses up" the copies when probe measurements run sequentially on the same register; taking fresh copies instead makes the analysis trivial but the copy count larger.
 
 ### Limitations and open questions
 
@@ -3495,10 +3495,10 @@ Classically (all matrices diagonal), the problem is adaptive data analysis with 
 * Specialized to diagonal matrices, the argument gives new proofs of the classical rates *without* differential privacy, via Fourier analysis on product spaces: the Efron–Stein view is new classically as well.
 * For special classes of observables there is room left: for Paulis nothing better than $1/\epsilon^4$ was known before 2026, and Chen, Gong, Ye showed that any improvement needs highly entangled measurements.
 
-### Relation to this project
+### Connections
 
 * The paper supplies the new reference rate for the column "Copies" for generic lists; the paragraph "What is open (1)" in the estimating section was formulated for $1/\epsilon^4$ and now states $1/\epsilon^3$ with the Lyu–Talwar evidence for optimality.
-* Energy as a damage measure is a candidate for the question of how much Phase 2 of this project's protocol really uses up the copies: the probe measurement on $\rho\otimes\sigma^*$ is a lifted observable across two registers, and its excitation balance would be directly computable.
+* Energy as a damage measure is a candidate for the question of how much an adaptive sign step really uses up the copies: the probe measurement on $\rho\otimes\sigma^*$ is a lifted observable across two registers, and its excitation balance would be directly computable.
 * The remark on Paulis (no better $\epsilon$ dependence than $1/\epsilon^4$ without highly entangled measurements) is a warning: the $O(\log d/\epsilon^4)$ of conjugate-pair magnitude estimation can probably not be improved without larger quantum memory; an empirically observed $\epsilon^{-3.2}$ would then be an instance effect, not a gain of the protocol.
 
 ### Limitations and open questions
@@ -3553,10 +3553,10 @@ Tomography scales exponentially in copies, memory, and running time. MPS and neu
 * The shadow norm is the language in which all later ensemble papers express their results; Theorem 2 says that the exponential dependence on locality is a law of nature for single copies, not an artefact.
 * The comparison with NNQST is the first clean side-by-side of provable and learned decoders on the same task.
 
-### Relation to this project
+### Connections
 
-* Theorem 2 is the single-copy wall against which the project works: for displacement operators on a qudit, the shadow norm of the generalized Clifford ensemble is $\Omega(d)$ (King, Wan, McClean, Theorem 31), hence $\Omega(d/\epsilon^2)$ copies for all $d^2$ amplitudes. The conjugate-pair measurement is the way out, and this paper supplies the reference against which the advantage is measured.
-* Median of means is the estimator that Phase 1 also uses; the constants of this paper are conservative (Fu et al. 2024).
+* Theorem 2 is the single-copy wall for displacement spectra: for displacement operators on a qudit, the shadow norm of the generalized Clifford ensemble is $\Omega(d)$ (King, Wan, McClean, Theorem 31), hence $\Omega(d/\epsilon^2)$ copies for all $d^2$ amplitudes. The conjugate-pair measurement is the way out, and this paper supplies the reference against which the advantage is measured.
+* Median of means is also the natural estimator for magnitudes from Bell records; the constants of this paper are conservative (Fu et al. 2024).
 * The numerics are a model for the instance ladder: the same models (TFIM, Heisenberg), the same observables (two-point functions), the same comparison with a learned model.
 
 ### Limitations and open questions
@@ -3611,9 +3611,9 @@ A molecular Hamiltonian with $M$ modes has $O(M^4)$ terms; naive measurement cos
 * Shows that shadows deliver nonlinear quantities (entanglement witnesses) on real data, without tomography.
 * Precursor experiments: Struchalin et al. (optical, uniform stabilizer measurements), Elben et al. (trapped-ion data for entanglement detection).
 
-### Relation to this project
+### Connections
 
-* The factor "hardware realism" of this project's taxonomy has a data point here: at four qubits and $10^3$ to $2\cdot 10^3$ shots, all methods lie in the error range $10^{-1}$, and noise does not change the ranking.
+* Hardware realism has a data point here: at four qubits and $10^3$ to $2\cdot 10^3$ shots, all methods lie in the error range $10^{-1}$, and noise does not change the ranking.
 * The U-statistics estimators for $p_2$ and $p_3$ are the single-copy simulation of two- and three-copy observables; the comparison with a genuine Bell measurement on $\rho\otimes\rho$, which yields $\mathrm{tr}(\rho^2)$ directly, would be the experiment that makes the memory axis visible in hardware.
 * The finding that the ensemble (uniform, biased, derandomized) determines the accuracy at a fixed number of shots is the single-copy analogue of the question which two-copy basis (Bell on $\rho\otimes\rho$ or on $\rho\otimes\rho^*$) makes the spectrum most visible.
 
@@ -3668,11 +3668,11 @@ The median-of-means bound $\Pr[|\hat\mu - \mu| \geq C\sigma\sqrt{t/N}] \leq 2e^{
 * A saving of a factor 1.5 in the bound relative to the plain median of means with Minsker's constant, and a factor 34 relative to the HKP figure, without any change to the experiment and applicable to existing data sets as well.
 * The message that the estimator has to match the measurement ensemble (Pauli: MoM or mean; Clifford: modified MoM) is a useful practical hint; normality of $\hat o_i(N,1)$ from $N \geq 1000$ on is confirmed.
 
-### Relation to this project
+### Connections
 
-* Phase 1 of this project's protocol estimates $|y_{q,p}|^2$ as a mean over the Bell record; the constants of the concentration bound enter the number of Bell samples directly, and this paper shows where the factors between theory and practice lie.
+* Conjugate-pair magnitude estimation computes $|y_{q,p}|^2$ as a mean over the Bell record; the constants of the concentration bound enter the number of Bell samples directly, and this paper shows where the factors between theory and practice lie.
 * The observation "the mean beats median of means in practice" is an argument not to compare empirical scaling exponents (such as $\epsilon^{-3.2}$ from the 2025 evaluation) with worst-case estimators.
-* The choice of estimator is a degree of freedom that a learned decoder has implicitly; the question whether the CNN learns a median-like or a mean-like estimator is testable.
+* The choice of estimator is a degree of freedom that a learned decoder has implicitly; whether it learns a median-like or a mean-like estimator is testable.
 
 ### Limitations and open questions
 
@@ -3683,8 +3683,8 @@ The median-of-means bound $\Pr[|\hat\mu - \mu| \geq C\sigma\sqrt{t/N}] \leq 2e^{
 ### Questions for further study
 
 * What does the concentration of the Bell record statistics look like (multinomial over $d^2$ outcomes), and which MoM variant is optimal there?
-* Can a CNN trained on noisy Bell records implicitly adapt the choice of estimator to the noise model, and how would one demonstrate that?
-* Where is the boundary between "constants" and "exponents" in this project's scaling analysis when $d$ only goes up to $64$ or $128$?
+* Can a learned decoder trained on noisy Bell records implicitly adapt the choice of estimator to the noise model, and how would one demonstrate that?
+* Where is the boundary between "constants" and "exponents" in a numerical scaling analysis when $d$ only goes up to $64$ or $128$?
 
 Paper: [arXiv:2412.03381](https://arxiv.org/abs/2412.03381)
 
@@ -3724,11 +3724,11 @@ The two limiting cases of Huang, Kueng, and Preskill, global Cliffords for low r
 * The statement that the reconstruction map depends only on purities is a structural result about measurement channels with local symmetry; Ippoliti uses it for Bell and GHZ bases.
 * The relation shadow norm $\leftrightarrow$ entanglement feature turns the choice of ensemble into an optimization problem over the entanglement of the measurement basis.
 
-### Relation to this project
+### Connections
 
 * The Bell measurement on two copies is a fixed, non-random measurement basis; the paper shows how to treat a fixed entangling dynamics as a shadow ensemble anyway, by scrambling locally. The question whether Bell sampling on $\rho\otimes\rho^*$ preceded by local qudit Cliffords becomes a locally scrambled two-copy ensemble connects directly.
-* The entanglement feature as the only relevant characteristic is a candidate for the factor "mixedness/entanglement" of this project's taxonomy: it is measurable and determines the cost.
-* The $2^N$ coefficients $r_A$ are an example of "memory exponential, but only once"; this project's coprime folding has the same structure, only with $d^2 \to 64\times 64$.
+* The entanglement feature as the only relevant characteristic is a candidate dial for mixedness/entanglement: it is measurable and determines the cost.
+* The $2^N$ coefficients $r_A$ are an example of "memory exponential, but only once"; folding a displacement spectrum over coprime moduli has the same structure, only with $d^2 \to 64\times 64$.
 
 ### Limitations and open questions
 
@@ -3780,9 +3780,9 @@ Random Pauli measurements cost $3^k$ shots for weight $k$, and this is informati
 * A hardware-cheap replacement for shallow shadows for string operators, plaquettes, and correlation functions; Table 1 of the paper ranks Pauli, Bell, deformed, and GHZ shadows by scaling and learnability.
 * Shows that "Bell measurement" can mean two quite different things: across two copies (memory axis) or across two qubits of one copy (choice of basis). Only the first sees the Pauli spectrum globally.
 
-### Relation to this project
+### Connections
 
-* The conceptual clarification matters for this project's paper: Bell measurements *within* one copy give $3^{k/2}$ and remain at the single-copy wall of Theorem 2 in Huang et al.; Bell measurements *across* $\rho\otimes\rho^*$ give $O(\log d/\epsilon^4)$ for all $d^2$ amplitudes. The resource is the second state, not the entangling gate.
+* The conceptual clarification matters: Bell measurements *within* one copy give $3^{k/2}$ and remain at the single-copy wall of Theorem 2 in Huang et al.; Bell measurements *across* $\rho\otimes\rho^*$ give $O(\log d/\epsilon^4)$ for all $d^2$ amplitudes. The resource is the second state, not the entangling gate.
 * The idea "trade accuracy on one class for unlearnability on another" is a template for measurement bases tailored to a promise class; a dictionary regime could choose a basis that sees only the dictionary addresses.
 * The bound $(3/2)^k$ via "at most $2^n$ of $3^n$ operators per basis" is a counting argument that could be carried over to the $d^2$ displacement addresses of a qudit.
 
@@ -3839,11 +3839,11 @@ Huggins et al. had implemented QC-AFQMC with Clifford shadows: the trial state i
 * The matchgate 3-design is a structural result with applications beyond shadows; Heyraud, Chomet, and Tilly generalize it to $SO(2n)$ and unify all matchgate ensembles.
 * For $k$-body fermionic observables with single copies, $\Omega(n^k/\epsilon^2)$ is necessary (King, Gosset, Kothari, Babbush, Theorem 3); matchgate shadows reach this up to logarithms and are therefore the single-copy reference for the fermionic two-copy row.
 
-### Relation to this project
+### Connections
 
 * The Gaussian unitaries are the fermionic counterpart of the displacement operators: a group with explicit representation theory whose twirls can be computed in closed form. The paper is the template for how to *compute* a shadow norm for a structured operator group instead of estimating it.
 * The variance $n^{|S|/2}$ is a "locality in the Majorana basis" that differs from Pauli locality; this is the example showing that the notion "local" depends on the basis in which the spectrum is read, just as for Heisenberg–Weyl versus Pauli.
-* The trick of writing overlaps as expectation values via the state $\frac12(|0\rangle + |\psi\rangle)(\dots)$ is a single-copy way around the Hadamard test and thus a model for Phase 2, where signs are obtained from expectation values on $\rho\otimes\sigma^*$ instead of from controlled operations.
+* The trick of writing overlaps as expectation values via the state $\frac12(|0\rangle + |\psi\rangle)(\dots)$ is a single-copy way around the Hadamard test and thus a model for sign steps in which signs are obtained from expectation values on $\rho\otimes\sigma^*$ instead of from controlled operations.
 
 ### Limitations and open questions
 
@@ -3895,9 +3895,9 @@ The measurement channel depends on the 2-fold twirl, the variance on the 3-fold 
 * Answers the open question of Wan et al. in the affirmative and turns the choice of ensemble into a pure hardware question: one takes the one with the fewest gates.
 * The cubature view (instead of the design view) is more general: it holds for angle distributions, not only for groups, and places results such as the Clifford 2-cubatures of earlier work in context.
 
-### Relation to this project
+### Connections
 
-* The message "the moments decide, not the ensemble" also holds for the Bell measurement on $\rho\otimes\rho^*$: two two-copy measurement bases with the same first three moments are indistinguishable for questions about magnitudes and variances. This is a criterion for evaluating variants of this project's measurement (for instance with local qudit Cliffords applied beforehand) without a new analysis.
+* The message "the moments decide, not the ensemble" also holds for the Bell measurement on $\rho\otimes\rho^*$: two two-copy measurement bases with the same first three moments are indistinguishable for questions about magnitudes and variances. This is a criterion for evaluating variants of the conjugate-pair measurement (for instance with local qudit Cliffords applied beforehand) without a new analysis.
 * The invariance under reflections is the fermionic counterpart of the question whether $D_{q,p}$ and $D_{-q,p}$ (i.e. $D$ and $D^T$) are equivalent for the statistics; for $\rho\otimes\rho$ versus $\rho\otimes\rho^*$, that is exactly the difference.
 * Gate-optimal sampling schemes are the factor "hardware realism" on the measurement side.
 
@@ -3950,7 +3950,7 @@ Qubit shadows rely on the 3-design property of the Clifford group. For $d$ an od
 * Verification of qudit systems is easier than feared; a single magic gate closes the gap to qubits, a new use case for "a little magic as a resource".
 * Shows that ensembles far from 3-designs (by the usual measure) can be just as good for shadows; the measure "distance to a 3-design" is the wrong one for shadows.
 
-### Relation to this project
+### Connections
 
 * This is the single-copy reference *on qudits*: for a single qudit ($n = 1$), the stabilizer-basis measurement is a complete set of MUBs, and the shadow norm of a displacement operator carries the factor $d+1$ (Eq. 11). Together with Theorem 31 in King, Wan, McClean ($\Omega(d)$ variance for displacements), this is the $\Omega(d/\epsilon^2)$ wall that conjugate pairs get around.
 * T gates in the measurement are a new degree of freedom that is missing in Bell measurements: whether a magic gate before the Bell measurement makes the distribution over the $d^2$ addresses more uniform or more informative is open and testable.
@@ -3958,7 +3958,7 @@ Qubit shadows rely on the 3-design property of the Clifford group. For $d$ an od
 
 ### Limitations and open questions
 
-* Odd primes $d$ only; composite $d$ ($\mathbb{Z}_d$ not a field) is left out, and that is exactly the case that matters for this project.
+* Odd primes $d$ only; composite $d$ ($\mathbb{Z}_d$ not a field) is left out, and that is exactly the case that matters for a single cyclic qudit with CRT structure.
 * Theorem 2 is an upper bound; for generic observables the actual norm is often much smaller and independent of $d$ (Fig. 2).
 * The exact form of $\gamma_{d,k}$ for $d = 1 \bmod 3$ is a different formula; details in the companion paper.
 * Noise and error mitigation are not treated.
@@ -4005,9 +4005,9 @@ Shadows over compact groups are well understood via Schur's lemma: the channel i
 * Completes the theory of shadows over the classical compact groups and their symmetric spaces; the group cases (unitary: HKP; orthogonal: West et al. "real shadows"; symplectic: West et al. 2024) are special cases.
 * The outlook names general representations, for instance DIII with $SO$ as the matchgate group, where $SO(2n)/U(n)$ is the manifold of pure Gaussian states: a bridge to the matchgate papers.
 
-### Relation to this project
+### Connections
 
-* The ensemble view "convex combination of the parent channel and dephasing" also describes Bell measurements with imperfect gates: a noise channel before the Bell basis acts like dephasing in the Bell basis, and the formula says how the reconstruction changes. This is relevant for the factor "hardware realism" of this project's taxonomy.
+* The ensemble view "convex combination of the parent channel and dephasing" also describes Bell measurements with imperfect gates: a noise channel before the Bell basis acts like dephasing in the Bell basis, and the formula says how the reconstruction changes. This is relevant for hardware realism.
 * The observation that a preferred basis helps only on the diagonal hints at why the Heisenberg–Weyl spectrum as a *whole* has no preferred single-copy basis: every displacement address is equally poorly visible in every stabilizer basis.
 * The Cartan structure is the tool with which one could ask whether $\rho\otimes\rho^*$ is a point in a symmetric space (conjugation is an involution) and what that means for twirls across the copies.
 
@@ -4060,15 +4060,15 @@ General shadow tomography is exponential in running time and needs entangled mea
 
 ### Significance and applications
 
-* Defines the efficiency goal of this project and provides the first map (Table 2 of the paper): naive, HKP, Bell sampling plus gentle measurement, and the new two-copy methods.
+* Defines the efficiency goal "triply efficient" and provides the first map (Table 2 of the paper): naive, HKP, Bell sampling plus gentle measurement, and the new two-copy methods.
 * Two copies are necessary *and* sufficient for Pauli and fermionic shadow tomography; local Paulis work with one copy, local fermionic observables do not: a clean difference between qubit locality and fermionic locality.
 * The graph theory ($\chi$-boundedness, Gyárfás) is a new tool in quantum learning theory.
 
-### Relation to this project
+### Connections
 
-* This project's paper cites exactly this paper for "triply efficient" and replaces two of its components: the coloring (grouping of incompatible observables) and the MMW. The sample complexity $O(\log|S|/\epsilon^4)$ of the magnitudes is the same as in Phase 1; the $\epsilon^{-2}$ of the signs corresponds to Phase 2.
+* A sparse top-$k$ approach keeps the magnitude step and would replace two components: the coloring (grouping of incompatible observables) and the MMW. The sample complexity $O(\log|S|/\epsilon^4)$ of the magnitudes is the same as for conjugate-pair magnitude estimation; the $\epsilon^{-2}$ of the signs corresponds to a sign step on known addresses.
 * Lemma 8 is a structural statement about *every* state: at most $4/\epsilon^2$ pairwise anticommuting addresses can be large at the same time. For displacement operators with their $\omega$-commutation, the analogue is a bound on the number of large amplitudes on non-commuting addresses, a candidate for a provable promise in the top-$k$ regime.
-* The correction to the table (time $\mathrm{poly}(4^n)$ for all Paulis) matters for the positioning: this project's method is not "as efficient as KGKB" but aims at time polynomial in $\log d$ for a list that is given only implicitly, and exactly this is open in general (Conjecture 13).
+* The correction to the table (time $\mathrm{poly}(4^n)$ for all Paulis) matters for comparisons: a top-$k$ method would have to reach time polynomial in $\log d$ for a list that is given only implicitly, and exactly this is open in general (Conjecture 13).
 
 ### Limitations and open questions
 
@@ -4080,7 +4080,7 @@ General shadow tomography is exponential in running time and needs entangled mea
 ### Questions for further study
 
 * What does the commutation graph of the $d^2$ displacement operators look like, what is its clique number on the set of large amplitudes, and is the family of its induced subgraphs $\chi$-bounded?
-* Can the CNN learn the coloring *implicitly*, and can this be read off from the structure of the learned filters?
+* Can a learned decoder learn the coloring *implicitly*, and can this be read off from the structure of the learned filters?
 * What is the rapid-retrieval compression of a qudit state with a $k$-sparse spectrum: $O(k\log d)$ bits, and is a query possible in $O(\log d)$ time?
 
 Paper: [arXiv:2404.19211](https://arxiv.org/abs/2404.19211)
@@ -4088,14 +4088,14 @@ Paper: [arXiv:2404.19211](https://arxiv.org/abs/2404.19211)
 ---
 ## Exponential learning advantages with conjugate states and minimal quantum memory (arXiv:2403.03469)
 
-The paper by **Robbie King, Kianna Wan, and Jarrod R. McClean** (Google Quantum AI, Caltech, Stanford; *PRX Quantum* 5, 040301 (2024)) introduces the learning resource of this project: joint measurements on a state and its complex conjugate, $\rho\otimes\rho^*$. For the task of learning all $d^2$ displacement amplitudes $y_{q,p} = \mathrm{Tr}(D_{q,p}\rho)$ of a $d$-dimensional state, $O(\log d/\epsilon^4)$ copies of $\rho\otimes\rho^*$ suffice, while every procedure on $\rho^{\otimes K}$ without $\rho^*$ needs at least $\Omega(\sqrt d/(K^2\epsilon^2))$ measurements, even for $K$ up to $1/(12\epsilon)$. The signs follow with a hypothesis state and matrix multiplicative weights; in addition there are generalized Clifford shadows for qudits and the proof that the commutation trick is restricted to displacement operators.
+The paper by **Robbie King, Kianna Wan, and Jarrod R. McClean** (Google Quantum AI, Caltech, Stanford; *PRX Quantum* 5, 040301 (2024)) introduces conjugate access as a learning resource: joint measurements on a state and its complex conjugate, $\rho\otimes\rho^*$. For the task of learning all $d^2$ displacement amplitudes $y_{q,p} = \mathrm{Tr}(D_{q,p}\rho)$ of a $d$-dimensional state, $O(\log d/\epsilon^4)$ copies of $\rho\otimes\rho^*$ suffice, while every procedure on $\rho^{\otimes K}$ without $\rho^*$ needs at least $\Omega(\sqrt d/(K^2\epsilon^2))$ measurements, even for $K$ up to $1/(12\epsilon)$. The signs follow with a hypothesis state and matrix multiplicative weights; in addition there are generalized Clifford shadows for qudits and the proof that the commutation trick is restricted to displacement operators.
 
 ### Placement in the tables
 
 * **Task type:** Estimating. Given is the implicit list of all $d^2$ displacement addresses; returned are magnitudes and signs. The row "Displacement amplitudes over a dictionary, conjugate pairs" of the estimating table; in the searching table the same paper is the basis of the sample side.
 * **Object:** $d$-dimensional state, $d$ prime in the theorems. **Access:** sample on $\rho\otimes\rho^*$, rung 2 of the access ladder; the Bell measurement entangles exactly two registers, constant quantum memory.
 * **Status:** 🟢 🟢 🟢. Copies logarithmic in $d$; magnitude estimation is computationally trivial; sign determination runs in $\mathrm{poly}(d, 1/\epsilon)$ via a $d\times d$ hypothesis, polynomial in the Hilbert space of a single qudit, hence $2^n$ in the $n$-qubit picture.
-* **Promise:** none about the state; the resource is the access. For this project's top-$k$ variant, the dictionary promise is added (Regime 1).
+* **Promise:** none about the state; the resource is the access. For a top-$k$ variant over a known list, the dictionary promise is added (Regime 1).
 
 ### The problem
 
@@ -4124,12 +4124,12 @@ Two-copy measurements give exponential advantages for Pauli expectation values (
 * A physically motivated family of observables with a bosonic limit; the paper connects quantum learning theory with sensing.
 * Theorem 4 says that new primitives are needed for classes beyond the Heisenberg groups.
 
-### Relation to this project
+### Connections
 
-* This is Paper 1 of the project: Phase 1 is Theorem 2, and Phase 2 replaces the MMW of Theorem 5 by the adaptive probe state $\tilde\rho$ with CNN control. The sample complexity $O(\log d/\epsilon^4)$ is the target of this project's scaling measurement in $d$; the $\epsilon^{-4}$ of the magnitudes and the $\epsilon^{-2}$ of the signs are the reference for the empirical overall scaling.
-* Theorem 3 is the reason why the pipeline needs two copies at all, and Theorem 1 the reason why $\rho\otimes\rho$ does not suffice; the 2025 evaluation with $\rho\otimes\rho$ therefore works with real states (GHZ, real Gibbs states), where $\rho = \rho^*$.
-* Theorem 4 is the theoretical limit of Objective 3 ("generalizations of Paulis"): the trick reaches exactly as far as displacement operators, no further.
-* The lower bound $\Omega(\sqrt d)$ is a *sample* statement; the LWE hardness of this project's paper is a *time* statement about the same task with a sparsity promise. Together they form the cell "sampling access, searching" of the quadrant.
+* This is the basis of conjugate-pair top-$k$ protocols: the magnitude step is Theorem 2, and a sign step can replace the MMW of Theorem 5 by an adaptive probe state $\tilde\rho$. The sample complexity $O(\log d/\epsilon^4)$ is the reference for any scaling measurement in $d$; the $\epsilon^{-4}$ of the magnitudes and the $\epsilon^{-2}$ of the signs are the reference for the empirical overall scaling.
+* Theorem 3 is the reason why two copies are needed at all, and Theorem 1 the reason why $\rho\otimes\rho$ does not suffice; numerical tests with $\rho\otimes\rho$ therefore have to use real states (GHZ, real Gibbs states), where $\rho = \rho^*$.
+* Theorem 4 is the theoretical limit of any generalization beyond Paulis: the trick reaches exactly as far as displacement operators, no further.
+* The lower bound $\Omega(\sqrt d)$ is a *sample* statement; the LWE hardness of the displacement instance is a *time* statement about the same task with a sparsity promise. Together they form the cell "sampling access, searching" of the quadrant.
 
 ### Limitations and open questions
 
@@ -4183,10 +4183,10 @@ Full tomography of eight ions cost hundreds of thousands of measurements and wee
 * The first proof that a structural promise (rank) makes tomography quadratically cheaper, and the beginning of compressed sensing in quantum information; successors: error bounds and sample complexity (Flammia, Gross, Liu, Eisert 2012), process tomography with compressed sensing (record at three qubits, cited in Flammia–Wallman).
 * The golfing scheme became a standard tool of matrix completion theory.
 
-### Relation to this project
+### Connections
 
-* Rank is the "low rank ⇒ easy" promise; this project works with the orthogonal promise of sparsity in the displacement spectrum. Both are compressed sensing structures, but this project's task has no *choosable* measurements: Bell sampling delivers i.i.d. draws, not the $m$ selected expectation values. That is the difference between this row (🔴 in copies, but query-like in the selection) and this project's own (🟢 in copies, LWE-hard in the decoder).
-* Trace norm minimization is the convex surrogate for rank; the $\ell_1$ surrogate for sparsity in the spectrum would be the obvious provable alternative to the CNN, provided an RIP-type argument exists for Bell statistics.
+* Rank is the "low rank ⇒ easy" promise; top-$k$ localization works with the orthogonal promise of sparsity in the displacement spectrum. Both are compressed sensing structures, but top-$k$ localization has no *choosable* measurements: Bell sampling delivers i.i.d. draws, not the $m$ selected expectation values. That is the difference between this row (🔴 in copies, but query-like in the selection) and the searching row for displacement spectra (🟢 in copies, LWE-hard in the decoder).
+* Trace norm minimization is the convex surrogate for rank; the $\ell_1$ surrogate for sparsity in the spectrum would be the obvious provable alternative to a learned decoder, provided an RIP-type argument exists for Bell statistics.
 * Certified tomography (Observation 2) is a model for a certificate of sparsity: statistics of the type $\sum|y_{q,p}|^4$, which measure the concentration of the spectrum, can be read off from the Bell record.
 
 ### Limitations and open questions
@@ -4239,10 +4239,10 @@ The density matrix can only be estimated on ensembles (no-cloning), and estimati
 * The rate function as a relative entropy connects quantum statistics with Sanov's theorem; the authors remark that there is no direct route to the i.i.d. theory.
 * Outlook on an estimator for the whole density operator: measure the Young diagram, then perform a covariant measurement of the eigenbasis; exactly this became optimal tomography.
 
-### Relation to this project
+### Connections
 
-* The row marks what "memory $k = N$" costs and buys: optimal rates, but a measurement across all copies. This project's protocol sits at the other end with $k = 2$, and the question "what is achievable with $k$ between two and $N$" (open question 2 of the estimating section) has its end point here.
-* The spectrum is basis-independent, the displacement spectrum basis-dependent; the Schur measurement sees the eigenvalues, the Bell measurement the coefficients in a fixed operator basis. The purity $\mathrm{tr}(\rho^2) = \sum r_j^2$ is the one quantity that both measurements deliver (the SWAP test as the two-copy Schur measurement); it is the mixedness factor of this project's taxonomy.
+* The row marks what "memory $k = N$" costs and buys: optimal rates, but a measurement across all copies. Conjugate-pair protocols sit at the other end with $k = 2$, and the question "what is achievable with $k$ between two and $N$" (open question 2 of the estimating section) has its end point here.
+* The spectrum is basis-independent, the displacement spectrum basis-dependent; the Schur measurement sees the eigenvalues, the Bell measurement the coefficients in a fixed operator basis. The purity $\mathrm{tr}(\rho^2) = \sum r_j^2$ is the one quantity that both measurements deliver (the SWAP test as the two-copy Schur measurement); it is the natural mixedness dial.
 * The proof technique (the highest weight dominates the Laplace transform) is a pattern for concentration statements about i.i.d. Bell samples, whose distribution is also a sum over representations.
 
 ### Limitations and open questions
@@ -4299,12 +4299,12 @@ With $N$ copies, spectrum $\alpha_1\geq\dots\geq\alpha_d$, and the Young diagram
 * Turns Keyl–Werner's asymptotic statement into a non-asymptotic one with explicit constants, and Keyl's measurement into an optimal procedure.
 * Quantum PCA with a provable copy count. Learning a property of the principal component instead of reconstructing it completely is later separated by Huang et al. (Science 2022): $O(1)$ copies against $\Omega(2^{n/2})$ without memory.
 
-### Relation to this project
+### Connections
 
-* The row marks the base price the project competes against. All $d^2$ displacement coefficients are contained in $\rho$, and full tomography delivers them with $\Theta(d^2/\epsilon^2)$ copies and a measurement across all copies. The project wants, with memory two and $O(\log d/\epsilon^4)$ copies, only the magnitudes and then the top-$k$ support; the gain is exponential in the copies, paid for with a restricted question.
+* The row marks the base price that any top-$k$ method competes against. All $d^2$ displacement coefficients are contained in $\rho$, and full tomography delivers them with $\Theta(d^2/\epsilon^2)$ copies and a measurement across all copies. A conjugate-pair top-$k$ method wants, with memory two and $O(\log d/\epsilon^4)$ copies, only the magnitudes and then the top-$k$ support; the gain is exponential in the copies, paid for with a restricted question.
 * Theorem 1.7 is dimension-free: the $k$ largest eigenvalues cost $O(k^2/\epsilon^2)$ copies, independent of $d$. This is the spectral analogue of the top-$k$ question, but in the eigenbasis. There the Schur measurement makes the top-$k$ list accessible independently of the basis; in the displacement spectrum it is tied to the fixed operator basis, and the normalization $\sum\vert y\vert^2 = d$ prevents reading it off directly.
 * Theorem 1.5 is the pattern for an agnostic guarantee: error equals the mass outside the top $k$ plus a statistical term. A guarantee for the top-$k$ decoder would have this form if the flat remainder carries the mass $d - k$.
-* On the copy axis, the project sits between $\Theta(d^2)$ entangled and $\Theta(d^3)$ single-copy, with memory two, but on a different task.
+* On the copy axis, conjugate-pair protocols sit between $\Theta(d^2)$ entangled and $\Theta(d^3)$ single-copy, with memory two, but on a different task.
 
 ### Limitations and open questions
 
@@ -4317,7 +4317,7 @@ With $N$ copies, spectrum $\alpha_1\geq\dots\geq\alpha_d$, and the Young diagram
 
 * What does Keyl's measurement give for $N = 2$, and how is it related to the Bell measurement on $\rho\otimes\rho^*$, which is also a two-copy measurement?
 * Is there an analogue of Theorem 1.7 for the displacement spectrum, i.e. the $k$ largest $\vert y_{q,p}\vert$ with a copy count independent of $d$? The normalization $\sum\vert y\vert^2 = d$ argues against it, but in which access model exactly?
-* What does the Schur–Weyl distribution look like for a state with a few large eigenvalues above a flat remainder, the spectral counterpart of this project's instances?
+* What does the Schur–Weyl distribution look like for a state with a few large eigenvalues above a flat remainder, the spectral counterpart of top-$k$ instances?
 
 Paper: [arXiv:1508.01907](https://arxiv.org/abs/1508.01907)
 
@@ -4359,11 +4359,11 @@ Process tomography has been studied in many metrics; the operationally natural o
 * Qualitatively close to gate set tomography, which reaches Heisenberg scaling through long gate sequences; the paper gives the first theoretical bound for this in a related model.
 * The bootstrap is a general tool: constant-error estimators plus root extraction plus recentering give the Heisenberg rate for objects on a Lie group.
 
-### Relation to this project
+### Connections
 
 * The row shows what query access does *not* buy: the dimension. For the estimating column: queries improve $1/\epsilon^2$ to $1/\epsilon$, sparsity or rank improve $d^2$; both together is the question of efficient unitary estimation under structural promises (low degree in Arunachalam et al., juntas in Chen–Nadimpalli–Yuen).
-* The recentering "shift to identity" is conceptually the same as the hypothesis state of King, Wan, McClean and the probe state of Phase 2: the unknown is shifted into a neighborhood in which the measurement is linear and informative. The link between "learning the residual" (also in Bakshi et al. and Shin, Lee, Oh) and "signs via a probe" is a common pattern.
-* The distinction average case (infidelity) versus worst case (diamond) is the same as that between a PAC guarantee and an "all $M$" guarantee and should be named in this project's scaling analysis: top-$k$ accuracy on average over instances is average-case.
+* The recentering "shift to identity" is conceptually the same as the hypothesis state of King, Wan, McClean and a probe state in a sign step: the unknown is shifted into a neighborhood in which the measurement is linear and informative. The link between "learning the residual" (also in Bakshi et al. and Shin, Lee, Oh) and "signs via a probe" is a common pattern.
+* The distinction average case (infidelity) versus worst case (diamond) is the same as that between a PAC guarantee and an "all $M$" guarantee and should be named in any scaling analysis: top-$k$ accuracy on average over instances is average-case.
 
 ### Limitations and open questions
 
@@ -4376,7 +4376,7 @@ Process tomography has been studied in many metrics; the operationally natural o
 
 * What does Lemma 3.1 look like for the Heisenberg–Weyl group, where $D_{q,p}^d = I$ and powers are periodic?
 * Can the bootstrap be carried over to the estimation of a *preparation unitary* with sparsity in the displacement spectrum of the prepared state, and what is then the analogue of $d^2$?
-* Why do $Z$ queries without control suffice, while van Apeldoorn et al. need $cZ$, and does the same hold for amplitude estimation in this project's query regime?
+* Why do $Z$ queries without control suffice, while van Apeldoorn et al. need $cZ$, and does the same hold for amplitude estimation of displacement amplitudes with query access?
 
 Paper: [arXiv:2302.14066](https://arxiv.org/abs/2302.14066)
 
@@ -4417,11 +4417,11 @@ The predecessor showed that a classical ML algorithm with polynomially many data
 * The Pauli 1-norm bound is useful independently; related inequalities appear in Huang, Chen, Preskill (Corollary 4 there) with other techniques.
 * The hardness statement shows the "power of data": data are a resource that circumvents NP-hardness.
 
-### Relation to this project
+### Connections
 
-* This is the provable learned decoder of the tables and the closest relative of this project's CNN: a feature map with an inductive bias (geometry here, coprime folding there), a linear learner on top, and a guarantee that follows from the structure of the target function. The difference: here the target function is provably smooth and local; there the structure (top-$k$ support in the displacement spectrum) is a conjecture.
-* The lower bound $n^{\Omega(1/\epsilon)}$ *without* geometry versus $\log n$ *with* geometry is the cleanest example of how a promise changes the exponent; for this project the question is which additional knowledge (dictionary, subgroup, gap) plays the same role.
-* Objective 4 of the project (ground states, Gibbs states) hits exactly the families of states of this paper; the numerical template (2D Heisenberg, 45 qubits, RMSE against $N$, $T$, $n$) can be adopted.
+* This is the provable learned decoder of the tables and the closest relative of a learned decoder for displacement spectra: a feature map with an inductive bias (geometry here, coprime folding there), a linear learner on top, and a guarantee that follows from the structure of the target function. The difference: here the target function is provably smooth and local; for displacement spectra the structure (top-$k$ support) is a conjecture.
+* The lower bound $n^{\Omega(1/\epsilon)}$ *without* geometry versus $\log n$ *with* geometry is the cleanest example of how a promise changes the exponent; for displacement spectra the question is which additional knowledge (dictionary, subgroup, gap) plays the same role.
+* Ground and Gibbs states are exactly the families of states of this paper; the numerical template (2D Heisenberg, 45 qubits, RMSE against $N$, $T$, $n$) can be adopted for displacement spectra.
 
 ### Limitations and open questions
 
@@ -4474,11 +4474,11 @@ Shadows learn local observables with $\log n$ copies, but exponentially in the s
 * Corollaries C.4 and C.6 are new classically as well ($W_1$ learning of Gibbs measures); there are classical Ising phases with decay of correlations but without a known sampler, and the results hold nonetheless.
 * Robust shadow tomography algorithms for Gibbs and ground states and Gibbs approximations of locally indistinguishable ground states are tools of independent value.
 
-### Relation to this project
+### Connections
 
-* For Objective 4 (Gibbs and ground states), this is the statement that these classes of states can be described completely *as classes* with $\mathrm{polylog}(n)$ copies as soon as correlations decay exponentially. The question for this project is whether the same structure implies a sparse displacement spectrum, and the continuity bound Eq. II.4 is a tool for tracking sparsity along a phase.
-* The distinction "on average" versus "pointwise" is the same one this project's paper has to make between scaling over instance distributions and a guarantee for every instance; the paper shows that the price of pointwise guarantees is an anticoncentration condition, not a loss in $n$.
-* The mixedness factor of this project's taxonomy is controlled here by $\beta$; the table of conditions (commuting, high temperature, Markov, GALI) is a template for the instance ladder.
+* For Gibbs and ground states, this is the statement that these classes of states can be described completely *as classes* with $\mathrm{polylog}(n)$ copies as soon as correlations decay exponentially. The open question is whether the same structure implies a sparse displacement spectrum, and the continuity bound Eq. II.4 is a tool for tracking sparsity along a phase.
+* The distinction "on average" versus "pointwise" is the same one any scaling claim has to make between instance distributions and a guarantee for every instance; the paper shows that the price of pointwise guarantees is an anticoncentration condition, not a loss in $n$.
+* Mixedness is controlled here by $\beta$; the table of conditions (commuting, high temperature, Markov, GALI) is a template for an instance ladder.
 
 ### Limitations and open questions
 
@@ -4533,10 +4533,10 @@ A CPTP channel has exponentially many parameters; covering arguments, shadow tom
 * The quantum Bohnenblust–Hille inequality with constant $\exp(\Theta(k\log k))$ matters independently; Klein, Slote, Volberg, Zhang carry it over to qudits, Arunachalam et al. to channels.
 * The observable-centered view of shadows (Lemma 1.10 in Bakshi et al.) originates here.
 
-### Relation to this project
+### Connections
 
-* The truncation statement "under locally flat distributions, $\mathcal{E}^\dagger(O)$ is effectively low-degree" is a mechanism that produces an *implicit* sparsity promise: not the process is sparse, but what the input distribution sees of it. For this project's conjecture, this is a model for how average-case decodability can come from the instance distribution, not from the state alone.
-* The thresholding procedure (keep large coefficients, zero out small ones) is the Eskenazis–Ivanisvili decoder and the algorithmic form of "top-$k$"; the Bohnenblust–Hille inequality is the guarantee that it works. The analogous inequality for displacement coefficients would be the provable core of this project's dictionary regime.
+* The truncation statement "under locally flat distributions, $\mathcal{E}^\dagger(O)$ is effectively low-degree" is a mechanism that produces an *implicit* sparsity promise: not the process is sparse, but what the input distribution sees of it. For the conjecture on random top-$k$ supports, this is a model for how average-case decodability can come from the instance distribution, not from the state alone.
+* The thresholding procedure (keep large coefficients, zero out small ones) is the Eskenazis–Ivanisvili decoder and the algorithmic form of "top-$k$"; the Bohnenblust–Hille inequality is the guarantee that it works. The analogous inequality for displacement coefficients would be the provable core of a dictionary regime for displacement spectra.
 * $n^{O(\log 1/\epsilon)}$ is quasi-polynomial: the time scales with the number of candidates $n^k$, which corresponds to the enumeration strategy of the dictionary regime.
 
 ### Limitations and open questions
@@ -4550,7 +4550,7 @@ A CPTP channel has exponentially many parameters; covering arguments, shadow tom
 
 * What is a "locally flat" distribution over qudit states if the local group is the Heisenberg–Weyl group instead of the Clifford group, and does Lemma 14 then hold for the displacement degree?
 * What does the polarization technique look like for displacement Hamiltonians $\sum_{q,p}\alpha_{q,p}(D_{q,p} + D_{q,p}^\dagger)$, and which Bohnenblust–Hille constant results?
-* Can this project's CNN be read as a learner of $\mathcal{E}^\dagger(O)$ if $\mathcal{E}$ is the preparation of the state from a reference state?
+* Can a learned decoder be read as a learner of $\mathcal{E}^\dagger(O)$ if $\mathcal{E}$ is the preparation of the state from a reference state?
 
 Paper: [arXiv:2210.14894](https://arxiv.org/abs/2210.14894)
 
@@ -4593,9 +4593,9 @@ Linial–Mansour–Nisan learn $\mathrm{AC}^0$ via low-degree approximation; Esk
 * The first $n$-independent learning results for structured channels and unitaries; applications to short-time dynamics of local Hamiltonians (Lieb–Robinson makes $e^{-iHt}$ low-degree) and to noise models with sparse local Paulis.
 * The BH inequality with constant $1$ is a contribution to functional analysis; the $\mathrm{poly}(d)$ versus $\exp(d)$ gap is explained as incomparable (tensors versus general polynomials).
 
-### Relation to this project
+### Connections
 
-* The channel algorithm is structurally this project's two-phase protocol on the Choi state: sampling finds the large diagonal entries (localization), a SWAP test estimates the coefficients (estimation), and the BH inequality replaces the conjecture. For states exactly this inequality is missing, because the normalization is $\sum|y_{q,p}|^2 = d$ instead of $1$; this is the normalization paragraph in the appendix ("What is learned") in pure form.
+* The channel algorithm is structurally a two-step protocol (localize, then estimate) on the Choi state: sampling finds the large diagonal entries (localization), a SWAP test estimates the coefficients (estimation), and the BH inequality replaces a conjecture. For states exactly this inequality is missing, because the normalization is $\sum|y_{q,p}|^2 = d$ instead of $1$; this is the normalization paragraph in the appendix ("What is learned") in pure form.
 * Question 4 (is the $\ell_1$ norm of the coefficients of a degree-$d$ unitary bounded?) is the unitary version of the question whether the displacement spectrum of a class of states is $\ell_1$-bounded; for ground states of local Hamiltonians, Lewis et al. Theorem 2 gives an answer for observables, not for states.
 * The $n$-independent query complexity is the query side of the quadrant: with control over the input, the dimension drops out of the sample count, while Bell sampling on states pays $\log d$.
 
@@ -4610,7 +4610,7 @@ Linial–Mansour–Nisan learn $\mathrm{AC}^0$ via low-degree approximation; Esk
 
 * What does the BH inequality for channels look like in the Heisenberg–Weyl basis of a qudit (combined with Klein et al.), and what is the "degree" of a displacement channel?
 * The SWAP test for mixed states as a coefficient estimator: is it the two-copy measurement $\hat\Phi\otimes\hat\Phi$, and how does it relate to Bell sampling on $\hat\Phi\otimes\hat\Phi^*$?
-* Can the step "sampling the diagonal with $O(1/\alpha^2)$" be read as a sample lower bound for localization in this project's protocol, where the diagonal is $|y_{q,p}|^2/d$?
+* Can the step "sampling the diagonal with $O(1/\alpha^2)$" be read as a sample lower bound for localization in a displacement spectrum, where the diagonal is $|y_{q,p}|^2/d$?
 
 Paper: [arXiv:2405.10933](https://arxiv.org/abs/2405.10933)
 
@@ -4651,10 +4651,10 @@ Eskenazis–Ivanisvili reduce low-degree learning to an $\ell_p$ bound, $p < 2$,
 * The Remez inequality is a tool of independent value: a bridge from discrete spaces back to classical harmonic analysis on the polytorus.
 * Shows that the Heisenberg–Weyl basis does *not* have the same analysis as the Pauli basis: the roots of unity are a genuine obstacle, not a technical one.
 
-### Relation to this project
+### Connections
 
 * This is the paper that makes Fourier analysis in the Heisenberg–Weyl basis of a qudit rigorous; for a single qudit ($n = 1$, $K = d$), the displacement coefficients $y_{q,p}$ are exactly the coefficients in this basis, and the cyclic BH inequality is the statement that an operator of bounded norm with "low degree" in $(q,p)$ has an $\ell_{2d/(d+1)}$-bounded spectrum.
-* The degree here is $|\alpha| = \sum_j\alpha_j$ with $\alpha_j\in\{0, \dots, K-1\}$, i.e. the size of the shift; for $n = 1$, "low degree" means "small $q$ and $p$". This is a promise that is missing from this project's instance ladder and would be provable: states with a displacement spectrum close to the origin of phase space.
+* The degree here is $|\alpha| = \sum_j\alpha_j$ with $\alpha_j\in\{0, \dots, K-1\}$, i.e. the size of the shift; for $n = 1$, "low degree" means "small $q$ and $p$". This is a provable promise for an instance ladder: states with a displacement spectrum close to the origin of phase space.
 * The constant $(\log K)^{O(d^2)}$ becomes useless as the degree approaches $K$ (the full phase space); this is the point at which low-degree learning stops and sparsity learning with LWE hardness begins.
 
 ### Limitations and open questions
@@ -4668,7 +4668,7 @@ Eskenazis–Ivanisvili reduce low-degree learning to an $\ell_p$ bound, $p < 2$,
 
 * Does a cyclic BH inequality hold for states with the normalization $\sum|y_{q,p}|^2 = d$, for instance after rescaling $\rho\mapsto d\rho$, and what does it say about the number of large coefficients?
 * What is the "degree" of a ground state of a displacement Hamiltonian, and is it small when the couplings $D_{q,p}$ have only small $(q,p)$?
-* What does the correlated randomization of the proof look like when read as a sampling rule for probe states in Phase 2?
+* What does the correlated randomization of the proof look like when read as a sampling rule for probe states in a sign step?
 
 Paper: [arXiv:2301.01438](https://arxiv.org/abs/2301.01438)
 
@@ -4709,10 +4709,10 @@ Classically, learning Markov random fields has been studied for 50 years; parame
 * Optimal in all parameters; the first time bound for quantum Hamiltonian learning from Gibbs states. The table of this document has "🔴→🟢" in the time entry of the Gibbs row precisely because of this paper and its successor at arbitrary constant temperature.
 * Structure learning remains open: classically it works via parameter learning on all $k$-local terms with the low-intersection guarantee; quantumly the algorithm works only for $\beta < 1/\mathrm{poly}(N)$; Bakshi et al. solve it in 2024 from the dynamics.
 
-### Relation to this project
+### Connections
 
-* This is the "known terms" row against which structure learning (searching table) is defined: here the list of terms is the dictionary, and the algorithm estimates coefficients over a dictionary from local marginals. Regime 1 of this project is the same structure with displacement addresses instead of Pauli terms.
-* The cluster expansion is a sparsity statement about Gibbs states at high temperature: expectation values depend only on a few nearby terms. For Objective 4 (Gibbs states), this is the mechanism that makes a sparse, or at least localized, displacement spectrum plausible at high temperature, and $\beta_c$ is the boundary from which the instance ladder becomes hard.
+* This is the "known terms" row against which structure learning (searching table) is defined: here the list of terms is the dictionary, and the algorithm estimates coefficients over a dictionary from local marginals. Regime 1 for displacement spectra is the same structure with displacement addresses instead of Pauli terms.
+* The cluster expansion is a sparsity statement about Gibbs states at high temperature: expectation values depend only on a few nearby terms. For Gibbs states, this is the mechanism that makes a sparse, or at least localized, displacement spectrum plausible at high temperature, and $\beta_c$ is the boundary from which an instance ladder becomes hard.
 * The lower bound $e^\beta$ shows that low temperature drives *sample* cost, not only time; the mixedness factor therefore cuts both ways.
 
 ### Limitations and open questions
@@ -4726,7 +4726,7 @@ Classically, learning Markov random fields has been studied for 50 years; parame
 
 * What does the cluster expansion look like for a displacement Hamiltonian on a single qudit, where "intersection" has to be defined over phase space instead of over qubits?
 * Is the log-partition function strongly convex in the displacement basis, and what is the analogue of $\beta_c$ for the instance ladder?
-* Can Newton–Raphson on the sparse surrogate of this project's protocol be used as a Phase 2 alternative to MMW?
+* Can Newton–Raphson on a sparse surrogate be used as a sign-step alternative to MMW?
 
 Paper: [arXiv:2108.04842](https://arxiv.org/abs/2108.04842)
 
@@ -4766,11 +4766,11 @@ All earlier methods for many-body Hamiltonians (derivative estimation, gradient 
 * Practically attractive: only single-qubit Cliffords, SPAM-robust, no special states; the precision is limited by the speed of the single-qubit gates.
 * Applications in sensing, device characterization, and many-body physics.
 
-### Relation to this project
+### Connections
 
-* The row is the evidence for the statement in the appendix ("The access-by-task quadrant") that query access improves the precision rate from $1/\epsilon^2$ to $1/\epsilon$; this project's protocol sits at rung 2 and does not have this rate. Whether amplitude estimation on the preparation circuit (the query route) would give a $1/\epsilon$ rate for displacement amplitudes is the query version of this project's task.
+* The row is the evidence for the statement in the appendix ("The access-by-task quadrant") that query access improves the precision rate from $1/\epsilon^2$ to $1/\epsilon$; conjugate-pair protocols sit at rung 2 and do not have this rate. Whether amplitude estimation on the preparation circuit (the query route) would give a $1/\epsilon$ rate for displacement amplitudes is the query version of top-$k$ localization.
 * Reshaping is a symmetrization technique: twirls over subgroups of the Pauli group project the Hamiltonian onto a commutant. In the Heisenberg–Weyl basis of a qudit, the analogue would be the twirl over a subgroup of the displacement group, which restricts the spectrum to a coset; this is a possible measurement-side preprocessing for Regime 2.
-* The separation "experiments polylog, time $1/\epsilon$" indicates that the right cost measure depends on the access; in this project's scaling analysis, the number of copies is the analogue of the total time.
+* The separation "experiments polylog, time $1/\epsilon$" indicates that the right cost measure depends on the access; in a sample-based scaling analysis, the number of copies is the analogue of the total time.
 
 ### Limitations and open questions
 
@@ -4821,14 +4821,14 @@ Pauli channels are the standard model of error correction and are enforced physi
 ### Significance and applications
 
 * The first proof of recovery guarantees for channels in relative precision without SPAM bias; the first efficient guarantees for nontrivial channel classes on $n$ qubits; a qualitative change relative to the record at the time (three qubits via compressed sensing).
-* Applications: tailoring codes and decoders to the noise, adapting fault tolerance, estimating thresholds and overheads; the "Pauli noise learning transfer" idea of this project's positioning.
+* Applications: tailoring codes and decoders to the noise, adapting fault tolerance, estimating thresholds and overheads; transferring Pauli noise learning to displacement noise.
 * Chen, Zhou, Seif, Jiang later show that precisely these RB-type, ancilla-free protocols need $\Omega(2^{n/3})$ rounds for eigenvalues, while an $n$-qubit ancilla allows $O(n)$.
 
-### Relation to this project
+### Connections
 
-* The row is the query-block representative for channels: sequences buy robustness, not dimension. For this project's pipeline, randomized compiling on both copies is the standard method for turning coherent errors into Pauli noise, and this paper is the reference for what is learnable afterwards.
-* The progression from Result 1 ($2^n$) to Result 2 (sparsity) to Result 3 (Markov field) is the channel version of the instance ladder: generic, sparse, factorized. This project's "factorized spectra with a best-first heap" is the state analogue of Result 3.
-* Relative precision is a quantity missing from this project's scaling analysis: top-$k$ amplitudes are large, but signal detection at a small signal-to-noise ratio would benefit from relative instead of additive accuracy.
+* The row is the query-block representative for channels: sequences buy robustness, not dimension. For conjugate-pair protocols, randomized compiling on both copies is the standard method for turning coherent errors into Pauli noise, and this paper is the reference for what is learnable afterwards.
+* The progression from Result 1 ($2^n$) to Result 2 (sparsity) to Result 3 (Markov field) is the channel version of the instance ladder: generic, sparse, factorized. "Factorized spectra with a best-first heap" (Regime 3) is the state analogue of Result 3.
+* Relative precision is a quantity usually missing from scaling analyses of top-$k$ learning: top-$k$ amplitudes are large, but signal detection at a small signal-to-noise ratio would benefit from relative instead of additive accuracy.
 
 ### Limitations and open questions
 
@@ -4881,11 +4881,11 @@ The known learning advantages (mixedness testing, unitarity testing, Pauli expec
 * The $k$-ancilla tradeoff curve is the first quantitative resource statement between $k = 0$ and $k = n$ and an example of open question (2) of the estimating section.
 * Motivates Subramanian, Kwon, Jiang (2026) to generalize to qudit and bosonic channels with $c$-copy access and the conjugate channel.
 
-### Relation to this project
+### Connections
 
-* This is the channel version of this project's measurement: $n$ Bell pairs, the channel on one half, and the Bell measurement correspond to Bell sampling on the Choi state, and the distribution is the Walsh–Hadamard transform of the spectrum. For displacement channels on qudits, the transform is the symplectic Fourier transform over $\mathbb{Z}_d^2$.
+* This is the channel version of conjugate-pair Bell sampling: $n$ Bell pairs, the channel on one half, and the Bell measurement correspond to Bell sampling on the Choi state, and the distribution is the Walsh–Hadamard transform of the spectrum. For displacement channels on qudits, the transform is the symplectic Fourier transform over $\mathbb{Z}_d^2$.
 * The statement that concatenation (query) does not help but the ancilla (memory) helps exponentially is the precise form of the separation of axes that the appendix of this document postulates: query buys rate, memory buys dimension.
-* Results (A) and (B) show that $o(n)$ ancillas bring almost nothing; for this project this means that a "half" second state (for instance an imperfect conjugate on a few qudits) should not be expected to give an exponential gain, provided the analogy holds.
+* Results (A) and (B) show that $o(n)$ ancillas bring almost nothing; by analogy, a "half" second state (for instance an imperfect conjugate on a few qudits) should not be expected to give an exponential gain.
 
 ### Limitations and open questions
 
@@ -4940,12 +4940,12 @@ For states it is known that Pauli expectation values need two copies, Heisenberg
 * The conjugate channel is available if all Kraus operators are real in some basis (a real Stinespring dilation with a self-conjugate environment); a superchannel that turns $\mathcal{E}^{\otimes k}$ into $\mathcal{E}^*$ does not exist.
 * Shows that the relation between TMSV Choi states in trace distance and the energy-constrained diamond norm can have exponential prefactors (Appendix C 2): a contribution to the question of the right metric for bosonic channels.
 
-### Relation to this project
+### Connections
 
-* This is the channel version of Objective 3, with exactly the project's object, $D(q,p)$ on qudits, and the conjugate as a resource. The results translate directly: Bell sampling on $\rho\otimes\rho^*$ is the surrogate-channel special case, and Corollary B.5.2 sharpens the lower bounds for $c$-copy state learning from the bosonic conjugate paper exponentially (Theorem B.22).
-* The transition at $c = d$ is the precise form of the statement "Bell sampling on identical copies fails for qudits" from the searching table: not two but $d$ copies make $D^{\otimes c}$ commute, and $\epsilon^{-2d}$ is the price. For composite $d$ the product of the prime divisors counts; for the project's cyclic single-qudit basis this is the relevant number.
-* $\epsilon^{-4}$ is tight for $\mathcal{E}\otimes\mathcal{E}^*$ with arbitrarily many parallel copies: the $\epsilon^{-4}$ of magnitude estimation in Phase 1 is therefore not a weakness of the protocol but a property of the resource, at least for magnitudes.
-* The master lemma is a tool for formulating this project's own lower bounds for top-$k$ localization with $\rho\otimes\rho^*$; it needs only operator norms of sums over the candidate addresses.
+* This is the channel version of conjugate-pair learning of displacement spectra, with exactly the object $D(q,p)$ on qudits and the conjugate as a resource. The results translate directly: Bell sampling on $\rho\otimes\rho^*$ is the surrogate-channel special case, and Corollary B.5.2 sharpens the lower bounds for $c$-copy state learning from the bosonic conjugate paper exponentially (Theorem B.22).
+* The transition at $c = d$ is the precise form of the statement "Bell sampling on identical copies fails for qudits" from the searching table: not two but $d$ copies make $D^{\otimes c}$ commute, and $\epsilon^{-2d}$ is the price. For composite $d$ the product of the prime divisors counts; for a cyclic single-qudit basis this is the relevant number.
+* $\epsilon^{-4}$ is tight for $\mathcal{E}\otimes\mathcal{E}^*$ with arbitrarily many parallel copies: the $\epsilon^{-4}$ of conjugate-pair magnitude estimation is therefore not a weakness of the protocol but a property of the resource, at least for magnitudes.
+* The master lemma is a tool for formulating lower bounds for top-$k$ localization with $\rho\otimes\rho^*$; it needs only operator norms of sums over the candidate addresses.
 
 ### Limitations and open questions
 
@@ -4956,8 +4956,8 @@ For states it is known that Pauli expectation values need two copies, Heisenberg
 
 ### Questions for further study
 
-* What does the transition at $c = d$ look like concretely for the cyclic single-qudit basis with composite $d$, and how many copies does this project's protocol need without the conjugate for $d = 64$?
-* Can the master lemma be applied to the task "find the $k$ largest $|y_{q,p}|$" to obtain a sample lower bound for Phase 1 with and without $\rho^*$?
+* What does the transition at $c = d$ look like concretely for the cyclic single-qudit basis with composite $d$, and how many copies does top-$k$ localization need without the conjugate for $d = 64$?
+* Can the master lemma be applied to the task "find the $k$ largest $|y_{q,p}|$" to obtain a sample lower bound for magnitude estimation with and without $\rho^*$?
 * What is the real Stinespring condition for states instead of channels: which preparations deliver $\rho^*$ physically, and does this coincide with Appendix D of King, Wan, McClean?
 
 Paper: [arXiv:2608.05307](https://arxiv.org/abs/2608.05307)
@@ -5015,7 +5015,7 @@ Four primitives, one per rung of the access ladder and one for the far end of th
 
 **Single-copy randomized measurements.** Draw a random basis per copy, from single-qubit Paulis or from $n$-qubit Cliffords, measure, and store the outcome. The engine of classical shadows and of direct fidelity estimation, where Pauli expectations are importance-sampled by their weight in the target state (Flammia, Liu 2011; da Silva, Landon-Cardinal, Poulin 2011). Adaptivity is allowed, each copy is still an i.i.d. draw, and the shadow norm of the ensemble decides the cost. This is rung 1 of the access ladder and the workhorse of every hardware experiment.
 
-**Bell sampling on two copies.** A transversal Bell measurement across two copies, $\rho\otimes\rho$ or $\rho\otimes\rho^*$, draws one Pauli or displacement operator per shot. Bell difference sampling, the XOR of two such draws from four copies, removes the unknown coset offset and is the primitive behind stabilizer learning, stabilizer testing, and agnostic tomography. Conjugate pairs turn the draw into the clean squared spectrum for every dimension $d$; on qudits with two identical copies the draw can be uniform and carry nothing. Rung 2 of the access ladder, and the primitive of this project. Details in the next subsection. Applied to the Choi state of a unitary or channel, the same measurement samples its Pauli spectrum; for processes this is the sample-access primitive.
+**Bell sampling on two copies.** A transversal Bell measurement across two copies, $\rho\otimes\rho$ or $\rho\otimes\rho^*$, draws one Pauli or displacement operator per shot. Bell difference sampling, the XOR of two such draws from four copies, removes the unknown coset offset and is the primitive behind stabilizer learning, stabilizer testing, and agnostic tomography. Conjugate pairs turn the draw into the clean squared spectrum for every dimension $d$; on qudits with two identical copies the draw can be uniform and carry nothing. Rung 2 of the access ladder. Details in the next subsection. Applied to the Choi state of a unitary or channel, the same measurement samples its Pauli spectrum; for processes this is the sample-access primitive.
 
 **Collective Schur sampling.** Measure all $N$ copies at once in the Schur–Weyl basis, which projects onto irreducible representations of the symmetric and unitary groups. Spectrum estimation (Keyl, Werner 2001), spectrum testing (O'Donnell, Wright 2015), and sample-optimal tomography (Haah et al. 2017; O'Donnell, Wright 2016) live here. Quantum memory $k = N$, the far end of the memory axis, and the reason those optimal rates are not hardware rates.
 
@@ -5038,7 +5038,7 @@ Literature:
 * **Huang et al. (Science 2022):** Flagship separations and Sycamore demo with 40 qubits.
 * **King, Wan, McClean (2024):** Exponential advantage via $(\rho, \rho^*)$ with constant memory.
 * **Chen, Gong, Zhang (2024):** Separations for adaptive multi-copy shadow tomography.
-* **Allcock, Doriguello, Ivanyos, Santha (2024):** Bell sampling fails on qudits, $d > 2$: Bell difference sampling on four copies of a stabilizer state returns only $\mathrm{col}(V)\times\mathrm{col}(W)$, uniform when both have full rank. With the conjugate, Bell sampling on $\vert S\rangle\vert S^*\rangle$ learns the state from $O(n)$ copies for every $d$; without it, a hidden-quadratic-phase algorithm does for $d$ prime. The reason this project uses conjugate pairs rather than two identical copies.
+* **Allcock, Doriguello, Ivanyos, Santha (2024):** Bell sampling fails on qudits, $d > 2$: Bell difference sampling on four copies of a stabilizer state returns only $\mathrm{col}(V)\times\mathrm{col}(W)$, uniform when both have full rank. With the conjugate, Bell sampling on $\vert S\rangle\vert S^*\rangle$ learns the state from $O(n)$ copies for every $d$; without it, a hidden-quadratic-phase algorithm does for $d$ prime. The reason to use conjugate pairs rather than two identical copies.
 
 **Two more separations of the same shape.** *Purity testing* (is $\rho$ pure or maximally mixed?) needs $O(1)$ copies with two-copy memory (a SWAP test) but $\Omega(2^{n/2})$ without (Chen, Cotler, Huang, Li, FOCS 2021); the memory-free lower bound also kills any single-copy route to $\mathrm{Tr}(\rho^2)$. *Pauli channel estimation*: learning all $4^n$ Pauli eigenvalues of a channel to $\pm\epsilon$ takes roughly $O(n/\epsilon^2)$ uses with ancilla-assisted entangled inputs versus $2^{\Omega(n)}$ without (Chen, Zhou, Seif, Jiang, PRA 2022), the channel version of the shadow-tomography separation. The general framework in which all of these live is **QUALM** (Aharonov, Cotler, Qi, Nat. Commun. 2022): an experiment is a quantum algorithm that calls an unknown *lab oracle*, with *coherent* access (outputs of several calls held and measured jointly) or *incoherent* access (each output measured completely before the next call, adaptivity allowed). The separations above are statements about this coherence, which is the memory axis of this document, not about the model class; which oracle nature supplies, copies of $\rho$, pairs $\rho\otimes\rho^*$, or the preparation circuit, is the separate access ladder. On qubits the SWAP test behind these separations is a coarse-grained Bell measurement: SWAP is diagonal in the Bell basis, with eigenvalue $(-1)^{\#Y}$ on the outcome $P$. On qudits with $d>2$ it is not; see the QUALM summary under Identifying (Papers).
 
@@ -5060,9 +5060,9 @@ The thesis stated under Efficiency Boundaries, a dense sample map and a nearly e
 * *Median of means and the shadow norm* for classical shadows; *gentle measurement* for shadow tomography (Winter 1999; Aaronson 2004, 2018), which is the same lemma as differential privacy (Aaronson, Rothblum 2019); *threshold search* for hypothesis selection (Bădescu, O'Donnell 2021); *matrix multiplicative weights* as the hypothesis update behind shadow and online learning.
 * *Fourier sampling and coset differencing*: Bell sampling, Bell difference sampling, and quantum examples deliver random elements of a subspace or coset, and Gaussian elimination finishes (Montanaro 2017; Bshouty, Jackson 1998; Simon 1994).
 
-**Time lower bounds, conditional.** Every known one is a reduction from a cryptographic assumption. LWE gives the displacement instance of this project; LPN gives the hardness of learning output distributions with a single $T$ gate (Hinsche et al. 2023) and the classical mirror of Bell sampling; one-way functions give pseudorandom states (Ji, Liu, Song 2018; Brakerski, Shmueli 2019) and from them the hardness of learning states of bounded gate complexity (Zhao et al. 2023) and of distinguishing entanglement (Aaronson et al. 2022). No unconditional time lower bound for a natural quantum learning task is known, which is why the time map is empty where the sample map is dense.
+**Time lower bounds, conditional.** Every known one is a reduction from a cryptographic assumption. LWE gives the real-diagonal displacement instance; LPN gives the hardness of learning output distributions with a single $T$ gate (Hinsche et al. 2023) and the classical mirror of Bell sampling; one-way functions give pseudorandom states (Ji, Liu, Song 2018; Brakerski, Shmueli 2019) and from them the hardness of learning states of bounded gate complexity (Zhao et al. 2023) and of distinguishing entanglement (Aaronson et al. 2022). No unconditional time lower bound for a natural quantum learning task is known, which is why the time map is empty where the sample map is dense.
 
-**Time upper bounds.** Each one names the structure it uses: linear algebra over $\mathbb{F}_2$ or $\mathbb{Z}_d$ for subgroups, enumeration for dictionaries, a best-first heap for factorized spectra, the noncommutative Bohnenblust–Hille inequality for low-degree objects (Volberg, Zhang 2023), light cones for shallow circuits, cluster expansions at high temperature and a different route at any constant temperature for Gibbs-state Hamiltonian learning (Haah, Kothari, Tang 2022; Bakshi, Liu, Moitra, Tang 2024), and graph colorings of commutation structure for triply efficient shadow tomography (King, Gosset, Kothari, Babbush 2024). The learned decoder of this project is an attempt to obtain such a bound empirically where no structure has been named.
+**Time upper bounds.** Each one names the structure it uses: linear algebra over $\mathbb{F}_2$ or $\mathbb{Z}_d$ for subgroups, enumeration for dictionaries, a best-first heap for factorized spectra, the noncommutative Bohnenblust–Hille inequality for low-degree objects (Volberg, Zhang 2023), light cones for shallow circuits, cluster expansions at high temperature and a different route at any constant temperature for Gibbs-state Hamiltonian learning (Haah, Kothari, Tang 2022; Bakshi, Liu, Moitra, Tang 2024), and graph colorings of commutation structure for triply efficient shadow tomography (King, Gosset, Kothari, Babbush 2024). A learned decoder is an attempt to obtain such a bound empirically where no structure has been named.
 
 ## Computational lens: hardness and pseudorandomness
 
@@ -5091,7 +5091,7 @@ Classical neural decoders on shadow data (bottom-left quadrant) as empirical heu
 * **Lewis et al. (Nat. Commun. 2024) / Onorati, Rouzé, França, Watson (2023):** Provable prediction of ground and thermal state properties within a phase, down to $O(\log n)$ training states.
 * **Bausch et al. (Nature 2024):** AlphaQubit, the learned surface-code decoder.
 
-**Representation side and the decoding target.** The representational cousin of a learned decoder is the **neural quantum state** (Carleo, Troyer, Science 2017): a network as the ansatz $\psi_\theta(s)$, trained variationally rather than from measurement data. The two meet in Torlai et al. (2018), where the network is fit to measurement statistics. On the transfer to error correction promised in the positioning section: Google's **AlphaQubit** (Bausch et al., Nature 2024) is a transformer decoder trained on syndrome data that outperforms tensor-network and matching decoders on Sycamore surface-code experiments, the existence proof that a learned decoder can beat hand-built combinatorics on real hardware data.
+**Representation side and the decoding target.** The representational cousin of a learned decoder is the **neural quantum state** (Carleo, Troyer, Science 2017): a network as the ansatz $\psi_\theta(s)$, trained variationally rather than from measurement data. The two meet in Torlai et al. (2018), where the network is fit to measurement statistics. On the transfer to error correction: Google's **AlphaQubit** (Bausch et al., Nature 2024) is a transformer decoder trained on syndrome data that outperforms tensor-network and matching decoders on Sycamore surface-code experiments, the existence proof that a learned decoder can beat hand-built combinatorics on real hardware data.
 
 ## Surveys and timeline
 
@@ -5142,14 +5142,14 @@ Glyph order in the status column: copies · time · memory.
 **Two ways to fail, which the memory column separates.**
 * *Hypothesis too large.* MMW-based shadow tomography keeps a $2^n \times 2^n$ matrix. Memory is exponential, and therefore time is too: an algorithm cannot touch more memory than it has steps. This is a representation problem, and sparse surrogates solve it.
 * *Search too hard.* Sparse displacement spectra need $O(k \log d)$ bits for the list. Memory is polynomial, time is LWE-hard regardless. This is a decoder problem, and no representation solves it.
-* The implication runs one way only: exponential memory forces exponential time, exponential time does not force exponential memory. The project's row is the only one in the table where memory holds and time still fails. The boundary this document is about is the decoder, not the representation.
-* The own pipeline crossed the memory boundary three times: the $d \times d$ histogram became a coprime fold into a fixed $64 \times 64$ tensor, the $d^2$-wide output layer became a bit vector of $2\lceil\log_2 d\rceil$ neurons, and the $d \times d$ MMW hypothesis became a sparse surrogate of $O(k)$ weights. Each replacement was necessary; none of them touched the time hardness of localization.
+* The implication runs one way only: exponential memory forces exponential time, exponential time does not force exponential memory. Sparse displacement spectra are the only row in the table where memory holds and time still fails. The boundary these notes are about is the decoder, not the representation.
+* A learned top-$k$ decoder can cross the memory boundary three times: the $d \times d$ histogram becomes a coprime fold into a fixed $64 \times 64$ tensor, the $d^2$-wide output layer becomes a bit vector of $2\lceil\log_2 d\rceil$ neurons, and the $d \times d$ MMW hypothesis becomes a sparse surrogate of $O(k)$ weights. Each replacement is necessary; none of them touches the time hardness of localization.
 
 **What the merged tables show.**
 * The object column shows that dynamics are not a separate category. States, Hamiltonians, unitaries, channels, and classical functions appear in all three tables; only the access differs, and it follows the rule of "What is learned": fixed or random inputs are sample access through the Choi or data state, adaptive or controlled use is query access. The object decides hardness only through the normalization of its spectrum, which is why heavy Pauli terms of a unitary are found from samples and heavy displacement terms of a state are not.
 * The computational boundary, as far as it is charted, is the set of 🟢 🔴 rows: sparse displacement spectra and LWE from samples (searching); general shadow tomography, PAC learning of states, and online learning (estimating, hypothesis too large); pseudorandom states, bounded gate complexity, and output distributions of circuits (identifying, cryptographic). Every one of them is sample-efficient. The three that fail in time with polynomial memory, the LWE pair, bounded gate complexity, and the output-distribution family, are the ones where the hardness is a theorem about the decoder rather than about the size of the hypothesis.
 * Every cell of the quadrant in the appendix is present with several examples, and the query rows carry no hardness for any task type. That is why the quadrant collapses to a single hard corner. Tasks that stay hard under queries, such as full tomography, are kept out of the quadrant on purpose.
-* The generic hard case has its own row: LWE from i.i.d. samples, directly under the project's row in the searching table, with the same 🟢 🔴 🟢. The hardness theorem behind this project embeds one into the other, a real-diagonal displacement state whose Bell outcomes are LWE samples, so the two rows are one instance seen from two sides.
-* One cell was empty in every earlier draft: query access with an identifying task. Bernstein–Vazirani fills it for functions, identification with preparation circuits for states. In the identifying column queries buy only the precision rate, because a polynomial list of candidates is already easy under sampling.
+* The generic hard case has its own row: LWE from i.i.d. samples, directly under the row for sparse displacement spectra in the searching table, with the same 🟢 🔴 🟢. A real-diagonal displacement state whose Bell outcomes are LWE samples embeds one into the other, so the two rows are one instance seen from two sides.
+* One cell is easy to overlook: query access with an identifying task. Bernstein–Vazirani fills it for functions, identification with preparation circuits for states. In the identifying column queries buy only the precision rate, because a polynomial list of candidates is already easy under sampling.
 * Identifying and searching coincide when the candidate class is exponentially large and parametrized. The LWE secret indexes $q^n$ hypotheses and at the same time locates the support; the distinction carries weight only when the list is polynomial (identifying) or the support must be found in an exponential space without a parametrization (searching). The LWE rows are labeled searching for that reason; Bernstein–Vazirani, its noiseless limit, is labeled identifying because one query resolves the parameter. This **LWE rule** applies to all tables: if the parameter of an exponential class is the location of the support in the Pauli or Weyl spectrum, the row sits under searching, even if a state is output at the end. This is why stabilizer states, stabilizer dimension $\geq n-t$ (few non-Clifford gates), and agnostic stabilizer learning sit under searching; stabilizer testing (one bit) and phase states of higher degree stay under identifying.
 * Simon and Montanaro run the same decoder: random elements of a subspace, then Gaussian elimination. The access differs, Fourier sampling of an oracle versus differences of Bell samples, and the subgroup promise makes the decoder linear on both rows. The promise, not the access, buys the time efficiency there.
