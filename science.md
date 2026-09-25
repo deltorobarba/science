@@ -37,7 +37,21 @@ Every quantum learning protocol is charged in three budgets, and they scale inde
 * The *computational boundary* is almost uncharted, although most sample-efficient protocols fail there. 
 * The reason is proof technology: Sample lower bounds come from information theory (Holevo, packing arguments) and are unconditional, hence comparatively easy to obtain. Time lower bounds need cryptographic assumptions (LWE, pseudorandom states) and are rare. One map is dense, the other nearly empty.
 
-## Known Efficiency Boundaries
+## How efficiency is "bought" in the quantum world
+
+**There is no protocol that is efficient in all three budgets for arbitrary states and arbitrary questions. Efficiency in all three budgets (🟢 🟢 🟢) exists only in special cases, which can be enforced in three ways:**
+
+1. **By a structural promise (a special class of states -> more details below):**
+   * *Algebraic:* stabilizer states, including cluster and graph states (Gaussian elimination), Gaussian states (covariance matrix).
+   * *Geometric:* $k$-local observables, juntas.
+   * *Entanglement:* matrix product states (1D area law).
+   * *Analytic and factorization promises* (spectral structure: coprime factorization, low-degree Pauli concentration (quantum LMN)).
+2. **By a quantum resource:**
+   * Entangled two-copy measurements (Bell sampling on $\rho \otimes \rho^*$).
+3. **By a stronger access model:**
+   * **Query access** (evaluation points chosen by the learner, oracle access to the preparation circuit or to the dynamics $e^{-iHt}$, including superposition queries), which enables divide-and-conquer methods (Goldreich–Levin, peeling). An adaptive choice of measurement basis is adaptivity, not query access (Appendix, "Measurement power").
+
+**Conclusion:** When quantum learning theory says "everything else is solved", it means: for estimating and identifying, **precise classes of promises have been identified** under which efficient protocols exist. For *searching*, by contrast, the map between the subgroup case (Montanaro) and the cryptographic LWE wall is only sparsely charted, and it is exactly in this no man's land that the author's project looks for new decodable classes.
 
 **Almost without exception, it is efficient special cases (under so-called *promises*) that make quantum learning efficient!** For fully arbitrary, generic quantum states without any promise, there are **hardly any general protocols that are efficient in all three budgets**.
 
@@ -47,13 +61,9 @@ On the quantum side, two entangled copies and logarithmically many samples suffi
 
 Thesis: the sample boundary is almost completely charted (by information-theoretic, unconditional bounds: Holevo, packing, the tree method). The computational boundary, by contrast, is terra incognita: most sample-efficient protocols have no known time-efficient decoder, and where hardness is proven, it rests on cryptographic assumptions (LWE, LPN, pseudorandomness).
 
-
-
-Here is the precise breakdown of why this is so, and why *searching* nevertheless holds a special position:
-
 ---
 
-### 1. The other columns: where generic cases fail everywhere
+**1. Where generic cases fail everywhere**
 
 The tables of this document show that **every generic case without a promise is red (🔴)**:
 
@@ -68,36 +78,23 @@ The tables of this document show that **every generic case without a promise is 
 
 ---
 
-### 2. Why, then, is *searching* singled out as "the only hard cell"?
+**2. Why, then, is *searching* singled out as "the only hard cell"?**
+
+Here is the precise breakdown of why this is so, and why *searching* nevertheless holds a special position:
 
 If special cases are needed everywhere: why does the quadrant in the appendix say that computational hardness sits exactly at the intersection of **sampling + searching**? The difference is between a **representation problem** and a genuine **decoder problem**:
 
-#### A. In estimating, time fails because of memory ("hypothesis too large")
+**A. In estimating, time fails because of memory ("hypothesis too large")**
+
 When general shadow tomography needs exponential time, this is simply because the hypothesis is a huge $2^n \times 2^n$ matrix. An algorithm cannot run faster than the size of the memory it writes. If the question is restricted to an explicit list of $M$ observables whose estimators are cheap to evaluate (a dictionary, local observables), the memory shrinks to $O(M)$ values and the problem becomes **efficient**.
 
-#### B. In searching, time fails because of the algorithm ("search too hard")
+**B. In searching, time fails because of the algorithm ("search too hard")**
+
 When searching for the $k$ strongest peaks of a displacement spectrum, the answer is extremely short:
 * The memory is **tiny**: a list of $k$ peaks needs only $O(k \log d)$ bits (🟢).
 * The information is **there**: Bell sampling on $\rho \otimes \rho^*$ yields all squared magnitudes from $O(\log d / \epsilon^4)$ copies (🟢).
 * **Yet time fails (🔴)!** Even with memory perfectly under control, generic localization of the addresses from random Bell samples contains **LWE (Learning With Errors)**, and on qubits **LPN**, as a special case: the displacement instance of `thm:lwe-displacement` embeds LWE. Under the LWE assumption, no efficient decoder exists, classical or quantum (proven in the tensor-product Weyl basis; open for the cyclic single-qudit basis).
 
----
-
-### Summary: how efficiency is "bought" in the quantum world
-
-There is no protocol that is efficient in all three budgets for arbitrary states and arbitrary questions. Efficiency in all three budgets (🟢 🟢 🟢) exists only in **special cases**, which can be enforced in three ways:
-
-1. **By a structural promise (a special class of states):**
-   * *Algebraic:* stabilizer states, including cluster and graph states (Gaussian elimination), Gaussian states (covariance matrix).
-   * *Geometric:* $k$-local observables, juntas.
-   * *Entanglement:* matrix product states (1D area law).
-   * *Analytic and factorization promises* (spectral structure: coprime factorization, low-degree Pauli concentration (quantum LMN)).
-2. **By a quantum resource:**
-   * Entangled two-copy measurements (Bell sampling on $\rho \otimes \rho^*$).
-3. **By a stronger access model:**
-   * **Query access** (evaluation points chosen by the learner, oracle access to the preparation circuit or to the dynamics $e^{-iHt}$, including superposition queries), which enables divide-and-conquer methods (Goldreich–Levin, peeling). An adaptive choice of measurement basis is adaptivity, not query access (Appendix, "Measurement power").
-
-> **Conclusion:** When quantum learning theory says "everything else is solved", it means: for estimating and identifying, **precise classes of promises have been identified** under which efficient protocols exist. For *searching*, by contrast, the map between the subgroup case (Montanaro) and the cryptographic LWE wall is only sparsely charted, and it is exactly in this no man's land that the author's project looks for new decodable classes.
 
 ## Deep Dive: Efficiency through a structural promise (a special class of states)
 
