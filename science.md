@@ -18,6 +18,7 @@ Study notes quantum learning theory (learning from quantum experiments)
 - [Estimating](#estimating)
 - [Estimating (Papers)](#estimating-papers)
 - [Appendix](#appendix)
+- [Astrophysics](#astrophysics)
 
 ---
 
@@ -5153,3 +5154,171 @@ Glyph order in the status column: copies · time · memory.
 * One cell is easy to overlook: query access with an identifying task. Bernstein–Vazirani fills it for functions, identification with preparation circuits for states. In the identifying column queries buy only the precision rate, because a polynomial list of candidates is already easy under sampling.
 * Identifying and searching coincide when the candidate class is exponentially large and parametrized. The LWE secret indexes $q^n$ hypotheses and at the same time locates the support; the distinction carries weight only when the list is polynomial (identifying) or the support must be found in an exponential space without a parametrization (searching). The LWE rows are labeled searching for that reason; Bernstein–Vazirani, its noiseless limit, is labeled identifying because one query resolves the parameter. This **LWE rule** applies to all tables: if the parameter of an exponential class is the location of the support in the Pauli or Weyl spectrum, the row sits under searching, even if a state is output at the end. This is why stabilizer states, stabilizer dimension $\geq n-t$ (few non-Clifford gates), and agnostic stabilizer learning sit under searching; stabilizer testing (one bit) and phase states of higher degree stay under identifying.
 * Simon and Montanaro run the same decoder: random elements of a subspace, then Gaussian elimination. The access differs, Fourier sampling of an oracle versus differences of Bell samples, and the subgroup promise makes the decoder linear on both rows. The promise, not the access, buys the time efficiency there.
+
+# Astrophysics
+
+## Overview: The Bridge Between Quantum Learning and Astrophysics
+
+Astronomical observations and gravitational wave (GW) detection are fundamentally **quantum measurements performed on weak optical and bosonic signals emitted by natural sources**. In the language of quantum learning theory, astronomy is situated at the bottom rungs of the access ladder: nature provides passive sample access (i.i.d. draws of single photons or optical cavity states), rather than active query access to an underlying preparation circuit.
+
+A striking structural correspondence connects classical astronomical pipelines and quantum learning protocols:
+
+```
+[Astronomical Pipeline]
+Catalog / Sensor Array -> Whiten / Flatten Noise -> Transformation (Fourier / BLS / Q-Transform) -> Argmax / Top-K Peaks -> Physical Parameters
+
+[Quantum Learning Pipeline]
+State / Channel Input  -> Conjugate Bell Measurement -> Displacement Spectrum -> Learned Sparse Decoder (Support Search) -> Phase / Parameter Estimation
+```
+
+Both pipelines share the same core computational objective: **identifying a few dominant, structured peaks over a massive background noise floor** ("find the needle in an exponential haystack").
+
+### Mapping Astrophysics to the Three Quantum Learning Tasks
+
+| Task Type | Astronomical / Astrophysical Problem | Quantum Formulation | Status & Bottleneck |
+| :--- | :--- | :--- | :--- |
+| **Searching** | **Blind all-sky continuous GW search (pulsars); sparse interferometric imaging (VLBI)** | Locating unknown support addresses $(q,p)$ or frequencies $\Omega$ in a high-dimensional displacement spectrum ($k \ll d$) without a priori candidate lists. | **Computationally bounded (🔴 time).** Classical template banks explode exponentially; passive quantum sensing requires structural decoders to bypass LWE-like hardness. |
+| **Estimating** | **Precision GW parameter estimation (chirp mass, spin); exoplanet transit depth / contrast** | Evaluating expectation values $\langle O_i \rangle$ or displacement amplitudes $\alpha(\Omega)$ when the template or observable coordinates are already known. | **Sample bounded (🟢 time, 🟢/🟡 copies).** Standard quantum metrology (Heisenberg limit, Caves 1981, squeezer in LIGO O4). |
+| **Identifying** | **Direct imaging detection (star vs. star + exoplanet); distinguishing SGWB from detector noise** | Hypothesis testing: classifying whether $\rho$ contains a weak coherent signal $\epsilon$ over a maximal thermal/vacuum background $\frac{1}{d}\mathbb{1}$ (mixedness testing). | **Model-class bounded.** Solvable with exponential sample advantages using small quantum memory (2 copies / EPR). |
+
+### Where the Bridge Holds — and Where it Fails
+
+* **Gravitational waves: Solid bridge.** GW strain is physically a coherent displacement $D(\alpha)$ of an optical field mode. Continuous waves (CW) from rotating neutron stars represent a genuine sparse Top-$k$ search problem.
+* **Direct imaging and VLBI: Solid bridge.** Photon arrival over distributed sensor arrays maps directly onto the discrete Heisenberg–Weyl algebra; spatial coherence (van Cittert–Zernike) forms a sparse Fourier spectrum; retroreflective optics physically implement the complex conjugate state $\rho^*$.
+* **Exoplanet transit photometry: Weak bridge.** Transits (e.g. Kepler, TESS) measure classical intensity dips ($\Delta F / F \sim 10^{-4}$) against thermal shot noise of $10^{10}$ incoherent photons. No phase coherence or entanglement exists; classical Box Least Squares (BLS) is near-optimal.
+
+---
+
+## Optical Interferometry and Astronomical Imaging (Direct Imaging & VLBI)
+
+### The Physics of Wavevector Inversion: How Retroreflectors Realize $\rho^*$
+
+A central obstacle in quantum learning with minimal quantum memory is that complex conjugation $\rho \mapsto \rho^*$ is unphysical and basis-dependent: turning an unknown state $\rho$ into $\rho^*$ in a general quantum computer requires $\Omega(\sqrt{d})$ copies, and black-box unitary inversion requires $d-1$ queries (Appendix D.1 of King, Wan, McClean 2024).
+
+In optical sensor arrays, however, nature provides a passive physical mechanism to produce $\rho^*$ (King, Wan, McClean 2024, Appendix D.4, citing Gottesman, Jennewein, Croke 2012 [arXiv:1107.2939] and Khabiboulline, Borregaard, De Greve, Lukin 2019 [arXiv:1809.03508]):
+
+1. **The Single-Photon Sensor State:** Consider an incident photon with wavevector $\vec{k}$ impinging on a 1D regular array of $n_x$ detectors across length $L$. In the low-intensity regime ($\ll 1$ photon per spatio-temporal mode), the absorbed photon prepares a $W$-type entangled state across the array sites $|x\rangle$:
+   $$|\psi\rangle \propto \sum_{x=1}^{n_x} e^{-2\pi i (\vec{k}\cdot\vec{x})/L} |x\rangle$$
+2. **Physical Conjugation via Spatial Parity ($k \to -k$):** The complex conjugate state requires flipping the phase sign:
+   $$|\psi\rangle^* \propto \sum_{x=1}^{n_x} e^{+2\pi i (\vec{k}\cdot\vec{x})/L} |x\rangle$$
+   This corresponds physically to **inverting the incident wavevector** $\vec{k} \to -\vec{k}$.
+3. **Passive Optical Implementation:** By splitting the incoming optical wavefront or using a secondary retroreflecting mirrored cavity (or an optical delay line with parity inversion) that shifts the detector positions by an offset $b$ and reflects the photon propagation axis, the second array receives:
+   $$|\psi'\rangle = e^{-2\pi i k b/L} |\psi\rangle^*$$
+   Up to an irrelevant global phase, a purely passive optical setup generates genuine physical pairs $\rho \otimes \rho^*$ from astronomical starlight!
+
+### The van Cittert–Zernike Theorem as a Top-$k$ Displacement Problem
+
+The fundamental relation of astronomical interferometry is the **van Cittert–Zernike theorem**: the mutual spatial coherence (complex visibility) $g(u, v)$ measured between two telescopes separated by spatial vector $(u, v)$ is the 2D spatial Fourier transform of the celestial intensity distribution $I(\theta)$:
+$$g(u, v) = \iint I(\theta) e^{-2\pi i (u\theta_x + v\theta_y)} d\theta_x d\theta_y$$
+
+* **Astrophysical Sparsity:** Compact astronomical targets (active galactic nuclei, relativistic jets, tight binary stars, gravitationally lensed images, or point-like exoplanets) are **highly sparse** in sky brightness $I(\theta)$.
+* **The Classical Limitation:** Earth-bound Very Long Baseline Interferometry (VLBI, e.g. the Event Horizon Telescope) suffers from severe under-sampling of the $(u, v)$-plane (sparse baselines). Classical image reconstruction solves this via regularized deconvolution (CLEAN, maximum entropy, or deep generative models).
+* **The Quantum Learning Advantage:** With quantum repeaters connecting telescope stations (Gottesman et al. 2012; Khabiboulline et al. 2019), optical signals are loaded into quantum memories. Performing two-copy Bell measurements across conjugate pairs $\rho \otimes \rho^*$ directly samples the squared visibilities $|g(u,v)|^2$ with $O(\log d / \epsilon^4)$ photons, transforming VLBI reconstruction into **sparse Top-$k$ displacement decoding** in the 2D spatial frequency lattice.
+
+### Direct Imaging of Exoplanets: Spatial Mode Demultiplexing and Mixedness Testing
+
+* **The Problem of Direct Imaging:** An exoplanet is separated from its host star by a tiny angular separation $s \ll \lambda / D$ (sub-Rayleigh regime) with extreme flux contrast $\epsilon = I_{\text{planet}} / I_{\text{star}} \sim 10^{-4}$ (hot Jupiters) down to $10^{-10}$ (Earth twins).
+* **Why Direct Pixel Cameras Fail:** On a conventional CCD, planet photons arrive on the Airy diffraction wings of the stellar Point Spread Function (PSF). Stellar photon shot noise dominates, forcing the error exponent of detection to scale as:
+  $$\text{Error Exponent}_{\text{classical}} \propto \epsilon^2$$
+* **Spatial Mode Demultiplexing (SPADE & Coronagraphy):** As shown by Tsang (2016) and Huang & Lupo (2021), sorting the incoming optical field into orthogonal spatial modes (e.g. Hermite–Gaussian modes $\text{HG}_{mn}$) prior to direct detection isolates the host star almost entirely into the fundamental mode $\text{HG}_{00}$. Photons emerging in the first-order mode $\text{HG}_{10}$ originate almost exclusively from the off-axis planet, with a detection rate proportional to $\epsilon (s/\sigma)^2$. The quantum detection error exponent improves to:
+  $$\text{Error Exponent}_{\text{quantum}} \propto \epsilon$$
+  This delivers an **unconditional $1/\epsilon$ quantum advantage** in exposure time.
+* **Connection to Quantum Mixedness Testing (King, Wan, McClean 2024):** In Appendix D.4, King et al. formulate the detection of faint coherent signals against strong thermal noise as:
+  $$\rho = \frac{1}{d}\mathbb{1} + \epsilon D_{q,p}$$
+  Distinguishing $\rho$ from the maximally mixed background $\frac{1}{d}\mathbb{1}$ requires $\Omega(d)$ copies with single-copy measurements, but collapses to $O(\log d / \epsilon^4)$ copies using conjugate Bell measurements. Direct exoplanet imaging under thermal background is a direct physical instance of this theorem.
+
+---
+
+## Gravitational Waves as Bosonic Displacements
+
+### Gravitational Wave Strain as a Continuous-Variable Displacement
+
+In a laser-interferometric gravitational wave detector (LIGO, Virgo, KAGRA, LISA), a passing gravitational wave with metric perturbation $h(t)$ induces a differential arm length change $\Delta L(t) = h(t) L$. 
+
+Quantally, the carrier light in the interferometer arms interacts with the metric strain. At the dark port of the beam splitter, the gravitational wave acts as an external classical force that displaces the optical mode at sideband frequency $\Omega$:
+$$\hat{a} \to \hat{a} + \alpha(\Omega), \quad \text{where } \alpha(\Omega) \propto h(\Omega) \frac{L}{\lambda} \sqrt{P_{\text{circ}}}$$
+The dark port output is a **bosonic continuous-variable (CV) displacement state** $D(\alpha)|0\rangle$.
+
+### Two-Mode Squeezing (EPR) as the Continuous-Variable Analog of $\rho \otimes \rho^*$
+
+In single-mode interferometry, quantum vacuum fluctuations entering the dark port limit sensitivity (Caves 1981):
+* Injecting single-mode squeezed vacuum (LIGO O3/O4) reduces quantum noise in the phase quadrature $\hat{p}$, but increases radiation pressure noise in the amplitude quadrature $\hat{x}$ due to the Heisenberg uncertainty $[\hat{x}, \hat{p}] = i$.
+* **The Two-Copy / EPR Solution (Oh et al., Science 2025 [arXiv:2310.03786]):** By preparing a continuous-variable EPR state (Two-Mode Squeezed Vacuum, TMSV) across an optical signal mode $\hat{a}_1$ and an idler memory mode $\hat{a}_2$, one measures the joint commuting observables:
+  $$\hat{x}_- = \hat{x}_1 - \hat{x}_2, \quad \hat{p}_+ = \hat{p}_1 + \hat{p}_2, \quad [\hat{x}_-, \hat{p}_+] = 0$$
+  This continuous-variable Bell measurement measures both quadratures simultaneously with noise suppressed by $e^{-2r}$ (where $r$ is the squeezing parameter).
+* Oh et al. (Science 2025) proved that learning a multi-mode random displacement channel $\Lambda(\rho) = \int p(\vec{\alpha}) D(\vec{\alpha})\rho D^\dagger(\vec{\alpha}) d^{2n}\vec{\alpha}$ across $n$ bosonic modes requires an **exponential number of copies in $n$ without entanglement**, but only a **dimension-independent, constant number of copies with EPR assistance**. The measurement outcomes directly sample the continuous displacement distribution $\vec{\alpha} \sim p(\vec{\alpha})$, exactly mirroring the discrete Bell distribution $|y_{q,p}|^2/d$.
+
+### Continuous Gravitational Waves (Pulsars) as a Prime Top-$k$ Search Candidate
+
+Why do gravitational waves provide a genuine quantum *search* problem, rather than merely an *estimation* task?
+
+1. **Transient Mergers (Coalescing Compact Binaries, e.g. GW150914):**
+   * Occur as singular, non-repeatable events lasting milliseconds to seconds.
+   * Provide only a single instance of the physical state (no i.i.d. draws).
+   * Matched filtering against numerical relativity template banks is classical post-processing on classical time-series data. Grover speedups (e.g. Gao et al.) provide at most a quadratic speedup for classical template search, hindered by quantum state loading overheads.
+2. **Continuous Waves (CW) from Non-Axisymmetric Neutron Stars (Pulsars):**
+   * Rapidly spinning neutron stars with a tiny equatorial quadrupole deformation (mountain) emit continuous, monochromatic gravitational radiation:
+     $$f_{\text{GW}} = 2 f_{\text{rot}} + \dot{f}_{\text{rot}} t + \dots$$
+   * The signal is persistent over years, providing effectively unlimited coherent channel interrogation time.
+   * **The Classical Computational Wall:** A blind "All-Sky Search" for unknown pulsars must search across sky position $(\alpha, \delta)$, emission frequency $f$, and spindown parameters $(\dot{f}, \ddot{f})$. The number of templates required scales as $\mathcal{N} \sim T_{\text{obs}}^5$ to $T_{\text{obs}}^7$, requiring petabytes of computation (driving massive volunteer distributed networks like *Einstein@Home*). Classical all-sky search is strictly **computationally bound**.
+   * **The Top-$k$ Quantum Learning Formulation:** In the multi-mode frequency lattice, a continuous wave is an isolated, extremely sharp **single displacement spike ($k = 1$ or $k = 2$)** embedded in stationary quantum vacuum/thermal noise. Detecting the pulsar without a template bank is precisely the **un-templated Top-$k$ displacement localization problem**.
+3. **Stochastic Gravitational Wave Background (SGWB):**
+   * The superposition of unresolved cosmological and astrophysical sources forms a stationary Gaussian displacement channel.
+   * The learning task corresponds to **spectral identification**: extracting the energy density spectrum $\Omega_{\text{GW}}(f)$ from multi-detector cross-correlations (H1–L1–Virgo).
+
+---
+
+## The Missing Link: Why Sparsity and Learned Decoders Matter for Astrophysics
+
+A critical disconnect exists between the current quantum metrology literature and practical astrophysical data analysis:
+
+```mermaid
+flowchart TD
+    classDef synth fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef box fill:#f5f5f5,stroke:#455a64,stroke-width:1px;
+
+    C["<b>Classical Astrophysics</b><br/>(LIGO, VLBI, Kepler)<br/>• <i>Focus:</i> Template matching, FFT<br/>• <i>Bottleneck:</i> Combinatorial explosion in all-sky search"]:::box
+    M["<b>Standard Quantum Metrology</b><br/>(Caves 1981, Tsang 2016)<br/>• <i>Focus:</i> Fisher info, Cramér-Rao bounds<br/>• <i>Limitation:</i> Assumes coordinates are known (Estimating only)"]:::box
+    T["<b>Quantum State Tomography</b><br/>(King et al. 2024, Oh et al. 2025)<br/>• <i>Focus:</i> Full state & channel reconstruction<br/>• <i>Limitation:</i> Scales with dimension d² (expensive post-processing)"]:::box
+
+    SYN["<b>SYNTHESIS: Sparse Structure Learning</b><br/>• <b>Quantum Frontend:</b> 2-copy conjugate / EPR measurement (sample-efficient, minimal memory)<br/>• <b>Classical Backend:</b> Learned Top-k CNN decoder (bypasses template banks in poly-time)<br/>• <b>Target:</b> Unknown coordinates, but naturally sparse spectrum (k ≪ d)"]:::synth
+
+    C -->|"Bypasses template banks via inductive bias"| SYN
+    M -->|"Extends metrology to un-templated Search"| SYN
+    T -->|"Exploits natural sparsity instead of full tomography"| SYN
+```
+
+### Comparison: Where Prior Literature Fails and What This Framework Adds
+
+| Approach / Paradigm | Typical Assumption | Where It Fails in Practice | How This Framework Resolves It |
+| :--- | :--- | :--- | :--- |
+| **Classical Astrophysics**<br>(LIGO, VLBI, Kepler) | Matched filtering, grid search, FFT over pre-calculated template banks. | **Computational wall:** Blind all-sky pulsar searches ($\mathcal{N} \sim T_{\text{obs}}^5 \dots T_{\text{obs}}^7$) and $(u,v)$-deconvolutions explode exponentially with resolution. | **Inductive-bias learned decoder:** Replaces combinatorial template matching with a fast CNN inference step over raw Bell coincidence histograms. |
+| **Standard Quantum Metrology**<br>(Caves 1981, Tsang 2016) | Parameter values are unknown, but their locations/modes are **known in advance** (Estimating). | **No search capability:** Cannot locate signals whose frequency $\Omega$ or sky position $\theta$ is unknown. | **Formulated as Searching:** Directly locates unknown addresses $(q,p)$ in the Heisenberg–Weyl lattice from measurement data without prior candidate lists. |
+| **Quantum State Tomography**<br>(King et al. 2024, Oh et al. 2025) | Reconstructs the **entire** quantum state or channel across all $d^2$ operators. | **Complexity explosion:** Sign resolution scales as $\mathrm{poly}(d) = \exp(n)$, making full tomography intractable for multi-qubit/high-mode grids. | **Restricted to Top-$k$ Sparsity:** Exploits natural astronomical sparsity ($k \ll d$) to extract only the dominant signals in $O(k \log d)$ bits. |
+| **Project: Sparse Structure Learning** | States have sparse displacement spectra ($k \ll d$), accessed via $\rho \otimes \rho^*$ or EPR pairs. | Sits in the hard quadrant cell (`Sampling × Searching`), but avoids LWE hardness via structural promises and average-case learned decoding. | **Triply efficient (🟢 🟢 🟢):** Logarithmic copies, $O(k \log d)$ classical memory, and polynomial classical decoding time. |
+
+
+### The Three Pillars of the Synthesis
+
+1. **Natural Sparsity as a Structural Promise:** Astrophysical targets are universally sparse in the appropriate basis:
+   * Celestial images $I(\theta)$ consist of localized point sources and compact cores.
+   * Gravitational wave spectra consist of discrete monochromatic lines (pulsars, calibration lines, violin modes) superimposed on a smooth background.
+   Sparsity reduces the candidate space from $d^2$ down to $O(k \log d)$ parameters.
+2. **Conjugate Quantum Frontends Eliminate Quantum Noise:**
+   * In VLBI: Optical retroreflectors ($k \to -k$) and quantum memories bypass the $\Omega(\sqrt{d})$ single-copy sampling lower bound.
+   * In GW detectors: Continuous-variable EPR entanglement (Two-Mode Squeezing) circumvents standard 3 dB quantum measurement limits on simultaneous $(x, p)$ quadrature measurement.
+3. **Learned Decoders Break the Computational Template Wall:**
+   * Standard matched filtering requires computing inner products with billions of pre-computed waveform templates.
+   * A trained inductive-bias decoder (such as the coprime-folding CNN) maps directly from raw two-copy coincidence histograms to the most probable Top-$k$ parameter addresses $(q, p)$, without enumerating the template lattice.
+
+### Concrete Simulation Roadmap for Astrophysics Notebooks
+
+To benchmark this cross-disciplinary bridge empirically:
+1. **Simulation Platform:** Construct an $n$-mode bosonic displacement channel $\Lambda(\rho) = \int p(\vec{\alpha}) D(\vec{\alpha})\rho D^\dagger(\vec{\alpha}) d^{2n}\vec{\alpha}$ using real astrophysical noise baselines from the Gravitational Wave Open Science Center (GWOSC) and Kepler/TESS light curves.
+2. **Signal Injection:** Inject sparse Top-$k$ components ($k \in \{1, 2, 5\}$):
+   * Simulated pulsar continuous waves with doppler modulation in GWOSC noise.
+   * Sparse optical Fourier components corresponding to sub-Rayleigh binaries in interferometric arrays.
+3. **Decoder Comparison:** Compare three decoders on identical shot budgets:
+   * *(a) Classical Baseline:* Single-copy homodyne / heterodyne detection followed by brute-force matched filtering / FFT.
+   * *(b) Exact Theory Decoder:* Full-grid character mean / maximum-likelihood reconstruction (Regime 1, polynomial in $d$ but failing as $d \to \infty$).
+   * *(c) Learned Decoder:* The coprime-folding CNN trained on two-copy Bell / EPR sample statistics, evaluating recall, precision, and execution speed as a function of the signal-to-noise ratio $\epsilon$ and grid dimension $d$.
