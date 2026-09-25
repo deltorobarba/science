@@ -8,7 +8,9 @@ Alexander Del Toro Barba, PhD
 
 <br>
 
-Study notes quantum learning theory (learning from quantum experiments)
+*Study notes quantum learning theory (learning from quantum experiments)*
+
+See website: https://deltorobarba.github.io/science/
 
 - [Efficiency Boundaries](#efficiency-boundaries)
 - [Searching](#searching)
