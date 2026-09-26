@@ -218,118 +218,6 @@ Classical neural decoders on shadow data (bottom-left quadrant) as empirical heu
 
 **Representation side and the decoding target.** The representational cousin of a learned decoder is the **neural quantum state** (Carleo, Troyer, Science 2017): a network as the ansatz $\psi_\theta(s)$, trained variationally rather than from measurement data. The two meet in Torlai et al. (2018), where the network is fit to measurement statistics. On the transfer to error correction: Google's **AlphaQubit** (Bausch et al., Nature 2024) is a transformer decoder trained on syndrome data that outperforms tensor-network and matching decoders on Sycamore surface-code experiments, the existence proof that a learned decoder can beat hand-built combinatorics on real hardware data.
 
-## Surveys and timeline
-
-* **Anshu, Arunachalam (Nat. Rev. Phys. 2024):** Canonical survey on state-learning complexity.
-* **Gebhart et al. (Nat. Rev. Phys. 2023):** Review on learning quantum dynamics in experiments.
-* **Elben et al. (Nat. Rev. Phys. 2023):** The randomized measurement toolbox, shadows in practice.
-* **Kliesch, Roth (PRX Quantum 2021):** Theory of quantum system certification, a tutorial.
-* **Montanaro, de Wolf (2016):** Survey of quantum property testing.
-* **Arunachalam, de Wolf (SIGACT 2017):** Quantum PAC learning.
-
-| Period | Milestones |
-| --- | --- |
-| 1973–1997 | Holevo bound (1973) · Bernstein–Vazirani (1993) and Simon (1994): Fourier sampling and hidden subgroups, the query-side primitives · DNF from quantum examples (Bshouty–Jackson 1995) |
-| 1998–2004 | Gentle measurement (Winter 1999; Aaronson 2004) · Spectrum estimation by Schur sampling (Keyl–Werner 2001) · Quantum Goldreich–Levin (Adcock–Cleve 2002) · Stabilizer identification (Aaronson–Gottesman 2004) · Quantum vs. classical learnability (Servedio–Gortler 2004) |
-| 2005–2010 | LWE (Regev 2005) · State PAC learnability (Aaronson 2007) · Clifford learning (Low 2009) · Compressed-sensing and MPS tomography (2010) · Quantum Boolean functions and operator Goldreich–Levin (Montanaro–Osborne 2010) |
-| 2011–2014 | Direct fidelity estimation by Pauli importance sampling (Flammia–Liu; da Silva, Landon-Cardinal, Poulin 2011) · Sparse FFT (Hassanieh, Indyk, Katabi, Price 2012) |
-| 2015–2017 | Spectrum testing (O'Donnell–Wright 2015) · Sample-optimal tomography $\Theta(d^2/\epsilon^2)$ (2016) · Property-testing survey (Montanaro–de Wolf 2016) · Stabilizer Bell sampling (Montanaro 2017) · Quantum PAC survey (Arunachalam–de Wolf 2017) · Ising structure learning in $\tilde O(p^2)$ without correlation decay (Bresler 2015) · Sparsitron, near-optimal MRF structure learning by multiplicative weights (Klivans–Meka 2017) |
-| 2018–2019 | Shadow tomography (Aaronson) · Online learning of states · Pseudorandom states (Ji–Liu–Song) · Neural-network tomography (Torlai et al.) · Stabilizer PAC learning (Rocchetto) · Gentle measurement and differential privacy (Aaronson–Rothblum) · LWE easy with quantum samples (Grilo–Kerenidis–Zijlstra) · Scalable PRS (Brakerski–Shmueli) · $k$-Fourier-sparse functions from $O(k^{1.5}\log^2 k)$ quantum examples (Arunachalam–Chakraborty–Lee–Paraashar–de Wolf) |
-| 2020 | Classical shadows (Huang–Kueng–Preskill) · Entanglement necessary for property testing (Bubeck–Chen–Li) · Pauli channel estimation (Flammia–Wallman; Harper–Flammia–Wallman) · Quantum statistical queries (Arunachalam–Grilo–Yuen) · Sparse Pauli noise by peeling on chosen stabilizer groups (Harper–Yu–Flammia) |
-| 2021 | Memory separations (Chen–Cotler–Huang–Li) · Clifford Schur–Weyl duality and stabilizer testing (Gross–Nezami–Walter) · Improved shadow tomography and threshold search (Bădescu–O'Donnell) · Gibbs-state Hamiltonian learning (Anshu et al.) · Power of data and information-theoretic bounds (Huang et al.) · Pseudorandomness and learning hardness (Kretschmer) · Derandomized and fermionic shadows · Experimental classical shadows on four photonic qubits (Zhang et al.) · Certification tutorial (Kliesch–Roth) |
-| 2022 | Learning from experiments, Sycamore demo (Huang et al., Science) · Provable ML on shadow data (Huang et al., Science) · Pauli-channel separation (Chen–Zhou–Seif–Jiang) · QUALM (Aharonov–Cotler–Qi) · High-temperature Hamiltonian learning in polynomial time (Haah–Kothari–Tang) · Few-T learning (Lai–Cheng) · Pseudoentanglement · Output-distribution learnability (Hinsche et al.) · Nonadaptive single-copy lower bound (Lowe–Nayak) · Tight certification bounds with incoherent measurements (Chen–Huang–Li–Liu) · Non-Markovian process tensor tomography (White et al.) · Noisy stabilizer PAC learning as hard as LPN (Gollakota–Liang) |
-| 2023 | Heisenberg-limited Hamiltonian learning (Huang–Tong–Fang–Su) · Adaptivity does not help tomography (Chen et al.) · Unitary estimation at the Heisenberg rate (Haah–Kothari–O'Donnell–Tang) · Phase states (Arunachalam–Bravyi–Dutt–Yoder) · Juntas (Chen–Nadimpalli–Yuen) · Predicting processes (Huang–Chen–Preskill) · Bounded gate complexity (Zhao et al.) · One $T$ gate makes distribution learning hard (Hinsche et al.) · Few non-Clifford gates (Grewal–Iyer–Kretschmer–Liang) · Free-fermion tomography (Aaronson–Grewal) · Noncommutative Bohnenblust–Hille (Volberg–Zhang) · Qudit low-degree learning via a dimension-free Remez inequality (Klein–Slote–Volberg–Zhang) · Matchgate shadows (Wan–Huggins–Lee–Babbush) · Locally scrambled shadows (Hu–Choi–You) · Randomized-measurement review (Elben et al.) · Stabilizer-entropy phase transition and purity estimation (Leone et al.) · Learning finitely correlated states (Fanizza et al.) · Average-case hardness of learning circuit output distributions (Nietner et al.) · Linear T-count for pseudorandomness and approximate stabilizer support from Bell difference sampling (Grewal–Iyer–Kretschmer–Liang) · Pseudomagic (Gu–Leone–Ghosh–Eisert–Yelin–Quek) · Pauli spectrum of QAC⁰, the quantum LMN (Nadimpalli–Parham–Vasconcelos–Yuen) |
-| 2024 | Triply efficient shadows (King–Gosset–Kothari–Babbush) · Conjugate pairs (King–Wan–McClean) · Adaptivity separations for shadow tomography (Chen–Gong–Zhang) · Agnostic tomography and stabilizer bootstrapping · Tolerant stabilizer testing (Arunachalam–Dutt) · Any-temperature Hamiltonian learning (Bakshi–Liu–Moitra–Tang) · Hamiltonian structure learning from real-time evolution (Bakshi–Liu–Moitra–Tang) · Shallow circuits in polynomial time (Huang et al.; Landau–Liu) · Qudit stabilizer learning beyond Bell sampling (Allcock et al.) · Low-degree objects · Certification with single-qubit measurements (Huang–Preskill–Soleimanifar) · Gaussian and CV state learning (Mele et al.) · AlphaQubit · Bell and locally entangled shadows (Ippoliti) · Matchgate ensemble unification (Heyraud–Chomet–Tilly) · Qudit shadows with a magic gate (Mao–Yi–Zhu) · Tighter median-of-means constants (Fu et al.) · State-learning survey (Anshu–Arunachalam) · Tolerant stabilizer testing with a polynomial gap (Bao–van Dordrecht–Helsen) · Fermionic states with few non-Gaussian gates (Mele–Herasymenko) |
-| 2025–2026 | First empirical evaluation of a two-copy triply efficient scheme (arXiv:2508.11744) · Noise-robust two-copy hardware · Physical average-case decodability · Learned decoders as algorithm discovery · Online shadow tomography at the classical rates (Chen–O'Donnell–Pelecanos–Wright) · Heisenberg-limited Hamiltonian learning without short-time control (Shin–Lee–Oh) · Shadows over symmetric spaces (Chang et al.) · Channel learning with limited parallel access and the conjugate channel (Subramanian–Kwon–Jiang) |
-
-### Research pillars over time
-
-A first map of the field in six pillars, restricted to results that changed what was believed possible. Each column follows one pillar, each row is a period (2004–07, 2010, 2016–17, 2018, then year by year up to 2026), and an arrow leads to the next milestone in the same pillar. A dashed frame marks a milestone without its own summary in these notes.
-
-```mermaid
----
-config:
-  block:
-    padding: 16
----
-block-beta
-  columns 6
-  %% header row, then one row per period; space = no milestone in that cell
-  P1["What is<br/>learned"] P2["Quantum<br/>memory"] P3["Structural<br/>promises"] P4["Computational<br/>wall"] P5["Hamiltonians<br/>and dynamics"] P6["Fourier<br/>and queries"]
-  t07["2007 · Aaronson<br/>PAC learning: O(n)<br/>measurements predict<br/>most outcomes"] space s04["2004 · Aaronson,<br/>Gottesman<br/>Stabilizer states<br/>from O(n²) copies"] h05["2005 · Regev<br/>LWE: noisy linear<br/>algebra is hard"] space space
-  space space s10["2010 · Cramer et al.;<br/>Gross et al.<br/>MPS and compressed-<br/>sensing tomography"] space space f10["2010 · Montanaro,<br/>Osborne<br/>Quantum Goldreich–<br/>Levin: heavy Paulis"]
-  t16["2016 · O'Donnell,<br/>Wright; Haah et al.<br/>Full tomography:<br/>Θ(d²/ε²) copies"] m17["2017 · Montanaro<br/>Bell sampling:<br/>stabilizer states<br/>from O(n) pairs"] space space space space
-  t18["2018 · Aaronson<br/>Shadow tomography:<br/>M observables from<br/>polylog(M)·n copies"] space space h18["2018 · Ji, Liu, Song<br/>Pseudorandom states<br/>fool every efficient<br/>test"] space space
-  t20["2020 · Huang,<br/>Kueng, Preskill<br/>Classical shadows:<br/>O(log M) snapshots"] space space space space space
-  space m21["2021 · Chen, Cotler,<br/>Huang, Li<br/>Exponential gap with<br/>vs. without memory"] space space d21["2021 · Anshu et al.<br/>Gibbs states:<br/>sample-efficient<br/>learning of H"] space
-  space m22["2022 · Huang et al.<br/>Memory advantage<br/>on Sycamore,<br/>up to 40 qubits"] space h22["2022 · Gollakota,<br/>Liang<br/>Noisy stabilizer PAC<br/>learning is LPN-hard"] d22["2022 · Haah,<br/>Kothari, Tang<br/>High temperature:<br/>optimal and fast"] space
-  space space s23["2023 · Grewal, Iyer,<br/>Kretschmer, Liang<br/>t non-Clifford gates:<br/>poly(n, 2^t)"] h23["2023 · Hinsche et al.;<br/>Zhao et al.<br/>1 T gate (outputs),<br/>ω(log n) gates: hard"] d23["2023 · Huang, Tong,<br/>Fang, Su<br/>Heisenberg limit 1/ε,<br/>many-body H"] f23["2023 · Chen,<br/>Nadimpalli, Yuen<br/>Quantum juntas:<br/>independent of n"]
-  t24["2024 · King, Gosset,<br/>Kothari, Babbush<br/>Triply efficient:<br/>all Paulis, 2 copies"] m24["2024 · King, Wan,<br/>McClean<br/>Conjugate pairs<br/>ρ⊗ρ* for qudits"] s24["2024 · Huang et al.;<br/>Landau, Liu<br/>Shallow circuits in<br/>polynomial time"] space d24["2024 · Bakshi, Liu,<br/>Moitra, Tang<br/>Structure learning<br/>from dynamics"] f24["2024 · Arunachalam<br/>et al.<br/>Low-degree channels,<br/>queries free of n"]
-  t26["2026 · Chen,<br/>O'Donnell et al.<br/>Shadow tomography<br/>at the classical rate"] space space space d26["2026 · Shin, Lee, Oh<br/>Heisenberg limit<br/>without short-time<br/>control"] space
-  %% arrows: the next milestone in the same pillar
-  t07 --> t16
-  t16 --> t18
-  t18 --> t20
-  t20 --> t24
-  t24 --> t26
-  m17 --> m21
-  m21 --> m22
-  m22 --> m24
-  s04 --> s10
-  s10 --> s23
-  s23 --> s24
-  h05 --> h18
-  h18 --> h22
-  h22 --> h23
-  d21 --> d22
-  d22 --> d23
-  d23 --> d24
-  d24 --> d26
-  f10 --> f23
-  f23 --> f24
-  classDef pillar font-weight:bold
-  classDef open stroke-dasharray:5 4
-  class P1,P2,P3,P4,P5,P6 pillar
-  class s04,h05,d21 open
-```
-
-**The six pillars.**
-1. **What is learned:** from reconstructing the state to predicting measurements. Each step either relaxes the success criterion or settles the copy count for it.
-2. **Quantum memory:** measurements on two copies at once, and the exponential separations they create.
-3. **Structural promises:** classes of states whose structure makes learning efficient in time, not only in copies.
-4. **Computational wall:** few copies suffice information-theoretically, yet no efficient algorithm exists under cryptographic assumptions.
-5. **Hamiltonians and dynamics:** learning the generator; access to $e^{-iHt}$ buys the Heisenberg rate $1/\epsilon$ instead of $1/\epsilon^2$.
-6. **Fourier and queries:** heavy Pauli coefficients and low-degree structure, found with query access.
-
-**Links between the pillars** (not drawn, so that the grid stays readable):
-* Aaronson, Gottesman 2004 → Montanaro 2017: stabilizer states from $O(n)$ copies measured in pairs, instead of $O(n^2)$ single copies.
-* Montanaro 2017 → Grewal et al. 2023: Bell difference sampling finds the stabilizer group of states with few non-Clifford gates.
-* Huang, Kueng, Preskill 2020 → Chen, Cotler, Huang, Li 2021: for worst-case observables, learners without quantum memory cannot beat classical shadows by more than logarithmic factors (Theorem 1.1 there).
-* Chen, Cotler, Huang, Li 2021 → King, Gosset, Kothari, Babbush 2024: single copies need $\Omega(2^n)$ for all Pauli expectation values, two-copy measurements make the task triply efficient.
-* King, Gosset, Kothari, Babbush 2024 → King, Wan, McClean 2024: the sign step by matrix multiplicative weights carries over from Paulis to qudit displacement operators.
-* Aaronson 2007 → Gollakota, Liang 2022: with label noise, PAC learning of stabilizer states inherits the hardness of LPN.
-* Grewal et al. 2023 and Hinsche et al. 2023: few non-Clifford gates are easy from copies, one $T$ gate makes output distributions hard from samples ("Contrast Pairs", pair 9).
-
-**Summaries by pillar.**
-* **What is learned:** [Aaronson 2007](#the-learnability-of-quantum-states-arxivquant-ph0608142) · [O'Donnell, Wright 2016](#efficient-quantum-tomography-arxiv150801907) · [Aaronson 2018](#shadow-tomography-of-quantum-states-arxiv171101053) · [Huang, Kueng, Preskill 2020](#predicting-many-properties-of-a-quantum-system-from-very-few-measurements-arxiv200208953) · [King, Gosset, Kothari, Babbush 2024](#triply-efficient-shadow-tomography-arxiv240419211) · [Chen, O'Donnell, Pelecanos, Wright 2026](#online-shadow-tomography-matching-the-classical-bounds-arxiv260729686)
-* **Quantum memory:** [Montanaro 2017](#learning-stabilizer-states-by-bell-sampling-arxiv170704012) · [Chen, Cotler, Huang, Li 2021](#exponential-separations-between-learning-with-and-without-quantum-memory-arxiv211105881) · [Huang et al. 2022](#quantum-advantage-in-learning-from-experiments-arxiv211200778) · [King, Wan, McClean 2024](#exponential-learning-advantages-with-conjugate-states-and-minimal-quantum-memory-arxiv240303469)
-* **Structural promises:** [Cramer et al. 2010](#efficient-quantum-state-tomography-arxiv11014366) · [Gross et al. 2010](#quantum-state-tomography-via-compressed-sensing-arxiv09093304) · [Grewal et al. 2023](#efficient-learning-of-quantum-states-prepared-with-few-non-clifford-gates-arxiv230513409) · [Huang et al. 2024](#learning-shallow-quantum-circuits-arxiv240110095)
-* **Computational wall:** [Ji, Liu, Song 2018](#pseudorandom-quantum-states-arxiv171100385) · [Gollakota, Liang 2022](#on-the-hardness-of-pac-learning-stabilizer-states-with-noise-arxiv210205174) · [Hinsche et al. 2023](#a-single-t-gate-makes-distribution-learning-hard-arxiv220703140) · [Zhao et al. 2023](#learning-quantum-states-and-unitaries-of-bounded-gate-complexity-arxiv231019882)
-* **Hamiltonians and dynamics:** [Haah, Kothari, Tang 2022](#optimal-learning-of-quantum-hamiltonians-from-high-temperature-gibbs-states-arxiv210804842) · [Huang, Tong, Fang, Su 2023](#learning-many-body-hamiltonians-with-heisenberg-limited-scaling-arxiv221003030) · [Bakshi, Liu, Moitra, Tang 2024](#structure-learning-of-hamiltonians-from-real-time-evolution-arxiv240500082) · [Shin, Lee, Oh 2026](#heisenberg-limited-hamiltonian-learning-without-short-time-control-arxiv260427838)
-* **Fourier and queries:** [Montanaro, Osborne 2010](#quantum-boolean-functions-arxiv08102435) · [Chen, Nadimpalli, Yuen 2023](#testing-and-learning-quantum-juntas-nearly-optimally-arxiv220705898) · [Arunachalam et al. 2024](#learning-low-degree-quantum-objects-arxiv240510933)
-
-<br>
-
-## Open Frontiers (Research Questions)
-
-* **Mapping the decodable classes.** Between "subgroup-easy" (linear algebra) and "LWE-hard" lies uncharted territory. The same state moves from the easy to the hard regime by turning up a noise parameter. Open: Does the hardness reduction transfer from the tensor-product basis to the cyclic single-qudit basis?
-* **What learned decoders implicitly find.** If a decoder works on a class with no known efficient algorithm, it may have found one. ML as a tool for algorithm discovery; what is missing is a metric that predicts generalization across state distributions.
-* **Hardware realism with two copies.** Approximate matched filters (probe gain $\kappa < 1$, overhead $\kappa^{-2}$) make protocols graceful against preparation, crosstalk, and measurement errors. The practically most relevant axis.
-* **Average case instead of worst case.** The hardness results are adversarial. Natural states (ground states of local Hamiltonians, thermal states) could be generically decodable: from the cryptography perspective to the physics perspective.
-* **Memory between zero and two.** The separations are stated at $k=0$ versus $k=2$ copies. Chen–Cotler–Huang–Li also treat a learner with $k$ qubits of quantum memory and find that the sample complexity interpolates smoothly; what is missing is the *protocol* side: which structured tasks become tractable at a fixed small memory budget short of a full second copy, e.g. with a few ancilla qubits per shot as in the Pauli-channel case.
-
-<br>
-
 ## Reading the tables
 
 The three tables are the primary object. This appendix keeps the three axes that generate them, for readers who want the coordinate system: the quadrant of access against task, the access ladder, and the measurement-power axis.
@@ -1058,6 +946,118 @@ Every pair turns one of five dials. Naming the dial is the fastest way to place 
 The first three dials are the quantum resource and the access model of [How efficiency is "bought" in the quantum world](#how-efficiency-is-bought-in-the-quantum-world), the fourth is the structural promise, and the fifth explains why the two halves of the map are charted so unevenly.
 
 </details>
+
+## Surveys and timeline
+
+* **Anshu, Arunachalam (Nat. Rev. Phys. 2024):** Canonical survey on state-learning complexity.
+* **Gebhart et al. (Nat. Rev. Phys. 2023):** Review on learning quantum dynamics in experiments.
+* **Elben et al. (Nat. Rev. Phys. 2023):** The randomized measurement toolbox, shadows in practice.
+* **Kliesch, Roth (PRX Quantum 2021):** Theory of quantum system certification, a tutorial.
+* **Montanaro, de Wolf (2016):** Survey of quantum property testing.
+* **Arunachalam, de Wolf (SIGACT 2017):** Quantum PAC learning.
+
+| Period | Milestones |
+| --- | --- |
+| 1973–1997 | Holevo bound (1973) · Bernstein–Vazirani (1993) and Simon (1994): Fourier sampling and hidden subgroups, the query-side primitives · DNF from quantum examples (Bshouty–Jackson 1995) |
+| 1998–2004 | Gentle measurement (Winter 1999; Aaronson 2004) · Spectrum estimation by Schur sampling (Keyl–Werner 2001) · Quantum Goldreich–Levin (Adcock–Cleve 2002) · Stabilizer identification (Aaronson–Gottesman 2004) · Quantum vs. classical learnability (Servedio–Gortler 2004) |
+| 2005–2010 | LWE (Regev 2005) · State PAC learnability (Aaronson 2007) · Clifford learning (Low 2009) · Compressed-sensing and MPS tomography (2010) · Quantum Boolean functions and operator Goldreich–Levin (Montanaro–Osborne 2010) |
+| 2011–2014 | Direct fidelity estimation by Pauli importance sampling (Flammia–Liu; da Silva, Landon-Cardinal, Poulin 2011) · Sparse FFT (Hassanieh, Indyk, Katabi, Price 2012) |
+| 2015–2017 | Spectrum testing (O'Donnell–Wright 2015) · Sample-optimal tomography $\Theta(d^2/\epsilon^2)$ (2016) · Property-testing survey (Montanaro–de Wolf 2016) · Stabilizer Bell sampling (Montanaro 2017) · Quantum PAC survey (Arunachalam–de Wolf 2017) · Ising structure learning in $\tilde O(p^2)$ without correlation decay (Bresler 2015) · Sparsitron, near-optimal MRF structure learning by multiplicative weights (Klivans–Meka 2017) |
+| 2018–2019 | Shadow tomography (Aaronson) · Online learning of states · Pseudorandom states (Ji–Liu–Song) · Neural-network tomography (Torlai et al.) · Stabilizer PAC learning (Rocchetto) · Gentle measurement and differential privacy (Aaronson–Rothblum) · LWE easy with quantum samples (Grilo–Kerenidis–Zijlstra) · Scalable PRS (Brakerski–Shmueli) · $k$-Fourier-sparse functions from $O(k^{1.5}\log^2 k)$ quantum examples (Arunachalam–Chakraborty–Lee–Paraashar–de Wolf) |
+| 2020 | Classical shadows (Huang–Kueng–Preskill) · Entanglement necessary for property testing (Bubeck–Chen–Li) · Pauli channel estimation (Flammia–Wallman; Harper–Flammia–Wallman) · Quantum statistical queries (Arunachalam–Grilo–Yuen) · Sparse Pauli noise by peeling on chosen stabilizer groups (Harper–Yu–Flammia) |
+| 2021 | Memory separations (Chen–Cotler–Huang–Li) · Clifford Schur–Weyl duality and stabilizer testing (Gross–Nezami–Walter) · Improved shadow tomography and threshold search (Bădescu–O'Donnell) · Gibbs-state Hamiltonian learning (Anshu et al.) · Power of data and information-theoretic bounds (Huang et al.) · Pseudorandomness and learning hardness (Kretschmer) · Derandomized and fermionic shadows · Experimental classical shadows on four photonic qubits (Zhang et al.) · Certification tutorial (Kliesch–Roth) |
+| 2022 | Learning from experiments, Sycamore demo (Huang et al., Science) · Provable ML on shadow data (Huang et al., Science) · Pauli-channel separation (Chen–Zhou–Seif–Jiang) · QUALM (Aharonov–Cotler–Qi) · High-temperature Hamiltonian learning in polynomial time (Haah–Kothari–Tang) · Few-T learning (Lai–Cheng) · Pseudoentanglement · Output-distribution learnability (Hinsche et al.) · Nonadaptive single-copy lower bound (Lowe–Nayak) · Tight certification bounds with incoherent measurements (Chen–Huang–Li–Liu) · Non-Markovian process tensor tomography (White et al.) · Noisy stabilizer PAC learning as hard as LPN (Gollakota–Liang) |
+| 2023 | Heisenberg-limited Hamiltonian learning (Huang–Tong–Fang–Su) · Adaptivity does not help tomography (Chen et al.) · Unitary estimation at the Heisenberg rate (Haah–Kothari–O'Donnell–Tang) · Phase states (Arunachalam–Bravyi–Dutt–Yoder) · Juntas (Chen–Nadimpalli–Yuen) · Predicting processes (Huang–Chen–Preskill) · Bounded gate complexity (Zhao et al.) · One $T$ gate makes distribution learning hard (Hinsche et al.) · Few non-Clifford gates (Grewal–Iyer–Kretschmer–Liang) · Free-fermion tomography (Aaronson–Grewal) · Noncommutative Bohnenblust–Hille (Volberg–Zhang) · Qudit low-degree learning via a dimension-free Remez inequality (Klein–Slote–Volberg–Zhang) · Matchgate shadows (Wan–Huggins–Lee–Babbush) · Locally scrambled shadows (Hu–Choi–You) · Randomized-measurement review (Elben et al.) · Stabilizer-entropy phase transition and purity estimation (Leone et al.) · Learning finitely correlated states (Fanizza et al.) · Average-case hardness of learning circuit output distributions (Nietner et al.) · Linear T-count for pseudorandomness and approximate stabilizer support from Bell difference sampling (Grewal–Iyer–Kretschmer–Liang) · Pseudomagic (Gu–Leone–Ghosh–Eisert–Yelin–Quek) · Pauli spectrum of QAC⁰, the quantum LMN (Nadimpalli–Parham–Vasconcelos–Yuen) |
+| 2024 | Triply efficient shadows (King–Gosset–Kothari–Babbush) · Conjugate pairs (King–Wan–McClean) · Adaptivity separations for shadow tomography (Chen–Gong–Zhang) · Agnostic tomography and stabilizer bootstrapping · Tolerant stabilizer testing (Arunachalam–Dutt) · Any-temperature Hamiltonian learning (Bakshi–Liu–Moitra–Tang) · Hamiltonian structure learning from real-time evolution (Bakshi–Liu–Moitra–Tang) · Shallow circuits in polynomial time (Huang et al.; Landau–Liu) · Qudit stabilizer learning beyond Bell sampling (Allcock et al.) · Low-degree objects · Certification with single-qubit measurements (Huang–Preskill–Soleimanifar) · Gaussian and CV state learning (Mele et al.) · AlphaQubit · Bell and locally entangled shadows (Ippoliti) · Matchgate ensemble unification (Heyraud–Chomet–Tilly) · Qudit shadows with a magic gate (Mao–Yi–Zhu) · Tighter median-of-means constants (Fu et al.) · State-learning survey (Anshu–Arunachalam) · Tolerant stabilizer testing with a polynomial gap (Bao–van Dordrecht–Helsen) · Fermionic states with few non-Gaussian gates (Mele–Herasymenko) |
+| 2025–2026 | First empirical evaluation of a two-copy triply efficient scheme (arXiv:2508.11744) · Noise-robust two-copy hardware · Physical average-case decodability · Learned decoders as algorithm discovery · Online shadow tomography at the classical rates (Chen–O'Donnell–Pelecanos–Wright) · Heisenberg-limited Hamiltonian learning without short-time control (Shin–Lee–Oh) · Shadows over symmetric spaces (Chang et al.) · Channel learning with limited parallel access and the conjugate channel (Subramanian–Kwon–Jiang) |
+
+### Research pillars over time
+
+A first map of the field in six pillars, restricted to results that changed what was believed possible. Each column follows one pillar, each row is a period (2004–07, 2010, 2016–17, 2018, then year by year up to 2026), and an arrow leads to the next milestone in the same pillar. A dashed frame marks a milestone without its own summary in these notes.
+
+```mermaid
+---
+config:
+  block:
+    padding: 16
+---
+block-beta
+  columns 6
+  %% header row, then one row per period; space = no milestone in that cell
+  P1["What is<br/>learned"] P2["Quantum<br/>memory"] P3["Structural<br/>promises"] P4["Computational<br/>wall"] P5["Hamiltonians<br/>and dynamics"] P6["Fourier<br/>and queries"]
+  t07["2007 · Aaronson<br/>PAC learning: O(n)<br/>measurements predict<br/>most outcomes"] space s04["2004 · Aaronson,<br/>Gottesman<br/>Stabilizer states<br/>from O(n²) copies"] h05["2005 · Regev<br/>LWE: noisy linear<br/>algebra is hard"] space space
+  space space s10["2010 · Cramer et al.;<br/>Gross et al.<br/>MPS and compressed-<br/>sensing tomography"] space space f10["2010 · Montanaro,<br/>Osborne<br/>Quantum Goldreich–<br/>Levin: heavy Paulis"]
+  t16["2016 · O'Donnell,<br/>Wright; Haah et al.<br/>Full tomography:<br/>Θ(d²/ε²) copies"] m17["2017 · Montanaro<br/>Bell sampling:<br/>stabilizer states<br/>from O(n) pairs"] space space space space
+  t18["2018 · Aaronson<br/>Shadow tomography:<br/>M observables from<br/>polylog(M)·n copies"] space space h18["2018 · Ji, Liu, Song<br/>Pseudorandom states<br/>fool every efficient<br/>test"] space space
+  t20["2020 · Huang,<br/>Kueng, Preskill<br/>Classical shadows:<br/>O(log M) snapshots"] space space space space space
+  space m21["2021 · Chen, Cotler,<br/>Huang, Li<br/>Exponential gap with<br/>vs. without memory"] space space d21["2021 · Anshu et al.<br/>Gibbs states:<br/>sample-efficient<br/>learning of H"] space
+  space m22["2022 · Huang et al.<br/>Memory advantage<br/>on Sycamore,<br/>up to 40 qubits"] space h22["2022 · Gollakota,<br/>Liang<br/>Noisy stabilizer PAC<br/>learning is LPN-hard"] d22["2022 · Haah,<br/>Kothari, Tang<br/>High temperature:<br/>optimal and fast"] space
+  space space s23["2023 · Grewal, Iyer,<br/>Kretschmer, Liang<br/>t non-Clifford gates:<br/>poly(n, 2^t)"] h23["2023 · Hinsche et al.;<br/>Zhao et al.<br/>1 T gate (outputs),<br/>ω(log n) gates: hard"] d23["2023 · Huang, Tong,<br/>Fang, Su<br/>Heisenberg limit 1/ε,<br/>many-body H"] f23["2023 · Chen,<br/>Nadimpalli, Yuen<br/>Quantum juntas:<br/>independent of n"]
+  t24["2024 · King, Gosset,<br/>Kothari, Babbush<br/>Triply efficient:<br/>all Paulis, 2 copies"] m24["2024 · King, Wan,<br/>McClean<br/>Conjugate pairs<br/>ρ⊗ρ* for qudits"] s24["2024 · Huang et al.;<br/>Landau, Liu<br/>Shallow circuits in<br/>polynomial time"] space d24["2024 · Bakshi, Liu,<br/>Moitra, Tang<br/>Structure learning<br/>from dynamics"] f24["2024 · Arunachalam<br/>et al.<br/>Low-degree channels,<br/>queries free of n"]
+  t26["2026 · Chen,<br/>O'Donnell et al.<br/>Shadow tomography<br/>at the classical rate"] space space space d26["2026 · Shin, Lee, Oh<br/>Heisenberg limit<br/>without short-time<br/>control"] space
+  %% arrows: the next milestone in the same pillar
+  t07 --> t16
+  t16 --> t18
+  t18 --> t20
+  t20 --> t24
+  t24 --> t26
+  m17 --> m21
+  m21 --> m22
+  m22 --> m24
+  s04 --> s10
+  s10 --> s23
+  s23 --> s24
+  h05 --> h18
+  h18 --> h22
+  h22 --> h23
+  d21 --> d22
+  d22 --> d23
+  d23 --> d24
+  d24 --> d26
+  f10 --> f23
+  f23 --> f24
+  classDef pillar font-weight:bold
+  classDef open stroke-dasharray:5 4
+  class P1,P2,P3,P4,P5,P6 pillar
+  class s04,h05,d21 open
+```
+
+**The six pillars.**
+1. **What is learned:** from reconstructing the state to predicting measurements. Each step either relaxes the success criterion or settles the copy count for it.
+2. **Quantum memory:** measurements on two copies at once, and the exponential separations they create.
+3. **Structural promises:** classes of states whose structure makes learning efficient in time, not only in copies.
+4. **Computational wall:** few copies suffice information-theoretically, yet no efficient algorithm exists under cryptographic assumptions.
+5. **Hamiltonians and dynamics:** learning the generator; access to $e^{-iHt}$ buys the Heisenberg rate $1/\epsilon$ instead of $1/\epsilon^2$.
+6. **Fourier and queries:** heavy Pauli coefficients and low-degree structure, found with query access.
+
+**Links between the pillars** (not drawn, so that the grid stays readable):
+* Aaronson, Gottesman 2004 → Montanaro 2017: stabilizer states from $O(n)$ copies measured in pairs, instead of $O(n^2)$ single copies.
+* Montanaro 2017 → Grewal et al. 2023: Bell difference sampling finds the stabilizer group of states with few non-Clifford gates.
+* Huang, Kueng, Preskill 2020 → Chen, Cotler, Huang, Li 2021: for worst-case observables, learners without quantum memory cannot beat classical shadows by more than logarithmic factors (Theorem 1.1 there).
+* Chen, Cotler, Huang, Li 2021 → King, Gosset, Kothari, Babbush 2024: single copies need $\Omega(2^n)$ for all Pauli expectation values, two-copy measurements make the task triply efficient.
+* King, Gosset, Kothari, Babbush 2024 → King, Wan, McClean 2024: the sign step by matrix multiplicative weights carries over from Paulis to qudit displacement operators.
+* Aaronson 2007 → Gollakota, Liang 2022: with label noise, PAC learning of stabilizer states inherits the hardness of LPN.
+* Grewal et al. 2023 and Hinsche et al. 2023: few non-Clifford gates are easy from copies, one $T$ gate makes output distributions hard from samples ("Contrast Pairs", pair 9).
+
+**Summaries by pillar.**
+* **What is learned:** [Aaronson 2007](#the-learnability-of-quantum-states-arxivquant-ph0608142) · [O'Donnell, Wright 2016](#efficient-quantum-tomography-arxiv150801907) · [Aaronson 2018](#shadow-tomography-of-quantum-states-arxiv171101053) · [Huang, Kueng, Preskill 2020](#predicting-many-properties-of-a-quantum-system-from-very-few-measurements-arxiv200208953) · [King, Gosset, Kothari, Babbush 2024](#triply-efficient-shadow-tomography-arxiv240419211) · [Chen, O'Donnell, Pelecanos, Wright 2026](#online-shadow-tomography-matching-the-classical-bounds-arxiv260729686)
+* **Quantum memory:** [Montanaro 2017](#learning-stabilizer-states-by-bell-sampling-arxiv170704012) · [Chen, Cotler, Huang, Li 2021](#exponential-separations-between-learning-with-and-without-quantum-memory-arxiv211105881) · [Huang et al. 2022](#quantum-advantage-in-learning-from-experiments-arxiv211200778) · [King, Wan, McClean 2024](#exponential-learning-advantages-with-conjugate-states-and-minimal-quantum-memory-arxiv240303469)
+* **Structural promises:** [Cramer et al. 2010](#efficient-quantum-state-tomography-arxiv11014366) · [Gross et al. 2010](#quantum-state-tomography-via-compressed-sensing-arxiv09093304) · [Grewal et al. 2023](#efficient-learning-of-quantum-states-prepared-with-few-non-clifford-gates-arxiv230513409) · [Huang et al. 2024](#learning-shallow-quantum-circuits-arxiv240110095)
+* **Computational wall:** [Ji, Liu, Song 2018](#pseudorandom-quantum-states-arxiv171100385) · [Gollakota, Liang 2022](#on-the-hardness-of-pac-learning-stabilizer-states-with-noise-arxiv210205174) · [Hinsche et al. 2023](#a-single-t-gate-makes-distribution-learning-hard-arxiv220703140) · [Zhao et al. 2023](#learning-quantum-states-and-unitaries-of-bounded-gate-complexity-arxiv231019882)
+* **Hamiltonians and dynamics:** [Haah, Kothari, Tang 2022](#optimal-learning-of-quantum-hamiltonians-from-high-temperature-gibbs-states-arxiv210804842) · [Huang, Tong, Fang, Su 2023](#learning-many-body-hamiltonians-with-heisenberg-limited-scaling-arxiv221003030) · [Bakshi, Liu, Moitra, Tang 2024](#structure-learning-of-hamiltonians-from-real-time-evolution-arxiv240500082) · [Shin, Lee, Oh 2026](#heisenberg-limited-hamiltonian-learning-without-short-time-control-arxiv260427838)
+* **Fourier and queries:** [Montanaro, Osborne 2010](#quantum-boolean-functions-arxiv08102435) · [Chen, Nadimpalli, Yuen 2023](#testing-and-learning-quantum-juntas-nearly-optimally-arxiv220705898) · [Arunachalam et al. 2024](#learning-low-degree-quantum-objects-arxiv240510933)
+
+<br>
+
+## Open Frontiers (Research Questions)
+
+* **Mapping the decodable classes.** Between "subgroup-easy" (linear algebra) and "LWE-hard" lies uncharted territory. The same state moves from the easy to the hard regime by turning up a noise parameter. Open: Does the hardness reduction transfer from the tensor-product basis to the cyclic single-qudit basis?
+* **What learned decoders implicitly find.** If a decoder works on a class with no known efficient algorithm, it may have found one. ML as a tool for algorithm discovery; what is missing is a metric that predicts generalization across state distributions.
+* **Hardware realism with two copies.** Approximate matched filters (probe gain $\kappa < 1$, overhead $\kappa^{-2}$) make protocols graceful against preparation, crosstalk, and measurement errors. The practically most relevant axis.
+* **Average case instead of worst case.** The hardness results are adversarial. Natural states (ground states of local Hamiltonians, thermal states) could be generically decodable: from the cryptography perspective to the physics perspective.
+* **Memory between zero and two.** The separations are stated at $k=0$ versus $k=2$ copies. Chen–Cotler–Huang–Li also treat a learner with $k$ qubits of quantum memory and find that the sample complexity interpolates smoothly; what is missing is the *protocol* side: which structured tasks become tractable at a fixed small memory budget short of a full second copy, e.g. with a few ancilla qubits per shot as in the Pauli-channel case.
+
+<br>
 
 <br>
 
