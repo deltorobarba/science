@@ -345,8 +345,20 @@ details > summary::-webkit-details-marker { display: none; }
   background: var(--surface);
   max-width: none;
 }
-.prose:has(.table-wrap) { max-width: none; }
-.prose:has(.table-wrap) > :not(.table-wrap) { max-width: 46rem; }
+.prose:has(.table-wrap), .prose:has(.diagram) { max-width: none; }
+.prose:has(.table-wrap) > :not(.table-wrap):not(.diagram),
+.prose:has(.diagram) > :not(.table-wrap):not(.diagram) { max-width: 46rem; }
+.diagram {
+  overflow-x: auto;
+  margin: .9rem 0;
+  padding: .8rem;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.diagram pre.mermaid { margin: 0; background: none; font: 12px/1.4 var(--font-mono); white-space: pre; }
+.diagram pre.mermaid[data-processed] { font: inherit; white-space: normal; }
+.diagram svg { display: block; margin: 0 auto; height: auto; }
 table { border-collapse: collapse; width: 100%; font: 13.5px/1.45 var(--font-ui); }
 th, td { text-align: left; vertical-align: top; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); min-width: 8.5rem; }
 th { background: var(--surface-2); font-weight: 600; position: sticky; top: 0; }

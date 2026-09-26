@@ -41,7 +41,67 @@
     }
     if (queue.size) { scheduled = true; requestAnimationFrame(drain); }
   }
-  document.addEventListener("toggle", (e) => { if (e.target.open) renderMath(e.target); }, true);
+  document.addEventListener("toggle", (e) => { if (e.target.open) { renderMath(e.target); renderDiagrams(e.target); } }, true);
+
+  /* ---------- diagrams: Mermaid is loaded only when a diagram becomes visible ---------- */
+  const MERMAID = "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  let mermaidReady = null;
+  function loadMermaid() {
+    if (!mermaidReady) {
+      mermaidReady = import(MERMAID).then(({ default: mermaid }) => mermaid).catch(() => null);
+    }
+    return mermaidReady;
+  }
+  function themeMermaid(mermaid) {
+    const css = getComputedStyle(document.documentElement);
+    const v = (name) => css.getPropertyValue(name).trim();
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "base",
+      fontFamily: v("--font-ui"),
+      themeVariables: {
+        fontSize: "13px",
+        background: v("--surface"),
+        primaryColor: v("--accent-weak"),
+        primaryBorderColor: v("--accent"),
+        primaryTextColor: v("--ink"),
+        lineColor: v("--ink-2"),
+        textColor: v("--ink"),
+      },
+      block: { useMaxWidth: true },
+      flowchart: { useMaxWidth: true },
+    });
+  }
+  const MIN_DIAGRAM_WIDTH = 900; // below this, wide diagrams scroll instead of shrinking
+  function sizeDiagram(el) {
+    const svg = el.querySelector("svg");
+    if (svg && svg.viewBox.baseVal && svg.viewBox.baseVal.width > MIN_DIAGRAM_WIDTH) {
+      svg.style.minWidth = MIN_DIAGRAM_WIDTH + "px";
+    }
+  }
+  async function renderDiagrams(root) {
+    const nodes = [...root.querySelectorAll("pre.mermaid:not([data-processed]):not([data-pending])")].filter(shown);
+    if (!nodes.length) return;
+    nodes.forEach((el) => {
+      el.dataset.pending = "1";
+      if (!el.dataset.src) el.dataset.src = el.textContent;
+    });
+    const mermaid = await loadMermaid();
+    if (mermaid) {
+      themeMermaid(mermaid);
+      try { await mermaid.run({ nodes }); } catch (e) { console.warn("diagram:", e); }
+    }
+    nodes.forEach((el) => { delete el.dataset.pending; sizeDiagram(el); });
+  }
+  const scheme = window.matchMedia("(prefers-color-scheme: dark)");
+  scheme.addEventListener("change", () => {
+    main.querySelectorAll("pre.mermaid[data-processed]").forEach((el) => {
+      el.removeAttribute("data-processed");
+      el.textContent = el.dataset.src;
+    });
+    renderDiagrams(main);
+  });
 
   /* ---------- navigation ---------- */
   function reveal(el) {
@@ -87,6 +147,7 @@
   document.getElementById("expand").addEventListener("click", () => {
     main.querySelectorAll("details").forEach((d) => { if (!d.closest("[hidden]")) d.open = true; });
     renderMath(main);
+    renderDiagrams(main);
   });
   document.getElementById("collapse").addEventListener("click", () => {
     main.querySelectorAll("details.sec, details.paper-d").forEach((d) => { d.open = false; });
@@ -221,5 +282,6 @@
   /* ---------- start ---------- */
   result.textContent = `${papers.length} papers`;
   renderMath(main);
+  renderDiagrams(main);
   if (location.hash.length > 1) go(decodeURIComponent(location.hash.slice(1)), false);
 })();

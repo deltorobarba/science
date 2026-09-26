@@ -12,7 +12,7 @@ Alexander Del Toro Barba, PhD
 
 See website: https://deltorobarba.github.io/science/
 
-- [Introduction to Quantum Learning](#introduction-to-quantum-learning)
+- [Quantum Learning Introduction](#quantum-learning-introduction)
 - [Efficiency Boundaries](#efficiency-boundaries)
 - [Searching](#searching)
 - [Searching (Papers)](#searching-papers)
@@ -27,7 +27,7 @@ See website: https://deltorobarba.github.io/science/
 
 <br>
 
-# Introduction to Quantum Learning
+# Quantum Learning Introduction
 
 ## Separation: QML with Classical and Quantum Data
 
@@ -66,6 +66,69 @@ Measurement theory answers the single-shot question: What does a measurement do 
 **Object and access are independent.** Learning a Hamiltonian from copies of its Gibbs state learns a process from samples of a state. Learning a state through its preparation circuit learns a state by queries. Learning a channel from its Choi state learns a process from samples, with the ancilla as quantum memory.
 
 **Where the object decides hardness: normalization.** The squared Pauli coefficients of a unitary sum to one, so Bell sampling on its Choi state returns every coefficient of size $\tau$ with probability $\tau^2$, and the heavy terms fall out directly. The squared displacement coefficients of a pure state sum to $d$, so a coefficient of size one appears with probability $1/d$. The same measurement makes searching easy for unitaries and runs into the LWE wall for states. Details in the structure-learning protocols.
+
+Hier ist die erweiterte Übersicht, die alle fünf Lernziele aus der quantenmechanischen Lerntheorie in einer systematischen Vergleichstabelle gegenüberstellt und anschließend für jedes Ziel detailliert aufzeigt, warum die aktuelle Spitzenforschung sich so intensiv damit beschäftigt.
+
+---
+
+## Lernziele der Quanten-Lerntheorie
+
+„A learner can be asked about a state, a Hamiltonian, a unitary, a channel, or a classical function“ 
+
+| Lernziel | Was ist es mathematisch & physikalisch? | Zugriff / Orakel-Modell des Learners | Was lernt / rekonstruiert man? | Typische Algorithmen & Paradigmen |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Quantum State**<br>($\rho$ oder $\|\psi\rangle$) | **Statischer Zustand / Momentaufnahme**<br>Dichtematrix $\rho \ge 0$, $\text{Tr}(\rho)=1$. Beschreibt die Konfiguration/Verschränkung eines Systems zu einem festen Zeitpunkt. | **Passiv:** Erhält $N$ identische Kopien $\rho^{\otimes N}$. Der Learner wählt Messungen (POVMs) auf einzelnen Kopien oder verschränkt über mehrere Kopien. | Vollständige Matrix $\rho$, Reinheit, Fidelity zu Zielzustand oder Erwartungswerte vieler Observablen $\text{Tr}(O_i \rho)$. | • Quantum State Tomography (QST)<br>• Classical Shadows (Huang–Kueng–Preskill)<br>• Direct Fidelity Estimation |
+| **2. Hamiltonian**<br>($H$) | **Kontinuierlicher Generator der Zeitentwicklung**<br>Hermitescher Operator $H = H^\dagger$. Beschreibt die fundamentalen Wechselwirkungen, Kräfte und Energien eines Systems. | **Aktiv / Dynamisch:** Präpariert Zustand $\|\psi_{\text{in}}\rangle$, lässt ihn für Zeit $t$ unter $U(t) = e^{-i H t}$ evolvieren und misst das Ergebnis (oder analysiert thermische Zustände $e^{-\beta H}/\mathcal{Z}$). | Kopplungskonstanten und Feldstärken $c_k$ in der Zerlegung $H = \sum_k c_k P_k$ (z. B. Heisenberg-, Ising-, Fermi-Hubbard-Modelle). | • Dynamical Hamiltonian Learning (z. B. Shin–Lee–Oh)<br>• Robust Phase Estimation<br>• Gibbs-State / Thermal State Learning |
+| **3. Unitary Operator**<br>($U$) | **Diskrete, ideale Transformation**<br>Isometrische/unitäre Matrix ($U^\dagger U = I$). Repräsentiert ein verlustfreies Quantengatter oder einen geschlossenen Quantenschaltkreis. | **Interaktiv (Blackbox-Gatter):** Wählt Eingabezustand $\|\psi_{\text{in}}\rangle$, schickt ihn durch die Blackbox $U$, erhält $U\|\psi_{\text{in}}\rangle$ und misst (ggf. mit verschränkten Hilfs-Qubits). | Die unitäre Matrix $U$, deren Zerlegung in Elementargatter oder die mittlere Gatter-Fidelity $F(U, U_{\text{target}})$. | • Quantum Process Tomography<br>• Randomized Benchmarking (RB)<br>• Gate Set Tomography (GST) |
+| **4. Quantum Channel**<br>($\mathcal{E}$) | **Allgemeine (offene / verrauschte) Dynamik**<br>Vollständig positive, spurerhaltende Abbildung (CPTP-Map): $\mathcal{E}(\rho) = \sum_k K_k \rho K_k^\dagger$. Modelliert reale Hardwarefehler und Umweltkopplung. | **Interaktiv (Blackbox-Kanal):** Präpariert $\rho_{\text{in}}$, schickt ihn durch das verrauschte System/Gatter $\mathcal{E}$, misst das transformierte $\mathcal{E}(\rho_{\text{in}})$. | Kraus-Operatoren $K_k$, Pauli-Transfer-Matrix (PTM) oder Fehlerraten (z. B. Dephasing-, Depolarizing-, Dämpfungs-Raten). | • Shadow Process Tomography<br>• Cycle Benchmarking<br>• Pauli Frame Randomization Characterization |
+| **5. Classical Function**<br>($f$) | **Diskrete Berechnungsfunktion**<br>Klassische Boolesche Funktion $f: \{0,1\}^n \to \{0,1\}^m$. Kein physikalisches Objekt, sondern ein abstraktes Problem/Konzept. | **Quantenorakel:** Zugriff via phasenkodiertem oder bit-flipped Orakel $O_f \|x\rangle\|y\rangle = \|x\rangle\|y \oplus f(x)\rangle$. Erlaubt Abfragen in **Superposition**. | Die Funktion $f$ selbst, deren Schaltkreis, Fourier-Koeffizienten oder globale Eigenschaften (z. B. Periode, Symmetrie, Parität). | • Bernstein–Vazirani, Simon, Shor<br>• Quantum PAC-Learning (Bshouty, Jackson)<br>• Quanten-Schwellenwert-Lernen |
+
+---
+
+### Warum fokussiert sich die Forschung auf jedes dieser Gebiete?
+
+---
+
+#### 1. Quantum State Learning: Der Schlüssel zur Verifikation von Quantenüberlegenheit
+* **Das Problem:** Wenn ein Labor behauptet, einen verschränkten 100-Qubit-Quantenzustand erzeugt zu haben (z. B. zur Demonstration von *Quantum Advantage*), muss dies unabhängig nachgewiesen werden. Eine vollständige Zustandstomographie ist jedoch hoffnungslos: Eine Dichtematrix von $n$ Qubits hat $4^n - 1$ reelle Parameter – bei 50 Qubits bräuchte man mehr Messungen, als es Atome im Universum gibt.
+* **Der Paradigmenwechsel (*Classical Shadows*):** Die Forschung hat sich von der vollständigen Rekonstruktion abgewandt hin zur **prädiktiven Lerntheorie**. 
+* **Warum es heute so wichtig ist:** Durch Techniken wie die *Classical Shadows* (Huang, Kueng, Preskill 2020) genügt eine polynomiale (oder gar logarithmische) Anzahl an Messungen, um hunderte physikalisch relevante Erwartungswerte $\langle O_i \rangle$ (wie Energie, Korrelationen, Verschränkungsentropie) vorherzusagen. Es ist das Standard-Werkzeug geworden, um Quantensimulatoren und Quantenprozessoren überhaupt auditieren zu können.
+
+---
+
+#### 2. Hamiltonian Learning: Die Naturgesetze und Fehlerquellen des Systems entschlüsseln
+* **Das Problem:** Ein Zustand $\rho$ ist vergänglich – der Hamiltonian $H$ hingegen ist das **fundamentale Gesetz**, das die gesamte Dynamik dauerhaft regiert. Wenn supraleitende Qubits miteinander wechselwirken, entstehen unbeabsichtigte Kopplungen (Crosstalk) und Phasenfluktuationen.
+* **Die physikalische Relevanz:** 
+  1. *Hardware-Kalibrierung:* Um Quantencomputer fehlertolerant zu machen, muss man den System-Hamiltonian bis auf winzige Bruchteile genau kennen, um Pulse exakt zu kompensieren.
+  2. *Quantensensorik & Metrologie:* Ein Quantensensor (z. B. NV-Zentren für Magnetfelder) wandelt eine externe Messgröße in einen Kopplungsterm im Hamiltonian um. Hamiltonian Learning ist gleichbedeutend mit dem Auslesen des Sensors.
+* **Warum Arbeiten wie Shin–Lee–Oh (2024) Meilensteine sind:** Die Quantenmechanik erlaubt es prinzipiell, Parameter mit einer Präzision von $\Delta \sim 1/T$ (Heisenberg-Limit) zu schätzen, statt des klassischen Rauschens $\Delta \sim 1/\sqrt{T}$. Bisherige Beweise erforderten aber oft das Schalten unendlich kurzer Evolutionszeiten ($t \to 0$), was an der Reaktionszeit realer Hardware scheitert. Shin–Lee–Oh haben bewiesen, dass man das Heisenberg-Limit auch unter realistischen Laborbedingungen (ohne Short-Time Control) erreichen kann.
+
+---
+
+#### 3. Unitary Learning: Die Zertifizierung perfekter Quantengatter
+* **Das Problem:** Ein Quantenalgorithmus besteht aus einer Kaskade unitärer Gatter (z. B. CNOT, Toffoli, Hadamard). Weicht das tatsächlich auf dem Chip ausgeführte Gatter auch nur um $0{,}1\,\%$ von der idealen Unitarität $U$ ab, bricht ein langer Algorithmus durch Fehlerakkumulation zusammen.
+* **Die methodische Hürde (SPAM-Fehler):** Wenn man ein Gatter testen will, muss man einen Zustand präparieren und am Ende messen. Dabei macht man aber Vorbereitungs- und Messfehler (State Preparation and Measurement = SPAM). Wie unterscheidet man einen Fehler des Gatters von einem Fehler des Messgeräts?
+* **Warum es heute so wichtig ist:** Verfahren wie *Randomized Benchmarking* (RB) und *Gate Set Tomography* (GST) wurden speziell entwickelt, um Gatterfehler invariant gegenüber SPAM-Fehlern zu messen. Unitary Learning bildet die Basis für die gesamte Compiler- und Gatteroptimierung in Quanten-Frameworks (wie Qiskit oder Cirq).
+
+---
+
+#### 4. Quantum Channel Learning: Das Fundament für Quantenfehlerkorrektur (QEC)
+* **Das Problem:** Kein Quantencomputer ist perfekt isoliert. Wechselwirkungen mit der Umgebung führen zu Dekohärenz (spontaner Zerfall $T_1$, Phasenverlust $T_2$). Diese Dynamik ist nicht unitär, sondern ein offener Quantenkanal $\mathcal{E}$.
+* **Der strategische Nutzen für QEC:** Quantenfehlerkorrekturcodes (wie der Surface Code) funktionieren drastisch besser, wenn man das spezifische Rauschmodell kennt:
+  * Reines *Pauli-Rauschen* (Bit-Flips und Phase-Flips) lässt sich extrem effizient korrigieren.
+  * *Kohärentes Rauschen* (ungewollte Mini-Rotationen) akkumuliert sich quadratisch und zerstört Fehlerkorrekturzyklen viel schneller.
+* **Warum die Forschung darauf brennt:** Um Fault-Tolerant Quantum Computing zu erreichen, muss man den Fehlerkanal $\mathcal{E}$ des gesamten Prozessors kontinuierlich lernen und überwachen. Moderne Methoden wie *Cycle Benchmarking* und *Shadow Process Tomography* versuchen, hochdimensionale Rauschkanäle mit minimalem Messaufwand in Echtzeit zu rekonstruieren.
+
+---
+
+#### 5. Classical Function Learning: Der Beweis für den Quantenvorteil im maschinellen Lernen
+* **Das Problem:** Hier ist das Ziel kein physikalisches System, sondern eine mathematische Funktion $f(x)$. Die zentrale Fragestellung lautet: **Gibt es Klassen von Funktionen, die ein Quantencomputer mit dramatisch weniger Beispielen (Sample Complexity) oder viel schneller (Time Complexity) lernen kann als jeder klassische Computer?**
+* **Die Verbindung zu QML & Komplexitätstheorie:**
+  * Im klassischen PAC-Lernen (*Probably Approximately Correct*) sind viele Konzepte (wie z. B. verschlüsselte Funktionen, diskrete Logarithmen oder bestimmte neuronale Netze) für klassische Algorithmen nachweislich unlernbar (unter kryptographischen Annahmen).
+  * Ein Quanten-Learner kann jedoch über Quantenorakel Anfragen in **Superposition** stellen ($\sum_x |x\rangle |f(x)\rangle$).
+* **Warum es heute so wichtig ist:** Dies ist die theoretische Wiege des echten Quantenvorteils:
+  * Algorithmen wie der von **Bshouty & Jackson** zeigten, dass Quanten-Learner DNF-Formeln (disjunktive Normalformen) unter uniformer Verteilung effizient lernen können – ein Problem, an dem klassische Algorithmen bis heute scheitern.
+  * Es liefert die theoretische Rechtfertigung für Quantum Machine Learning (QML): Man will exakt beweisen, wo Quantencomputer einen echten Lernvorteil gegenüber klassischer KI (wie Deep Learning) besitzen und wo nicht.
 
 ## Measurement primitives as basis for Protocols for Quantum Learning
 
@@ -178,6 +241,82 @@ Classical neural decoders on shadow data (bottom-left quadrant) as empirical heu
 | 2023 | Heisenberg-limited Hamiltonian learning (Huang–Tong–Fang–Su) · Adaptivity does not help tomography (Chen et al.) · Unitary estimation at the Heisenberg rate (Haah–Kothari–O'Donnell–Tang) · Phase states (Arunachalam–Bravyi–Dutt–Yoder) · Juntas (Chen–Nadimpalli–Yuen) · Predicting processes (Huang–Chen–Preskill) · Bounded gate complexity (Zhao et al.) · One $T$ gate makes distribution learning hard (Hinsche et al.) · Few non-Clifford gates (Grewal–Iyer–Kretschmer–Liang) · Free-fermion tomography (Aaronson–Grewal) · Noncommutative Bohnenblust–Hille (Volberg–Zhang) · Qudit low-degree learning via a dimension-free Remez inequality (Klein–Slote–Volberg–Zhang) · Matchgate shadows (Wan–Huggins–Lee–Babbush) · Locally scrambled shadows (Hu–Choi–You) · Randomized-measurement review (Elben et al.) · Stabilizer-entropy phase transition and purity estimation (Leone et al.) · Learning finitely correlated states (Fanizza et al.) · Average-case hardness of learning circuit output distributions (Nietner et al.) · Linear T-count for pseudorandomness and approximate stabilizer support from Bell difference sampling (Grewal–Iyer–Kretschmer–Liang) · Pseudomagic (Gu–Leone–Ghosh–Eisert–Yelin–Quek) · Pauli spectrum of QAC⁰, the quantum LMN (Nadimpalli–Parham–Vasconcelos–Yuen) |
 | 2024 | Triply efficient shadows (King–Gosset–Kothari–Babbush) · Conjugate pairs (King–Wan–McClean) · Adaptivity separations for shadow tomography (Chen–Gong–Zhang) · Agnostic tomography and stabilizer bootstrapping · Tolerant stabilizer testing (Arunachalam–Dutt) · Any-temperature Hamiltonian learning (Bakshi–Liu–Moitra–Tang) · Hamiltonian structure learning from real-time evolution (Bakshi–Liu–Moitra–Tang) · Shallow circuits in polynomial time (Huang et al.; Landau–Liu) · Qudit stabilizer learning beyond Bell sampling (Allcock et al.) · Low-degree objects · Certification with single-qubit measurements (Huang–Preskill–Soleimanifar) · Gaussian and CV state learning (Mele et al.) · AlphaQubit · Bell and locally entangled shadows (Ippoliti) · Matchgate ensemble unification (Heyraud–Chomet–Tilly) · Qudit shadows with a magic gate (Mao–Yi–Zhu) · Tighter median-of-means constants (Fu et al.) · State-learning survey (Anshu–Arunachalam) · Tolerant stabilizer testing with a polynomial gap (Bao–van Dordrecht–Helsen) · Fermionic states with few non-Gaussian gates (Mele–Herasymenko) |
 | 2025–2026 | First empirical evaluation of a two-copy triply efficient scheme (arXiv:2508.11744) · Noise-robust two-copy hardware · Physical average-case decodability · Learned decoders as algorithm discovery · Online shadow tomography at the classical rates (Chen–O'Donnell–Pelecanos–Wright) · Heisenberg-limited Hamiltonian learning without short-time control (Shin–Lee–Oh) · Shadows over symmetric spaces (Chang et al.) · Channel learning with limited parallel access and the conjugate channel (Subramanian–Kwon–Jiang) |
+
+### Research pillars over time
+
+A first map of the field in six pillars, restricted to results that changed what was believed possible. Each column follows one pillar, each row is a period (2004–07, 2010, 2016–17, 2018, then year by year up to 2026), and an arrow leads to the next milestone in the same pillar. A dashed frame marks a milestone without its own summary in these notes.
+
+```mermaid
+---
+config:
+  block:
+    padding: 16
+---
+block-beta
+  columns 6
+  %% header row, then one row per period; space = no milestone in that cell
+  P1["What is<br/>learned"] P2["Quantum<br/>memory"] P3["Structural<br/>promises"] P4["Computational<br/>wall"] P5["Hamiltonians<br/>and dynamics"] P6["Fourier<br/>and queries"]
+  t07["2007 · Aaronson<br/>PAC learning: O(n)<br/>measurements predict<br/>most outcomes"] space s04["2004 · Aaronson,<br/>Gottesman<br/>Stabilizer states<br/>from O(n²) copies"] h05["2005 · Regev<br/>LWE: noisy linear<br/>algebra is hard"] space space
+  space space s10["2010 · Cramer et al.;<br/>Gross et al.<br/>MPS and compressed-<br/>sensing tomography"] space space f10["2010 · Montanaro,<br/>Osborne<br/>Quantum Goldreich–<br/>Levin: heavy Paulis"]
+  t16["2016 · O'Donnell,<br/>Wright; Haah et al.<br/>Full tomography:<br/>Θ(d²/ε²) copies"] m17["2017 · Montanaro<br/>Bell sampling:<br/>stabilizer states<br/>from O(n) pairs"] space space space space
+  t18["2018 · Aaronson<br/>Shadow tomography:<br/>M observables from<br/>polylog(M)·n copies"] space space h18["2018 · Ji, Liu, Song<br/>Pseudorandom states<br/>fool every efficient<br/>test"] space space
+  t20["2020 · Huang,<br/>Kueng, Preskill<br/>Classical shadows:<br/>O(log M) snapshots"] space space space space space
+  space m21["2021 · Chen, Cotler,<br/>Huang, Li<br/>Exponential gap with<br/>vs. without memory"] space space d21["2021 · Anshu et al.<br/>Gibbs states:<br/>sample-efficient<br/>learning of H"] space
+  space m22["2022 · Huang et al.<br/>Memory advantage<br/>on Sycamore,<br/>up to 40 qubits"] space h22["2022 · Gollakota,<br/>Liang<br/>Noisy stabilizer PAC<br/>learning is LPN-hard"] d22["2022 · Haah,<br/>Kothari, Tang<br/>High temperature:<br/>optimal and fast"] space
+  space space s23["2023 · Grewal, Iyer,<br/>Kretschmer, Liang<br/>t non-Clifford gates:<br/>poly(n, 2^t)"] h23["2023 · Hinsche et al.;<br/>Zhao et al.<br/>1 T gate (outputs),<br/>ω(log n) gates: hard"] d23["2023 · Huang, Tong,<br/>Fang, Su<br/>Heisenberg limit 1/ε,<br/>many-body H"] f23["2023 · Chen,<br/>Nadimpalli, Yuen<br/>Quantum juntas:<br/>independent of n"]
+  t24["2024 · King, Gosset,<br/>Kothari, Babbush<br/>Triply efficient:<br/>all Paulis, 2 copies"] m24["2024 · King, Wan,<br/>McClean<br/>Conjugate pairs<br/>ρ⊗ρ* for qudits"] s24["2024 · Huang et al.;<br/>Landau, Liu<br/>Shallow circuits in<br/>polynomial time"] space d24["2024 · Bakshi, Liu,<br/>Moitra, Tang<br/>Structure learning<br/>from dynamics"] f24["2024 · Arunachalam<br/>et al.<br/>Low-degree channels,<br/>queries free of n"]
+  t26["2026 · Chen,<br/>O'Donnell et al.<br/>Shadow tomography<br/>at the classical rate"] space space space d26["2026 · Shin, Lee, Oh<br/>Heisenberg limit<br/>without short-time<br/>control"] space
+  %% arrows: the next milestone in the same pillar
+  t07 --> t16
+  t16 --> t18
+  t18 --> t20
+  t20 --> t24
+  t24 --> t26
+  m17 --> m21
+  m21 --> m22
+  m22 --> m24
+  s04 --> s10
+  s10 --> s23
+  s23 --> s24
+  h05 --> h18
+  h18 --> h22
+  h22 --> h23
+  d21 --> d22
+  d22 --> d23
+  d23 --> d24
+  d24 --> d26
+  f10 --> f23
+  f23 --> f24
+  classDef pillar font-weight:bold
+  classDef open stroke-dasharray:5 4
+  class P1,P2,P3,P4,P5,P6 pillar
+  class s04,h05,d21 open
+```
+
+**The six pillars.**
+1. **What is learned:** from reconstructing the state to predicting measurements. Each step either relaxes the success criterion or settles the copy count for it.
+2. **Quantum memory:** measurements on two copies at once, and the exponential separations they create.
+3. **Structural promises:** classes of states whose structure makes learning efficient in time, not only in copies.
+4. **Computational wall:** few copies suffice information-theoretically, yet no efficient algorithm exists under cryptographic assumptions.
+5. **Hamiltonians and dynamics:** learning the generator; access to $e^{-iHt}$ buys the Heisenberg rate $1/\epsilon$ instead of $1/\epsilon^2$.
+6. **Fourier and queries:** heavy Pauli coefficients and low-degree structure, found with query access.
+
+**Links between the pillars** (not drawn, so that the grid stays readable):
+* Aaronson, Gottesman 2004 → Montanaro 2017: stabilizer states from $O(n)$ copies measured in pairs, instead of $O(n^2)$ single copies.
+* Montanaro 2017 → Grewal et al. 2023: Bell difference sampling finds the stabilizer group of states with few non-Clifford gates.
+* Huang, Kueng, Preskill 2020 → Chen, Cotler, Huang, Li 2021: for worst-case observables, learners without quantum memory cannot beat classical shadows by more than logarithmic factors (Theorem 1.1 there).
+* Chen, Cotler, Huang, Li 2021 → King, Gosset, Kothari, Babbush 2024: single copies need $\Omega(2^n)$ for all Pauli expectation values, two-copy measurements make the task triply efficient.
+* King, Gosset, Kothari, Babbush 2024 → King, Wan, McClean 2024: the sign step by matrix multiplicative weights carries over from Paulis to qudit displacement operators.
+* Aaronson 2007 → Gollakota, Liang 2022: with label noise, PAC learning of stabilizer states inherits the hardness of LPN.
+* Grewal et al. 2023 and Hinsche et al. 2023: few non-Clifford gates are easy from copies, one $T$ gate makes output distributions hard from samples ("Contrast Pairs", pair 9).
+
+**Summaries by pillar.**
+* **What is learned:** [Aaronson 2007](#the-learnability-of-quantum-states-arxivquant-ph0608142) · [O'Donnell, Wright 2016](#efficient-quantum-tomography-arxiv150801907) · [Aaronson 2018](#shadow-tomography-of-quantum-states-arxiv171101053) · [Huang, Kueng, Preskill 2020](#predicting-many-properties-of-a-quantum-system-from-very-few-measurements-arxiv200208953) · [King, Gosset, Kothari, Babbush 2024](#triply-efficient-shadow-tomography-arxiv240419211) · [Chen, O'Donnell, Pelecanos, Wright 2026](#online-shadow-tomography-matching-the-classical-bounds-arxiv260729686)
+* **Quantum memory:** [Montanaro 2017](#learning-stabilizer-states-by-bell-sampling-arxiv170704012) · [Chen, Cotler, Huang, Li 2021](#exponential-separations-between-learning-with-and-without-quantum-memory-arxiv211105881) · [Huang et al. 2022](#quantum-advantage-in-learning-from-experiments-arxiv211200778) · [King, Wan, McClean 2024](#exponential-learning-advantages-with-conjugate-states-and-minimal-quantum-memory-arxiv240303469)
+* **Structural promises:** [Cramer et al. 2010](#efficient-quantum-state-tomography-arxiv11014366) · [Gross et al. 2010](#quantum-state-tomography-via-compressed-sensing-arxiv09093304) · [Grewal et al. 2023](#efficient-learning-of-quantum-states-prepared-with-few-non-clifford-gates-arxiv230513409) · [Huang et al. 2024](#learning-shallow-quantum-circuits-arxiv240110095)
+* **Computational wall:** [Ji, Liu, Song 2018](#pseudorandom-quantum-states-arxiv171100385) · [Gollakota, Liang 2022](#on-the-hardness-of-pac-learning-stabilizer-states-with-noise-arxiv210205174) · [Hinsche et al. 2023](#a-single-t-gate-makes-distribution-learning-hard-arxiv220703140) · [Zhao et al. 2023](#learning-quantum-states-and-unitaries-of-bounded-gate-complexity-arxiv231019882)
+* **Hamiltonians and dynamics:** [Haah, Kothari, Tang 2022](#optimal-learning-of-quantum-hamiltonians-from-high-temperature-gibbs-states-arxiv210804842) · [Huang, Tong, Fang, Su 2023](#learning-many-body-hamiltonians-with-heisenberg-limited-scaling-arxiv221003030) · [Bakshi, Liu, Moitra, Tang 2024](#structure-learning-of-hamiltonians-from-real-time-evolution-arxiv240500082) · [Shin, Lee, Oh 2026](#heisenberg-limited-hamiltonian-learning-without-short-time-control-arxiv260427838)
+* **Fourier and queries:** [Montanaro, Osborne 2010](#quantum-boolean-functions-arxiv08102435) · [Chen, Nadimpalli, Yuen 2023](#testing-and-learning-quantum-juntas-nearly-optimally-arxiv220705898) · [Arunachalam et al. 2024](#learning-low-degree-quantum-objects-arxiv240510933)
 
 <br>
 
@@ -5592,8 +5731,8 @@ A critical disconnect exists between the current quantum metrology literature an
 
 ```mermaid
 flowchart TD
-    classDef synth fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
-    classDef box fill:#f5f5f5,stroke:#455a64,stroke-width:1px;
+    classDef synth fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#18212b;
+    classDef box fill:#f5f5f5,stroke:#455a64,stroke-width:1px,color:#18212b;
 
     C["<b>Classical Astrophysics</b><br/>(LIGO, VLBI, Kepler)<br/>• <i>Focus:</i> Template matching, FFT<br/>• <i>Bottleneck:</i> Combinatorial explosion in all-sky search"]:::box
     M["<b>Standard Quantum Metrology</b><br/>(Caves 1981, Tsang 2016)<br/>• <i>Focus:</i> Fisher info, Cramér-Rao bounds<br/>• <i>Limitation:</i> Assumes coordinates are known (Estimating only)"]:::box

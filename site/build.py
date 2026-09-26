@@ -60,10 +60,12 @@ def resolve_anchor(target, ctx):
 DISPLAY_MATH = re.compile(r"\$\$(.+?)\$\$", re.S)
 INLINE_MATH = re.compile(r"(?<!\\)\$([^$\n]+?)(?<!\\)\$")
 PH = re.compile("\ue000(\\d+)\ue001")
+FENCE = re.compile(r"^(```.*?^```[ \t]*$)", re.M | re.S)
+MERMAID = re.compile(r'<pre><code class="language-mermaid">(.*?)</code></pre>', re.S)
 
 
 def render(text, ctx):
-    """Markdown to HTML; formulas are shielded from the Markdown parser."""
+    """Markdown to HTML; formulas are shielded from the Markdown parser, code fences stay as they are."""
     store = []
 
     def keep(display):
@@ -72,9 +74,11 @@ def render(text, ctx):
             return f"\ue000{len(store) - 1}\ue001"
         return sub
 
-    text = DISPLAY_MATH.sub(keep(True), text)
-    text = INLINE_MATH.sub(keep(False), text)
-    out = md.render(text)
+    pieces = FENCE.split(text)
+    for i in range(0, len(pieces), 2):
+        pieces[i] = INLINE_MATH.sub(keep(False), DISPLAY_MATH.sub(keep(True), pieces[i]))
+    out = md.render("".join(pieces))
+    out = MERMAID.sub(r'<div class="diagram"><pre class="mermaid">\1</pre></div>', out)
 
     def restore(m):
         tex, display = store[int(m.group(1))]
@@ -121,10 +125,13 @@ def heading_anchor(m, ctx):
 # ---------- cross-references in the Markdown source ----------
 
 def link_references(text, ctx):
-    """Turn quoted section or row names and plain arXiv IDs into internal links."""
+    """Turn quoted section or row names and plain arXiv IDs into internal links (not inside code fences)."""
     out = []
+    fenced = False
     for line in text.split("\n"):
-        if line.startswith("#"):
+        if line.startswith("```"):
+            fenced = not fenced
+        if fenced or line.startswith("#") or line.startswith("```"):
             out.append(line)
             continue
 
