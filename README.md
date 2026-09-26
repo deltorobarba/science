@@ -1,5 +1,5 @@
 
-# Quantum Information Science
+# Science
 
 Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/)
 
@@ -8,7 +8,24 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
-Study and research notes on quantum theory.
+**Quantum Algorithms**
+* [README.md](https://github.com/deltorobarba/science/blob/main/README.md) - Quantum Information Science - research notes
+* [science.md](https://github.com/deltorobarba/science/blob/main/science.md) - Quantum Learning theory - research notes
+* [scrambling.ipynb](https://github.com/deltorobarba/science/blob/main/scrambling.ipynb) - Quantum information scrambling research code
+* [quantum.ipynb](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - Quantum Computing code
+
+**Astrophysics**
+* [galaxies.ipynb](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) - Galaxies and Nebulae research code
+* [exoplanets.ipynb](https://github.com/deltorobarba/science/blob/main/exoplanets.ipynb) - Exoplanet research code
+* [gravitationalwaves.ipynb](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) - Gravitational Waves research code
+* [stars.ipynb](https://github.com/deltorobarba/science/blob/main/stars.ipynb) - Stars and solar research code
+
+
+---
+
+<br>
+
+**Study and research notes on quantum theory**
 
 - [I. Heisenberg-Weyl](#i-heisenberg-weyl)
 - [II. Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra](#ii-tensor-algebra-tv-as-basis-for-exterior-symmetric-clifford-and-weyl-algebra)
