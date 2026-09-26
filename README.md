@@ -10,7 +10,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 **Quantum Algorithms**
 * [README.md](https://github.com/deltorobarba/science/blob/main/README.md) - Quantum Information Science - research notes
-* [science.md](https://github.com/deltorobarba/science/blob/main/science.md) - Quantum Learning theory - research notes
+* [science.md](https://deltorobarba.github.io/science/) - Quantum Learning theory - research notes
 * [scrambling.ipynb](https://github.com/deltorobarba/science/blob/main/scrambling.ipynb) - Quantum information scrambling research code
 * [quantum.ipynb](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - Quantum Computing code
 
