@@ -12,6 +12,7 @@ Alexander Del Toro Barba, PhD
 
 See website: https://deltorobarba.github.io/science/
 
+- [Introduction to Quantum Learning](#introduction-to-quantum-learning)
 - [Efficiency Boundaries](#efficiency-boundaries)
 - [Searching](#searching)
 - [Searching (Papers)](#searching-papers)
@@ -19,10 +20,201 @@ See website: https://deltorobarba.github.io/science/
 - [Identifying (Papers)](#identifying-papers)
 - [Estimating](#estimating)
 - [Estimating (Papers)](#estimating-papers)
-- [Appendix](#appendix)
 - [Astrophysics](#astrophysics)
 
 ---
+
+
+<br>
+
+# Introduction to Quantum Learning
+
+## Separation: QML with Classical and Quantum Data
+
+The data source decides, not the hardware. Quantum Learning is the bottom row of the following data-vs-learner matrix. **Why the separation matters (Power of Data).** In the top row, advantage claims are fragile: classical ML with enough training data catches up with quantum models on classical tasks (Huang et al., Nat. Commun. 2021). In the bottom row stand the *proven* exponential separations, including hardware demonstration.
+
+| | Classical Learners | Quantum Enhanced Learners |
+| --- | --- | --- |
+| **Classical data** | classical ML | "QML on classical data": feature maps, variational classifiers, quantum kernels |
+| **Quantum data** <br>(copies of $\rho$ / channels) | **Measurement protocol + classical statistics: shadows, Bell sampling + classical decoders** | Quantum-memory protocols: coherent two-/multi-copy measurements |
+
+Three litmus tests separate the rows sharply:
+
+1. **Where does the unknown live?** Density operator/channel vs. classical dataset.
+2. **Is "number of copies" a meaningful cost?** Quantum data cannot be cloned, every copy costs. Classical data can be copied at will.
+3. **Do the information bounds bind?** No-cloning, Holevo, and gentle measurement are what make learning from quantum data nontrivial. They do not apply to a CSV file. 
+
+The three bounds are: **No-cloning:** no CPTP map sends $\rho \mapsto \rho\otimes\rho$ for all $\rho$ (linearity forbids it). > The first bound makes copies a budget. **Holevo:** $n$ qubits carry at most $n$ bits of accessible classical information, $I(X{:}Y) \leq S(\bar\rho) - \sum_x p_x S(\rho_x) \leq n$. > the second bound caps what one shot can reveal. **Gentle measurement** (Winter 1999; Aaronson 2004): if a two-outcome measurement accepts $\rho$ with probability $\geq 1-\epsilon$, the post-measurement state is within trace distance $O(\sqrt{\epsilon})$ of $\rho$. > the third bound is the loophole that lets many near-deterministic questions share the same copies (shadow tomography).
+
+
+## Measurement theory vs. Learning Theory
+
+Measurement theory answers the single-shot question: What does a measurement do to a state, and which statistics does it produce? Learning theory asks the inverse, statistical question: *What can be learned about an unknown $\rho$ from many measurements, and at what cost?* The Born rule turns the state into a sampling oracle; learning is the inverse problem.
+
+**Definition.** Given access to copies of an unknown quantum object (state $\rho$, channel $\mathcal{E}$, Hamiltonian $H$), produced by nature, a sensor, or a quantum device: *Which* properties can a learner extract, at *what* cost in copies, classical time, and memory, and how do quantum resources (quantum memory, entangled measurements, adaptivity) change these costs?
+
+
+## What is learned: states and processes
+
+**The object axis.** A learner can be asked about a state, a Hamiltonian, a unitary, a channel, or a classical function. This is a fourth axis next to task, access, and budgets, and it runs across the three task types rather than forming a block of its own: states appear in all three tables, and so do processes. Hamiltonians have rows in estimating for their coefficients and in searching for their structure; circuits have rows in identifying. The tables therefore carry the object as a column instead of a separate section.
+
+**Access for processes.** Sample versus query is defined for states on the access ladder. For processes the classical distinction between random examples and membership queries supplies the definition.
+* A process applied to fixed or random inputs that do not depend on earlier outcomes yields copies of a single state: the Choi state, obtained by applying the process to half of a Bell pair, or the input–output data state. That is **sample access**.
+* Inputs chosen adaptively or queried in superposition, and uses of the process in controlled or inverted form, in sequences, or interleaved with control pulses, are **query access**. Heisenberg-limited learning of dynamics needs such control (Dutkiewicz, O'Brien, Schuster 2024) and is therefore query access.
+* Every row sits at the **weakest access its algorithm needs**. A nonadaptive protocol on random product inputs is a sample protocol, even if the learner prepares the inputs.
+
+**Object and access are independent.** Learning a Hamiltonian from copies of its Gibbs state learns a process from samples of a state. Learning a state through its preparation circuit learns a state by queries. Learning a channel from its Choi state learns a process from samples, with the ancilla as quantum memory.
+
+**Where the object decides hardness: normalization.** The squared Pauli coefficients of a unitary sum to one, so Bell sampling on its Choi state returns every coefficient of size $\tau$ with probability $\tau^2$, and the heavy terms fall out directly. The squared displacement coefficients of a pure state sum to $d$, so a coefficient of size one appears with probability $1/d$. The same measurement makes searching easy for unitaries and runs into the LWE wall for states. Details in the structure-learning protocols.
+
+## Measurement primitives as basis for Protocols for Quantum Learning
+
+Everything protocol below is a *protocol over measurements*, not a new measurement type. The section mirrors the three tables. First the four measurement primitives from which every protocol is built, then the protocols by task type, then what cuts across all three tables: the proof technology behind the bounds, the hardness results, the learned decoders, and the surveys.
+
+**Measurement primitives**
+
+Four primitives, one per rung of the access ladder and one for the far end of the memory axis. Every row in the tables uses one of them.
+
+**Single-copy randomized measurements.** Draw a random basis per copy, from single-qubit Paulis or from $n$-qubit Cliffords, measure, and store the outcome. The engine of classical shadows and of direct fidelity estimation, where Pauli expectations are importance-sampled by their weight in the target state (Flammia, Liu 2011; da Silva, Landon-Cardinal, Poulin 2011). Adaptivity is allowed, each copy is still an i.i.d. draw, and the shadow norm of the ensemble decides the cost. This is rung 1 of the access ladder and the workhorse of every hardware experiment.
+
+**Bell sampling on two copies.** A transversal Bell measurement across two copies, $\rho\otimes\rho$ or $\rho\otimes\rho^*$, draws one Pauli or displacement operator per shot. Bell difference sampling, the XOR of two such draws from four copies, removes the unknown coset offset and is the primitive behind stabilizer learning, stabilizer testing, and agnostic tomography. Conjugate pairs turn the draw into the clean squared spectrum for every dimension $d$; on qudits with two identical copies the draw can be uniform and carry nothing. Rung 2 of the access ladder. Details in the next subsection. Applied to the Choi state of a unitary or channel, the same measurement samples its Pauli spectrum; for processes this is the sample-access primitive.
+
+**Collective Schur sampling.** Measure all $N$ copies at once in the Schur–Weyl basis, which projects onto irreducible representations of the symmetric and unitary groups. Spectrum estimation (Keyl, Werner 2001), spectrum testing (O'Donnell, Wright 2015), and sample-optimal tomography (Haah et al. 2017; O'Donnell, Wright 2016) live here. Quantum memory $k = N$, the far end of the memory axis, and the reason those optimal rates are not hardware rates.
+
+**Oracle calls.** Uses of a preparation circuit $U$, its inverse and controlled versions, of the dynamics $e^{-iHt}$ interleaved with control, or of a channel in sequences or on inputs chosen adaptively or in superposition. Amplitude estimation, superposition queries, Heisenberg-limited Hamiltonian learning, and sequence-based noise learning count this budget. A process applied once to a fixed or random input is not an oracle call in this sense: it yields copies of the Choi state or of an input–output data state and belongs to the sample primitives. Rung 3 of the access ladder, where the precision rate improves to $1/\epsilon$ and where the search problems of the searching table become polynomial.
+
+## Bell sampling on two copies: the primitive behind conjugate pairs and structure learning
+
+**Mechanism.** The $2n$-qubit Bell basis $\{(P\otimes\mathbb{1})|\Phi^+\rangle^{\otimes n}\}$ is the joint eigenbasis of all commuting $P\otimes\bar P$. A transversal Bell measurement across two copies draws one Pauli string per shot
+
+$$P \sim \frac{|\langle\bar\psi|P|\psi\rangle|^2}{2^n}$$
+
+A single shot carries information about the *entire* Pauli spectrum. **Subtlety:** On $\psi\otimes\psi$ one samples against the *conjugate* state $\bar\psi$. The clean spectrum $\mathrm{Tr}(P\rho)^2/2^n$ requires the pair $(\rho, \bar\rho)$. For real amplitudes both coincide (which is why demos like GHZ states).
+
+**Consequences.** Purity and overlap $\mathrm{Tr}(\rho\sigma)$ via SWAP tests without tomography. Stabilizer states learnable from $O(n)$ Bell samples. Above all: **Pauli shadow tomography with $\Theta(n)$ copies given two-copy memory vs. $2^{\Omega(n)}$ without.** One of the strongest proven exponential quantum advantages, demonstrated in hardware. Two is the sweet spot: Almost all known gain arrives already at $k=2$.
+
+Literature:
+* **Bubeck, Chen, Li (FOCS 2020):** Entanglement necessary for optimal property testing.
+* **Chen, Cotler, Huang, Li (FOCS 2021):** $\Theta(n)$ vs. $2^{\Omega(n)}$ separation with quantum memory.
+* **Aharonov, Cotler, Qi (Nat. Commun. 2022):** QUALM, the formal model of an experiment as a quantum algorithm with coherent or incoherent access to a lab oracle; exponential separation of the two for physically motivated distinction tasks, with a SWAP test on two oracle outputs as the coherent protocol.
+* **Huang et al. (Science 2022):** Flagship separations and Sycamore demo with 40 qubits.
+* **King, Wan, McClean (2024):** Exponential advantage via $(\rho, \rho^*)$ with constant memory.
+* **Chen, Gong, Zhang (2024):** Separations for adaptive multi-copy shadow tomography.
+* **Allcock, Doriguello, Ivanyos, Santha (2024):** Bell sampling fails on qudits, $d > 2$: Bell difference sampling on four copies of a stabilizer state returns only $\mathrm{col}(V)\times\mathrm{col}(W)$, uniform when both have full rank. With the conjugate, Bell sampling on $\vert S\rangle\vert S^*\rangle$ learns the state from $O(n)$ copies for every $d$; without it, a hidden-quadratic-phase algorithm does for $d$ prime. The reason to use conjugate pairs rather than two identical copies.
+
+**Two more separations of the same shape.** *Purity testing* (is $\rho$ pure or maximally mixed?) needs $O(1)$ copies with two-copy memory (a SWAP test) but $\Omega(2^{n/2})$ without (Chen, Cotler, Huang, Li, FOCS 2021); the memory-free lower bound also kills any single-copy route to $\mathrm{Tr}(\rho^2)$. *Pauli channel estimation*: learning all $4^n$ Pauli eigenvalues of a channel to $\pm\epsilon$ takes roughly $O(n/\epsilon^2)$ uses with ancilla-assisted entangled inputs versus $2^{\Omega(n)}$ without (Chen, Zhou, Seif, Jiang, PRA 2022), the channel version of the shadow-tomography separation. The general framework in which all of these live is **QUALM** (Aharonov, Cotler, Qi, Nat. Commun. 2022): an experiment is a quantum algorithm that calls an unknown *lab oracle*, with *coherent* access (outputs of several calls held and measured jointly) or *incoherent* access (each output measured completely before the next call, adaptivity allowed). The separations above are statements about this coherence, which is the memory axis of this document, not about the model class; which oracle nature supplies, copies of $\rho$, pairs $\rho\otimes\rho^*$, or the preparation circuit, is the separate access ladder. On qubits the SWAP test behind these separations is a coarse-grained Bell measurement: SWAP is diagonal in the Bell basis, with eigenvalue $(-1)^{\#Y}$ on the outcome $P$. On qudits with $d>2$ it is not; see the QUALM summary under Identifying (Papers).
+
+
+<br>
+
+## Where the bounds come from: proof technology
+
+The thesis stated under Efficiency Boundaries, a dense sample map and a nearly empty time map, has a concrete cause: the two kinds of bounds are proved with different tools, and only one kind is unconditional.
+
+**Sample lower bounds, unconditional.**
+* *Holevo and packing.* $n$ qubits carry at most $n$ bits; a hypothesis class with $2^{\Theta(N)}$ well-separated members needs $\Omega(N)$ copies. This gives $\Omega(n)$ for stabilizer states, $\Omega(d^2/\epsilon^2)$ for full tomography, and $\Omega(d_{\mathrm{VC}}/\epsilon)$ for PAC learning from quantum examples (Arunachalam, de Wolf 2018).
+* *The tree method for bounded memory.* A learner without quantum memory induces a tree of single-copy outcomes; bounding the likelihood ratio between a random hypothesis and the maximally mixed state along every root-to-leaf path gives $2^{\Omega(n)}$ for Pauli shadow tomography, purity testing, and channel learning without memory (Bubeck, Chen, Li 2020; Chen, Cotler, Huang, Li 2021; Chen, Zhou, Seif, Jiang 2022) and $\Omega(d^3/\epsilon^2)$ for single-copy tomography, adaptive or not (Lowe, Nayak 2022; Chen, Huang, Li, Liu, Sellke 2023). The method interpolates in the number $k$ of memory qubits.
+* *Reduction plus Weingarten calculus for Haar-random oracles.* Every incoherent protocol, adaptive or not, is a probabilistic mixture of simple prepare–apply–measure protocols, because the classical messages from the workspace can be generated by a classical computer with random bits. For those, the outcome distributions under a fixed and under a fresh Haar-random unitary are compared term by term in the Weingarten expansion, summing over outcomes backwards from the last call. This gives $\Omega(2^{2\ell/7})$ for the fixed-unitary and symmetry-class problems (Aharonov, Cotler, Qi 2022), the process-side counterpart of the tree method.
+* *Group theory.* Schur–Weyl duality for the unitary group gives the optimal tomography rates; Schur–Weyl duality for the Clifford group (Gross, Nezami, Walter 2021) explains why four copies expose a stabilizer group and why the characteristic distribution of a pure state is its own symplectic Fourier transform.
+
+**Sample upper bounds.**
+* *Hoeffding plus a union bound* over a candidate list: character means over a dictionary, all $d^2$ squared magnitudes from one Bell record, Hamiltonian coefficients from local marginals.
+* *Median of means and the shadow norm* for classical shadows; *gentle measurement* for shadow tomography (Winter 1999; Aaronson 2004, 2018), which is the same lemma as differential privacy (Aaronson, Rothblum 2019); *threshold search* for hypothesis selection (Bădescu, O'Donnell 2021); *matrix multiplicative weights* as the hypothesis update behind shadow and online learning.
+* *Fourier sampling and coset differencing*: Bell sampling, Bell difference sampling, and quantum examples deliver random elements of a subspace or coset, and Gaussian elimination finishes (Montanaro 2017; Bshouty, Jackson 1998; Simon 1994).
+
+**Time lower bounds, conditional.** Every known one is a reduction from a cryptographic assumption. LWE gives the real-diagonal displacement instance; LPN gives the hardness of learning output distributions with a single $T$ gate (Hinsche et al. 2023) and the classical mirror of Bell sampling; one-way functions give pseudorandom states (Ji, Liu, Song 2018; Brakerski, Shmueli 2019) and from them the hardness of learning states of bounded gate complexity (Zhao et al. 2023) and of distinguishing entanglement (Aaronson et al. 2022). No unconditional time lower bound for a natural quantum learning task is known, which is why the time map is empty where the sample map is dense.
+
+**Time upper bounds.** Each one names the structure it uses: linear algebra over $\mathbb{F}_2$ or $\mathbb{Z}_d$ for subgroups, enumeration for dictionaries, a best-first heap for factorized spectra, the noncommutative Bohnenblust–Hille inequality for low-degree objects (Volberg, Zhang 2023), light cones for shallow circuits, cluster expansions at high temperature and a different route at any constant temperature for Gibbs-state Hamiltonian learning (Haah, Kothari, Tang 2022; Bakshi, Liu, Moitra, Tang 2024), and graph colorings of commutation structure for triply efficient shadow tomography (King, Gosset, Kothari, Babbush 2024). A learned decoder is an attempt to obtain such a bound empirically where no structure has been named.
+
+## Computational lens: hardness and pseudorandomness
+
+Pseudorandom states (PRS) show: States can be statistically learnable yet computationally indistinguishable from Haar-random ones.
+
+* **Regev (2005):** Learning With Errors, foundation of average-case hardness.
+* **Ji, Liu, Song (CRYPTO 2018):** Pseudorandom quantum states.
+* **Kretschmer (TQC 2021):** Quantum pseudorandomness and classical learning hardness.
+* **Huang, Broughton et al. (Nat. Commun. 2021):** *Power of data*: classical data closes quantum advantages in learning classical functions.
+* **Brakerski, Shmueli (TCC 2019):** Scalable pseudorandom states from one-way functions.
+* **Aaronson, Bouland, Fefferman, Ghosh, Vazirani, Zhang, Zhou (ITCS 2024):** Pseudoentanglement: low and high entanglement, computationally indistinguishable.
+* **Gu, Leone, Ghosh, Eisert, Yelin, Quek (2023):** Pseudomagic: stabilizer entropy $\omega(\log n)$ versus $\Theta(n)$, computationally indistinguishable; magic is hideable like entanglement, the two are tunable independently, and black-box magic distillation is limited to $O(\log^{1+c} n)$ $T$ states. For the searching column a second hard endpoint from one-way functions.
+* **Zhao, Lewis, Kannan, Quek, Huang, Caro (PRX Quantum 2024):** States and unitaries of bounded gate complexity: $\tilde\Theta(G)$ copies suffice, but learning is computationally hard under cryptographic assumptions.
+* **Hinsche et al. (2022; PRL 2023, "One $T$ gate makes distribution learning hard") / Nietner et al. (2023):** Output distributions of circuits: learnable for Clifford, hard under LPN with a single non-Clifford gate, also on average.
+
+**The average-case counterpart.** Huang, Kueng, Preskill, "Information-theoretic bounds on quantum advantage in machine learning" (PRL 2021): for predicting $\mathrm{Tr}(O\,\mathcal{E}(\rho_x))$ on inputs drawn from a distribution, a classical learner with measurement data needs only polynomially more samples than a fully quantum one in the *average-case* prediction error, while for *worst-case* prediction the gap can be exponential. Read together with PRS: computational indistinguishability and average-case learnability are different axes, and most "quantum advantage in learning" claims live on the worst-case one.
+
+## Machine-learned decoders
+
+Classical neural decoders on shadow data (bottom-left quadrant) as empirical heuristics for classically hard decoding tasks.
+
+* **Torlai et al. (Nat. Phys. 2018):** Neural-network QST.
+* **Huang, Kueng, Torlai, Albert, Preskill (Science 2022):** Provable generalization bounds for ML on shadow data.
+* **Huang, Preskill, Soleimanifar (2024):** State certification via single-qubit shadow relaxations.
+* **Carrasquilla, Torlai, Melko, Aolita (Nat. Mach. Intell. 2019):** Generative models as state representations fit to measurement data.
+* **Lewis et al. (Nat. Commun. 2024) / Onorati, Rouzé, França, Watson (2023):** Provable prediction of ground and thermal state properties within a phase, down to $O(\log n)$ training states.
+* **Bausch et al. (Nature 2024):** AlphaQubit, the learned surface-code decoder.
+
+**Representation side and the decoding target.** The representational cousin of a learned decoder is the **neural quantum state** (Carleo, Troyer, Science 2017): a network as the ansatz $\psi_\theta(s)$, trained variationally rather than from measurement data. The two meet in Torlai et al. (2018), where the network is fit to measurement statistics. On the transfer to error correction: Google's **AlphaQubit** (Bausch et al., Nature 2024) is a transformer decoder trained on syndrome data that outperforms tensor-network and matching decoders on Sycamore surface-code experiments, the existence proof that a learned decoder can beat hand-built combinatorics on real hardware data.
+
+## Surveys and timeline
+
+* **Anshu, Arunachalam (Nat. Rev. Phys. 2024):** Canonical survey on state-learning complexity.
+* **Gebhart et al. (Nat. Rev. Phys. 2023):** Review on learning quantum dynamics in experiments.
+* **Elben et al. (Nat. Rev. Phys. 2023):** The randomized measurement toolbox, shadows in practice.
+* **Kliesch, Roth (PRX Quantum 2021):** Theory of quantum system certification, a tutorial.
+* **Montanaro, de Wolf (2016):** Survey of quantum property testing.
+* **Arunachalam, de Wolf (SIGACT 2017):** Quantum PAC learning.
+
+| Period | Milestones |
+| --- | --- |
+| 1973–1997 | Holevo bound (1973) · Bernstein–Vazirani (1993) and Simon (1994): Fourier sampling and hidden subgroups, the query-side primitives · DNF from quantum examples (Bshouty–Jackson 1995) |
+| 1998–2004 | Gentle measurement (Winter 1999; Aaronson 2004) · Spectrum estimation by Schur sampling (Keyl–Werner 2001) · Quantum Goldreich–Levin (Adcock–Cleve 2002) · Stabilizer identification (Aaronson–Gottesman 2004) · Quantum vs. classical learnability (Servedio–Gortler 2004) |
+| 2005–2010 | LWE (Regev 2005) · State PAC learnability (Aaronson 2007) · Clifford learning (Low 2009) · Compressed-sensing and MPS tomography (2010) · Quantum Boolean functions and operator Goldreich–Levin (Montanaro–Osborne 2010) |
+| 2011–2014 | Direct fidelity estimation by Pauli importance sampling (Flammia–Liu; da Silva, Landon-Cardinal, Poulin 2011) · Sparse FFT (Hassanieh, Indyk, Katabi, Price 2012) |
+| 2015–2017 | Spectrum testing (O'Donnell–Wright 2015) · Sample-optimal tomography $\Theta(d^2/\epsilon^2)$ (2016) · Property-testing survey (Montanaro–de Wolf 2016) · Stabilizer Bell sampling (Montanaro 2017) · Quantum PAC survey (Arunachalam–de Wolf 2017) · Ising structure learning in $\tilde O(p^2)$ without correlation decay (Bresler 2015) · Sparsitron, near-optimal MRF structure learning by multiplicative weights (Klivans–Meka 2017) |
+| 2018–2019 | Shadow tomography (Aaronson) · Online learning of states · Pseudorandom states (Ji–Liu–Song) · Neural-network tomography (Torlai et al.) · Stabilizer PAC learning (Rocchetto) · Gentle measurement and differential privacy (Aaronson–Rothblum) · LWE easy with quantum samples (Grilo–Kerenidis–Zijlstra) · Scalable PRS (Brakerski–Shmueli) · $k$-Fourier-sparse functions from $O(k^{1.5}\log^2 k)$ quantum examples (Arunachalam–Chakraborty–Lee–Paraashar–de Wolf) |
+| 2020 | Classical shadows (Huang–Kueng–Preskill) · Entanglement necessary for property testing (Bubeck–Chen–Li) · Pauli channel estimation (Flammia–Wallman; Harper–Flammia–Wallman) · Quantum statistical queries (Arunachalam–Grilo–Yuen) · Sparse Pauli noise by peeling on chosen stabilizer groups (Harper–Yu–Flammia) |
+| 2021 | Memory separations (Chen–Cotler–Huang–Li) · Clifford Schur–Weyl duality and stabilizer testing (Gross–Nezami–Walter) · Improved shadow tomography and threshold search (Bădescu–O'Donnell) · Gibbs-state Hamiltonian learning (Anshu et al.) · Power of data and information-theoretic bounds (Huang et al.) · Pseudorandomness and learning hardness (Kretschmer) · Derandomized and fermionic shadows · Experimental classical shadows on four photonic qubits (Zhang et al.) · Certification tutorial (Kliesch–Roth) |
+| 2022 | Learning from experiments, Sycamore demo (Huang et al., Science) · Provable ML on shadow data (Huang et al., Science) · Pauli-channel separation (Chen–Zhou–Seif–Jiang) · QUALM (Aharonov–Cotler–Qi) · High-temperature Hamiltonian learning in polynomial time (Haah–Kothari–Tang) · Few-T learning (Lai–Cheng) · Pseudoentanglement · Output-distribution learnability (Hinsche et al.) · Nonadaptive single-copy lower bound (Lowe–Nayak) · Tight certification bounds with incoherent measurements (Chen–Huang–Li–Liu) · Non-Markovian process tensor tomography (White et al.) · Noisy stabilizer PAC learning as hard as LPN (Gollakota–Liang) |
+| 2023 | Heisenberg-limited Hamiltonian learning (Huang–Tong–Fang–Su) · Adaptivity does not help tomography (Chen et al.) · Unitary estimation at the Heisenberg rate (Haah–Kothari–O'Donnell–Tang) · Phase states (Arunachalam–Bravyi–Dutt–Yoder) · Juntas (Chen–Nadimpalli–Yuen) · Predicting processes (Huang–Chen–Preskill) · Bounded gate complexity (Zhao et al.) · One $T$ gate makes distribution learning hard (Hinsche et al.) · Few non-Clifford gates (Grewal–Iyer–Kretschmer–Liang) · Free-fermion tomography (Aaronson–Grewal) · Noncommutative Bohnenblust–Hille (Volberg–Zhang) · Qudit low-degree learning via a dimension-free Remez inequality (Klein–Slote–Volberg–Zhang) · Matchgate shadows (Wan–Huggins–Lee–Babbush) · Locally scrambled shadows (Hu–Choi–You) · Randomized-measurement review (Elben et al.) · Stabilizer-entropy phase transition and purity estimation (Leone et al.) · Learning finitely correlated states (Fanizza et al.) · Average-case hardness of learning circuit output distributions (Nietner et al.) · Linear T-count for pseudorandomness and approximate stabilizer support from Bell difference sampling (Grewal–Iyer–Kretschmer–Liang) · Pseudomagic (Gu–Leone–Ghosh–Eisert–Yelin–Quek) · Pauli spectrum of QAC⁰, the quantum LMN (Nadimpalli–Parham–Vasconcelos–Yuen) |
+| 2024 | Triply efficient shadows (King–Gosset–Kothari–Babbush) · Conjugate pairs (King–Wan–McClean) · Adaptivity separations for shadow tomography (Chen–Gong–Zhang) · Agnostic tomography and stabilizer bootstrapping · Tolerant stabilizer testing (Arunachalam–Dutt) · Any-temperature Hamiltonian learning (Bakshi–Liu–Moitra–Tang) · Hamiltonian structure learning from real-time evolution (Bakshi–Liu–Moitra–Tang) · Shallow circuits in polynomial time (Huang et al.; Landau–Liu) · Qudit stabilizer learning beyond Bell sampling (Allcock et al.) · Low-degree objects · Certification with single-qubit measurements (Huang–Preskill–Soleimanifar) · Gaussian and CV state learning (Mele et al.) · AlphaQubit · Bell and locally entangled shadows (Ippoliti) · Matchgate ensemble unification (Heyraud–Chomet–Tilly) · Qudit shadows with a magic gate (Mao–Yi–Zhu) · Tighter median-of-means constants (Fu et al.) · State-learning survey (Anshu–Arunachalam) · Tolerant stabilizer testing with a polynomial gap (Bao–van Dordrecht–Helsen) · Fermionic states with few non-Gaussian gates (Mele–Herasymenko) |
+| 2025–2026 | First empirical evaluation of a two-copy triply efficient scheme (arXiv:2508.11744) · Noise-robust two-copy hardware · Physical average-case decodability · Learned decoders as algorithm discovery · Online shadow tomography at the classical rates (Chen–O'Donnell–Pelecanos–Wright) · Heisenberg-limited Hamiltonian learning without short-time control (Shin–Lee–Oh) · Shadows over symmetric spaces (Chang et al.) · Channel learning with limited parallel access and the conjugate channel (Subramanian–Kwon–Jiang) |
+
+<br>
+
+## Open Frontiers (Research Questions)
+
+* **Mapping the decodable classes.** Between "subgroup-easy" (linear algebra) and "LWE-hard" lies uncharted territory. The same state moves from the easy to the hard regime by turning up a noise parameter. Open: Does the hardness reduction transfer from the tensor-product basis to the cyclic single-qudit basis?
+* **What learned decoders implicitly find.** If a decoder works on a class with no known efficient algorithm, it may have found one. ML as a tool for algorithm discovery; what is missing is a metric that predicts generalization across state distributions.
+* **Hardware realism with two copies.** Approximate matched filters (probe gain $\kappa < 1$, overhead $\kappa^{-2}$) make protocols graceful against preparation, crosstalk, and measurement errors. The practically most relevant axis.
+* **Average case instead of worst case.** The hardness results are adversarial. Natural states (ground states of local Hamiltonians, thermal states) could be generically decodable: from the cryptography perspective to the physics perspective.
+* **Memory between zero and two.** The separations are stated at $k=0$ versus $k=2$ copies. Chen–Cotler–Huang–Li also treat a learner with $k$ qubits of quantum memory and find that the sample complexity interpolates smoothly; what is missing is the *protocol* side: which structured tasks become tractable at a fixed small memory budget short of a full second copy, e.g. with a few ancilla qubits per shot as in the Pauli-channel case.
+
+<br>
+
+## Reading the tables
+
+The three tables are the primary object. This appendix keeps the three axes that generate them, for readers who want the coordinate system: the quadrant of access against task, the access ladder, and the measurement-power axis.
+
+
+
+**The pattern in the status column.** Every 🟢 🟢 🟢 row under sampling access names a promise (locality, subgroup, class structure, Gaussianity, bond dimension, light cone, low degree, a gapped phase) or a resource (two-copy memory, an entangled ancilla); every 🟢 🟢 🟢 row under query access names the access itself, sometimes together with a promise. The 🟢 🔴 rows are the generic cases. Time efficiency is never free; it is bought by a promise about the state, by a resource on the quantum side, or by a stronger access model.
+
+Glyph order in the status column: copies · time · memory.
+
+**Two ways to fail, which the memory column separates.**
+* *Hypothesis too large.* MMW-based shadow tomography keeps a $2^n \times 2^n$ matrix. Memory is exponential, and therefore time is too: an algorithm cannot touch more memory than it has steps. This is a representation problem, and sparse surrogates solve it.
+* *Search too hard.* Sparse displacement spectra need $O(k \log d)$ bits for the list. Memory is polynomial, time is LWE-hard regardless. This is a decoder problem, and no representation solves it.
+* The implication runs one way only: exponential memory forces exponential time, exponential time does not force exponential memory. Sparse displacement spectra are the only row in the table where memory holds and time still fails. The boundary these notes are about is the decoder, not the representation.
+* A learned top-$k$ decoder can cross the memory boundary three times: the $d \times d$ histogram becomes a coprime fold into a fixed $64 \times 64$ tensor, the $d^2$-wide output layer becomes a bit vector of $2\lceil\log_2 d\rceil$ neurons, and the $d \times d$ MMW hypothesis becomes a sparse surrogate of $O(k)$ weights. Each replacement is necessary; none of them touches the time hardness of localization.
+
+**What the merged tables show.**
+* The object column shows that dynamics are not a separate category. States, Hamiltonians, unitaries, channels, and classical functions appear in all three tables; only the access differs, and it follows the rule of "What is learned": fixed or random inputs are sample access through the Choi or data state, adaptive or controlled use is query access. The object decides hardness only through the normalization of its spectrum, which is why heavy Pauli terms of a unitary are found from samples and heavy displacement terms of a state are not.
+* The computational boundary, as far as it is charted, is the set of 🟢 🔴 rows: sparse displacement spectra and LWE from samples (searching); general shadow tomography, PAC learning of states, and online learning (estimating, hypothesis too large); pseudorandom states, bounded gate complexity, and output distributions of circuits (identifying, cryptographic). Every one of them is sample-efficient. The three that fail in time with polynomial memory, the LWE pair, bounded gate complexity, and the output-distribution family, are the ones where the hardness is a theorem about the decoder rather than about the size of the hypothesis.
+* Every cell of the quadrant in the appendix is present with several examples, and the query rows carry no hardness for any task type. That is why the quadrant collapses to a single hard corner. Tasks that stay hard under queries, such as full tomography, are kept out of the quadrant on purpose.
+* The generic hard case has its own row: LWE from i.i.d. samples, directly under the row for sparse displacement spectra in the searching table, with the same 🟢 🔴 🟢. A real-diagonal displacement state whose Bell outcomes are LWE samples embeds one into the other, so the two rows are one instance seen from two sides.
+* One cell is easy to overlook: query access with an identifying task. Bernstein–Vazirani fills it for functions, identification with preparation circuits for states. In the identifying column queries buy only the precision rate, because a polynomial list of candidates is already easy under sampling.
+* Identifying and searching coincide when the candidate class is exponentially large and parametrized. The LWE secret indexes $q^n$ hypotheses and at the same time locates the support; the distinction carries weight only when the list is polynomial (identifying) or the support must be found in an exponential space without a parametrization (searching). The LWE rows are labeled searching for that reason; Bernstein–Vazirani, its noiseless limit, is labeled identifying because one query resolves the parameter. This **LWE rule** applies to all tables: if the parameter of an exponential class is the location of the support in the Pauli or Weyl spectrum, the row sits under searching, even if a state is output at the end. This is why stabilizer states, stabilizer dimension $\geq n-t$ (few non-Clifford gates), and agnostic stabilizer learning sit under searching; stabilizer testing (one bit) and phase states of higher degree stay under identifying.
+* Simon and Montanaro run the same decoder: random elements of a subspace, then Gaussian elimination. The access differs, Fourier sampling of an oracle versus differences of Bell samples, and the subgroup promise makes the decoder linear on both rows. The promise, not the access, buys the time efficiency there.
 
 <br>
 
@@ -411,6 +603,322 @@ The two parts are independent, and all four combinations occur:
 
 The same Bell measurement is therefore incoherent or coherent depending on the oracle written down, which is why the access model has to be stated explicitly. King, Wan, McClean (2024) is a separation between two oracles at the same small memory, not between coherent and incoherent access.
 
+## Contrast Pairs
+
+Ten pairs of results that seem to contradict each other, or that differ in a single assumption. Each pair opens with questions: answer them on paper first, then unfold the explanation. The explanation gives the short answer, the mechanism, and the lesson that carries over to other rows of the tables; the links at the end of each pair lead to the full summaries. Steps marked *own inference* or *own calculation* are not in the papers.
+
+| # | Pair | One side | Other side |
+| --- | --- | --- | --- |
+| 1 | One copy or two | Montanaro 2017: $O(n)$ copies, Bell measurements | Arunachalam, Bravyi, Dutt, Yoder 2023: $\Omega(n^2)$ with single copies |
+| 2 | Two copies or a copy and its conjugate | Bell sampling on $\rho\otimes\rho$ (qubits) | King, Wan, McClean 2024: $\rho\otimes\rho^*$ (qudits) |
+| 3 | With or without quantum memory | Chen, Cotler, Huang, Li 2021: purity $\Theta(2^{n/2})$ without memory | SWAP test with $O(1)$ copies; Huang et al. 2022: an unentangled separating state |
+| 4 | Copies or dynamics | Haah, Kothari, Tang 2021: Gibbs states, $1/\epsilon^2$ | Huang, Tong, Fang, Su 2023: $e^{-iHt}$, $1/\epsilon$ |
+| 5 | Tomography or PAC learning | O'Donnell, Wright 2016: $\Theta(d^2/\epsilon^2)$ | Aaronson 2007: $O(n)$ training measurements |
+| 6 | Pauli or Clifford shadows | Huang, Kueng, Preskill 2020: local observables | the same paper: global low-rank observables; Hu, Choi, You 2023 in between |
+| 7 | Sample-efficient or triply efficient | Aaronson 2018: 🟢 🔴 🔴 | King, Gosset, Kothari, Babbush 2024: 🟢 🟢 🟢 for Paulis |
+| 8 | Parity with or without noise | Gaussian elimination (Montanaro; Rocchetto) | Gollakota, Liang 2022: LPN-hard |
+| 9 | A few $T$ gates or a single one | Grewal, Iyer, Kretschmer, Liang 2023: efficient up to $O(\log n)$ | Hinsche et al. 2023: one $T$ gate, LPN-hard |
+| 10 | Few copies, yet pseudorandom | Zhao et al. 2024: $\tilde\Theta(G/\epsilon^2)$ copies | Ji, Liu, Song 2018: pseudorandom states |
+
+### 1. One copy or two: learning stabilizer states
+
+Montanaro (arXiv:1707.04012, Theorem 1) identifies an unknown $n$-qubit stabilizer state from $O(n)$ copies with Bell measurements on pairs of copies, in time $O(n^3)$. Arunachalam, Bravyi, Dutt, and Yoder (arXiv:2208.07851, Theorem 5) prove that a learner that measures each copy on its own, in an arbitrary basis, needs $\Omega(n^d)$ copies of a degree-$d$ phase state; for $d = 2$, a subclass of stabilizer states, this is $\Omega(n^2)$.
+
+**Questions**
+1. What exactly does the second copy buy: more information per copy, or only easier post-processing?
+2. Where does $\Omega(n^2)$ come from, and why is $\Omega(n)$ the floor for every measurement strategy?
+3. For degree-3 phase states, the entangled measurement that reaches $\Theta(n^2)$ copies runs in exponential time. What does that say about "joint measurements are always better"?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** The second copy buys information per copy. A single copy of a random stabilizer state, measured in any basis, gives an almost uniform outcome and therefore $O(1)$ bits about the state. A Bell sample on two copies gives about $n$ bits. Since $\Theta(n^2)$ bits specify a stabilizer state, the counts are $\Theta(n^2)$ single copies and $\Theta(n)$ pairs.
+
+**Counting.** There are $2^{\Theta(n^2)}$ stabilizer states, so identification means learning $\Theta(n^2)$ bits. One copy of an $n$-qubit state carries at most $n$ bits (Holevo), which gives $\Omega(n)$ for every strategy; this is Montanaro's optimality remark. Theorem 5 of Arunachalam et al. sharpens the bound for single-copy measurements: for a uniformly random polynomial $f$ of degree $d\geq 2$ and any basis $U$, the outcome entropy satisfies $\mathbb{E}_f[H_U(x\vert f)]\geq n-2$ (Lemma 5 there). The outcome $x$ has only $n$ bits in total, so the mutual information per copy is $O(1)$ bits, and $\Omega(\log\vert P(n,d)\vert) = \Omega(n^d)$ copies are needed. For $d = 2$ this matches the $O(n^2)$ single-copy algorithm of Aaronson and Gottesman.
+
+**Why the Bell sample is informative.** By Lemma 2 of Montanaro, the Bell outcome $r\in\mathbb{F}_2^{2n}$ has probability $\vert\langle\psi\vert\sigma_r\vert\psi^*\rangle\vert^2/2^n$. For a stabilizer state, $\psi^*$ is a Pauli image of $\psi$, so the outcome is uniform on a coset of the stabilizer group $T$: $2^n$ allowed outcomes out of $4^n$. The outcome is still random, but it is confined to a set that encodes the state: about $2n$ bits of outcome, of which $n$ are noise given the state, leave about $n$ bits of information per sample (own inference from the same entropy count). Differences of two samples are uniform elements of $T$; $O(n)$ of them span $T$, and Gaussian elimination finishes the job.
+
+**The post-processing caveat.** For $d\geq 3$, Bell sampling on two copies of a degree-$d$ phase state yields a single copy of a random degree-$(d-1)$ state, and collecting enough of them takes $\Omega(\sqrt{2^n})$ copies. Entangled measurements still help in principle: the pretty-good measurement reaches $\Theta(n^{d-1})$ copies (Theorem 4), but it runs in time exponential in $n^d$. The copy advantage of joint measurements pays off only when the decoder stays linear algebra.
+
+**Lesson.** Single-copy lower bounds come from flatness: if every basis sees a nearly uniform outcome, each copy leaks $O(1)$ bits. A joint measurement helps when it concentrates the outcome on a structured set, and it helps *efficiently* only when that structure can be decoded in polynomial time. The same pattern returns in pairs 2, 3, and 7.
+
+</details>
+
+**Deep dives:** [Learning stabilizer states by Bell sampling](#learning-stabilizer-states-by-bell-sampling-arxiv170704012) · [Optimal algorithms for learning quantum phase states](#optimal-algorithms-for-learning-quantum-phase-states-arxiv220807851)
+
+### 2. Two copies or a copy and its conjugate
+
+Montanaro (arXiv:1707.04012) and Huang et al. (arXiv:2112.00778) measure two identical copies $\rho\otimes\rho$; on qubits, one Bell measurement gives information about $\mathrm{Tr}(P\rho)^2$ for all $4^n$ Paulis at once. King, Wan, and McClean (arXiv:2403.03469) show that on a $d$-dimensional system, learning the magnitudes of all $d^2$ displacement amplitudes $\mathrm{Tr}(D_{q,p}\rho)$ needs $\Omega(\sqrt d/(K^2\epsilon^2))$ measurements on $\rho^{\otimes K}$ (Theorem 1), but only $O(\log d/\epsilon^4)$ samples of $\rho\otimes\rho^*$ (Theorem 2).
+
+**Questions**
+1. Why does a second identical copy suffice for qubit Paulis but fail exponentially for qudit displacement operators? Write down the commutation relation of $D_a\otimes D_a$ with $D_b\otimes D_b$.
+2. What does $\rho^*$ repair, and which quantity does the Bell measurement on $\rho\otimes\rho^*$ return?
+3. Why can a lab not produce $\rho^*$ from copies of $\rho$, and when is it available anyway?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** A joint measurement can read out $\vert\mathrm{Tr}(O\rho)\vert^2$ for a whole family of observables at once only if the doubled observables commute pairwise, so that they share an eigenbasis. For qubit Paulis, $P\otimes P$ and $Q\otimes Q$ commute because the sign in $PQ = \pm QP$ appears twice and squares to one. For displacement operators the phase $\omega$ also appears twice, and $\omega^2\neq 1$ for $d > 2$. Pairing $D$ with $D^*$ turns the second phase into $\omega^{-1}$, and the phases cancel.
+
+**The commutator.** Displacement operators satisfy $D_aD_b = \omega^{[a,b]}D_bD_a$ with $\omega = e^{2\pi i/d}$ and the symplectic form $[a,b]$; conjugating gives $D_a^*D_b^* = \omega^{-[a,b]}D_b^*D_a^*$. Hence
+
+* $(D_a\otimes D_a)(D_b\otimes D_b) = \omega^{2[a,b]}\,(D_b\otimes D_b)(D_a\otimes D_a)$,
+* $(D_a\otimes D_a^*)(D_b\otimes D_b^*) = (D_b\otimes D_b^*)(D_a\otimes D_a^*)$.
+
+For $d = 2$, $\omega = -1$ and $\omega^2 = 1$: identical copies suffice. For $d > 2$ only the conjugate pair gives a commuting family.
+
+**What is measured.** In the common eigenbasis, a generalized Bell basis, $\mathrm{Tr}[(D\otimes D^*)(\rho\otimes\rho^*)] = \mathrm{Tr}(D\rho)\,\overline{\mathrm{Tr}(D\rho)} = \vert\mathrm{Tr}(D\rho)\vert^2$ for all $d^2$ operators simultaneously. Each value is a Fourier coefficient of the outcome distribution; estimating $\vert y\vert^2$ to $\epsilon^2$ costs $1/\epsilon^4$ samples, and a union bound over $d^2$ addresses adds $\log d$. The signs are a second step (Theorem 5: a hypothesis state and matrix multiplicative weights). Theorem 3 adds that single copies of $\rho$ *and* of $\rho^*$, measured separately, still need $\Omega(d/\epsilon^2)$: the conjugate is necessary, and so is the joint measurement.
+
+**Why identical copies worked for qubits.** For a qubit Pauli, $P^* = \pm P$ ($Y^* = -Y$), so $\rho\otimes\rho$ is already a conjugate pair up to known signs. Montanaro's stabilizer case goes one step further: there $\psi^*$ is a Pauli image of $\psi$, which is why the Bell distribution becomes a coset. For qudits, $Z^* = Z^{-1}\neq Z$, and the shortcut breaks; for qudit stabilizer states, Bell difference sampling can even become completely uninformative (Allcock et al., arXiv:2405.06357).
+
+**Why $\rho^*$ is not free.** For Hermitian $\rho$, $\rho^* = \rho^T$, and transposition is positive but not completely positive; no quantum channel maps an unknown $\rho$ to $\rho^*$. The conjugate is available when one controls the source (conjugate every gate of the preparation circuit, white-box access) or when the state is real in the measured basis, $\rho = \rho^*$, as for time-reversal symmetric states.
+
+**A limit.** Theorem 4 of King, Wan, McClean: if $U\otimes\tilde U$ and $V\otimes\tilde V$ commute for non-commuting $U, V$ of finite order $d$, then $U$ and $V$ are unitarily equivalent to sums of displacement operators. The trick reaches exactly as far as the Heisenberg–Weyl group.
+
+**Lesson.** The resource of a two-copy measurement is a commuting family of doubled observables. Whether identical copies provide it is decided by the phases in the group commutator, not by the state. The access rung ($\rho$, $\rho\otimes\rho^*$, a circuit) is an axis of its own, independent of the amount of quantum memory.
+
+</details>
+
+**Deep dives:** [Learning stabilizer states by Bell sampling](#learning-stabilizer-states-by-bell-sampling-arxiv170704012) · [Exponential learning advantages with conjugate states and minimal quantum memory](#exponential-learning-advantages-with-conjugate-states-and-minimal-quantum-memory-arxiv240303469) · [Bell sampling on two copies](#bell-sampling-on-two-copies-the-primitive-behind-conjugate-pairs-and-structure-learning)
+
+### 3. With or without quantum memory: purity, and a state without entanglement
+
+Chen, Cotler, Huang, and Li (arXiv:2111.05881, Theorem 1.3 and Theorems 5.11, 5.13) prove that deciding whether $\rho$ is pure or maximally mixed takes $\Theta(2^{n/2})$ copies if each copy is measured on its own, adaptively or not, and $O(1)$ copies with a SWAP test on pairs. Huang et al. (arXiv:2112.00778, Theorem 1) separate the two kinds of experiment with the state $\rho = 2^{-n}(I + 0.9\,sP)$, a mixture of product states: $\Omega(2^n)$ copies without memory, $O(1)$ with Bell measurements on two copies.
+
+**Questions**
+1. A memoryless learner may choose every measurement adaptively. Why does that not replace a stored copy?
+2. Where does the square root in $2^{n/2}$ come from? Think of a Haar-random pure state, measured one copy at a time.
+3. The separating state of Huang et al. has no entanglement at all. What, then, is the source of the exponential advantage?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** The information that separates the hypotheses sits in correlations between copies. A memoryless learner sees these correlations only through its classical outcomes; for purity this means waiting for repeated outcomes, which takes about $\sqrt{2^n}$ copies (birthday paradox). A SWAP test measures the correlation directly.
+
+**One copy, averaged over the unknown, is noise.** In the hard instance the pure state is Haar-random. One copy of a Haar-random state, averaged over the state, is exactly $I/2^n$, the same as the alternative. Only joint moments differ: $\mathbb{E}[\vert\psi\rangle\langle\psi\vert^{\otimes 2}] = (I + \mathrm{SWAP})/(2^n(2^n+1))$, the normalized projector onto the symmetric subspace, while $(I/2^n)^{\otimes 2}$ has no SWAP component.
+
+**The birthday paradox.** Chen et al. give the intuition behind their proof: if all copies were measured in the same basis, the most informative event would be a repeated outcome. Under $I/2^n$ outcomes are uniform, and a collision among $T$ draws becomes likely only at $T\approx 2^{n/2}$. The pure state collides about twice as often (collision probability $2/(2^n+1)$ against $2^{-n}$), but that difference is visible only once collisions occur at all. The tree argument shows that adaptive changes of basis do not beat this bound (Theorem 5.11), and a memoryless algorithm with $O(2^{n/2})$ copies exists (Theorem 5.13).
+
+**The SWAP test.** On $\rho\otimes\rho$ it accepts with probability $(1 + \mathrm{Tr}\rho^2)/2$: $1$ for a pure state, $(1 + 2^{-n})/2\approx 1/2$ for the maximally mixed one. A constant number of pairs decides. The memory cost is $n$ qubits to hold one copy.
+
+**The unentangled separating state.** For $\rho = 2^{-n}(I + 0.9\,sP)$, the Pauli $P$ is unknown when the data are taken. A single-copy measurement basis is diagonal for at most a commuting set of Paulis; with $P$ unknown, a memoryless learner must spread its copies over mutually incompatible bases, and the tree argument turns this into $\Omega(2^n)$. The Bell measurement on two copies diagonalizes all $P\otimes P$ at once (they commute, pair 2), so every snapshot carries information about $\mathrm{Tr}(P\rho)^2$ for every $P$. The advantage comes from the incompatibility of the observables, not from entanglement in the state, a point Huang et al. stress themselves. With $k$ qubits of memory the bound is $\Omega(2^{(n-k)/3})$ (Theorem 1.4 of Chen et al.; Theorem 13 of Huang et al.): the memory has to grow with $n$.
+
+**Lesson.** Adaptivity chooses *which* question to ask the next copy; memory allows one question to be asked of *two copies at once*. Only the second reaches observables such as SWAP or $P\otimes P$, whose expectation values are quadratic in $\rho$. Whenever the signal is quadratic in $\rho$ and the linear information is flat, expect an exponential memory separation.
+
+</details>
+
+**Deep dives:** [Exponential separations between learning with and without quantum memory](#exponential-separations-between-learning-with-and-without-quantum-memory-arxiv211105881) · [Quantum advantage in learning from experiments](#quantum-advantage-in-learning-from-experiments-arxiv211200778)
+
+### 4. Copies of a Gibbs state or access to the dynamics: $1/\epsilon^2$ versus $1/\epsilon$
+
+Haah, Kothari, and Tang (arXiv:2108.04842, Theorems 1.1, 1.2) learn the coefficients of a low-intersection Hamiltonian from copies of its Gibbs state at high temperature with $O(\log N/(\beta^2\epsilon^2))$ copies, and prove that $\Omega(e^\beta\log N/(\beta^2\epsilon^2))$ are necessary. Huang, Tong, Fang, and Su (arXiv:2210.03030, Theorems 1, 2) learn the coefficients from the dynamics $e^{-iHt}$ with total evolution time $O(\epsilon^{-1}\log\delta^{-1})$, and prove that this is optimal.
+
+**Questions**
+1. Why is $1/\epsilon^2$ unavoidable with copies of a fixed state, and what does the dynamics offer that removes one power of $\epsilon$?
+2. Haah, Kothari, and Tang also learn from $e^{-itH}$ (Theorem 1.3), yet with $1/\epsilon^2$ applications. What is missing in their use of the dynamics?
+3. Single-parameter metrology has reached $1/\epsilon$ for a long time. Why were many-body Hamiltonians stuck at $1/\epsilon^2$?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** A copy of a fixed state is a sample of a fixed distribution, and a mean is learned to $\epsilon$ from $1/\epsilon^2$ samples: the standard quantum limit. Under the dynamics, a coefficient enters as a phase $\lambda t$ that grows with the evolution time. Coherent evolution up to $t\sim 1/\epsilon$ plus phase estimation reaches precision $\epsilon$ at total time $O(1/\epsilon)$: the Heisenberg limit.
+
+**Why copies stop at $1/\epsilon^2$.** Nothing in a copy-based protocol amplifies the dependence on $\lambda$; two Hamiltonians that differ by $\epsilon$ give Gibbs states whose outcome statistics differ at order $\epsilon$, so their distinguishability per copy is of order $\epsilon^2$ (Fisher information; own gloss). The lower bound of Theorem 1.2 is proven with Fano's inequality and the KL divergence, as for classical Markov random fields. The factor $e^\beta$ shows that low temperature raises the *sample* cost, not only the time.
+
+**What the dynamics adds.** After time $t$, a phase $\lambda t$ can be read with $O(1)$ shots to precision about $1/t$ in $\lambda$: the signal grows linearly in $t$, the shot noise does not. Robust phase estimation (Kimmel, Low, Yoder) doubles $t$ step by step and reaches precision $\epsilon$ at total time $O(1/\epsilon)$. This is why the number of experiments in Huang et al. is only polylogarithmic in $1/\epsilon$: the cost measure is the total evolution time.
+
+**What Theorem 1.3 of Haah, Kothari, Tang lacks.** It uses a short, known time $t < t_c$. At a fixed short $t$ each application is again a sample of a fixed distribution, and the rate stays $1/\epsilon^2$; the gain there is a constant time resolution instead of $t = O(\epsilon)$ and a quadratic improvement over derivative estimation. The resource is long coherent evolution with control, not the dynamics as such.
+
+**Why many-body systems were hard.** Over long times a many-body evolution entangles everything and mixes all coefficients, so the clean single-phase picture is lost. Huang et al. reshape the Hamiltonian: interleaving the evolution with random single-qubit Cliffords simulates the effective Hamiltonian $\sum_kw_kU_kHU_k^\dagger$, which decouples into small patches with known eigenvectors, and robust phase estimation runs on all patches in parallel. Control between evolutions is provably necessary for Heisenberg scaling (Dutkiewicz, O'Brien, Schuster, cited there).
+
+**Lesson.** Query access to a process buys the precision rate, $1/\epsilon^2\to 1/\epsilon$. It does not by itself buy the dependence on the system size: in both papers that comes from the locality promise (known terms, low intersection). This is the query-side pattern of the "Access-by-task quadrant".
+
+</details>
+
+**Deep dives:** [Optimal learning of quantum Hamiltonians from high-temperature Gibbs states](#optimal-learning-of-quantum-hamiltonians-from-high-temperature-gibbs-states-arxiv210804842) · [Learning many-body Hamiltonians with Heisenberg-limited scaling](#learning-many-body-hamiltonians-with-heisenberg-limited-scaling-arxiv221003030)
+
+### 5. Full tomography or PAC learning: $4^n$ copies versus $O(n)$ measurements
+
+O'Donnell and Wright (arXiv:1508.01907), together with Haah et al., settle full tomography at $\Theta(d^2/\epsilon^2)$ copies with entangled measurements, $d = 2^n$; with single-copy measurements it is $\Theta(d^3/\epsilon^2)$. Aaronson (arXiv:quant-ph/0608142, Theorem 1.1) shows that a number of training measurements linear in $n$ suffices to predict an arbitrary $n$-qubit state.
+
+**Questions**
+1. What exactly did Aaronson give up to get from $4^n$ to $O(n)$? Name both relaxations.
+2. The state has $4^n - 1$ real parameters. Why can the number of training measurements be linear in $n$ anyway? Hint: random access codes.
+3. Is the problem solved by this? Which budget pays for the relaxation?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** Two relaxations: the hypothesis only has to predict *most* measurements, drawn from a fixed distribution $\mathcal{D}$, and only to within $\gamma$; tomography demands every measurement at once (trace distance). Under this average-case criterion, the sample complexity is governed by a combinatorial dimension of the class rather than by its number of parameters, and for $n$ qubits that dimension is $O(n/\gamma^2)$. The price is paid in time and memory.
+
+**Worst case versus average case.** Trace distance $\epsilon$ means that every two-outcome measurement is predicted to within $\epsilon$, a statement about all directions of state space at once. PAC asks for a hypothesis $\sigma$ with $\Pr_{E\sim\mathcal{D}}[\vert\mathrm{Tr}(E\sigma) - \mathrm{Tr}(E\rho)\vert > \gamma]\leq\epsilon$. The hypothesis may be badly wrong on rare measurements, and on measurements that $\mathcal{D}$ never produces.
+
+**Why the count is linear in $n$.** In classical learning theory, sample complexity is governed by the VC or fat-shattering dimension of a class, not by its number of parameters. Aaronson bounds the $\gamma$-fat-shattering dimension of $n$-qubit states by $O(n/\gamma^2)$ via the random access code bound of Ambainis, Nayak, Ta-Shma, and Vazirani: a state that shatters $k$ measurements would encode $k$ bits that can each be retrieved with bounded error, and $n$ qubits hold at most $O(n)$ such bits. Generalization bounds of Bartlett and Long then give a number of training measurements linear in $n$, up to factors in $1/\gamma$ and $1/\epsilon$.
+
+**Where the cost went.** The status is 🟢 🔴 🔴: the data are linear in $n$, but a consistent hypothesis is found by a semidefinite program over $2^n\times 2^n$ matrices, and the hypothesis itself is such a matrix. Efficient special cases need a promise (stabilizer states: Rocchetto 2018). Shadow tomography (pair 7) sits between the two criteria: all $M$ listed measurements, not most, with $\mathrm{poly}(n, \log M)$ copies.
+
+**Lesson.** Before comparing copy counts, compare success criteria. Worst case over all measurements (tomography), all measurements on a given list (shadow tomography), most measurements from a distribution (PAC): three different problems with three different counts.
+
+</details>
+
+**Deep dives:** [Efficient quantum tomography](#efficient-quantum-tomography-arxiv150801907) · [The Learnability of Quantum States](#the-learnability-of-quantum-states-arxivquant-ph0608142)
+
+### 6. Pauli shadows or Clifford shadows: local versus global observables
+
+Huang, Kueng, and Preskill (arXiv:2002.08953, Theorem 1) give two ensembles for classical shadows. Random single-qubit Pauli measurements predict $M$ observables of locality $k$ from $O(4^k\log M/\epsilon^2)$ snapshots; random $n$-qubit Clifford measurements predict $M$ observables of bounded $\mathrm{tr}(O^2)$, such as fidelities with pure states, from $O(\log M\max_i\mathrm{tr}(O_i^2)/\epsilon^2)$. Each ensemble fails exponentially where the other works. Hu, Choi, and You (arXiv:2107.04817) interpolate with locally scrambled shallow dynamics.
+
+**Questions**
+1. Why do Pauli shadows pay $3^k$ to $4^k$ for a $k$-local observable, and why is the fidelity with a GHZ state exponentially expensive for them?
+2. Why do Clifford shadows estimate a global fidelity with $O(1/\epsilon^2)$ snapshots but fail for the single-qubit observable $Z_1$?
+3. A single global Pauli string can be measured directly with $O(1/\epsilon^2)$ copies. Why does Theorem 2 of Huang, Kueng, and Preskill nevertheless say that single-copy procedures need exponentially many measurements?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** The variance of a shadow estimate is set by the shadow norm, which measures how strongly the inverted measurement channel has to amplify what the snapshots see of $O$. Local random bases see a $k$-local observable with probability $3^{-k}$ and amplify by $3$ per qubit. A global random Clifford basis spreads every observable over the whole Hilbert space: it sees low-rank observables well and local ones only with weight $2^{-n}$.
+
+**Pauli shadows.** Each qubit is measured in a random basis $X$, $Y$, or $Z$; the inverse channel is $3X - I$ per qubit. A Pauli string of weight $k$ contributes only when all $k$ bases match, probability $3^{-k}$, and is then weighted by $3^k$: the variance is $3^k$, and $4^k\Vert O\Vert_\infty^2$ for a general $k$-local $O$. The GHZ fidelity contains the coherence $\vert 0^n\rangle\langle 1^n\vert$, which a snapshot sees only when all $n$ bases are $X$ or $Y$, probability $(2/3)^n$, and then amplifies to magnitude $(3/2)^n$; the variance grows like $(3/2)^n$ (own calculation).
+
+**Clifford shadows.** Random $n$-qubit Cliffords form a 3-design; the inverse channel is $(2^n+1)X - I$, and the shadow norm is at most $3\,\mathrm{tr}(O^2)$. For a fidelity, $O = \vert\psi\rangle\langle\psi\vert$ and $\mathrm{tr}(O^2) = 1$: constant cost for every $n$. For $O = Z_1$, $\mathrm{tr}(O^2) = 2^n$: a global random basis carries almost no information about one qubit, and the factor $2^n + 1$ blows up the noise.
+
+**Theorem 2 and the direct measurement.** Classical shadows fix the measurements before the observables are known ("measure first, ask later"), and Theorem 2 bounds exactly this task: any single-copy procedure that can predict *any* $M$ observables from one data set needs $\Omega(\log M\max_i\Vert O_i\Vert_{\mathrm{shadow}}^2/\epsilon^2)$ measurements. If the observable is known in advance, one simply measures it; Huang, Kueng, and Preskill call the global Pauli string their "non-example". The exponential cost is the price of not knowing the question; for Paulis, two-copy Bell measurements remove it (pairs 3 and 7).
+
+**The interpolation.** Hu, Choi, and You show that for locally scrambled ensembles (distributions invariant under local basis changes), the reconstruction map and the shadow norm depend only on the entanglement feature of the snapshots, i.e. on the mean subsystem purities. A shallow circuit or a short Hamiltonian evolution before the measurement tunes the ensemble between the two limits: at short times local observables are cheaper, at long times all observables become equally expensive.
+
+**Lesson.** A measurement ensemble is a bet on which observables will be asked, and its entanglement decides which ones are cheap. No single-copy ensemble is cheap for all of them, and that is a theorem, not a missing idea.
+
+</details>
+
+**Deep dives:** [Predicting Many Properties of a Quantum System from Very Few Measurements](#predicting-many-properties-of-a-quantum-system-from-very-few-measurements-arxiv200208953) · [Classical Shadow Tomography with Locally Scrambled Quantum Dynamics](#classical-shadow-tomography-with-locally-scrambled-quantum-dynamics-arxiv210704817)
+
+### 7. Shadow tomography: sample-efficient or triply efficient
+
+Aaronson (arXiv:1711.01053, Theorem 2) estimates $M$ arbitrary two-outcome measurements on a $D$-dimensional state from $\tilde O(\log^4 M\cdot\log D/\epsilon^4)$ copies, polylogarithmic even for exponential $M$, but with a joint measurement across all copies and a $D\times D$ hypothesis. King, Gosset, Kothari, and Babbush (arXiv:2404.19211, Theorem 7) are triply efficient for all $4^n$ Pauli observables, with measurements on at most two copies at a time.
+
+**Questions**
+1. Aaronson's protocol is 🟢 🔴 🔴. Give the exact reason for each red dot, and the reason why the copy count stays small.
+2. King et al. run in time $\mathrm{poly}(2^n, 1/\epsilon)$ for all Paulis and still call this computationally efficient. Why is that consistent, and why is the same problem for a polynomial-size set of high-weight Paulis still open (their Conjecture 13)?
+3. What does the restriction to Pauli observables buy that general two-outcome measurements do not?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** Aaronson's protocol needs few copies because gentle measurement lets it reuse copies while it refines a hypothesis. The two red dots are that hypothesis, a full $D\times D$ matrix, and the search for a violated measurement, a joint circuit over all copies. King et al. restrict to Paulis, where one Bell measurement on two copies reads all magnitudes at once and the signs reduce to a small combinatorial problem. Efficiency is measured against the output size $\vert S\vert$: for all $4^n$ Paulis, $\mathrm{poly}(2^n)$ is polynomial in it.
+
+**Aaronson's budgets.** Copies: the quantum OR bound decides whether *some* listed measurement is violated by the current hypothesis with $O(\log M/\epsilon^2)$ copies without destroying them, and postselected learning from $I/D$ converges after a number of rounds logarithmic in $D$, because $\rho$ has weight at least $1/D$ in the maximally mixed state. Memory: the hypothesis has $D^2$ entries. Time: at least the memory ("an algorithm cannot touch more memory than it has steps", "Reading the tables"), plus a measurement circuit polynomial in $M$ and $D$ across all copies. The row is the prototype of the failure mode "hypothesis too large".
+
+**How King et al. get time and memory.** Step 1: the Bell measurement on $\rho\otimes\rho$ diagonalizes all $P\otimes P$, so $O(\log\vert S\vert/\epsilon^4)$ two-copy samples give every $\vert\mathrm{Tr}(P\rho)\vert$ (pair 2). Step 2, the signs, are needed only on the set $S_\epsilon$ of large Paulis. Lemma 8: at most $4/\epsilon^2$ pairwise anticommuting Paulis can be large at the same time, an uncertainty relation. So the commutation graph on $S_\epsilon$ has small cliques and, for $k$-body fermions, a small coloring whose color classes are commuting sets measurable on single copies. For all Paulis the signs come from a mimicking state $\sigma$, found by matrix multiplicative weights: Bell sampling on $\rho\otimes\sigma$ gives $\mathrm{Tr}(P\rho)\mathrm{Tr}(P\sigma)$, and the known sign of the second factor reveals the sign of the first.
+
+**Why $\mathrm{poly}(2^n)$ counts as efficient.** The definition asks for time $\mathrm{poly}(\vert S\vert, n, 1/\epsilon)$, because the output alone has $\vert S\vert$ numbers. For $S$ = all Paulis, $\vert S\vert = 4^n$. For a polynomial-size set of high-weight Paulis, the same running time would be exponential in $\vert S\vert$; whether the large Paulis of an arbitrary set always admit a small, efficiently samplable coloring is exactly Conjecture 13. The bigger task is easier in this accounting because its output is already exponential. Corollary 12 adds a compression: for constant $\epsilon$, every state has a $\mathrm{poly}(n)$-bit description from which each Pauli value follows in $\mathrm{poly}(n)$ time, but learning it takes time $2^{O(n)}$.
+
+**What Paulis buy.** Two properties that general $E_i$ lack: the doubled operators $P\otimes P$ commute, so one two-copy measurement serves all of them; and anticommutation limits how many can be large at once, which makes the sign problem small. Two copies are also necessary: single-copy protocols need $\Omega(2^n)$ copies for all Paulis (Chen, Cotler, Huang, Li) and $\Omega(n^k/\epsilon^2)$ for $k$-body fermionic observables (Theorem 3 of King et al.).
+
+**Lesson.** The copy budget is settled by information theory. Time and memory need structure in the observables that lets a small representation replace the $D\times D$ hypothesis. Of the two failure modes in "Reading the tables", this pair is about the first (hypothesis too large); pairs 8 to 10 are about the second (search too hard).
+
+</details>
+
+**Deep dives:** [Shadow Tomography of Quantum States](#shadow-tomography-of-quantum-states-arxiv171101053) · [Triply efficient shadow tomography](#triply-efficient-shadow-tomography-arxiv240419211)
+
+### 8. Parity with or without noise: Gaussian elimination versus LPN
+
+Without noise, stabilizer states are learnable in Aaronson's PAC model by Gaussian elimination over $\mathbb{F}_2$ (Rocchetto 2018), and from copies by Montanaro's Bell sampling (arXiv:1707.04012). Gollakota and Liang (arXiv:2102.05174, Corollary 4.12) show that with classification noise at a constant rate $\eta$, the PAC problem is as hard as Learning Parity with Noise (LPN).
+
+**Questions**
+1. Why does a small constant noise rate turn linear algebra into a problem believed to be hard? Think about what happens to the XOR of many noisy labels.
+2. The hard instance is a computational-basis state $\vert y\rangle$ under parity measurements $Z^{x_1}\otimes\cdots\otimes Z^{x_n}$. With copies of $\vert y\rangle$ and a free choice of measurement, the task is trivial. What does that say about where the hardness lives?
+3. With *quantum* examples, superpositions over all inputs $x$ with the label in a second register, noisy parity becomes easy again. What does the superposition provide?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** Gaussian elimination combines many labels by XOR, and errors accumulate: an XOR of $m$ labels, each flipped independently with probability $\eta$, is correct with probability $\frac12(1 + (1-2\eta)^m)$, which tends to $\frac12$ exponentially fast (the piling-up lemma). Without noise the method is exact. With noise, finding $n$ clean labels by trial takes about $(1-\eta)^{-n}$ attempts, and the best known algorithm (Blum, Kalai, Wasserman) is only slightly subexponential. The hardness lives in the access model, not in the state class.
+
+**The embedding.** For $\vert y\rangle$ and the measurement $E_x = (I + Z^{x_1}\otimes\cdots\otimes Z^{x_n})/2$, the outcome is deterministically the parity $x\cdot y$ (Proposition 4.10). A noisy PAC example $(E_x, Y)$ is therefore literally a noisy parity example $(x, x\cdot y\oplus e)$, and every PAC learner for stabilizer states under this measurement distribution solves LPN. In the statistical query model the bound is unconditional: $2^{\Omega(n)}$ queries under parity measurements (Corollary 4.11).
+
+**Why copies make it trivial.** With copies of $\vert y\rangle$ one measures every qubit in $Z$ and reads $y$; readout noise is removed by a majority vote over a few copies per qubit. Noise is dangerous in LPN only because each example gives *one linear equation* about the secret, and equations have to be combined (own conclusion, also recorded in the summary of arXiv:2102.05174).
+
+**Quantum examples.** A quantum example is a superposition over all $x$. Hadamards on all registers implement a Boolean Fourier transform, as in Bernstein–Vazirani, and return the secret itself with constant probability (arXiv:2102.05174, Section 2, citing Cross, Smith, Smolin 2015). Noise lowers this probability but does not accumulate, because no equations are combined: each example votes for $s$ on its own (own gloss).
+
+**Montanaro in this light.** Bell sampling also ends in Gaussian elimination, so the exact algorithm is just as fragile. Montanaro's theorem covers exact stabilizer states only; robustness needed new ideas (Grewal et al., arXiv:2304.13915; agnostic learning by stabilizer bootstrapping, arXiv:2408.06967).
+
+**Lesson.** The same algebraic class sits on either side of the cryptographic wall, and the pair (noise, access) decides the side. Bernstein–Vazirani is the noiseless limit of LWE; LPN is its noisy version over $\mathbb{F}_2$, LWE over $\mathbb{Z}_q$. The LWE rows of the searching table are this pair at larger modulus.
+
+</details>
+
+**Deep dives:** [Learning stabilizer states by Bell sampling](#learning-stabilizer-states-by-bell-sampling-arxiv170704012) · [On the Hardness of PAC-learning Stabilizer States with Noise](#on-the-hardness-of-pac-learning-stabilizer-states-with-noise-arxiv210205174)
+
+### 9. A few $T$ gates or a single one
+
+Grewal, Iyer, Kretschmer, and Liang (arXiv:2305.13409, Theorem 1.1) learn states prepared by Clifford circuits with at most $t$ non-Clifford gates in time and copies $\mathrm{poly}(n, 2^t, 1/\epsilon)$, efficient up to $t = O(\log n)$. Hinsche et al. (arXiv:2207.03140, Theorem 2) show that the output distributions of local Clifford circuits with a *single* $T$ gate are not efficiently learnable with an evaluator, under the LPN assumption.
+
+**Questions**
+1. Why is this not a contradiction? Compare object, access, and required output in the two papers.
+2. In the hardness construction, a label qubit is prepared as $HTH\vert 0\rangle$ and parities $x\cdot s$ are copied onto it with CNOTs. What does a computational-basis measurement of the whole register produce? What could a learner do with copies of the *state* instead?
+3. Classical simulation cost grows smoothly with the number of $T$ gates. Why is the transition for distribution learning sharp at a single $T$ gate?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** The two papers learn different objects from different data. Grewal et al. receive quantum copies and may measure them in any basis, including Bell measurements on pairs. Hinsche et al. receive classical bit strings from one fixed basis, the computational basis, and must output an evaluator of the probabilities. One $T$ gate is enough to hide an LPN instance in that single basis, while the state itself stays easy to learn from copies.
+
+**The circuit (Fig. 2 and Appendix D).** Hadamards put the data qubits into a uniform superposition, CNOTs write the parity $x\cdot s$ onto the label qubit, and the label qubit was prepared as $HTH\vert 0\rangle$. Measuring everything in the computational basis gives $(x, x\cdot s)$ with the label flipped with probability $\eta = \sin^2(\pi/8)\approx 0.146$: exactly an LPN sample. An evaluator returns $P(x, 0)$ and $P(x, 1)$; comparing them reveals the parity $x\cdot s$ for any chosen $x$, and with it $s$. In essence, that is why LPN reduces to evaluator learning. Theorem 2 needs depth $n^{\Omega(1)}$ because the parity on $k = n^{\Omega(1)}$ bits has to be compiled into nearest-neighbour gates, which costs depth $O(k)$; with arbitrary connectivity, constant depth already suffices.
+
+**The same state from copies (own calculation).** The state is $2^{-n/2}\sum_x\vert x\rangle\otimes X^{x\cdot s}HTH\vert 0\rangle$. Hadamards on all $n + 1$ qubits give the outcome $(s, 1)$ with probability $1/2$ and $(0, 0)$ otherwise: Bernstein–Vazirani goes straight through the "noise", because the $T$ gate is unitary and the randomness appears only when the label is measured in the computational basis. More generally, one non-Clifford gate leaves stabilizer dimension at least $n$ on the $n + 1$ qubits, and Theorem 1.1 of Grewal et al. applies with $t = 1$.
+
+**Why the transition is sharp.** Simulation cost counts how much non-Clifford structure an algorithm has to track, and that grows smoothly, as $2^{O(t)}$. The hardness here does not come from tracking: the $T$ gate is used as a biased coin, and one coin per sample is all that LPN needs. Learning from samples in one fixed basis inherits every classical hardness that can be embedded into that basis. With $t = 0$, Clifford distributions are uniform on affine subspaces and are learned by Gaussian elimination from $O(n)$ samples (Theorem 1): the noiseless side of pair 8.
+
+**Lesson.** "Learnable" is a statement about a triple: object, access, output. Here the circuit is the same and the access changes, from quantum copies with free measurements to classical samples in one basis. The wall of pair 8 reappears: fixed-basis samples plus a little randomness give LPN.
+
+</details>
+
+**Deep dives:** [Efficient Learning of Quantum States Prepared With Few Non-Clifford Gates](#efficient-learning-of-quantum-states-prepared-with-few-non-clifford-gates-arxiv230513409) · [A single T-gate makes distribution learning hard](#a-single-t-gate-makes-distribution-learning-hard-arxiv220703140)
+
+### 10. Learnable from few copies, yet pseudorandom
+
+Zhao et al. (arXiv:2310.19882, Theorems 1, 2) show that $\tilde\Theta(G/\epsilon^2)$ copies are necessary and sufficient to learn any state prepared by $G$ two-qubit gates, independent of $n$, and that under RingLWE every learner needs time $\exp(\Omega(\min\{G, n\}))$. Ji, Liu, and Song (arXiv:1711.00385, Theorem 1) construct efficiently preparable states that no polynomial-time algorithm can distinguish from Haar-random states, given polynomially many copies.
+
+**Questions**
+1. Pseudorandom states are prepared with polynomially many gates, so by Zhao et al. polynomially many copies suffice to learn them. How can both statements be true?
+2. Turn a hypothetical efficient learner into a distinguisher between pseudorandom and Haar-random states. Which step uses the fact that Haar-random states cannot be learned from few copies?
+3. Why does the transition sit at $G = O(\log n)$ gates, and why does the time bound need an assumption (RingLWE) while the copy bound does not?
+
+<details class="answer">
+<summary>Explanation</summary>
+
+**Short answer.** The copy bound is information-theoretic, the hardness computational. Few copies suffice because the class is small in the counting sense: $\tilde O(G)$ bits describe a $G$-gate circuit to precision $\epsilon$. Finding the right circuit among $2^{\tilde O(G)}$ candidates takes exponential time, and pseudorandom states show that no efficient algorithm can shortcut the search.
+
+**Why few copies suffice.** A covering net of all $G$-gate states has $2^{\tilde O(G)}$ elements. Quantum hypothesis selection picks a good candidate from a list of $N$ with $O(\log N/\epsilon^2)$ copies, hence $\tilde O(G/\epsilon^2)$; a packing net gives the matching lower bound. The procedure runs through the entire list.
+
+**Learner to distinguisher.** Given copies of an unknown state, run the learner, obtain a circuit $\hat U$, and test it on fresh copies: apply $\hat U^\dagger$ and check for $\vert 0^n\rangle$. For a pseudorandom state the learner succeeds and the test passes with high probability. For a Haar-random state no procedure with polynomially many copies can output a good hypothesis, because pure-state tomography of a generic state needs a number of copies linear in the dimension $2^n$; so the test fails. An efficient learner would therefore be an efficient distinguisher, which pseudorandomness rules out. Zhao et al. use this reduction with pseudorandom states of $\tilde O(G)$ gates (the idea goes back to Kretschmer 2021).
+
+**Why $\log n$.** $G$ two-qubit gates touch at most $2G$ qubits, so for $G = O(\log n)$ the state is $\vert 0\rangle$ on all but $O(\log n)$ qubits, and tomography on the rest costs $2^{O(\log n)} = \mathrm{poly}(n)$ (own reading of the junta-learning upper bound). The lower bound $\exp(\Omega(\min\{G, n\}))$ becomes superpolynomial exactly when $G = \omega(\log n)$. The same threshold appears for $t$ non-Clifford gates in pair 9, for the same reason: $2^t$ is polynomial only for $t = O(\log n)$.
+
+**Why an assumption.** Copy lower bounds are counting arguments (packing nets, Holevo) and hold unconditionally. Unconditional superpolynomial time lower bounds are out of reach for essentially all natural problems in complexity theory; the available tool is a reduction from a problem believed to be hard (RingLWE, one-way functions). This is the asymmetry of the whole map: the sample boundary is charted by theorems, the computational boundary by reductions (Efficiency Boundaries, "Thesis").
+
+**Lesson.** When a class is exponentially large but parametrized, few copies always suffice, and the only question is the decoder. A green copy dot next to a red time dot is the signature of a hidden key: pseudorandom states, LWE, LPN.
+
+</details>
+
+**Deep dives:** [Learning quantum states and unitaries of bounded gate complexity](#learning-quantum-states-and-unitaries-of-bounded-gate-complexity-arxiv231019882) · [Pseudorandom quantum states](#pseudorandom-quantum-states-arxiv171100385)
+
+### Synthesis: which dial does each pair turn?
+
+**Question.** Before unfolding: for each of the ten pairs, name the one thing that changes between the two sides.
+
+<details class="answer">
+<summary>Explanation</summary>
+
+Every pair turns one of five dials. Naming the dial is the fastest way to place a new result in the tables.
+
+1. **Measurement:** one copy at a time, or jointly on two (pairs 1, 3, 7). Joint measurements reach quantities that are quadratic in $\rho$; they help efficiently only when the decoder stays linear algebra.
+2. **Access rung:** copies of $\rho$, the pair $\rho\otimes\rho^*$, classical samples in a fixed basis, quantum examples, queries to the dynamics (pairs 2, 4, 8, 9). The same object can be easy on one rung and hard on another.
+3. **Success criterion:** all measurements, a given list, or most measurements from a distribution (pairs 5, 6, 7). Copy counts are comparable only under the same criterion.
+4. **Promise:** stabilizer structure, few non-Clifford gates, few gates, locality, Pauli structure of the observables (pairs 1, 4, 7, 9, 10). The promise buys time; information theory already gives the copies.
+5. **Proof technology:** counting and information theory for copies, cryptographic reductions for time (pairs 8, 9, 10). A green copy dot is a theorem; a red time dot is almost always a reduction.
+
+The first three dials are the quantum resource and the access model of [How efficiency is "bought" in the quantum world](#how-efficiency-is-bought-in-the-quantum-world), the fourth is the structural promise, and the fifth explains why the two halves of the map are charted so unevenly.
+
+</details>
 
 <br>
 
@@ -4964,198 +5472,6 @@ For states it is known that Pauli expectation values need two copies, Heisenberg
 * What is the real Stinespring condition for states instead of channels: which preparations deliver $\rho^*$ physically, and does this coincide with Appendix D of King, Wan, McClean?
 
 Paper: [arXiv:2608.05307](https://arxiv.org/abs/2608.05307)
-
-
-<br>
-
-# Appendix
-
-## Separation: QML with Classical and Quantum Data
-
-The data source decides, not the hardware. Quantum Learning is the bottom row of the following data-vs-learner matrix. **Why the separation matters (Power of Data).** In the top row, advantage claims are fragile: classical ML with enough training data catches up with quantum models on classical tasks (Huang et al., Nat. Commun. 2021). In the bottom row stand the *proven* exponential separations, including hardware demonstration.
-
-| | Classical Learners | Quantum Enhanced Learners |
-| --- | --- | --- |
-| **Classical data** | classical ML | "QML on classical data": feature maps, variational classifiers, quantum kernels |
-| **Quantum data** <br>(copies of $\rho$ / channels) | **Measurement protocol + classical statistics: shadows, Bell sampling + classical decoders** | Quantum-memory protocols: coherent two-/multi-copy measurements |
-
-Three litmus tests separate the rows sharply:
-
-1. **Where does the unknown live?** Density operator/channel vs. classical dataset.
-2. **Is "number of copies" a meaningful cost?** Quantum data cannot be cloned, every copy costs. Classical data can be copied at will.
-3. **Do the information bounds bind?** No-cloning, Holevo, and gentle measurement are what make learning from quantum data nontrivial. They do not apply to a CSV file. 
-
-The three bounds are: **No-cloning:** no CPTP map sends $\rho \mapsto \rho\otimes\rho$ for all $\rho$ (linearity forbids it). > The first bound makes copies a budget. **Holevo:** $n$ qubits carry at most $n$ bits of accessible classical information, $I(X{:}Y) \leq S(\bar\rho) - \sum_x p_x S(\rho_x) \leq n$. > the second bound caps what one shot can reveal. **Gentle measurement** (Winter 1999; Aaronson 2004): if a two-outcome measurement accepts $\rho$ with probability $\geq 1-\epsilon$, the post-measurement state is within trace distance $O(\sqrt{\epsilon})$ of $\rho$. > the third bound is the loophole that lets many near-deterministic questions share the same copies (shadow tomography).
-
-
-## Measurement theory vs. Learning Theory
-
-Measurement theory answers the single-shot question: What does a measurement do to a state, and which statistics does it produce? Learning theory asks the inverse, statistical question: *What can be learned about an unknown $\rho$ from many measurements, and at what cost?* The Born rule turns the state into a sampling oracle; learning is the inverse problem.
-
-**Definition.** Given access to copies of an unknown quantum object (state $\rho$, channel $\mathcal{E}$, Hamiltonian $H$), produced by nature, a sensor, or a quantum device: *Which* properties can a learner extract, at *what* cost in copies, classical time, and memory, and how do quantum resources (quantum memory, entangled measurements, adaptivity) change these costs?
-
-
-## What is learned: states and processes
-
-**The object axis.** A learner can be asked about a state, a Hamiltonian, a unitary, a channel, or a classical function. This is a fourth axis next to task, access, and budgets, and it runs across the three task types rather than forming a block of its own: states appear in all three tables, and so do processes. Hamiltonians have rows in estimating for their coefficients and in searching for their structure; circuits have rows in identifying. The tables therefore carry the object as a column instead of a separate section.
-
-**Access for processes.** Sample versus query is defined for states on the access ladder. For processes the classical distinction between random examples and membership queries supplies the definition.
-* A process applied to fixed or random inputs that do not depend on earlier outcomes yields copies of a single state: the Choi state, obtained by applying the process to half of a Bell pair, or the input–output data state. That is **sample access**.
-* Inputs chosen adaptively or queried in superposition, and uses of the process in controlled or inverted form, in sequences, or interleaved with control pulses, are **query access**. Heisenberg-limited learning of dynamics needs such control (Dutkiewicz, O'Brien, Schuster 2024) and is therefore query access.
-* Every row sits at the **weakest access its algorithm needs**. A nonadaptive protocol on random product inputs is a sample protocol, even if the learner prepares the inputs.
-
-**Object and access are independent.** Learning a Hamiltonian from copies of its Gibbs state learns a process from samples of a state. Learning a state through its preparation circuit learns a state by queries. Learning a channel from its Choi state learns a process from samples, with the ancilla as quantum memory.
-
-**Where the object decides hardness: normalization.** The squared Pauli coefficients of a unitary sum to one, so Bell sampling on its Choi state returns every coefficient of size $\tau$ with probability $\tau^2$, and the heavy terms fall out directly. The squared displacement coefficients of a pure state sum to $d$, so a coefficient of size one appears with probability $1/d$. The same measurement makes searching easy for unitaries and runs into the LWE wall for states. Details in the structure-learning protocols.
-
-## Measurement primitives as basis for Protocols for Quantum Learning
-
-Everything protocol below is a *protocol over measurements*, not a new measurement type. The section mirrors the three tables. First the four measurement primitives from which every protocol is built, then the protocols by task type, then what cuts across all three tables: the proof technology behind the bounds, the hardness results, the learned decoders, and the surveys.
-
-**Measurement primitives**
-
-Four primitives, one per rung of the access ladder and one for the far end of the memory axis. Every row in the tables uses one of them.
-
-**Single-copy randomized measurements.** Draw a random basis per copy, from single-qubit Paulis or from $n$-qubit Cliffords, measure, and store the outcome. The engine of classical shadows and of direct fidelity estimation, where Pauli expectations are importance-sampled by their weight in the target state (Flammia, Liu 2011; da Silva, Landon-Cardinal, Poulin 2011). Adaptivity is allowed, each copy is still an i.i.d. draw, and the shadow norm of the ensemble decides the cost. This is rung 1 of the access ladder and the workhorse of every hardware experiment.
-
-**Bell sampling on two copies.** A transversal Bell measurement across two copies, $\rho\otimes\rho$ or $\rho\otimes\rho^*$, draws one Pauli or displacement operator per shot. Bell difference sampling, the XOR of two such draws from four copies, removes the unknown coset offset and is the primitive behind stabilizer learning, stabilizer testing, and agnostic tomography. Conjugate pairs turn the draw into the clean squared spectrum for every dimension $d$; on qudits with two identical copies the draw can be uniform and carry nothing. Rung 2 of the access ladder. Details in the next subsection. Applied to the Choi state of a unitary or channel, the same measurement samples its Pauli spectrum; for processes this is the sample-access primitive.
-
-**Collective Schur sampling.** Measure all $N$ copies at once in the Schur–Weyl basis, which projects onto irreducible representations of the symmetric and unitary groups. Spectrum estimation (Keyl, Werner 2001), spectrum testing (O'Donnell, Wright 2015), and sample-optimal tomography (Haah et al. 2017; O'Donnell, Wright 2016) live here. Quantum memory $k = N$, the far end of the memory axis, and the reason those optimal rates are not hardware rates.
-
-**Oracle calls.** Uses of a preparation circuit $U$, its inverse and controlled versions, of the dynamics $e^{-iHt}$ interleaved with control, or of a channel in sequences or on inputs chosen adaptively or in superposition. Amplitude estimation, superposition queries, Heisenberg-limited Hamiltonian learning, and sequence-based noise learning count this budget. A process applied once to a fixed or random input is not an oracle call in this sense: it yields copies of the Choi state or of an input–output data state and belongs to the sample primitives. Rung 3 of the access ladder, where the precision rate improves to $1/\epsilon$ and where the search problems of the searching table become polynomial.
-
-## Bell sampling on two copies: the primitive behind conjugate pairs and structure learning
-
-**Mechanism.** The $2n$-qubit Bell basis $\{(P\otimes\mathbb{1})|\Phi^+\rangle^{\otimes n}\}$ is the joint eigenbasis of all commuting $P\otimes\bar P$. A transversal Bell measurement across two copies draws one Pauli string per shot
-
-$$P \sim \frac{|\langle\bar\psi|P|\psi\rangle|^2}{2^n}$$
-
-A single shot carries information about the *entire* Pauli spectrum. **Subtlety:** On $\psi\otimes\psi$ one samples against the *conjugate* state $\bar\psi$. The clean spectrum $\mathrm{Tr}(P\rho)^2/2^n$ requires the pair $(\rho, \bar\rho)$. For real amplitudes both coincide (which is why demos like GHZ states).
-
-**Consequences.** Purity and overlap $\mathrm{Tr}(\rho\sigma)$ via SWAP tests without tomography. Stabilizer states learnable from $O(n)$ Bell samples. Above all: **Pauli shadow tomography with $\Theta(n)$ copies given two-copy memory vs. $2^{\Omega(n)}$ without.** One of the strongest proven exponential quantum advantages, demonstrated in hardware. Two is the sweet spot: Almost all known gain arrives already at $k=2$.
-
-Literature:
-* **Bubeck, Chen, Li (FOCS 2020):** Entanglement necessary for optimal property testing.
-* **Chen, Cotler, Huang, Li (FOCS 2021):** $\Theta(n)$ vs. $2^{\Omega(n)}$ separation with quantum memory.
-* **Aharonov, Cotler, Qi (Nat. Commun. 2022):** QUALM, the formal model of an experiment as a quantum algorithm with coherent or incoherent access to a lab oracle; exponential separation of the two for physically motivated distinction tasks, with a SWAP test on two oracle outputs as the coherent protocol.
-* **Huang et al. (Science 2022):** Flagship separations and Sycamore demo with 40 qubits.
-* **King, Wan, McClean (2024):** Exponential advantage via $(\rho, \rho^*)$ with constant memory.
-* **Chen, Gong, Zhang (2024):** Separations for adaptive multi-copy shadow tomography.
-* **Allcock, Doriguello, Ivanyos, Santha (2024):** Bell sampling fails on qudits, $d > 2$: Bell difference sampling on four copies of a stabilizer state returns only $\mathrm{col}(V)\times\mathrm{col}(W)$, uniform when both have full rank. With the conjugate, Bell sampling on $\vert S\rangle\vert S^*\rangle$ learns the state from $O(n)$ copies for every $d$; without it, a hidden-quadratic-phase algorithm does for $d$ prime. The reason to use conjugate pairs rather than two identical copies.
-
-**Two more separations of the same shape.** *Purity testing* (is $\rho$ pure or maximally mixed?) needs $O(1)$ copies with two-copy memory (a SWAP test) but $\Omega(2^{n/2})$ without (Chen, Cotler, Huang, Li, FOCS 2021); the memory-free lower bound also kills any single-copy route to $\mathrm{Tr}(\rho^2)$. *Pauli channel estimation*: learning all $4^n$ Pauli eigenvalues of a channel to $\pm\epsilon$ takes roughly $O(n/\epsilon^2)$ uses with ancilla-assisted entangled inputs versus $2^{\Omega(n)}$ without (Chen, Zhou, Seif, Jiang, PRA 2022), the channel version of the shadow-tomography separation. The general framework in which all of these live is **QUALM** (Aharonov, Cotler, Qi, Nat. Commun. 2022): an experiment is a quantum algorithm that calls an unknown *lab oracle*, with *coherent* access (outputs of several calls held and measured jointly) or *incoherent* access (each output measured completely before the next call, adaptivity allowed). The separations above are statements about this coherence, which is the memory axis of this document, not about the model class; which oracle nature supplies, copies of $\rho$, pairs $\rho\otimes\rho^*$, or the preparation circuit, is the separate access ladder. On qubits the SWAP test behind these separations is a coarse-grained Bell measurement: SWAP is diagonal in the Bell basis, with eigenvalue $(-1)^{\#Y}$ on the outcome $P$. On qudits with $d>2$ it is not; see the QUALM summary under Identifying (Papers).
-
-
-<br>
-
-## Where the bounds come from: proof technology
-
-The thesis stated under Efficiency Boundaries, a dense sample map and a nearly empty time map, has a concrete cause: the two kinds of bounds are proved with different tools, and only one kind is unconditional.
-
-**Sample lower bounds, unconditional.**
-* *Holevo and packing.* $n$ qubits carry at most $n$ bits; a hypothesis class with $2^{\Theta(N)}$ well-separated members needs $\Omega(N)$ copies. This gives $\Omega(n)$ for stabilizer states, $\Omega(d^2/\epsilon^2)$ for full tomography, and $\Omega(d_{\mathrm{VC}}/\epsilon)$ for PAC learning from quantum examples (Arunachalam, de Wolf 2018).
-* *The tree method for bounded memory.* A learner without quantum memory induces a tree of single-copy outcomes; bounding the likelihood ratio between a random hypothesis and the maximally mixed state along every root-to-leaf path gives $2^{\Omega(n)}$ for Pauli shadow tomography, purity testing, and channel learning without memory (Bubeck, Chen, Li 2020; Chen, Cotler, Huang, Li 2021; Chen, Zhou, Seif, Jiang 2022) and $\Omega(d^3/\epsilon^2)$ for single-copy tomography, adaptive or not (Lowe, Nayak 2022; Chen, Huang, Li, Liu, Sellke 2023). The method interpolates in the number $k$ of memory qubits.
-* *Reduction plus Weingarten calculus for Haar-random oracles.* Every incoherent protocol, adaptive or not, is a probabilistic mixture of simple prepare–apply–measure protocols, because the classical messages from the workspace can be generated by a classical computer with random bits. For those, the outcome distributions under a fixed and under a fresh Haar-random unitary are compared term by term in the Weingarten expansion, summing over outcomes backwards from the last call. This gives $\Omega(2^{2\ell/7})$ for the fixed-unitary and symmetry-class problems (Aharonov, Cotler, Qi 2022), the process-side counterpart of the tree method.
-* *Group theory.* Schur–Weyl duality for the unitary group gives the optimal tomography rates; Schur–Weyl duality for the Clifford group (Gross, Nezami, Walter 2021) explains why four copies expose a stabilizer group and why the characteristic distribution of a pure state is its own symplectic Fourier transform.
-
-**Sample upper bounds.**
-* *Hoeffding plus a union bound* over a candidate list: character means over a dictionary, all $d^2$ squared magnitudes from one Bell record, Hamiltonian coefficients from local marginals.
-* *Median of means and the shadow norm* for classical shadows; *gentle measurement* for shadow tomography (Winter 1999; Aaronson 2004, 2018), which is the same lemma as differential privacy (Aaronson, Rothblum 2019); *threshold search* for hypothesis selection (Bădescu, O'Donnell 2021); *matrix multiplicative weights* as the hypothesis update behind shadow and online learning.
-* *Fourier sampling and coset differencing*: Bell sampling, Bell difference sampling, and quantum examples deliver random elements of a subspace or coset, and Gaussian elimination finishes (Montanaro 2017; Bshouty, Jackson 1998; Simon 1994).
-
-**Time lower bounds, conditional.** Every known one is a reduction from a cryptographic assumption. LWE gives the real-diagonal displacement instance; LPN gives the hardness of learning output distributions with a single $T$ gate (Hinsche et al. 2023) and the classical mirror of Bell sampling; one-way functions give pseudorandom states (Ji, Liu, Song 2018; Brakerski, Shmueli 2019) and from them the hardness of learning states of bounded gate complexity (Zhao et al. 2023) and of distinguishing entanglement (Aaronson et al. 2022). No unconditional time lower bound for a natural quantum learning task is known, which is why the time map is empty where the sample map is dense.
-
-**Time upper bounds.** Each one names the structure it uses: linear algebra over $\mathbb{F}_2$ or $\mathbb{Z}_d$ for subgroups, enumeration for dictionaries, a best-first heap for factorized spectra, the noncommutative Bohnenblust–Hille inequality for low-degree objects (Volberg, Zhang 2023), light cones for shallow circuits, cluster expansions at high temperature and a different route at any constant temperature for Gibbs-state Hamiltonian learning (Haah, Kothari, Tang 2022; Bakshi, Liu, Moitra, Tang 2024), and graph colorings of commutation structure for triply efficient shadow tomography (King, Gosset, Kothari, Babbush 2024). A learned decoder is an attempt to obtain such a bound empirically where no structure has been named.
-
-## Computational lens: hardness and pseudorandomness
-
-Pseudorandom states (PRS) show: States can be statistically learnable yet computationally indistinguishable from Haar-random ones.
-
-* **Regev (2005):** Learning With Errors, foundation of average-case hardness.
-* **Ji, Liu, Song (CRYPTO 2018):** Pseudorandom quantum states.
-* **Kretschmer (TQC 2021):** Quantum pseudorandomness and classical learning hardness.
-* **Huang, Broughton et al. (Nat. Commun. 2021):** *Power of data*: classical data closes quantum advantages in learning classical functions.
-* **Brakerski, Shmueli (TCC 2019):** Scalable pseudorandom states from one-way functions.
-* **Aaronson, Bouland, Fefferman, Ghosh, Vazirani, Zhang, Zhou (ITCS 2024):** Pseudoentanglement: low and high entanglement, computationally indistinguishable.
-* **Gu, Leone, Ghosh, Eisert, Yelin, Quek (2023):** Pseudomagic: stabilizer entropy $\omega(\log n)$ versus $\Theta(n)$, computationally indistinguishable; magic is hideable like entanglement, the two are tunable independently, and black-box magic distillation is limited to $O(\log^{1+c} n)$ $T$ states. For the searching column a second hard endpoint from one-way functions.
-* **Zhao, Lewis, Kannan, Quek, Huang, Caro (PRX Quantum 2024):** States and unitaries of bounded gate complexity: $\tilde\Theta(G)$ copies suffice, but learning is computationally hard under cryptographic assumptions.
-* **Hinsche et al. (2022; PRL 2023, "One $T$ gate makes distribution learning hard") / Nietner et al. (2023):** Output distributions of circuits: learnable for Clifford, hard under LPN with a single non-Clifford gate, also on average.
-
-**The average-case counterpart.** Huang, Kueng, Preskill, "Information-theoretic bounds on quantum advantage in machine learning" (PRL 2021): for predicting $\mathrm{Tr}(O\,\mathcal{E}(\rho_x))$ on inputs drawn from a distribution, a classical learner with measurement data needs only polynomially more samples than a fully quantum one in the *average-case* prediction error, while for *worst-case* prediction the gap can be exponential. Read together with PRS: computational indistinguishability and average-case learnability are different axes, and most "quantum advantage in learning" claims live on the worst-case one.
-
-## Machine-learned decoders
-
-Classical neural decoders on shadow data (bottom-left quadrant) as empirical heuristics for classically hard decoding tasks.
-
-* **Torlai et al. (Nat. Phys. 2018):** Neural-network QST.
-* **Huang, Kueng, Torlai, Albert, Preskill (Science 2022):** Provable generalization bounds for ML on shadow data.
-* **Huang, Preskill, Soleimanifar (2024):** State certification via single-qubit shadow relaxations.
-* **Carrasquilla, Torlai, Melko, Aolita (Nat. Mach. Intell. 2019):** Generative models as state representations fit to measurement data.
-* **Lewis et al. (Nat. Commun. 2024) / Onorati, Rouzé, França, Watson (2023):** Provable prediction of ground and thermal state properties within a phase, down to $O(\log n)$ training states.
-* **Bausch et al. (Nature 2024):** AlphaQubit, the learned surface-code decoder.
-
-**Representation side and the decoding target.** The representational cousin of a learned decoder is the **neural quantum state** (Carleo, Troyer, Science 2017): a network as the ansatz $\psi_\theta(s)$, trained variationally rather than from measurement data. The two meet in Torlai et al. (2018), where the network is fit to measurement statistics. On the transfer to error correction: Google's **AlphaQubit** (Bausch et al., Nature 2024) is a transformer decoder trained on syndrome data that outperforms tensor-network and matching decoders on Sycamore surface-code experiments, the existence proof that a learned decoder can beat hand-built combinatorics on real hardware data.
-
-## Surveys and timeline
-
-* **Anshu, Arunachalam (Nat. Rev. Phys. 2024):** Canonical survey on state-learning complexity.
-* **Gebhart et al. (Nat. Rev. Phys. 2023):** Review on learning quantum dynamics in experiments.
-* **Elben et al. (Nat. Rev. Phys. 2023):** The randomized measurement toolbox, shadows in practice.
-* **Kliesch, Roth (PRX Quantum 2021):** Theory of quantum system certification, a tutorial.
-* **Montanaro, de Wolf (2016):** Survey of quantum property testing.
-* **Arunachalam, de Wolf (SIGACT 2017):** Quantum PAC learning.
-
-| Period | Milestones |
-| --- | --- |
-| 1973–1997 | Holevo bound (1973) · Bernstein–Vazirani (1993) and Simon (1994): Fourier sampling and hidden subgroups, the query-side primitives · DNF from quantum examples (Bshouty–Jackson 1995) |
-| 1998–2004 | Gentle measurement (Winter 1999; Aaronson 2004) · Spectrum estimation by Schur sampling (Keyl–Werner 2001) · Quantum Goldreich–Levin (Adcock–Cleve 2002) · Stabilizer identification (Aaronson–Gottesman 2004) · Quantum vs. classical learnability (Servedio–Gortler 2004) |
-| 2005–2010 | LWE (Regev 2005) · State PAC learnability (Aaronson 2007) · Clifford learning (Low 2009) · Compressed-sensing and MPS tomography (2010) · Quantum Boolean functions and operator Goldreich–Levin (Montanaro–Osborne 2010) |
-| 2011–2014 | Direct fidelity estimation by Pauli importance sampling (Flammia–Liu; da Silva, Landon-Cardinal, Poulin 2011) · Sparse FFT (Hassanieh, Indyk, Katabi, Price 2012) |
-| 2015–2017 | Spectrum testing (O'Donnell–Wright 2015) · Sample-optimal tomography $\Theta(d^2/\epsilon^2)$ (2016) · Property-testing survey (Montanaro–de Wolf 2016) · Stabilizer Bell sampling (Montanaro 2017) · Quantum PAC survey (Arunachalam–de Wolf 2017) · Ising structure learning in $\tilde O(p^2)$ without correlation decay (Bresler 2015) · Sparsitron, near-optimal MRF structure learning by multiplicative weights (Klivans–Meka 2017) |
-| 2018–2019 | Shadow tomography (Aaronson) · Online learning of states · Pseudorandom states (Ji–Liu–Song) · Neural-network tomography (Torlai et al.) · Stabilizer PAC learning (Rocchetto) · Gentle measurement and differential privacy (Aaronson–Rothblum) · LWE easy with quantum samples (Grilo–Kerenidis–Zijlstra) · Scalable PRS (Brakerski–Shmueli) · $k$-Fourier-sparse functions from $O(k^{1.5}\log^2 k)$ quantum examples (Arunachalam–Chakraborty–Lee–Paraashar–de Wolf) |
-| 2020 | Classical shadows (Huang–Kueng–Preskill) · Entanglement necessary for property testing (Bubeck–Chen–Li) · Pauli channel estimation (Flammia–Wallman; Harper–Flammia–Wallman) · Quantum statistical queries (Arunachalam–Grilo–Yuen) · Sparse Pauli noise by peeling on chosen stabilizer groups (Harper–Yu–Flammia) |
-| 2021 | Memory separations (Chen–Cotler–Huang–Li) · Clifford Schur–Weyl duality and stabilizer testing (Gross–Nezami–Walter) · Improved shadow tomography and threshold search (Bădescu–O'Donnell) · Gibbs-state Hamiltonian learning (Anshu et al.) · Power of data and information-theoretic bounds (Huang et al.) · Pseudorandomness and learning hardness (Kretschmer) · Derandomized and fermionic shadows · Experimental classical shadows on four photonic qubits (Zhang et al.) · Certification tutorial (Kliesch–Roth) |
-| 2022 | Learning from experiments, Sycamore demo (Huang et al., Science) · Provable ML on shadow data (Huang et al., Science) · Pauli-channel separation (Chen–Zhou–Seif–Jiang) · QUALM (Aharonov–Cotler–Qi) · High-temperature Hamiltonian learning in polynomial time (Haah–Kothari–Tang) · Few-T learning (Lai–Cheng) · Pseudoentanglement · Output-distribution learnability (Hinsche et al.) · Nonadaptive single-copy lower bound (Lowe–Nayak) · Tight certification bounds with incoherent measurements (Chen–Huang–Li–Liu) · Non-Markovian process tensor tomography (White et al.) · Noisy stabilizer PAC learning as hard as LPN (Gollakota–Liang) |
-| 2023 | Heisenberg-limited Hamiltonian learning (Huang–Tong–Fang–Su) · Adaptivity does not help tomography (Chen et al.) · Unitary estimation at the Heisenberg rate (Haah–Kothari–O'Donnell–Tang) · Phase states (Arunachalam–Bravyi–Dutt–Yoder) · Juntas (Chen–Nadimpalli–Yuen) · Predicting processes (Huang–Chen–Preskill) · Bounded gate complexity (Zhao et al.) · One $T$ gate makes distribution learning hard (Hinsche et al.) · Few non-Clifford gates (Grewal–Iyer–Kretschmer–Liang) · Free-fermion tomography (Aaronson–Grewal) · Noncommutative Bohnenblust–Hille (Volberg–Zhang) · Qudit low-degree learning via a dimension-free Remez inequality (Klein–Slote–Volberg–Zhang) · Matchgate shadows (Wan–Huggins–Lee–Babbush) · Locally scrambled shadows (Hu–Choi–You) · Randomized-measurement review (Elben et al.) · Stabilizer-entropy phase transition and purity estimation (Leone et al.) · Learning finitely correlated states (Fanizza et al.) · Average-case hardness of learning circuit output distributions (Nietner et al.) · Linear T-count for pseudorandomness and approximate stabilizer support from Bell difference sampling (Grewal–Iyer–Kretschmer–Liang) · Pseudomagic (Gu–Leone–Ghosh–Eisert–Yelin–Quek) · Pauli spectrum of QAC⁰, the quantum LMN (Nadimpalli–Parham–Vasconcelos–Yuen) |
-| 2024 | Triply efficient shadows (King–Gosset–Kothari–Babbush) · Conjugate pairs (King–Wan–McClean) · Adaptivity separations for shadow tomography (Chen–Gong–Zhang) · Agnostic tomography and stabilizer bootstrapping · Tolerant stabilizer testing (Arunachalam–Dutt) · Any-temperature Hamiltonian learning (Bakshi–Liu–Moitra–Tang) · Hamiltonian structure learning from real-time evolution (Bakshi–Liu–Moitra–Tang) · Shallow circuits in polynomial time (Huang et al.; Landau–Liu) · Qudit stabilizer learning beyond Bell sampling (Allcock et al.) · Low-degree objects · Certification with single-qubit measurements (Huang–Preskill–Soleimanifar) · Gaussian and CV state learning (Mele et al.) · AlphaQubit · Bell and locally entangled shadows (Ippoliti) · Matchgate ensemble unification (Heyraud–Chomet–Tilly) · Qudit shadows with a magic gate (Mao–Yi–Zhu) · Tighter median-of-means constants (Fu et al.) · State-learning survey (Anshu–Arunachalam) · Tolerant stabilizer testing with a polynomial gap (Bao–van Dordrecht–Helsen) · Fermionic states with few non-Gaussian gates (Mele–Herasymenko) |
-| 2025–2026 | First empirical evaluation of a two-copy triply efficient scheme (arXiv:2508.11744) · Noise-robust two-copy hardware · Physical average-case decodability · Learned decoders as algorithm discovery · Online shadow tomography at the classical rates (Chen–O'Donnell–Pelecanos–Wright) · Heisenberg-limited Hamiltonian learning without short-time control (Shin–Lee–Oh) · Shadows over symmetric spaces (Chang et al.) · Channel learning with limited parallel access and the conjugate channel (Subramanian–Kwon–Jiang) |
-
-<br>
-
-## Open Frontiers (Research Questions)
-
-* **Mapping the decodable classes.** Between "subgroup-easy" (linear algebra) and "LWE-hard" lies uncharted territory. The same state moves from the easy to the hard regime by turning up a noise parameter. Open: Does the hardness reduction transfer from the tensor-product basis to the cyclic single-qudit basis?
-* **What learned decoders implicitly find.** If a decoder works on a class with no known efficient algorithm, it may have found one. ML as a tool for algorithm discovery; what is missing is a metric that predicts generalization across state distributions.
-* **Hardware realism with two copies.** Approximate matched filters (probe gain $\kappa < 1$, overhead $\kappa^{-2}$) make protocols graceful against preparation, crosstalk, and measurement errors. The practically most relevant axis.
-* **Average case instead of worst case.** The hardness results are adversarial. Natural states (ground states of local Hamiltonians, thermal states) could be generically decodable: from the cryptography perspective to the physics perspective.
-* **Memory between zero and two.** The separations are stated at $k=0$ versus $k=2$ copies. Chen–Cotler–Huang–Li also treat a learner with $k$ qubits of quantum memory and find that the sample complexity interpolates smoothly; what is missing is the *protocol* side: which structured tasks become tractable at a fixed small memory budget short of a full second copy, e.g. with a few ancilla qubits per shot as in the Pauli-channel case.
-
-<br>
-
-## Reading the tables
-
-The three tables are the primary object. This appendix keeps the three axes that generate them, for readers who want the coordinate system: the quadrant of access against task, the access ladder, and the measurement-power axis.
-
-
-
-**The pattern in the status column.** Every 🟢 🟢 🟢 row under sampling access names a promise (locality, subgroup, class structure, Gaussianity, bond dimension, light cone, low degree, a gapped phase) or a resource (two-copy memory, an entangled ancilla); every 🟢 🟢 🟢 row under query access names the access itself, sometimes together with a promise. The 🟢 🔴 rows are the generic cases. Time efficiency is never free; it is bought by a promise about the state, by a resource on the quantum side, or by a stronger access model.
-
-Glyph order in the status column: copies · time · memory.
-
-**Two ways to fail, which the memory column separates.**
-* *Hypothesis too large.* MMW-based shadow tomography keeps a $2^n \times 2^n$ matrix. Memory is exponential, and therefore time is too: an algorithm cannot touch more memory than it has steps. This is a representation problem, and sparse surrogates solve it.
-* *Search too hard.* Sparse displacement spectra need $O(k \log d)$ bits for the list. Memory is polynomial, time is LWE-hard regardless. This is a decoder problem, and no representation solves it.
-* The implication runs one way only: exponential memory forces exponential time, exponential time does not force exponential memory. Sparse displacement spectra are the only row in the table where memory holds and time still fails. The boundary these notes are about is the decoder, not the representation.
-* A learned top-$k$ decoder can cross the memory boundary three times: the $d \times d$ histogram becomes a coprime fold into a fixed $64 \times 64$ tensor, the $d^2$-wide output layer becomes a bit vector of $2\lceil\log_2 d\rceil$ neurons, and the $d \times d$ MMW hypothesis becomes a sparse surrogate of $O(k)$ weights. Each replacement is necessary; none of them touches the time hardness of localization.
-
-**What the merged tables show.**
-* The object column shows that dynamics are not a separate category. States, Hamiltonians, unitaries, channels, and classical functions appear in all three tables; only the access differs, and it follows the rule of "What is learned": fixed or random inputs are sample access through the Choi or data state, adaptive or controlled use is query access. The object decides hardness only through the normalization of its spectrum, which is why heavy Pauli terms of a unitary are found from samples and heavy displacement terms of a state are not.
-* The computational boundary, as far as it is charted, is the set of 🟢 🔴 rows: sparse displacement spectra and LWE from samples (searching); general shadow tomography, PAC learning of states, and online learning (estimating, hypothesis too large); pseudorandom states, bounded gate complexity, and output distributions of circuits (identifying, cryptographic). Every one of them is sample-efficient. The three that fail in time with polynomial memory, the LWE pair, bounded gate complexity, and the output-distribution family, are the ones where the hardness is a theorem about the decoder rather than about the size of the hypothesis.
-* Every cell of the quadrant in the appendix is present with several examples, and the query rows carry no hardness for any task type. That is why the quadrant collapses to a single hard corner. Tasks that stay hard under queries, such as full tomography, are kept out of the quadrant on purpose.
-* The generic hard case has its own row: LWE from i.i.d. samples, directly under the row for sparse displacement spectra in the searching table, with the same 🟢 🔴 🟢. A real-diagonal displacement state whose Bell outcomes are LWE samples embeds one into the other, so the two rows are one instance seen from two sides.
-* One cell is easy to overlook: query access with an identifying task. Bernstein–Vazirani fills it for functions, identification with preparation circuits for states. In the identifying column queries buy only the precision rate, because a polynomial list of candidates is already easy under sampling.
-* Identifying and searching coincide when the candidate class is exponentially large and parametrized. The LWE secret indexes $q^n$ hypotheses and at the same time locates the support; the distinction carries weight only when the list is polynomial (identifying) or the support must be found in an exponential space without a parametrization (searching). The LWE rows are labeled searching for that reason; Bernstein–Vazirani, its noiseless limit, is labeled identifying because one query resolves the parameter. This **LWE rule** applies to all tables: if the parameter of an exponential class is the location of the support in the Pauli or Weyl spectrum, the row sits under searching, even if a state is output at the end. This is why stabilizer states, stabilizer dimension $\geq n-t$ (few non-Clifford gates), and agnostic stabilizer learning sit under searching; stabilizer testing (one bit) and phase states of higher degree stay under identifying.
-* Simon and Montanaro run the same decoder: random elements of a subspace, then Gaussian elimination. The access differs, Fourier sampling of an oracle versus differences of Bell samples, and the subgroup promise makes the decoder linear on both rows. The promise, not the access, buys the time efficiency there.
 
 # Astrophysics
 

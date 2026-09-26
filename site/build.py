@@ -44,6 +44,17 @@ def slugify(text, used):
     return s
 
 
+def github_slug(text):
+    """Anchor that GitHub and VS Code give a Markdown heading."""
+    s = re.sub(r"[^\w\s-]", "", text.strip().lower())
+    return re.sub(r"\s", "-", s)
+
+
+def resolve_anchor(target, ctx):
+    """Map a GitHub-style anchor from the Markdown source to the id on the page."""
+    return target if target in ctx["used"] else ctx["gh"].get(target, target)
+
+
 # ---------- markdown rendering with protected math ----------
 
 DISPLAY_MATH = re.compile(r"\$\$(.+?)\$\$", re.S)
@@ -72,6 +83,7 @@ def render(text, ctx):
 
     out = PH.sub(restore, out)
     out = re.sub(r'<a href="(https?:)', r'<a target="_blank" rel="noopener" href="\1', out)
+    out = re.sub(r'href="#([^"]+)"', lambda m: f'href="#{resolve_anchor(m.group(1), ctx)}"', out)
     out = re.sub(r"<table>", '<div class="table-wrap"><table>', out).replace("</table>", "</table></div>")
     out = re.sub(r"<tr>\s*<td><strong>(.+?)</strong>", lambda m: row_anchor(m, ctx), out)
     out = re.sub(r"<h([3-6])>(.+?)</h\1>", lambda m: heading_anchor(m, ctx), out)
@@ -205,12 +217,13 @@ def build(src, mode, banner, katex_dir):
     lines = src.split("\n")
     head_pre, parts = split_blocks(lines, "# ")
 
-    ctx = {"used": set(), "titles": {}, "rows": {}, "papers": {}, "hmap": {}, "placed": set()}
+    ctx = {"used": set(), "titles": {}, "rows": {}, "papers": {}, "hmap": {}, "placed": set(), "gh": {}}
     # anchors for parts, sections, papers, headings and table rows
     plan = []
     for ptitle, plines in parts:
         pid = slugify(ptitle, ctx["used"])
         ctx["titles"].setdefault(ptitle, pid)
+        ctx["gh"].setdefault(github_slug(ptitle), pid)
         _, secs = split_blocks(plines, "## ")
         entries = []
         for stitle, slines in secs:
@@ -230,6 +243,8 @@ def build(src, mode, banner, katex_dir):
                         hid = slugify(plain_source(hm.group(1)), ctx["used"])
                         ctx["hmap"][plain_source(hm.group(1))] = hid
                         ctx["titles"].setdefault(hm.group(1).strip(), hid)
+                        ctx["gh"].setdefault(github_slug(hm.group(1)), hid)
+            ctx["gh"].setdefault(github_slug(stitle), sid)
             entries.append(sid)
         plan.append((pid, entries))
     for line in lines:

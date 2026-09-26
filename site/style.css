@@ -332,6 +332,11 @@ details > summary::-webkit-details-marker { display: none; }
 .prose code { font: 13.5px var(--font-mono); background: var(--surface-2); padding: .1em .35em; border-radius: 4px; }
 .prose img { max-width: 100%; }
 .prose strong { font-weight: 700; }
+.prose details.answer { margin: .8rem 0 1rem; padding: 0 1rem; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface-2); }
+.prose details.answer > summary { padding: .55rem 0; font: 600 14px var(--font-ui); color: var(--accent); }
+.prose details.answer > summary::before { content: "+ "; }
+.prose details.answer[open] > summary::before { content: "– "; }
+.prose details.answer[open] > summary { border-bottom: 1px solid var(--rule); }
 .table-wrap {
   overflow-x: auto;
   margin: .9rem 0;
