@@ -9,16 +9,16 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 <br>
 
 **Quantum Algorithms**
-* [README.md](https://github.com/deltorobarba/science/blob/main/README.md) - Quantum Information Science - research notes
-* [science.md](https://deltorobarba.github.io/science/) - Quantum Learning theory - research notes
-* [scrambling.ipynb](https://github.com/deltorobarba/science/blob/main/scrambling.ipynb) - Quantum information scrambling research code
-* [quantum.ipynb](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - Quantum Computing code
+* [Quantum Information Science](https://github.com/deltorobarba/science/blob/main/README.md) - research notes (here below)
+* [Quantum Learning Theory](https://deltorobarba.github.io/science/) - research notes
+* [Quantum information scrambling](https://github.com/deltorobarba/science/blob/main/scrambling.ipynb) -  research code
+* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - code
 
 **Astrophysics**
-* [galaxies.ipynb](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) - Galaxies and Nebulae research code
-* [exoplanets.ipynb](https://github.com/deltorobarba/science/blob/main/exoplanets.ipynb) - Exoplanet research code
-* [gravitationalwaves.ipynb](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) - Gravitational Waves research code
-* [stars.ipynb](https://github.com/deltorobarba/science/blob/main/stars.ipynb) - Stars and solar research code
+* [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) - research code
+* [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanets.ipynb) -  research code
+* [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) - research code
+* [Stars and Solar](https://github.com/deltorobarba/science/blob/main/stars.ipynb) - research code
 
 
 ---
