@@ -9,7 +9,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 <br>
 
 **Quantum Algorithms**
-* [Quantum Mathematics (Heisenberg-Weyl & Tensor Algebra)](https://github.com/deltorobarba/science/blob/main/README.md) - research notes (here below)
+* [Heisenberg-Weyl & Tensor Algebra](https://github.com/deltorobarba/science/blob/main/README.md) - research notes
 * [Quantum Learning Theory](https://deltorobarba.github.io/science/) - research notes
 * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/scrambling.ipynb) -  research code and notes
 * [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - research code
@@ -25,12 +25,9 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
-**Study and research notes on quantum theory**
+*Study and research notes on quantum theory*
 
-- [Heisenberg-Weyl](#heisenberg-weyl)
-- [Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra](#tensor-algebra-tv-as-basis-for-exterior-symmetric-clifford-and-weyl-algebra)
 
----
 
 ## Heisenberg-Weyl
 
