@@ -918,8 +918,44 @@ td:first-child { min-width: 11rem; }
 <li>The information is <strong>there</strong>: Bell sampling on <span class="math" data-tex="\rho \otimes \rho^*">\rho \otimes \rho^*</span> yields all squared magnitudes from <span class="math" data-tex="O(\log d / \epsilon^4)">O(\log d / \epsilon^4)</span> copies (🟢).</li>
 <li><strong>Yet time fails (🔴)!</strong> Even with memory perfectly under control, generic localization of the addresses from random Bell samples contains <strong>LWE (Learning With Errors)</strong>, and on qubits <strong>LPN</strong>, as a special case: a real-diagonal displacement instance embeds LWE. Under the LWE assumption, no efficient decoder exists, classical or quantum (shown in the tensor-product Weyl basis; open for the cyclic single-qudit basis).</li>
 </ul>
-<p><strong>Deep Dive: Efficiency through a structural promise (a special class of states)</strong></p>
+<h3 id="deep-dive-efficiency-through-a-structural-promise-a-special-class-of-states">Deep Dive: Efficiency through a structural promise (a special class of states)</h3>
 <p>When a protocol becomes efficient through a <strong>structural promise</strong>, this means: the allowed class of quantum states is restricted so that a mathematical theorem applies, which abruptly reduces the exponential search space to a tractable problem. These structural promises fall into <strong>four large families</strong>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:left">Promise family</th>
+<th style="text-align:left">What is physically excluded?</th>
+<th style="text-align:left">Mathematical trick</th>
+<th style="text-align:left">Typical classical decoder</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Algebraic</strong></td>
+<td style="text-align:left">Arbitrary superpositions</td>
+<td style="text-align:left">Finite fields / group invariance</td>
+<td style="text-align:left"><strong>Gaussian elimination, clique search</strong></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Locality</strong></td>
+<td style="text-align:left">Long-range simultaneous couplings</td>
+<td style="text-align:left">Small <span class="math" data-tex="k">k</span>-subsets (<span class="math" data-tex="n^k">n^k</span>)</td>
+<td style="text-align:left"><strong>Median of means, greedy search</strong></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Area law</strong></td>
+<td style="text-align:left">Volume-law entanglement (chaos)</td>
+<td style="text-align:left">Local tensor decomposition</td>
+<td style="text-align:left"><strong>SVD (singular value decomposition)</strong></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Spectral</strong></td>
+<td style="text-align:left">Uncorrelated frequencies</td>
+<td style="text-align:left">Chinese remainder theorem / decay</td>
+<td style="text-align:left"><strong>Best-first heap, Fourier truncation</strong></td>
+</tr>
+</tbody>
+</table></div>
 <hr />
 <h3 id="group-1-algebraic-promises-symmetries">Group 1: Algebraic promises (symmetries)</h3>
 <p><em>Here group and field theory turn exponential search into simple linear algebra.</em></p>
@@ -1044,43 +1080,6 @@ Once <span class="math" data-tex="n">n</span> linearly independent vectors are f
 </li>
 </ul>
 <hr />
-<h3 id="summary-of-the-groups">Summary of the groups</h3>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th style="text-align:left">Promise family</th>
-<th style="text-align:left">What is physically excluded?</th>
-<th style="text-align:left">Mathematical trick</th>
-<th style="text-align:left">Typical classical decoder</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><strong>Algebraic</strong></td>
-<td style="text-align:left">Arbitrary superpositions</td>
-<td style="text-align:left">Finite fields / group invariance</td>
-<td style="text-align:left"><strong>Gaussian elimination, clique search</strong></td>
-</tr>
-<tr>
-<td style="text-align:left"><strong>Locality</strong></td>
-<td style="text-align:left">Long-range simultaneous couplings</td>
-<td style="text-align:left">Small <span class="math" data-tex="k">k</span>-subsets (<span class="math" data-tex="n^k">n^k</span>)</td>
-<td style="text-align:left"><strong>Median of means, greedy search</strong></td>
-</tr>
-<tr>
-<td style="text-align:left"><strong>Area law</strong></td>
-<td style="text-align:left">Volume-law entanglement (chaos)</td>
-<td style="text-align:left">Local tensor decomposition</td>
-<td style="text-align:left"><strong>SVD (singular value decomposition)</strong></td>
-</tr>
-<tr>
-<td style="text-align:left"><strong>Spectral</strong></td>
-<td style="text-align:left">Uncorrelated frequencies</td>
-<td style="text-align:left">Chinese remainder theorem / decay</td>
-<td style="text-align:left"><strong>Best-first heap, Fourier truncation</strong></td>
-</tr>
-</tbody>
-</table></div>
 <p>Whenever this document shows green (🟢) in the time budget, one of these mechanisms is at work behind it, or a quantum resource, or a stronger access model (see the summary above). Without such a promise, no efficient decoder is known in general, and for LWE-type instances none can exist under standard cryptographic assumptions.</p>
 </div></details><details class="sec" id="proven-classes-by-task-type-and-candidate-instance-classes" data-unit><summary><h2>Proven classes by task type, and candidate instance classes</h2></summary><div class="prose"><p>The four groups are a cross-task toolbox: a promise is a statement about the state, while the task type is fixed by what is returned. By their rows in the tables (LWE rule, Appendix, &quot;<a href="#reading-the-tables">Reading the tables</a>&quot;), the entries of this deep dive sort as follows.</p>
 <div class="table-wrap"><table>
