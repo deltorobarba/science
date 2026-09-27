@@ -9,10 +9,10 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 <br>
 
 **Quantum Algorithms**
-* [Quantum Information Science](https://github.com/deltorobarba/science/blob/main/README.md) - research notes (here below)
+* [Quantum Mathematics (Heisenberg-Weyl & Tensor Algebra)](https://github.com/deltorobarba/science/blob/main/README.md) - research notes (here below)
 * [Quantum Learning Theory](https://deltorobarba.github.io/science/) - research notes
-* [Quantum information scrambling](https://github.com/deltorobarba/science/blob/main/scrambling.ipynb) -  research code
-* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - code
+* [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/scrambling.ipynb) -  research code and notes
+* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - research code
 
 **Astrophysics**
 * [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) - research code
@@ -27,17 +27,12 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 **Study and research notes on quantum theory**
 
-- [I. Heisenberg-Weyl](#i-heisenberg-weyl)
-- [II. Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra](#ii-tensor-algebra-tv-as-basis-for-exterior-symmetric-clifford-and-weyl-algebra)
-- [III. Quantum Dynamics](#iii-quantum-dynamics)
-- [IV. Chaos, Scrambling and OTOCs](#iv-chaos-scrambling-and-otocs)
-- [V. QML on Classical Data: Dequantization vs. Genuine Quantum Advantage](#v-qml-on-classical-data-dequantization-vs-genuine-quantum-advantage)
-<br>
+- [Heisenberg-Weyl](#heisenberg-weyl)
+- [Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra](#tensor-algebra-tv-as-basis-for-exterior-symmetric-clifford-and-weyl-algebra)
 
 ---
 
-<a id="i-heisenberg-weyl"></a>
-## I. Heisenberg-Weyl
+## Heisenberg-Weyl
 
 > Every quantum gate is a time evolution $U = e^{-i\hat Ht}$. The physical and information-theoretic complexity of the gate is determined by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
 
@@ -144,8 +139,7 @@ The $T$ gate belongs to level $\mathcal{C}_3$. Operationally, any gate residing 
 * **Chapter 2** encounters this ladder again as the foundational exception enabling cheap Hamiltonian simulation (shadow simulation, fast-forwarding of linear/quadratic models) and identifies degree $\geq 3$ as the root driver of chaotic scrambling dynamics (out-of-time-ordered correlators, OTOCs).
 * **Chapter 3** leverages this hierarchy as the tunable magic dial for learnable quantum state classes, using the degree-1 Heisenberg-Weyl displacements $D_{q,p}$ as the operator basis through which two-copy Bell measurements reconstruct unknown quantum spectra.
 
-<a id="ii-tensor-algebra-tv-as-basis-for-exterior-symmetric-clifford-and-weyl-algebra"></a>
-## II. Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra
+## Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra
 
 *The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** in that ideal (symmetric $Q$ or antisymmetric $\omega$), plus whether you switch its value on at all.*
 
