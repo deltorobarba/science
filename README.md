@@ -11,7 +11,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Quantum Algorithms**
 * [Heisenberg-Weyl & Tensor Algebra](https://github.com/deltorobarba/science/blob/main/README.md) - research notes
 * [Quantum Learning Theory](https://deltorobarba.github.io/science/) - research notes
-* [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/scrambling.ipynb) -  research code and notes
+* [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/dynamics.ipynb) -  research code and notes
 * [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - research code
 
 **Astrophysics**
