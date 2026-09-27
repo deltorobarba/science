@@ -136,7 +136,11 @@ The $T$ gate belongs to level $\mathcal{C}_3$. Operationally, any gate residing 
 * **Chapter 2** encounters this ladder again as the foundational exception enabling cheap Hamiltonian simulation (shadow simulation, fast-forwarding of linear/quadratic models) and identifies degree $\geq 3$ as the root driver of chaotic scrambling dynamics (out-of-time-ordered correlators, OTOCs).
 * **Chapter 3** leverages this hierarchy as the tunable magic dial for learnable quantum state classes, using the degree-1 Heisenberg-Weyl displacements $D_{q,p}$ as the operator basis through which two-copy Bell measurements reconstruct unknown quantum spectra.
 
-## Tensor Algebra $T(V)$ as Basis for Exterior, Symmetric, Clifford and Weyl algebra
+<br>
+
+## Tensor Algebra $T(V)$ 
+
+**Tensor Algebra is Basis for Exterior, Symmetric, Clifford and Weyl algebra**
 
 *The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** in that ideal (symmetric $Q$ or antisymmetric $\omega$), plus whether you switch its value on at all.*
 
