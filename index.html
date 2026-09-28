@@ -864,9 +864,9 @@ td:first-child { min-width: 11rem; }
 <li><strong>Time</strong> (classical): efficient means <span class="math" data-tex="\mathrm{poly}(n, M, 1/\epsilon)">\mathrm{poly}(n, M, 1/\epsilon)</span> post-processing, polynomial in <span class="math" data-tex="M">M</span> rather than <span class="math" data-tex="\log M">\log M</span>, since <span class="math" data-tex="M">M</span> values must at least be written down.</li>
 <li><strong>Memory</strong> (classical): efficient means <span class="math" data-tex="\mathrm{poly}(n)">\mathrm{poly}(n)</span> bits for the learned representation; a <span class="math" data-tex="d \times d">d \times d</span> hypothesis already breaks it.</li>
 </ul>
-<p><em>Hypothesis: The field has charted the sample boundary in detail: exponential separations by quantum memory, adaptivity, and conjugate access are proven and partly demonstrated in hardware (see &quot;<a href="#bell-sampling-on-two-copies-the-primitive-behind-conjugate-pairs-and-structure-learning">Bell sampling on two copies</a>&quot; in the Introduction). But the computational boundary is almost uncharted, although most sample-efficient protocols fail there. The reason is proof technology: Sample lower bounds come from information theory (Holevo, packing arguments) and are unconditional, hence comparatively easy to obtain. Time lower bounds need cryptographic assumptions (LWE, pseudorandom states) and are rare. One map is dense, the other nearly empty.</em></p>
+<p><em>Hypothesis: The field has charted the sample boundary in detail: exponential separations by quantum memory, adaptivity, and conjugate access are proven and partly demonstrated in hardware (see &quot;<a href="#bell-sampling-on-two-copies-the-primitive-behind-conjugate-pairs-and-structure-learning">Bell sampling on two copies</a>&quot; in the Introduction). But the computational boundary is almost uncharted, although most sample-efficient protocols fail there. The reason is proof technology: Sample lower bounds come from information theory (Holevo, packing arguments, the tree method) and are unconditional, hence comparatively easy to obtain. Time lower bounds need cryptographic assumptions (LWE, LPN, pseudorandom states) and are rare. One map is dense, the other nearly empty.</em></p>
 <hr />
-<p><strong>How efficiency is &quot;bought&quot; in the quantum world</strong></p>
+<h3 id="how-efficiency-is-bought-in-the-quantum-world">How efficiency is &quot;bought&quot; in the quantum world</h3>
 <p><strong>There is no protocol that is efficient in all three budgets for arbitrary states and arbitrary questions. Efficiency in all three budgets (🟢 🟢 🟢) exists only in special cases, which can be enforced in three ways:</strong></p>
 <ol>
 <li><strong>By a structural promise (a special class of states -&gt; more details below):</strong>
@@ -899,30 +899,9 @@ td:first-child { min-width: 11rem; }
 </ul>
 </li>
 </ol>
-<p><strong>Combining levers.</strong> Most efficient protocols use more than one lever. Bell sampling on <span class="math" data-tex="\rho\otimes\rho^*">\rho\otimes\rho^*</span> combines 2 (the joint measurement) and 3 (conjugate access): single copies of <span class="math" data-tex="\rho">\rho</span> and <span class="math" data-tex="\rho^*">\rho^*</span>, measured separately, still need <span class="math" data-tex="\Omega(d/\epsilon^2)">\Omega(d/\epsilon^2)</span> (King, Wan, McClean, Theorem 3). Triply efficient shadow tomography combines 2 with the Pauli structure of the observables, stabilizer learning combines 2 with an algebraic promise, and Heisenberg-limited Hamiltonian learning combines 3 with a locality promise.</p>
-<p><strong>Exkurs: Heisenberg limit: total evolution time</strong></p>
-<ul>
-<li>Das Heisenberg-Limit (HL) der totalen Evolutionszeit beschreibt die fundamentale quantenmechanische Grenze, die festlegt, wie präzise ein Parameter (wie eine Frequenz oder Energie) in Abhängigkeit von der gesamten Zeit <span class="math" data-tex="T">T</span>, die ein System sich entwickeln darf, geschätzt werden kann. APS Journals +1</li>
-<li><strong>Grundlagen und Skalierung</strong>
-<ul>
-<li>Inverse Skalierung: Die Messgenauigkeit (der Fehler <span class="math" data-tex="\Delta \theta">\Delta \theta</span> ) skaliert umgekehrt proportional zur totalen Evolutionszeit <span class="math" data-tex="T">T</span> (oder der Anzahl der Ressourcen <span class="math" data-tex="N">N</span> ) als <span class="math" data-tex="\Delta \theta">\Delta \theta</span> <span class="math" data-tex="\sim 1 / T ">\sim 1 / T </span></li>
-<li>Klassisches Limit (Standard Quantum Limit): Ohne Quantenverschränkung liegt das klassische Limit (Schrotrauschen) bei <span class="math" data-tex="\Delta \theta \sim 1 / \sqrt{T}">\Delta \theta \sim 1 / \sqrt{T}</span>. Das Heisenberg-Limit bietet somit eine quadratische Verbesserung <span class="math" data-tex="(\sim 1 / T">(\sim 1 / T</span> statt <span class="math" data-tex="\sim 1 / \sqrt{T})">\sim 1 / \sqrt{T})</span>.</li>
-<li>Zeit-Energie-Unschärfe: Diese Grenze leitet sich direkt aus der Unschärferelation zwischen Zeit und Energie ab (wie den Mandelstam-Tamm-Relationen).</li>
-</ul>
-</li>
-<li><strong>Bedeutung bei der Hamilton-Operator-Bestimmung (Hamiltonian Learning)</strong>
-<ul>
-<li>Optimale Lernzeit: In der Quanteninformation und beim Erlernen unbekannter Quantensysteme (Hamiltonian Learning) gibt das Heisenberg-Limit an, dass die Fehlerquote bei der Bestimmung von Parametern proportional zu 1/T zur Gesamtzeit T abnimmt.</li>
-<li>Ressourceneffizienz: Moderne Quantenalgorithmen versuchen dieses Limit zu erreichen, um die notwendige Laufzeit und Schaltungstiefe (circuit depth) auf Quantencomputern so gering wie möglich zu halten.</li>
-</ul>
-</li>
-<li><em>Fragen: Wie kann man das Heisenberg-Limit bezüglich der Evolutionszeit mathematisch aus der Zeit-Energie-Unschärferelation herleitet?</em></li>
-<li>https://arxiv.org/abs/2604.27838</li>
-<li>https://link.aps.org/accepted/10.1103/PhysRevLett.130.200403</li>
-<li>https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.3.010318</li>
-</ul>
-<br>
-<p><strong>Which budget each lever buys.</strong> There is no one-to-one map between the three levers and the three budgets, but each lever has a main budget:</p>
+<p><strong>⚠️ Combining levers.</strong> Most efficient protocols use more than one lever. Bell sampling on <span class="math" data-tex="\rho\otimes\rho^*">\rho\otimes\rho^*</span> combines 2 (the joint measurement) and 3 (conjugate access): single copies of <span class="math" data-tex="\rho">\rho</span> and <span class="math" data-tex="\rho^*">\rho^*</span>, measured separately, still need <span class="math" data-tex="\Omega(d/\epsilon^2)">\Omega(d/\epsilon^2)</span> (King, Wan, McClean, Theorem 3). Triply efficient shadow tomography combines 2 with the Pauli structure of the observables, stabilizer learning combines 2 with an algebraic promise, and Heisenberg-limited Hamiltonian learning combines 3 with a locality promise.</p>
+<h3 id="which-budget-each-lever-buys">Which budget each lever buys</h3>
+<p>There is no one-to-one map between the three levers and the three budgets, but each lever has a main budget:</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -954,7 +933,8 @@ td:first-child { min-width: 11rem; }
 </tbody>
 </table></div>
 <p>Resource and access act mainly on the copies, the promise mainly on time and memory. Time can be bought by all three levers, each in its own way.</p>
-<p><strong>Which task type each lever serves.</strong> The task type does not fix the lever either, but the pattern is sharp:</p>
+<h3 id="which-task-type-each-lever-serves">Which task type each lever serves</h3>
+<p>The task type does not fix the lever either, but the pattern is sharp:</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -986,36 +966,47 @@ td:first-child { min-width: 11rem; }
 </tbody>
 </table></div>
 <p>Queries remove hardness in every column, and the quantum resource never removes the decoder problem. This is why the &quot;<a href="#access-by-task-quadrant">Access-by-task quadrant</a>&quot; has a single hard cell: sampling access with a searching task, where only a promise helps.</p>
-<p><strong>Conclusion:</strong> When quantum learning theory says &quot;everything else is solved&quot;, it means: for estimating and identifying, <strong>precise classes of promises have been identified</strong> under which efficient protocols exist. For <em>searching</em>, by contrast, the map between the subgroup case (Montanaro) and the cryptographic LWE wall is only sparsely charted, and new decodable classes would have to be found in exactly this no man's land.</p>
-<p><strong>Almost without exception, it is efficient special cases (under so-called <em>promises</em>) that make quantum learning efficient!</strong> For fully arbitrary, generic quantum states without any promise, there are <strong>hardly any general protocols that are efficient in all three budgets</strong>.</p>
-<p>&quot;Time efficiency is never free; it is bought by a promise about the state, by a resource on the quantum side, or by a stronger access model.&quot; (Introduction, &quot;Reading the tables&quot;.)</p>
-<p>On the quantum side, two entangled copies and logarithmically many samples suffice to estimate all squared magnitudes of the Pauli or displacement spectrum of a state. Decoding the relevant operators classically from these measurement data, however, runs into the same cryptographic wall as post-quantum cryptography (LWE), unless the state class carries a decodable structure (symmetries, locality, factorization) or query access is available. Learned decoders can exploit such structure; they cannot break the wall.</p>
-<p>Thesis: the sample boundary is almost completely charted (by information-theoretic, unconditional bounds: Holevo, packing, the tree method). The computational boundary, by contrast, is terra incognita: most sample-efficient protocols have no known time-efficient decoder, and where hardness is proven, it rests on cryptographic assumptions (LWE, LPN, pseudorandomness).</p>
-<hr />
-<p><strong>1. Where generic cases fail everywhere</strong></p>
-<p>The tables of this document show that <strong>every generic case without a promise is red (🔴)</strong>:</p>
+<p><strong>In short.</strong></p>
 <ul>
-<li><strong>Full state tomography (no promise):</strong><br />
-🔴 🔴 🔴 – exponential in <em>all three</em> budgets: <span class="math" data-tex="\Theta(4^n/\epsilon^2)">\Theta(4^n/\epsilon^2)</span> copies, <span class="math" data-tex="\exp(n)">\exp(n)</span> time, <span class="math" data-tex="\exp(n)">\exp(n)</span> memory.</li>
-<li><strong>General shadow tomography (estimating without a promise):</strong><br />
-🟢 🔴 🔴 – information-theoretically <span class="math" data-tex="\mathrm{poly}(\log M, n, 1/\epsilon)">\mathrm{poly}(\log M, n, 1/\epsilon)</span> copies suffice, but time and memory are <span class="math" data-tex="\exp(n)">\exp(n)</span>. The reason: the algorithm keeps and updates a <span class="math" data-tex="2^n \times 2^n">2^n \times 2^n</span> hypothesis density matrix (<em>matrix multiplicative weights</em>).<br />
-<em>When does it become 🟢 🟢 🟢?</em> <strong>Only in special cases:</strong> e.g. a <em>locality promise</em> (<span class="math" data-tex="k">k</span>-local Paulis with classical shadows), a <em>dictionary promise</em> (a small list of <span class="math" data-tex="M">M</span> observables known in advance, with conjugate pairs), or two-copy memory for Pauli observables.</li>
-<li><strong>General learning of circuits (identifying without a promise):</strong><br />
-🟢 🔴 🟢 – states prepared with <span class="math" data-tex="G">G</span> gates need only <span class="math" data-tex="\tilde\Theta(G/\epsilon^2)">\tilde\Theta(G/\epsilon^2)</span> copies, but beyond <span class="math" data-tex="G = \tilde\omega(\log n)">G = \tilde\omega(\log n)</span> gates they are <strong>computationally hard to learn</strong> (under RingLWE; Zhao et al. 2023).<br />
-<em>When does it become 🟢 🟢 🟢?</em> <strong>Only for narrowly restricted classes:</strong> stabilizer states, Gaussian states, matrix product states (bounded entanglement), or circuits of depth <span class="math" data-tex="O(1)">O(1)</span>.</li>
+<li><strong>Promises carry almost all efficiency.</strong> Without a promise, no known protocol is efficient in all three budgets. With one, estimating and identifying have precisely charted efficient classes (the next two sections).</li>
+<li><strong>Searching is the open frontier.</strong> Between the subgroup case (Montanaro) and the LWE wall the map is sparse; new decodable classes would have to be found there. Learned decoders can exploit such structure, but they cannot break the wall.</li>
 </ul>
-<hr />
-<p><strong>2. Why, then, is <em>searching</em> singled out as &quot;the only hard cell&quot;?</strong></p>
-<p>Here is the precise breakdown of why this is so, and why <em>searching</em> nevertheless holds a special position:</p>
-<p>If special cases are needed everywhere: why does the &quot;<a href="#access-by-task-quadrant">Access-by-task quadrant</a>&quot; in the Introduction say that computational hardness sits exactly at the intersection of <strong>sampling + searching</strong>? The difference is between a <strong>representation problem</strong> and a genuine <strong>decoder problem</strong>:</p>
-<p><strong>A. In estimating, time fails because of memory (&quot;hypothesis too large&quot;)</strong></p>
-<p>When general shadow tomography needs exponential time, this is simply because the hypothesis is a huge <span class="math" data-tex="2^n \times 2^n">2^n \times 2^n</span> matrix. An algorithm cannot run faster than the size of the memory it writes. If the question is restricted to an explicit list of <span class="math" data-tex="M">M</span> observables whose estimators are cheap to evaluate (a dictionary, local observables), the memory shrinks to <span class="math" data-tex="O(M)">O(M)</span> values and the problem becomes <strong>efficient</strong>.</p>
-<p><strong>B. In searching, time fails because of the algorithm (&quot;search too hard&quot;)</strong></p>
-<p>When searching for the <span class="math" data-tex="k">k</span> strongest peaks of a displacement spectrum, the answer is extremely short:</p>
+<h3 id="where-generic-cases-fail">Where generic cases fail</h3>
+<p>Every generic task without a promise has at least one 🔴:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Generic task (no promise)</th>
+<th>Status</th>
+<th>Why it fails</th>
+<th>What makes it 🟢 🟢 🟢</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full state tomography</td>
+<td>🔴 🔴 🔴</td>
+<td><span class="math" data-tex="\Theta(4^n/\epsilon^2)">\Theta(4^n/\epsilon^2)</span> copies, <span class="math" data-tex="\exp(n)">\exp(n)</span> time and memory</td>
+<td>A class promise (matrix product states, low rank) or a smaller question (shadows)</td>
+</tr>
+<tr>
+<td>General shadow tomography (estimating)</td>
+<td>🟢 🔴 🔴</td>
+<td><span class="math" data-tex="\mathrm{poly}(\log M, n, 1/\epsilon)">\mathrm{poly}(\log M, n, 1/\epsilon)</span> copies, but a <span class="math" data-tex="2^n\times 2^n">2^n\times 2^n</span> hypothesis updated by matrix multiplicative weights</td>
+<td>Locality (<span class="math" data-tex="k">k</span>-local Paulis, classical shadows), a dictionary of <span class="math" data-tex="M">M</span> observables known in advance, or two copies for Pauli observables</td>
+</tr>
+<tr>
+<td>Learning circuits of <span class="math" data-tex="G">G</span> gates (identifying)</td>
+<td>🟢 🔴 🟢</td>
+<td><span class="math" data-tex="\tilde\Theta(G/\epsilon^2)">\tilde\Theta(G/\epsilon^2)</span> copies, but time-hard beyond <span class="math" data-tex="G = \tilde\omega(\log n)">G = \tilde\omega(\log n)</span> under RingLWE (Zhao et al. 2023)</td>
+<td>Stabilizer, Gaussian, or matrix product states, or constant depth</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Two ways to fail, and why searching is special.</strong> The difference is between a representation problem and a decoder problem:</p>
 <ul>
-<li>The memory is <strong>tiny</strong>: a list of <span class="math" data-tex="k">k</span> peaks needs only <span class="math" data-tex="O(k \log d)">O(k \log d)</span> bits (🟢).</li>
-<li>The information is <strong>there</strong>: Bell sampling on <span class="math" data-tex="\rho \otimes \rho^*">\rho \otimes \rho^*</span> yields all squared magnitudes from <span class="math" data-tex="O(\log d / \epsilon^4)">O(\log d / \epsilon^4)</span> copies (🟢).</li>
-<li><strong>Yet time fails (🔴)!</strong> Even with memory perfectly under control, generic localization of the addresses from random Bell samples contains <strong>LWE (Learning With Errors)</strong>, and on qubits <strong>LPN</strong>, as a special case: a real-diagonal displacement instance embeds LWE. Under the LWE assumption, no efficient decoder exists, classical or quantum (shown in the tensor-product Weyl basis; open for the cyclic single-qudit basis).</li>
+<li><em>Estimating, &quot;hypothesis too large&quot;:</em> time fails because the hypothesis is a <span class="math" data-tex="2^n\times 2^n">2^n\times 2^n</span> matrix, and an algorithm cannot run faster than the memory it writes. Restricting the question to an explicit list of <span class="math" data-tex="M">M</span> cheap observables shrinks the memory to <span class="math" data-tex="O(M)">O(M)</span> values, and the problem becomes efficient.</li>
+<li><em>Searching, &quot;search too hard&quot;:</em> for the <span class="math" data-tex="k">k</span> strongest peaks of a displacement spectrum, memory and information are both fine: the answer needs <span class="math" data-tex="O(k\log d)">O(k\log d)</span> bits, and Bell sampling on <span class="math" data-tex="\rho\otimes\rho^*">\rho\otimes\rho^*</span> yields all squared magnitudes from <span class="math" data-tex="O(\log d/\epsilon^4)">O(\log d/\epsilon^4)</span> copies (🟢 🟢). Yet time fails (🔴): generic localization of the addresses from random Bell samples contains LWE, and LPN on qubits, as a special case, since a real-diagonal displacement instance embeds LWE. Under the LWE assumption no efficient decoder exists, classical or quantum (shown in the tensor-product Weyl basis; open for the cyclic single-qudit basis).</li>
 </ul>
 </div></details><details class="sec" id="deep-dive-efficiency-through-a-structural-promise-a-special-class-of-states" data-unit><summary><h2>Deep Dive: Efficiency through a structural promise (a special class of states)</h2></summary><div class="prose"><p>When a protocol becomes efficient through a <strong>structural promise</strong>, this means: the allowed class of quantum states is restricted so that a mathematical theorem applies, which abruptly reduces the exponential search space to a tractable problem. These structural promises fall into <strong>four large families</strong>:</p>
 <div class="table-wrap"><table>
@@ -2025,7 +2016,7 @@ Once <span class="math" data-tex="n">n</span> linearly independent vectors are f
 <p><strong>Why few copies suffice.</strong> A covering net of all <span class="math" data-tex="G">G</span>-gate states has <span class="math" data-tex="2^{\tilde O(G)}">2^{\tilde O(G)}</span> elements. Quantum hypothesis selection picks a good candidate from a list of <span class="math" data-tex="N">N</span> with <span class="math" data-tex="O(\log N/\epsilon^2)">O(\log N/\epsilon^2)</span> copies, hence <span class="math" data-tex="\tilde O(G/\epsilon^2)">\tilde O(G/\epsilon^2)</span>; a packing net gives the matching lower bound. The procedure runs through the entire list.</p>
 <p><strong>Learner to distinguisher.</strong> Given copies of an unknown state, run the learner, obtain a circuit <span class="math" data-tex="\hat U">\hat U</span>, and test it on fresh copies: apply <span class="math" data-tex="\hat U^\dagger">\hat U^\dagger</span> and check for <span class="math" data-tex="\vert 0^n\rangle">\vert 0^n\rangle</span>. For a pseudorandom state the learner succeeds and the test passes with high probability. For a Haar-random state no procedure with polynomially many copies can output a good hypothesis, because pure-state tomography of a generic state needs a number of copies linear in the dimension <span class="math" data-tex="2^n">2^n</span>; so the test fails. An efficient learner would therefore be an efficient distinguisher, which pseudorandomness rules out. Zhao et al. use this reduction with pseudorandom states of <span class="math" data-tex="\tilde O(G)">\tilde O(G)</span> gates (the idea goes back to Kretschmer 2021).</p>
 <p><strong>Why <span class="math" data-tex="\log n">\log n</span>.</strong> <span class="math" data-tex="G">G</span> two-qubit gates touch at most <span class="math" data-tex="2G">2G</span> qubits, so for <span class="math" data-tex="G = O(\log n)">G = O(\log n)</span> the state is <span class="math" data-tex="\vert 0\rangle">\vert 0\rangle</span> on all but <span class="math" data-tex="O(\log n)">O(\log n)</span> qubits, and tomography on the rest costs <span class="math" data-tex="2^{O(\log n)} = \mathrm{poly}(n)">2^{O(\log n)} = \mathrm{poly}(n)</span> (own reading of the junta-learning upper bound). The lower bound <span class="math" data-tex="\exp(\Omega(\min\{G, n\}))">\exp(\Omega(\min\{G, n\}))</span> becomes superpolynomial exactly when <span class="math" data-tex="G = \omega(\log n)">G = \omega(\log n)</span>. The same threshold appears for <span class="math" data-tex="t">t</span> non-Clifford gates in pair 9, for the same reason: <span class="math" data-tex="2^t">2^t</span> is polynomial only for <span class="math" data-tex="t = O(\log n)">t = O(\log n)</span>.</p>
-<p><strong>Why an assumption.</strong> Copy lower bounds are counting arguments (packing nets, Holevo) and hold unconditionally. Unconditional superpolynomial time lower bounds are out of reach for essentially all natural problems in complexity theory; the available tool is a reduction from a problem believed to be hard (RingLWE, one-way functions). This is the asymmetry of the whole map: the sample boundary is charted by theorems, the computational boundary by reductions (Efficiency Boundaries, &quot;Thesis&quot;).</p>
+<p><strong>Why an assumption.</strong> Copy lower bounds are counting arguments (packing nets, Holevo) and hold unconditionally. Unconditional superpolynomial time lower bounds are out of reach for essentially all natural problems in complexity theory; the available tool is a reduction from a problem believed to be hard (RingLWE, one-way functions). This is the asymmetry of the whole map: the sample boundary is charted by theorems, the computational boundary by reductions (the hypothesis at the start of &quot;<a href="#objective-triply-efficient-in-sample-time-and-memory">Objective</a>&quot;).</p>
 <p><strong>Lesson.</strong> When a class is exponentially large but parametrized, few copies always suffice, and the only question is the decoder. A green copy dot next to a red time dot is the signature of a hidden key: pseudorandom states, LWE, LPN.</p>
 </details>
 <p><strong>Deep dives:</strong> <a href="#p-2310.19882">Learning quantum states and unitaries of bounded gate complexity</a> · <a href="#p-1711.00385">Pseudorandom quantum states</a></p>
