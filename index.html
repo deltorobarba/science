@@ -900,6 +900,28 @@ td:first-child { min-width: 11rem; }
 </li>
 </ol>
 <p><strong>Combining levers.</strong> Most efficient protocols use more than one lever. Bell sampling on <span class="math" data-tex="\rho\otimes\rho^*">\rho\otimes\rho^*</span> combines 2 (the joint measurement) and 3 (conjugate access): single copies of <span class="math" data-tex="\rho">\rho</span> and <span class="math" data-tex="\rho^*">\rho^*</span>, measured separately, still need <span class="math" data-tex="\Omega(d/\epsilon^2)">\Omega(d/\epsilon^2)</span> (King, Wan, McClean, Theorem 3). Triply efficient shadow tomography combines 2 with the Pauli structure of the observables, stabilizer learning combines 2 with an algebraic promise, and Heisenberg-limited Hamiltonian learning combines 3 with a locality promise.</p>
+<p><strong>Exkurs: Heisenberg limit: total evolution time</strong></p>
+<ul>
+<li>Das Heisenberg-Limit (HL) der totalen Evolutionszeit beschreibt die fundamentale quantenmechanische Grenze, die festlegt, wie präzise ein Parameter (wie eine Frequenz oder Energie) in Abhängigkeit von der gesamten Zeit <span class="math" data-tex="T">T</span>, die ein System sich entwickeln darf, geschätzt werden kann. APS Journals +1</li>
+<li><strong>Grundlagen und Skalierung</strong>
+<ul>
+<li>Inverse Skalierung: Die Messgenauigkeit (der Fehler <span class="math" data-tex="\Delta \theta">\Delta \theta</span> ) skaliert umgekehrt proportional zur totalen Evolutionszeit <span class="math" data-tex="T">T</span> (oder der Anzahl der Ressourcen <span class="math" data-tex="N">N</span> ) als <span class="math" data-tex="\Delta \theta">\Delta \theta</span> <span class="math" data-tex="\sim 1 / T ">\sim 1 / T </span></li>
+<li>Klassisches Limit (Standard Quantum Limit): Ohne Quantenverschränkung liegt das klassische Limit (Schrotrauschen) bei <span class="math" data-tex="\Delta \theta \sim 1 / \sqrt{T}">\Delta \theta \sim 1 / \sqrt{T}</span>. Das Heisenberg-Limit bietet somit eine quadratische Verbesserung <span class="math" data-tex="(\sim 1 / T">(\sim 1 / T</span> statt <span class="math" data-tex="\sim 1 / \sqrt{T})">\sim 1 / \sqrt{T})</span>.</li>
+<li>Zeit-Energie-Unschärfe: Diese Grenze leitet sich direkt aus der Unschärferelation zwischen Zeit und Energie ab (wie den Mandelstam-Tamm-Relationen).</li>
+</ul>
+</li>
+<li><strong>Bedeutung bei der Hamilton-Operator-Bestimmung (Hamiltonian Learning)</strong>
+<ul>
+<li>Optimale Lernzeit: In der Quanteninformation und beim Erlernen unbekannter Quantensysteme (Hamiltonian Learning) gibt das Heisenberg-Limit an, dass die Fehlerquote bei der Bestimmung von Parametern proportional zu 1/T zur Gesamtzeit T abnimmt.</li>
+<li>Ressourceneffizienz: Moderne Quantenalgorithmen versuchen dieses Limit zu erreichen, um die notwendige Laufzeit und Schaltungstiefe (circuit depth) auf Quantencomputern so gering wie möglich zu halten.</li>
+</ul>
+</li>
+<li><em>Fragen: Wie kann man das Heisenberg-Limit bezüglich der Evolutionszeit mathematisch aus der Zeit-Energie-Unschärferelation herleitet?</em></li>
+<li>https://arxiv.org/abs/2604.27838</li>
+<li>https://link.aps.org/accepted/10.1103/PhysRevLett.130.200403</li>
+<li>https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.3.010318</li>
+</ul>
+<br>
 <p><strong>Which budget each lever buys.</strong> There is no one-to-one map between the three levers and the three budgets, but each lever has a main budget:</p>
 <div class="table-wrap"><table>
 <thead>
