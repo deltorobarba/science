@@ -30,6 +30,7 @@
   --font-ui: "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --top: env(safe-area-inset-top, 0px);
+  --measure: 52rem; /* width of running text; tables and diagrams use the full column */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -347,7 +348,7 @@ details > summary::-webkit-details-marker { display: none; }
 .sub > .prose { padding-bottom: .5rem; }
 
 /* ---------- prose ---------- */
-.prose { max-width: 46rem; }
+.prose { max-width: var(--measure); }
 .prose p, .prose ul, .prose ol { margin: .6rem 0; }
 .prose li { margin: .25rem 0; }
 .prose ul ul, .prose ol ul { margin: .2rem 0; }
@@ -373,7 +374,7 @@ details > summary::-webkit-details-marker { display: none; }
 }
 .prose:has(.table-wrap), .prose:has(.diagram) { max-width: none; }
 .prose:has(.table-wrap) > :not(.table-wrap):not(.diagram),
-.prose:has(.diagram) > :not(.table-wrap):not(.diagram) { max-width: 46rem; }
+.prose:has(.diagram) > :not(.table-wrap):not(.diagram) { max-width: var(--measure); }
 .diagram {
   overflow-x: auto;
   margin: .9rem 0;
@@ -515,7 +516,7 @@ td:first-child { min-width: 11rem; }
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><strong>1. Quantum State</strong><br>(<span class="math" data-tex="\rho">\rho</span> oder <span class="math" data-tex="\|\psi\rangle">\|\psi\rangle</span>)</td>
+<td style="text-align:left"><strong>1. Quantum State</strong><br>(<span class="math" data-tex="\rho">\rho</span> oder <span class="math" data-tex="\vert \psi\rangle">\vert \psi\rangle</span>)</td>
 <td style="text-align:left"><strong>Statischer Zustand / Momentaufnahme</strong><br>Dichtematrix <span class="math" data-tex="\rho \ge 0">\rho \ge 0</span>, <span class="math" data-tex="\text{Tr}(\rho)=1">\text{Tr}(\rho)=1</span>. Beschreibt die Konfiguration/Verschränkung eines Systems zu einem festen Zeitpunkt.</td>
 <td style="text-align:left"><strong>Passiv:</strong> Erhält <span class="math" data-tex="N">N</span> identische Kopien <span class="math" data-tex="\rho^{\otimes N}">\rho^{\otimes N}</span>. Der Learner wählt Messungen (POVMs) auf einzelnen Kopien oder verschränkt über mehrere Kopien.</td>
 <td style="text-align:left">Vollständige Matrix <span class="math" data-tex="\rho">\rho</span>, Reinheit, Fidelity zu Zielzustand oder Erwartungswerte vieler Observablen <span class="math" data-tex="\text{Tr}(O_i \rho)">\text{Tr}(O_i \rho)</span>.</td>
@@ -524,14 +525,14 @@ td:first-child { min-width: 11rem; }
 <tr>
 <td style="text-align:left"><strong>2. Hamiltonian</strong><br>(<span class="math" data-tex="H">H</span>)</td>
 <td style="text-align:left"><strong>Kontinuierlicher Generator der Zeitentwicklung</strong><br>Hermitescher Operator <span class="math" data-tex="H = H^\dagger">H = H^\dagger</span>. Beschreibt die fundamentalen Wechselwirkungen, Kräfte und Energien eines Systems.</td>
-<td style="text-align:left"><strong>Aktiv / Dynamisch:</strong> Präpariert Zustand <span class="math" data-tex="\|\psi_{\text{in}}\rangle">\|\psi_{\text{in}}\rangle</span>, lässt ihn für Zeit <span class="math" data-tex="t">t</span> unter <span class="math" data-tex="U(t) = e^{-i H t}">U(t) = e^{-i H t}</span> evolvieren und misst das Ergebnis (oder analysiert thermische Zustände <span class="math" data-tex="e^{-\beta H}/\mathcal{Z}">e^{-\beta H}/\mathcal{Z}</span>).</td>
+<td style="text-align:left"><strong>Aktiv / Dynamisch:</strong> Präpariert Zustand <span class="math" data-tex="\vert \psi_{\text{in}}\rangle">\vert \psi_{\text{in}}\rangle</span>, lässt ihn für Zeit <span class="math" data-tex="t">t</span> unter <span class="math" data-tex="U(t) = e^{-i H t}">U(t) = e^{-i H t}</span> evolvieren und misst das Ergebnis (oder analysiert thermische Zustände <span class="math" data-tex="e^{-\beta H}/\mathcal{Z}">e^{-\beta H}/\mathcal{Z}</span>).</td>
 <td style="text-align:left">Kopplungskonstanten und Feldstärken <span class="math" data-tex="c_k">c_k</span> in der Zerlegung <span class="math" data-tex="H = \sum_k c_k P_k">H = \sum_k c_k P_k</span> (z. B. Heisenberg-, Ising-, Fermi-Hubbard-Modelle).</td>
 <td style="text-align:left">• Dynamical Hamiltonian Learning (z. B. Shin–Lee–Oh)<br>• Robust Phase Estimation<br>• Gibbs-State / Thermal State Learning</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>3. Unitary Operator</strong><br>(<span class="math" data-tex="U">U</span>)</td>
 <td style="text-align:left"><strong>Diskrete, ideale Transformation</strong><br>Isometrische/unitäre Matrix (<span class="math" data-tex="U^\dagger U = I">U^\dagger U = I</span>). Repräsentiert ein verlustfreies Quantengatter oder einen geschlossenen Quantenschaltkreis.</td>
-<td style="text-align:left"><strong>Interaktiv (Blackbox-Gatter):</strong> Wählt Eingabezustand <span class="math" data-tex="\|\psi_{\text{in}}\rangle">\|\psi_{\text{in}}\rangle</span>, schickt ihn durch die Blackbox <span class="math" data-tex="U">U</span>, erhält <span class="math" data-tex="U\|\psi_{\text{in}}\rangle">U\|\psi_{\text{in}}\rangle</span> und misst (ggf. mit verschränkten Hilfs-Qubits).</td>
+<td style="text-align:left"><strong>Interaktiv (Blackbox-Gatter):</strong> Wählt Eingabezustand <span class="math" data-tex="\vert \psi_{\text{in}}\rangle">\vert \psi_{\text{in}}\rangle</span>, schickt ihn durch die Blackbox <span class="math" data-tex="U">U</span>, erhält <span class="math" data-tex="U\vert \psi_{\text{in}}\rangle">U\vert \psi_{\text{in}}\rangle</span> und misst (ggf. mit verschränkten Hilfs-Qubits).</td>
 <td style="text-align:left">Die unitäre Matrix <span class="math" data-tex="U">U</span>, deren Zerlegung in Elementargatter oder die mittlere Gatter-Fidelity <span class="math" data-tex="F(U, U_{\text{target}})">F(U, U_{\text{target}})</span>.</td>
 <td style="text-align:left">• Quantum Process Tomography<br>• Randomized Benchmarking (RB)<br>• Gate Set Tomography (GST)</td>
 </tr>
@@ -545,7 +546,7 @@ td:first-child { min-width: 11rem; }
 <tr>
 <td style="text-align:left"><strong>5. Classical Function</strong><br>(<span class="math" data-tex="f">f</span>)</td>
 <td style="text-align:left"><strong>Diskrete Berechnungsfunktion</strong><br>Klassische Boolesche Funktion <span class="math" data-tex="f: \{0,1\}^n \to \{0,1\}^m">f: \{0,1\}^n \to \{0,1\}^m</span>. Kein physikalisches Objekt, sondern ein abstraktes Problem/Konzept.</td>
-<td style="text-align:left"><strong>Quantenorakel:</strong> Zugriff via phasenkodiertem oder bit-flipped Orakel <span class="math" data-tex="O_f \|x\rangle\|y\rangle = \|x\rangle\|y \oplus f(x)\rangle">O_f \|x\rangle\|y\rangle = \|x\rangle\|y \oplus f(x)\rangle</span>. Erlaubt Abfragen in <strong>Superposition</strong>.</td>
+<td style="text-align:left"><strong>Quantenorakel:</strong> Zugriff via phasenkodiertem oder bit-flipped Orakel <span class="math" data-tex="O_f \vert x\rangle\vert y\rangle = \vert x\rangle\vert y \oplus f(x)\rangle">O_f \vert x\rangle\vert y\rangle = \vert x\rangle\vert y \oplus f(x)\rangle</span>. Erlaubt Abfragen in <strong>Superposition</strong>.</td>
 <td style="text-align:left">Die Funktion <span class="math" data-tex="f">f</span> selbst, deren Schaltkreis, Fourier-Koeffizienten oder globale Eigenschaften (z. B. Periode, Symmetrie, Parität).</td>
 <td style="text-align:left">• Bernstein–Vazirani, Simon, Shor<br>• Quantum PAC-Learning (Bshouty, Jackson)<br>• Quanten-Schwellenwert-Lernen</td>
 </tr>
