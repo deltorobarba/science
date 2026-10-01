@@ -2129,10 +2129,10 @@ block-beta
 <tr>
 <td style="text-align:left">D1</td>
 <td style="text-align:left"><strong>Injected displacement terms without background, <span class="math" data-tex="k\geq 2">k\geq 2</span>:</strong> <span class="math" data-tex="H = \sum_iw_is_i(D_{v_i} + D_{v_i}^\dagger)">H = \sum_iw_is_i(D_{v_i} + D_{v_i}^\dagger)</span> with decay <span class="math" data-tex="\alpha">\alpha</span></td>
-<td style="text-align:left">pure ground state: the injected peaks sit above a remainder of mass at least <span class="math" data-tex="d - k">d - k</span> (normalization); for <span class="math" data-tex="k = 1">k = 1</span> with a nondegenerate ground state this is B4</td>
-<td style="text-align:left">no proven promise once the addresses do not commute; placement on a line or in a coset brings back Regime 2</td>
-<td style="text-align:left">the dials <span class="math" data-tex="k">k</span>, <span class="math" data-tex="\alpha">\alpha</span>, and the placement (random, line, coset)</td>
-<td style="text-align:left">standard</td>
+<td style="text-align:left">pure ground state: the top-<span class="math" data-tex="k">k</span> sits above a remainder of mass at least <span class="math" data-tex="d - k">d - k</span> (normalization) and is <em>generated</em> by the injected addresses rather than equal to them. Own computation (three random addresses, <span class="math" data-tex="d = 13, 31">d = 13, 31</span>): only 30–46 % of the true top-3 are injected addresses; the rest are multiples <span class="math" data-tex="a v_i">a v_i</span> and small combinations <span class="math" data-tex="a v_i + b v_j">a v_i + b v_j</span>. For <span class="math" data-tex="k = 1">k = 1</span> with a nondegenerate ground state this is B4</td>
+<td style="text-align:left">no proven promise once the addresses do not commute. Own computation: placement on a line through the origin gives a degenerate ground state in 69–85 % of cases and B4 otherwise; placement in a coset adds no structure</td>
+<td style="text-align:left">the dials <span class="math" data-tex="k">k</span>, <span class="math" data-tex="\alpha">\alpha</span>, and the temperature: hot Gibbs states of the same Hamiltonian realize D4</td>
+<td style="text-align:left">standard; own computation</td>
 </tr>
 <tr>
 <td style="text-align:left">D2</td>
@@ -2152,8 +2152,8 @@ block-beta
 </tr>
 <tr>
 <td style="text-align:left">D4</td>
-<td style="text-align:left"><strong>Generic sparse support:</strong> uniformly random top-<span class="math" data-tex="k">k</span> addresses without structure</td>
-<td style="text-align:left">top-<span class="math" data-tex="k">k</span> above a remainder, no algebraic relation between the addresses</td>
+<td style="text-align:left"><strong>Generic sparse support:</strong> uniformly random top-<span class="math" data-tex="k">k</span> addresses without structure; realized by hot Gibbs states <span class="math" data-tex="e^{-\beta H}/Z">e^{-\beta H}/Z</span> of the D1 Hamiltonians</td>
+<td style="text-align:left">top-<span class="math" data-tex="k">k</span> above a remainder, no algebraic relation between the addresses. Own computation: for <span class="math" data-tex="\beta \leq 0.3">\beta \leq 0.3</span> the true top-3 are exactly the injected, uniformly random addresses (<span class="math" data-tex="d = 13, 31, 101">d = 13, 31, 101</span>), with the third peak at <span class="math" data-tex="\vert y\vert \approx 0.12">\vert y\vert \approx 0.12</span>, independent of <span class="math" data-tex="d">d</span>; at <span class="math" data-tex="\beta = 1">\beta = 1</span> it is 86–87 %</td>
 <td style="text-align:left">none proven: this is the open conjecture</td>
 <td style="text-align:left">the conjecture itself: does a learned decoder stay efficient as <span class="math" data-tex="d">d</span> grows, where the baseline needs <span class="math" data-tex="\mathrm{poly}(d)">\mathrm{poly}(d)</span> time?</td>
 <td style="text-align:left">&quot;<a href="#the-repaired-success-criterion-and-the-three-failure-modes">The repaired success criterion and the three failure modes</a>&quot;</td>
@@ -2288,6 +2288,97 @@ block-beta
 </ul>
 <p><strong>Why none of the three families provides a proven-hard instance</strong> (own inference). The number 27 shows the difference. One qudit of dimension 27 has <em>one</em> clock with 27 hours, <span class="math" data-tex="\mathbb{Z}_{27}">\mathbb{Z}_{27}</span>. Three qutrits have the same Hilbert-space dimension but <em>three separate</em> clocks with 3 hours each, <span class="math" data-tex="\mathbb{Z}_3\times\mathbb{Z}_3\times\mathbb{Z}_3">\mathbb{Z}_3\times\mathbb{Z}_3\times\mathbb{Z}_3</span>: the same dimension, a different grid. The LWE instance behind the hardness theorem (<a href="#where-the-wall-begins-four-refinements">Where the wall begins</a>; E2 above) needs the second kind: a secret of many numbers <span class="math" data-tex="s_1,\dots,s_n">s_1,\dots,s_n</span> on clocks of the <em>same</em> size, combined as <span class="math" data-tex="a_1s_1 + \dots + a_ns_n">a_1s_1 + \dots + a_ns_n</span> plus an error, and its hardness grows with the number <span class="math" data-tex="n">n</span> of clocks. A single cyclic qudit has one clock. Family 2 provides several clocks, but of different sizes (2 and 3), and recombined they form one clock again, <span class="math" data-tex="\mathbb{Z}_6">\mathbb{Z}_6</span>. The secret is then always a single number, the hidden number problem, which lattice reduction breaks. A proven-hard reference therefore needs the tensor-product basis, several qudits of equal dimension; in the cyclic basis it remains open, with the dihedral hidden-shift problem as the candidate (see &quot;What is open&quot; in <a href="#searching">Searching</a>).</p>
 <p><strong>Reading results across d.</strong> A statement that a decoder succeeds on a class is incomplete without the family, because each family contains different structures. Averaging over mixed values such as <span class="math" data-tex="d = 4, 5, 6, 7">d = 4, 5, 6, 7</span> combines three different experiments; each family should be evaluated on its own.</p>
+<h4 id="a-test-sequence-and-its-reference-decoders">A test sequence and its reference decoders</h4>
+<p>A learned decoder is judged against three yardsticks, each answering a different question (own proposal):</p>
+<ul>
+<li><strong>Zero-shot reference:</strong> ignores the measurements and outputs the <span class="math" data-tex="k">k</span> addresses that are most often in the true top-<span class="math" data-tex="k">k</span> of the class. It measures what the class prior alone achieves. Beating it shows that a decoder uses the data at all.</li>
+<li><strong>Full-grid baseline:</strong> character means over all <span class="math" data-tex="d^2-1">d^2-1</span> addresses, computed as a 2D FFT of the outcome histogram (Regime 1 with the whole grid as the list). It needs only <span class="math" data-tex="O(\log d)">O(\log d)</span> shots, but <span class="math" data-tex="O(N + d^2\log d)">O(N + d^2\log d)</span> time and <span class="math" data-tex="O(d^2)">O(d^2)</span> memory, which is polynomial in <span class="math" data-tex="d">d</span> and therefore exponential in <span class="math" data-tex="\log d">\log d</span>. It is the <em>statistical</em> yardstick, not a scalable decoder: it shows what <span class="math" data-tex="N">N</span> shots allow when time is free. A scalable decoder has to approach its recall at equal shots and beat it in time once <span class="math" data-tex="d^2">d^2</span> dominates. Own measurement: the baseline needs about 20 ms per state at <span class="math" data-tex="d = 512">d = 512</span> and 400 ms at <span class="math" data-tex="d = 2048">d = 2048</span>.</li>
+<li><strong>Provable specialist:</strong> where the class carries a promise, the efficient decoder that the promise allows. Where it exists, it is the relevant competitor, and a learned decoder should at least match it.</li>
+</ul>
+<p>The sequence below orders the classes of the table above so that each step adds one property and the prior cannot pass for decoding.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Instance class</th>
+<th>Family of <span class="math" data-tex="d">d</span></th>
+<th>Why at this point</th>
+<th>Provable specialist (besides the zero-shot reference and the full-grid baseline)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>A1: basis and Fourier-basis states</td>
+<td>prime</td>
+<td>Checks tie handling in the scoring and calibrates the noise floor; nothing is searched</td>
+<td>The support is known: any <span class="math" data-tex="k">k</span> points of the line <span class="math" data-tex="q = 0">q = 0</span> (or <span class="math" data-tex="p = 0">p = 0</span>); one shot decides which line</td>
+</tr>
+<tr>
+<td>2</td>
+<td>B4: stabilizer states, prepared directly as eigenstates of <span class="math" data-tex="D_v">D_v</span></td>
+<td>prime; later a squared prime factor</td>
+<td>Sanity check for subgroup structure: on <span class="math" data-tex="\rho\otimes\rho^*">\rho\otimes\rho^*</span> every Bell shot lies on the support. The Hamiltonian route <span class="math" data-tex="s(D_v + D_v^\dagger)">s(D_v + D_v^\dagger)</span> gives a degenerate ground state for odd <span class="math" data-tex="d">d</span> in half of the signs</td>
+<td>Linear algebra: for prime <span class="math" data-tex="d">d</span> one nonzero shot <span class="math" data-tex="u">u</span> fixes the line <span class="math" data-tex="\{m\,u\}">\{m\,u\}</span>; for composite <span class="math" data-tex="d">d</span> the Hermite normal form of the shots; time <span class="math" data-tex="\mathrm{poly}(\log d)">\mathrm{poly}(\log d)</span> (Montanaro; Allcock et al.; own inference for the cyclic case)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>D4: hot Gibbs states of random injected terms, no background</td>
+<td>prime</td>
+<td>The core test of the open conjecture: for <span class="math" data-tex="\beta \leq 0.3">\beta \leq 0.3</span> the top-<span class="math" data-tex="k">k</span> is exactly a uniformly random set of addresses, so no prior helps. <span class="math" data-tex="\beta">\beta</span> is the dial towards step 4; small <span class="math" data-tex="\vert y\vert">\vert y\vert</span> makes the shot cost the price</td>
+<td>None proven: only the two yardsticks</td>
+</tr>
+<tr>
+<td>4</td>
+<td>D1: ground states of the same Hamiltonians</td>
+<td>prime</td>
+<td>The support becomes generated by the injected addresses (multiples and small combinations): a structured class between random and subgroup</td>
+<td>None proven; the support lies in small integer combinations of <span class="math" data-tex="k">k</span> generators, a candidate structure for a decoder (own inference)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>B6: factorized spectra, product states across the CRT factors</td>
+<td>product of distinct primes</td>
+<td>The setting where a decoder with a CRT prior can pay off</td>
+<td>Character means per factor on the CRT-reduced shots, combined by a best-first heap; time <span class="math" data-tex="O(N + \sum_j d_j^2\log d_j + k\log k)">O(N + \sum_j d_j^2\log d_j + k\log k)</span> (own inference)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>D2, D3: background plus injection; deformations</td>
+<td>prime first</td>
+<td>Generalization, once steps 3 to 5 show where a learned decoder helps. In D2 the top-<span class="math" data-tex="k">k</span> is dominated by the background neighbours of the origin: own computation, the zero-shot reference reaches 50–69 % recall@3 for <span class="math" data-tex="d = 5">d = 5</span> to 13</td>
+<td>None proven; for hot Gibbs states of the background alone, character means over the neighbourhood of the origin (B2)</td>
+</tr>
+<tr>
+<td>alongside</td>
+<td>E controls: E2 (tensor basis), E4 (flat), E5 (local depolarizing)</td>
+<td>all</td>
+<td>A decoder that reports success on E2 or a top-<span class="math" data-tex="k">k</span> list on E4 is broken</td>
+<td>E4: a threshold on the character means reports no peak. E2: no efficient decoder under LWE</td>
+</tr>
+<tr>
+<td>no separate run</td>
+<td>A2: displaced states</td>
+<td>–</td>
+<td>Sign recovery can be scored on the candidates of every other step</td>
+<td>Phases at two independent addresses with known reference magnitudes give <span class="math" data-tex="v">v</span> by linear algebra modulo <span class="math" data-tex="d">d</span> (own inference)</td>
+</tr>
+<tr>
+<td>no separate run</td>
+<td>B1, B2: dictionary classes</td>
+<td>–</td>
+<td>They serve as reference decoders on every step instead</td>
+<td>Character means over the list (Regime 1; King, Wan, McClean)</td>
+</tr>
+<tr>
+<td>later</td>
+<td>B5: commuting Hamiltonians</td>
+<td>squared prime factor only</td>
+<td>Genuinely new only in that family</td>
+<td>For a nondegenerate ground state a stabilizer state: as step 2, with the Hermite normal form</td>
+</tr>
+</tbody>
+</table></div>
 </div></details><details class="sec" id="study-guide" data-unit><summary><h2>Study Guide</h2></summary><div class="prose"><h3 id="die-funf-phasen">Die fünf Phasen</h3>
 <div class="table-wrap"><table>
 <thead>
