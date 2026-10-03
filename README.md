@@ -9,7 +9,8 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 <br>
 
 **Quantum Simulation & Learning Theory** ⭐ (study notes) 
-<br>https://deltorobarba.github.io/science/ 
+<br>
+* https://deltorobarba.github.io/science/ 
 
 
 **Quantum Algorithms**
