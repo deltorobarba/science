@@ -30,3 +30,5 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Models](https://github.com/deltorobarba/science/blob/main/models.ipynb)
 * [Google AI Studio](https://github.com/deltorobarba/science/blob/main/googleaistudio.ipynb)
 * [HuggingFace](https://github.com/deltorobarba/science/blob/main/huggingface.ipynb)
+* [Agent Auth on Google Cloud](https://github.com/deltorobarba/science/blob/main/claude.ipynb)
+* [AI for Software Engineering](https://github.com/deltorobarba/science/blob/main/sdlc.md)
