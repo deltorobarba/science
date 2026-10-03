@@ -889,6 +889,22 @@ td:first-child { min-width: 11rem; }
 <li><strong>Dynamic = Propagation.</strong> Dynamical problems feature no general variational principle and no forward-in-time shortcut theorem. Simulating non-equilibrium chemical reaction dynamics, bond breaking during atomic collisions, non-adiabatic electronic excitations, and quantum chaotic scrambling cannot be framed as an optimization task; states must be explicitly propagated under <span class="math" data-tex="e^{-iHt}">e^{-iHt}</span>.</li>
 <li><strong>Fundamental Axiom.</strong> In static problems, the quantum computer merely <em>stores</em> and updates state information. In full dynamical evolution, it stores nothing: <strong>it <em>is</em> the physical Hilbert space.</strong></li>
 </ul>
+<h3 id="unitaries-vs-channels">Unitaries vs Channels</h3>
+<p>Der Begriff „Unitaries“ meint zwar dynamische Transformationen bzw. Prozesse im Gegensatz zu statischen Zuständen (States), bezieht sich aber ausschließlich auf geschlossene Quantensysteme (closed quantum dynamics).</p>
+<p>Hier ist die genaue begriffliche Einordnung:</p>
+<p>⚬ Unitaries (U): Stehen für unitäre Operatoren (U^\dagger U = I). Sie beschreiben die reversible, informationserhaltende Zeitentwicklung eines perfekt isolierten (geschlossenen) Systems:</p>
+<p><span class="math display" data-tex="\rho \mapsto U \rho U^\dagger \quad \text{bzw.} \quad \vert{}\psi\rangle \mapsto U \vert{}\psi\rangle">\rho \mapsto U \rho U^\dagger \quad \text{bzw.} \quad \vert{}\psi\rangle \mapsto U \vert{}\psi\rangle</span></p>
+<p>Typische Beispiele sind Quantengatter (wie Hadamard, CNOT) oder die kontinuierliche Schrödinger-Dynamik unter einem hermiteschen Hamiltonoperator (U = e^{-iHt/\hbar}).
+⚬ Open Quantum Dynamics (Offene Systeme): Wenn ein System mit einer Umgebung wechselwirkt (Rauschen, Dekohärenz, Dissipation), ist der Prozess im Allgemeinen nicht mehr unitär. Man spricht hier nicht von Unitaries, sondern von:
+⚬ Quantum Channels (vollständig positive, spurerhaltende Abbildungen bzw. CPTP maps)
+⚬ Dynamical Maps / Superoperatoren
+⚬ Kraus-Operatoren (\rho \mapsto \sum_k K_k \rho K_k^\dagger)
+⚬ Lindblad-Mastergleichungen für kontinuierliche dissipative Dynamik</p>
+<p>Das Begriffspaar im Überblick</p>
+<p>Dimension	Geschlossene Systeme (Closed)	Offene Systeme (Open)
+Statisch	Reine Zustände (Ket \vert{}\psi\rangle) / Dichtematrizen \rho	Gemischte Zustände / Dichtematrizen \rho
+Dynamisch	Unitaries (U)	Quantum Channels / CPTP Maps (\mathcal{E})</p>
+<p>Wenn man die Dichotomie zwischen „Zuständen“ und „Prozessen“ allgemein ausdrücken möchte (einschließlich Rauschen und offener Systeme), spricht man meist von States vs. Channels (oder States vs. Operations). Sagt jemand explizit States vs. Unitaries, wird die Welt der fehlerfreien, idealisierten bzw. streng geschlossenen Quantengatter und -zeitentwicklungen fokussiert.</p>
 <hr />
 </div></details><details class="sec" id="static-quantum-chemistry-the-approximation-stack" data-unit><summary><h2>Static Quantum Chemistry: The Approximation Stack</h2></summary><div class="prose"><p><strong>Why only tiny systems are solvable analytically.</strong> The Schrödinger equation is analytically solvable only for the one-electron hydrogen atom. Introducing a second electron adds Coulomb repulsion, producing a non-integrable quantum three-body problem. Every electronic structure method is an approximation stack built upon foundational simplifications:</p>
 <ol>
