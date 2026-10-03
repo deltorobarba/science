@@ -19,7 +19,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) 🛰️ research code
 * [Stars and Solar](https://github.com/deltorobarba/science/blob/main/stars.ipynb) ✨ research code
 
-## Machine Learning 🎨
+## Machine Learning
 * [Agents](https://github.com/deltorobarba/science/blob/main/agents.ipynb)
 * [Evaluation](https://github.com/deltorobarba/science/blob/main/evaluation.ipynb)
 * [MCP](https://github.com/deltorobarba/science/blob/main/mcp.ipynb)
