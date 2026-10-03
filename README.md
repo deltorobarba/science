@@ -8,12 +8,9 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
-**Quantum Simulation & Learning Theory** ⭐ (study notes) 
+## Quantum Theory & Engineering
 <br>
 * https://deltorobarba.github.io/science/ 
-
-
-**Quantum Algorithms**
 * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/dynamics.ipynb) - research code
 * [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - research code
 
@@ -23,7 +20,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) - research code
 * [Stars and Solar](https://github.com/deltorobarba/science/blob/main/stars.ipynb) - research code
 
-**Machine Learning**
+## Machine Learning
 * [Agents](https://github.com/deltorobarba/science/blob/main/agents.ipynb)
 * [Evaluation](https://github.com/deltorobarba/science/blob/main/evaluation.ipynb)
 * [MCP](https://github.com/deltorobarba/science/blob/main/mcp.ipynb)
