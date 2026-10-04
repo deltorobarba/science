@@ -11,7 +11,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 ## Quantum Computing 🪼
 * https://deltorobarba.github.io/science/ 
 * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/dynamics.ipynb) - research code
-* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum.ipynb) - research code
+* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/circuit.ipynb) - research code
 
 ## Astrophysics 🔭
 * [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) 🧬 research code
