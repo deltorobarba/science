@@ -19,13 +19,3 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) 🛰️ research code
 * [Stars and Solar](https://github.com/deltorobarba/science/blob/main/stars.ipynb) ✨ research code
 
-## Machine Learning
-* [Overview](https://github.com/deltorobarba/science/tree/main/gcp) - Generative AI on Google Cloud
-* [Agents](https://github.com/deltorobarba/science/blob/main/gcp/agents.ipynb)
-* [Evaluation](https://github.com/deltorobarba/science/blob/main/gcp/evaluation.ipynb)
-* [MCP](https://github.com/deltorobarba/science/blob/main/gcp/mcp.ipynb)
-* [Models](https://github.com/deltorobarba/science/blob/main/gcp/models.ipynb)
-* [Google AI Studio](https://github.com/deltorobarba/science/blob/main/gcp/googleaistudio.ipynb)
-* [HuggingFace](https://github.com/deltorobarba/science/blob/main/gcp/huggingface.ipynb)
-* [Agent Auth on Google Cloud](https://github.com/deltorobarba/science/blob/main/gcp/claude.ipynb)
-* [AI for Software Engineering](https://github.com/deltorobarba/science/blob/main/gcp/sdlc.md)
