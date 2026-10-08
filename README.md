@@ -26,9 +26,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 ### Heisenberg-Weyl
 
-> Every quantum gate is a time evolution $U = e^{-i\hat Ht}$. The physical and information-theoretic complexity of the gate is determined by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
-
----
+Every quantum gate is a time evolution $U = e^{-i\hat Ht}$. The physical and information-theoretic complexity of the gate is determined by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
 
 #### Physics: Quantum Harmonic Oscillator as Source of All Operators
 
@@ -69,7 +67,7 @@ Here, $e^{-i\theta}$ guarantees unitarity, $\hat G$ is the Hermitian generator o
 | **Gate as exponential** | $X \approx e^{-i\hat P\delta}$ | $Z \approx e^{i\hat Q\delta}$ |
 | **Conjugation twist** | $X$ *represents* momentum but *generates* a position shift: $D_{q,0} \sim X^q$ | $Z$ *represents* position but *generates* a momentum kick: $D_{0,p} \sim Z^p$ |
 
-> $`X = \mathrm{DFT}^\dagger\, Z\, \mathrm{DFT}`$ - In the momentum basis, the spatial shift operator becomes diagonal and acts identically to the clock operator.
+$`X = \mathrm{DFT}^\dagger\, Z\, \mathrm{DFT}`$ - In the momentum basis, the spatial shift operator becomes diagonal and acts identically to the clock operator.
 
 ---
 
@@ -264,7 +262,7 @@ The **symplectic form $`\omega`$** is a differential $2$-form defined by three p
 
 ### Differentiation: Model, Computation and Type
 
-> Every simulation technique in chemistry and physics sits on three axes: **Model** (classical vs. quantum), **Type** (static vs. dynamic), and **Computing** (classical vs. quantum). *Quantum dynamics* is the cell "quantum model, dynamic type", and its hard core is propagating $\vert{}\psi(t)\rangle = e^{-iHt}\vert{}\psi(0)\rangle$ in a $2^n$-dimensional Hilbert space. Static problems are **optimized** (variational principle); dynamic problems must be **propagated** (no forward theorem). On a quantum computer, propagation follows one of three structural strategies: decompose *time* (Trotter), transform the *spectrum* (Qubitization / QSVT), or shrink the *space* (Shadow Simulation).
+Every simulation technique in chemistry and physics sits on three axes: **Model** (classical vs. quantum), **Type** (static vs. dynamic), and **Computing** (classical vs. quantum). *Quantum dynamics* is the cell "quantum model, dynamic type", and its hard core is propagating $\vert{}\psi(t)\rangle = e^{-iHt}\vert{}\psi(0)\rangle$ in a $2^n$-dimensional Hilbert space. Static problems are **optimized** (variational principle); dynamic problems must be **propagated** (no forward theorem). On a quantum computer, propagation follows one of three structural strategies: decompose *time* (Trotter), transform the *spectrum* (Qubitization / QSVT), or shrink the *space* (Shadow Simulation).
 
 * **Model:** Classical models ignore electrons and treat atoms as spheres connected by springs (empirical force fields). Quantum models explicitly bring electrons, orbitals, and many-body correlation into play.
 * **Type:** Static (ground state, eigenvalue problem $\hat H\vert{}\psi\rangle = E\vert{}\psi\rangle$) vs. dynamic (time evolution $`i\hbar\,\partial_t\Psi = \hat H\Psi`$).
@@ -350,17 +348,6 @@ $$e^{-i(A+B)t} \neq e^{-iAt}e^{-iBt}$$
 | **Transform Spectrum** | Qubitization / Quantum Singular Value Transformation (QSVT) | Continuous energy spectrum mapped into discrete rotation angles: $E_k = \lambda\cos\theta_k$ | Fault-Tolerant (ancilla-assisted block encodings) |
 | **Shrink Space** | Shadow Simulation | Full state space ($2^n$ complex amplitudes) projected into $M$ operator expectation values | Both NISQ and Fault-Tolerant regimes |
 
-```mermaid
-flowchart TD
-    H["Task: implement e^{-iHt} to precision ε"] --> A{"Do H and an operator set S<br/>close a small Lie algebra?"}
-    A -->|"yes: free fermions, free bosons,<br/>Pauli/Clifford sets"| SH["Shadow simulation<br/>evolve M expectation values, dim H_S ≪ 2^n"]
-    A -->|"no"| R{"Hardware regime?"}
-    R -->|"NISQ: shallow, no ancillas"| TR["Trotter–Suzuki or qDRIFT<br/>decompose time, error ∝ commutators"]
-    R -->|"fault-tolerant: ancillas + oracles"| BE["LCU block encoding<br/>PREPARE, SELECT, 1-norm λ"]
-    BE --> QB["Qubitization walk<br/>E_k = λ cos θ_k"]
-    QB --> QS["QSP / QSVT polynomial in θ<br/>cost O(λt + log 1/ε)"]
-
-```
 
 *The three strategies as an operational decision tree: shrink the state space if algebraic closure permits; otherwise, choose between slicing time or mapping the spectrum based on available hardware fault tolerance.*
 
@@ -477,7 +464,7 @@ matching the optimal time scaling of closed-system Hamiltonian simulation up to 
 
 ### Chaos, Scrambling and OTOCs
 
-> A local operator under chaotic dynamics in the Heisenberg picture, $W(t) = e^{iHt}We^{-iHt}$, grows in three directions, each with its own metric and its own bound: **rate** $\lambda_L$ (time), **reach** $v_B$ (space), and **depth** $K(t)$ (operator space). Without the Schrödinger solution $e^{-iHt}$ there is no $`W(t)`$ and no OTOC: chaos diagnostics *are* quantum dynamics.
+A local operator under chaotic dynamics in the Heisenberg picture, $W(t) = e^{iHt}We^{-iHt}$, grows in three directions, each with its own metric and its own bound: **rate** $\lambda_L$ (time), **reach** $v_B$ (space), and **depth** $K(t)$ (operator space). Without the Schrödinger solution $e^{-iHt}$ there is no $`W(t)`$ and no OTOC: chaos diagnostics *are* quantum dynamics.
 
 **Model system.** Mixed-field Ising model:
 
@@ -647,62 +634,3 @@ $$P(p) \approx N e^{-Np}$$
 acts as the static fingerprint of Haar-random state generation. The circuit depth required to enter the Porter–Thomas regime corresponds precisely to the geometric scrambling time ($d \sim n$ in 1D architectures, $d \sim \sqrt{n}$ on 2D planar chips), reflecting the time needed for the Lieb–Robinson light cone to traverse the physical processor.
 <br>
 
-### Observation of constructive interference at the edge of quantum ergodicity
-
-Im Nature-Paper von Oktober 2025 (**„Observation of constructive interference at the edge of quantum ergodicity“**, Google Quantum AI, *Nature* 646, 825–829, DOI: [10.1038/s41586-025-09526-6](https://doi.org/10.1038/s41586-025-09526-6)) geht es um einen **fundamentalen quantenmechanischen Benchmark**, der zeigt, wie wiederholte Zeitumkehrungen (**OTOCs höherer Ordnung**, speziell $k=2$) die mikroskopischen Details chaotischer Vielteilchendynamik sichtbar halten und warum dies klassisch extrem schwer zu simulieren ist.
-
----
-
-#### 1. Das physikalische Kernproblem: Ergodizität und Scrambling
-In isolierten Quanten-Vielteilchensystemen führt die schnelle Entstehung von Verschränkung (Scrambling / Quanten-Ergodizität) dazu, dass lokale Quanteninformation rasch in exponentiell vielen Freiheitsgraden des Hilbertraums „versteckt“ wird:
-* **Herkömmliche Observablen und zeitgeordnete Korrelatoren (TOCs, $\langle M(t)M \rangle$)** zerfallen exponentiell schnell. Nach wenigen Gatter-Zyklen ($t \approx 9$) sind sie praktisch im statistischen Rauschen verschwunden und „blind“ für mikroskopische Details der Dynamik.
-* Um solche Prozesse dennoch zu untersuchen, braucht man **Echosequenzen mit Zeitumkehr** (wie beim klassischen Out-of-Time-Order Correlator, OTOC / $C^{(2)}$).
-
----
-
-#### 2. Das neue Konzept: OTOC zweiter Ordnung ($\text{OTOC}(2)$ bzw. $C^{(4)}$)
-Das Nature-Paper erweitert das Echo-Prinzip auf ein **Interferometer mit mehreren Armen / wiederholter Zeitumkehr**:
-```math
-\mathcal{U}_k(t) = B(t)\,[M\,B(t)]^{k-1}, \qquad C^{(2k)} = \langle \mathcal{U}_k^\dagger M \mathcal{U}_k M \rangle = \langle (B(t)M)^{2k} \rangle
-```
-
-* Während der Standard-OTOC ($k=1$) aus **zwei Evolutionsblöcken** ($U(t)$ vorwärts, $U^\dagger(t)$ rückwärts) besteht, nutzt **$\text{OTOC}(2)$ ($k=2$) vier Evolutionsblöcke** ($U, U^\dagger, U, U^\dagger$).
-* **Heisenberg-Bild & Pauli-Pfade:** Entwickelt man den zeitentwickelten Butterfly-Operator $B(t)$ in Multi-Qubit-Pauli-Strings $P_n$, zerfällt $C^{(4)}$ in:
-  $$C^{(4)} = \sum_{\alpha,\beta,\gamma,\delta} c_{\alpha\beta\gamma\delta} \frac{\mathrm{Tr}[P_\alpha P_\beta P_\gamma P_\delta]}{2^N}$$
-  Damit die Spur nicht verschwindet, muss das Produkt der vier Strings die Identität ergeben (geschlossene Schleife im Konfigurationsraum):
-  1. **Diagonale Beiträge ($C^{(4)}_{\text{diag}}$):** $\alpha = \beta$ und $\gamma = \delta$ („kleine Schleifen“, Fläche null). Diese existieren bereits im Standard-OTOC $C^{(2)}$.
-  2. **Off-diagonale Beiträge ($C^{(4)}_{\text{off-diag}}$):** Vier *paarweise verschiedene* Strings ($\alpha \neq \beta \neq \gamma \neq \delta$), deren Produkt dennoch $I$ ergibt (**„große Schleifen“**). Diese existieren **nur ab $k \ge 2$**.
-
----
-
-#### 3. Experimenteller Nachweis der konstruktiven Interferenz
-Auf supraleitenden Quantenprozessoren (Willow-Architektur) von Google Quantum AI wurde bewiesen, dass dieser off-diagonale Interferenzmechanismus real und dominant ist:
-* **Pauli-Insertion-Protokoll:** Werden während der Vorwärts- und Rückwärtsentwicklung zufällige Pauli-Gatter eingefügt, randomisiert dies die Vorzeichen/Phasen der Pauli-Strings, ohne deren Amplituden zu verändern.
-* **Ergebnis:** Während diagonale Anteile unbeeinflusst bleiben, löscht sich die Off-Diagonale destruktiv aus (die Pearson-Korrelation zwischen Messung und Simulation bricht von **$\rho = 0{,}998$** auf **$\rho = 0{,}555$** ein). Das belegt eindeutig **konstruktive Interferenz großer Schleifen** im ungestörten System.
-* **Algebraischer statt exponentieller Sensitivitätszerfall:** Die Fluktuation $\sigma[C^{(4)}]$ über Schaltkreisinstanzen fällt nur algebraisch (Power-Law) ab und bleibt selbst jenseits von 20 Zyklen hochsensitiv für mikroskopische Parameter.
-
----
-
-#### 4. Klassische Simulationskomplexität & Beyond-Classical Regime
-Genau die Eigenschaft, die dem $\text{OTOC}(2)$ seine Sensitivität verleiht (die Vielwege-Interferenz der großen Schleifen), macht ihn für klassische Algorithmen extrem teuer:
-* Gängige approximative Monte-Carlo- und Pauli-Path-Heuristiken (z. B. Cached Monte Carlo, CMC), die für $C^{(2)}$ noch passable Ergebnisse liefern ($\text{SNR} \approx 5{,}3$), versagen bei $C^{(4)}_{\text{off-diag}}$ völlig ($\text{SNR} \approx 1{,}1$ vs. Quantenprozessor $\text{SNR} \approx 3{,}9$ bei 40 Qubits).
-* **65-Qubit-Experiment:** Für 65 Qubits und 23 Zyklen benötigt eine klassische Tensor-Netzwerk-Kontraktion auf dem US-Supercomputer **Frontier** geschätzt **~3,2 Jahre**, während der Quantenprozessor die Daten in **2,1 Stunden pro Schaltkreis** erfasst (ein Laufzeitunterschied von etwa **Faktor 13.000**).
-
----
-
-#### 5. Praktischer Machbarkeitsnachweis: Hamiltonian Learning
-Um zu zeigen, wozu diese Sensitivität nützlich ist, demonstrieren die Autoren ein **Hamiltonian-Learning-Experiment** (auf 34 Qubits):
-* Eine unbekannte Phase $\xi$ eines Zweiqubit-Gatters ($\xi/\pi = 0{,}6$) in einem Netzwerk wird gelernt, indem experimentelle $\text{OTOC}(2)$-Kurven mit simulierten Kurven abgeglichen werden. Die Kostenfunktion minimiert exakt beim Sollwert.
-
----
-
-#### 6. Wichtige Abgrenzung: drei verwandte Arbeiten
-Drei eng verwandte, aber strikt zu trennende Arbeiten:
-
-| Paper / Artefakt | Typ | Wesentliche Merkmale |
-| :--- | :--- | :--- |
-| **Science 374, 1479 (2021)**, [arXiv:2101.08870](https://arxiv.org/abs/2101.08870) | Historische Baseline | Standard-OTOC ($k=1$, 2 Blöcke) auf Sycamore; trennt *operator spreading* von *operator entanglement*. |
-| **Nature 646, 825 (2025)**, [DOI](https://doi.org/10.1038/s41586-025-09526-6) | **Dieses Paper** (abstrakter Benchmark) | **$\text{OTOC}(2)$ ($k=2$, 4 Blöcke)** auf 2D-Zufallsschaltkreisen (bis 65Q); Entdeckung der konstruktiven Interferenz großer Schleifen; Demonstration von Beyond-Classical-Laufzeitvorteil. |
-| **[arXiv:2510.19550](https://arxiv.org/abs/2510.19550) (2025)** | Chemische Anwendung | Reale chemische Anwendung (**NMR-OTOC** zur Strukturaufklärung von Toluol/9Q und DMBP/15Q). Nutzt wieder einen **Standard-OTOC ($k=1$, 2 Blöcke)** unter der TARDIS-Sequenz. |
-
-<br>
