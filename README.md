@@ -21,6 +21,8 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
+*Study notes on **Heisenberg-Weyl** algebra (quantum operators from quantum harmonic oscillator, exponentiation of position and momentum), **Tensor algebra** (as basis for Exterior, Symmetric, Clifford and Weyl algebra), **Quantum Simulation** (classical and quantum), and **Quantum dynamics** (quantum chaos, scrambling OTOC):*
+
 ## Heisenberg-Weyl
 
 ### 1. Physics: Quantum Harmonic Oscillator as Source of All Operators
