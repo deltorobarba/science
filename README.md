@@ -223,6 +223,12 @@ Every simulation method in physics and chemistry can be classified along three a
 
 <font color="blue">**Simulation Techniques Matrix**</font>
 
+$\color{blue}{\text{Dieser Text ist blau}}$
+
+
+$\color{#1E88E5}{\text{Dieser Text ist in individuellem Blau}}$
+
+
 | Model / Computing | **Static** (optimization via variational principle, states) | **Dynamic** (explicit time propagation, time evolution) |
 | --- | --- | --- |
 | **Classical Model / Classical Hardware** | **Docking, Energy Minimization:** Geometric fitting (AutoDock, Rosetta) | **Molecular Dynamics (MD):** $F = ma$, classical trajectories via force fields (GROMACS, NAMD, AMBER) |
