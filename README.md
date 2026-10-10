@@ -63,9 +63,6 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
   * **Matrix Representation:** Diagonal matrix composed of complex phase factors.
   * **Conjugation Relation:** While $Z$ physically *represents* position, it *generates* a momentum translation/kick ($D_{0,p} \sim Z^p$).
 
----
-
-### Degree Ladder of Quantum Operators
 
 The physical and information-theoretic complexity of the gate is determined by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
 
@@ -94,7 +91,9 @@ The physical and information-theoretic complexity of the gate is determined by t
 
 <br>
 
-## Tensor Algebra $T(V)$
+---
+
+### Tensor Algebra $T(V)$
 
 Tensor Algebra is the basis for Exterior, Symmetric, Clifford and Weyl algebra. The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** in that ideal (symmetric $`Q`$ or antisymmetric $`\omega`$), plus whether you switch its value on at all.
 
@@ -159,19 +158,12 @@ The QC bridge is **structurally one theorem**, once for $SO$/Spin, once for $Sp$
 | **Symmetry tower** | $\mathrm{O}(V,g) \supset \mathfrak{so}(n)$, $\dim \frac{n(n-1)}{2}$, Cartan types $B_n/D_n$, cover $\mathrm{Spin}(n)$ | $\mathrm{Sp}(2n) \supset \mathfrak{sp}(2n)$, $\dim n(2n+1)$, Cartan type $C_n$, cover $\mathrm{Mp}(2n)$ |
 | **QC bridge** | Matchgates / free fermions = rotor in $\mathrm{Spin}(2n)$; non-free from **degree 4** | Clifford / Gaussian = symplectic action; magic from **degree 3** |
 
-
----
-
-### 2. From Weyl Algebra to Heisenberg-Weyl (How Bosons Reach Actual Qubits / Qudits)
+**From Weyl Algebra to Heisenberg-Weyl (How Bosons Reach Actual Qubits / Qudits)**: Exponentiating rescues what the additive box forbids: trace vs. determinant. At the group level the test uses $\det$: $\det(ZXZ^{-1}X^{-1}) = 1$ must equal $\det(\zeta_d\mathbf{1}) = \zeta_d^d = 1$ ✓. The additive constraint is *unsatisfiable* in finite dimensions, but the multiplicative one is *automatically satisfied*. That is why the discrete Weyl relation $ZX = \zeta_d XZ$ exists in exact $d\times d$ complex matrices, providing the complete pathway from the continuous Weyl algebra to the discrete Heisenberg-Weyl algebra.
 
 | Level | Continuous | Discrete |
 | --- | --- | --- |
 | **Additive** (Lie bracket) | Weyl algebra $A_n = W(V,\omega)$: all polynomials in $\hat q,\hat p$, home of Hamiltonians and the degree filter | **Does not exist.** Trace argument: $\mathrm{Tr}([\hat q,\hat p]) = 0$ but $\mathrm{Tr}(i\hbar\mathbf{1}) = i\hbar d \neq 0$ |
 | **Multiplicative** (operator product) | Heisenberg group $H_n$ / CCR $C^*$-algebra: $W(z)W(z') = e^{-\frac{i}{2}\omega(z,z')}W(z+z')$, linked to $A_n$ by Stone–von Neumann | HW algebra $M_d(\mathbb{C}) \cong \mathbb{C}_\omega[\mathbb{Z}_d \times \mathbb{Z}_d]$, spanned by the $d^2$ matrices $X^qZ^p$ |
-
-**Why exponentiating rescues what the additive box forbids: trace vs. determinant.** At the group level the test uses $\det$: $\det(ZXZ^{-1}X^{-1}) = 1$ must equal $\det(\zeta_d\mathbf{1}) = \zeta_d^d = 1$ ✓. The additive constraint is *unsatisfiable* in finite dimensions, but the multiplicative one is *automatically satisfied*. That is why the discrete Weyl relation $ZX = \zeta_d XZ$ exists in exact $d\times d$ complex matrices, providing the complete pathway from the continuous Weyl algebra to the discrete Heisenberg-Weyl algebra.
-
-**Moving between the boxes.**
 
 * **Up:** $\mathfrak{h}_n \xrightarrow{\exp} H_n$ (BCH series terminates cleanly because $[\hat Q,\hat P]$ is central; the additive Lie bracket maps into a multiplicative phase factor).
 * **Down:** Differentiate at the identity along one-parameter subgroups.
@@ -183,18 +175,13 @@ The QC bridge is **structurally one theorem**, once for $SO$/Spin, once for $Sp$
 2. The discrete analogue is unique in precisely the same way: $M_d(\mathbb{C})$ has, up to unitary equivalence, exactly one irreducible representation of $ZX = \zeta_d XZ$, explaining why "the" qudit clock and shift operators are canonical.
 3. The theorem **fails** for infinitely many degrees of freedom (quantum field theory, thermodynamic limit): inequivalent representations exist, which is Haag's theorem and the structural origin of superselection sectors. Finite-$`n`$ uniqueness is what makes phase-space methods and the operator degree ladder unambiguous.
 
----
-
-### 3. Symplectic Form
+**Symplectic Form**
 
 A **form** evaluates to a scalar: $0$-form = scalar function, $1$-form = covector field, $2$-form = bilinear form. Differential forms $\Omega^k(M) = \Gamma(\Lambda^k T^*M)$ integrate intrinsically over oriented submanifolds without coordinate choices ($1$-forms over curves yield work; $2$-forms over surfaces yield flux). The **symplectic form $`\omega`$** is a differential $2$-form defined by three properties:
 
 * **Alternating:** Pointwise antisymmetric, $\omega(u,v) = -\omega(v,u)$.
 * **Closed:** $d\omega = 0$, guaranteeing the absence of local curvature invariants (Darboux's theorem).
 * **Non-degenerate:** Forces an **even dimension** $2n$ (coordinates naturally pair into positions $q_i$ and momenta $p_i$) and produces the nowhere-vanishing **Liouville volume form** $\omega^n$.
-
-**Two consequences used in the [quantum learning notes](https://deltorobarba.github.io/science/).**
-
 * **Darboux's Theorem:** Locally, every symplectic manifold is symplectomorphic to standard phase space $(\mathbb{R}^{2n}, \sum_{i=1}^n dq_i \wedge dp_i)$. Because there are no local invariants, the only geometric structure a Gaussian/Clifford operation can preserve is $`\omega`$ itself. This is why $\mathrm{Sp}(2n)$ (continuous) and $\mathrm{Sp}(2n,\mathbb{Z}_d)$ (discrete, with symplectic product $\omega(z,z') = qp' - q'p \pmod d$) act as the universal structure groups of degree 2.
 * **Liouville's Theorem:** The phase-space volume $\omega^n$ is invariant under Hamiltonian flows, and its quantum shadow is unitarity. The Wigner function utilized in quantum learning is precisely a quasi-probability density evaluated against this Liouville volume form, and Hudson's theorem dictates that dynamics generated by Hamiltonians of degree $\leq 2$ preserve the non-negativity of Gaussian Wigner distributions.
 
@@ -202,32 +189,14 @@ A **form** evaluates to a scalar: $0$-form = scalar function, $1$-form = covecto
 
 ## Quantum Dynamics
 
-### Quantum and Classical Simulation Methods
+### Quantum Simulation
 
 Every simulation method in physics and chemistry can be classified along three axes:
+* **Model**: **Classical:** Neglects electrons; atoms are approximated as point masses connected by springs (empirical force fields). **Quantum:** Explicitly accounts for electrons, orbitals, and many-body correlation.
+* **Computing**: Computation runs either on classical hardware (CPU/GPU/supercomputer) or on qubit processors.
+* **Type**: **Static (ground state / eigenvalue problem):** $\hat{H}\vert{}\psi\rangle = E\vert{}\psi\rangle$. Energy optimization: For eigenstates, $\Psi(t) = \psi e^{-iEt/\hbar}$; probability densities $\vert{}\Psi(t)\vert{}^2$ are time-invariant. Solution approach: Search for global minima on energy hypersurfaces via the Rayleigh-Ritz variational principle or VQE. **Dynamic (time evolution):** $i\hbar\,\partial_t\Psi = \hat{H}\Psi$. Propagation: No general variational principle, no forward-in-time shortcut theorem. Required for non-equilibrium chemistry, bond breaking in collisions, non-adiabatic excitations, and quantum chaos. 
 
-* **Model (Classical vs. Quantum)**
-  * *Classical:* Neglects electrons; atoms are approximated as point masses connected by springs (empirical force fields).
-  * *Quantum:* Explicitly accounts for electrons, orbitals, and many-body correlation.
-* **Computing (Classical vs. Quantum Hardware)**
-  * Computation runs either on classical hardware (CPU/GPU/supercomputer) or on qubit processors.
-* **Type (Static vs. Dynamic)**
-  * *Static (ground state / eigenvalue problem):* $\hat{H}\vert{}\psi\rangle = E\vert{}\psi\rangle$
-    * Energy optimization: For eigenstates, $\Psi(t) = \psi e^{-iEt/\hbar}$; probability densities $\vert{}\Psi(t)\vert{}^2$ are time-invariant.
-    * Solution approach: Search for global minima on energy hypersurfaces via the Rayleigh-Ritz variational principle or VQE.
-  * *Dynamic (time evolution):* $i\hbar\,\partial_t\Psi = \hat{H}\Psi$
-    * Propagation: No general variational principle, no forward-in-time shortcut theorem.
-    * Required for non-equilibrium chemistry, bond breaking in collisions, non-adiabatic excitations, and quantum chaos.
-    * *Core axiom:* For static problems, the quantum computer stores information; in dynamical evolution, *it is the physical Hilbert space*.
-
-
-<font color="blue">**Simulation Techniques Matrix**</font>
-
-$\color{blue}{\text{Dieser Text ist blau}}$
-
-
-$\color{#1E88E5}{\text{Dieser Text ist in individuellem Blau}}$
-
+Core axiom: For static problems, QC stores information. In dynamical evolution, QC is the physical Hilbert space.
 
 | Model / Computing | **Static** (optimization via variational principle, states) | **Dynamic** (explicit time propagation, time evolution) |
 | --- | --- | --- |
@@ -236,20 +205,17 @@ $\color{#1E88E5}{\text{Dieser Text ist in individuellem Blau}}$
 | **Quantum Model / Classical Hardware** | **HF, DFT, Post-HF:** $\hat{H}\vert{}\psi\rangle = E\vert{}\psi\rangle$<br>• HF ignores correlation<br>• DFT approximates via the electron density $\rho$<br>• Post-HF (CC, CI) exact, but exponential in $N$ | **TD-DFT & Wave Packet Dynamics:** Excitations, spectra, fluorescence.<br>• Exact propagation $e^{-i\hat{H}t/\hbar}\vert{}\Psi(0)\rangle$ scales exponentially in $N$ |
 | **Quantum Model / Quantum Hardware** | **VQE (NISQ) & QPE (Fault-Tolerant):** Determination of the correlation energy via parametrized entanglement / phase measurement | **Hamiltonian Simulation:** Coherent time evolution $e^{-iHt}\vert{}\psi(0)\rangle$ in the $2^n$-dimensional Hilbert space via Trotter, QSVT, or Shadow Simulation |
 
+
 **Static Quantum Chemistry**
-
-* **The Correlation Problem**
-  * Only the 1-electron hydrogen atom is analytically solvable; from two electrons on, the Coulomb repulsion forces approximation methods.
-  * *Born-Oppenheimer approximation:* Nuclei are treated as fixed on electronic timescales $\implies$ potential energy surface (PES).
+* **Correlation Problem**: 
+  * Only the 1-electron hydrogen atom is analytically solvable; from two electrons on, the Coulomb repulsion forces approximation methods. 
+  * *Born-Oppenheimer approximation:* Nuclei are treated as fixed on electronic timescales $\implies$ potential energy surface (PES). 
   * *Rayleigh-Ritz principle:* $\langle\psi\vert{}H\vert{}\psi\rangle \geq E_0$ yields upper bounds for the ground state.
-
-| Method | Treatment of Electron Correlation | Computational Cost / Scaling |
-| --- | --- | --- |
-| **Hartree–Fock (HF)** | Mean field; neglects correlation entirely | Cheap: Polynomial ($O(N^4)$ to $O(N^3)$) |
-| **Density Functional Theory (DFT)** | Approximated via exchange-correlation functionals of the density $\rho$ | Cheap: Favorable polynomial scaling |
-| **Post-HF (Coupled Cluster, CI)** | Systematically exact treatment of correlation | Exponential in $N$; FCI scales combinatorially with $\binom{M}{N}$ |
-| **Variational Quantum Eigensolver (VQE)** | Directly on the qubit register via many-body entanglement | NISQ heuristic; target: strongly correlated molecules |
-
+* **Strategies for static quantum chemistry**
+  * **Hartree–Fock (HF)**. Treatment of Electron Correlation: Mean field; neglects correlation entirely. Scaling: Cheap: Polynomial ($O(N^4)$ to $O(N^3)$)
+  * **Density Functional Theory (DFT)**. Treatment of Electron Correlation: Approximated via exchange-correlation functionals of the density $\rho$. Scaling: Cheap: Favorable polynomial scaling
+  * **Post-HF (Coupled Cluster, CI)**. Treatment of Electron Correlation: Systematically exact treatment of correlation. Scaling: Exponential in $N$; FCI scales combinatorially with $\binom{M}{N}$
+  * **Variational Quantum Eigensolver (VQE)**. Treatment of Electron Correlation: Directly on the qubit register via many-body entanglement. Scaling: NISQ heuristic; target: strongly correlated molecules
 * **Chemical Accuracy & Scaling Limits**
   * *Target precision:* $1\text{ kcal/mol} \approx 1.6\text{ mHa} \approx 43\text{ meV}$ (needed for reaction rates at room temperature to within an order of magnitude).
   * *Limits of classical methods:* The gold standard $\text{CCSD(T)}$ scales as $O(N^7)$ and fails for strong static correlation (multireference systems, transition-metal catalysis such as FeMoco).
@@ -260,23 +226,17 @@ $\color{#1E88E5}{\text{Dieser Text ist in individuellem Blau}}$
 
 **Dynamic Simulation on Quantum Computers**
 
-* **The Fundamental Problem**
+* **Fundamental Problem**
   * Nature switches on all terms simultaneously; quantum gates run sequentially.
   * Since terms do not commute ($[A, B] \neq 0$), we have: $e^{-i(A+B)t} \neq e^{-iAt}e^{-iBt}$.
-* **The Three Propagation Strategies**
-
-| Strategy | Method | Decomposed Element | Target Hardware |
-| --- | --- | --- | --- |
-| **Discretize Time** | Trotter-Suzuki, qDRIFT | Physical time $t$ split into $r$ time steps | **NISQ** (low depth, no ancillas) |
-| **Transform the Spectrum** | Qubitization / QSVT | Continuous energy spectrum mapped to rotation angles ($E_k = \lambda\cos\theta_k$) | **Fault-Tolerant** (ancilla register, block encoding) |
-| **Reduce the Space** | Shadow Simulation | Full state space ($2^n$) projected onto $M$ observable expectation values | **NISQ & Fault-Tolerant** (requires algebraic closure) |
-
+* **Propagation Strategies**
+  * **Discretize Time** via Trotter-Suzuki, qDRIFT. Decomposed Element: Physical time $t$ split into $r$ time steps. Ideal for **NISQ** (low depth, no ancillas).
+  * **Transform the Spectrum** via Qubitization / QSVT. Decomposed Element: Continuous energy spectrum mapped to rotation angles ($E_k = \lambda\cos\theta_k$). Ideal for **Fault-Tolerant** (ancilla register, block encoding).
+  * **Reduce the Space** via Shadow Simulation. Decomposed Element: Full state space ($2^n$) projected onto $M$ observable expectation values. Ideal for **NISQ & Fault-Tolerant** (requires algebraic closure).
 * **Bounds & Fast-Forwarding**
   * *No-fast-forwarding theorem:* The linear dependence of the runtime on the time $t$ is strictly optimal for generic Hamiltonians; additive term $\log(1/\epsilon)$ for function approximations.
   * *Exceptions:* Fast-forwarding ($t \ll \Vert{}H\Vert{}t$) is only possible for special structures (e.g. commuting terms, quadratic fermionic systems).
-
 **Open Quantum Systems: Non-Unitary Dynamics**
-
 * **From Unitaries to Quantum Channels**
   * Isolated systems: Unitary evolution via the Schrödinger equation ($U^\dagger U = \mathbb{1}$, reversibility, purity is preserved).
   * Coupled systems (bath, measurement, dissipation): Non-unitary; described by **CPTP maps** (completely positive, trace-preserving maps).
@@ -294,7 +254,7 @@ $\color{#1E88E5}{\text{Dieser Text ist in individuellem Blau}}$
 
 ---
 
-### Chaos, Scrambling & OTOCs
+### Quantum Dynamics (Chaos, Scrambling & OTOCs)
 
 **Fundamentals & Core Concepts**
 
@@ -320,32 +280,33 @@ $\color{#1E88E5}{\text{Dieser Text ist in individuellem Blau}}$
 * **Why "Out-of-Time-Order"?**
   * The time contour runs through $t \to 0 \to t \to 0$.
   * Standard 2-point functions already decay on the local thermalization timescale $t_{\text{therm}}$ and are blind to scrambling into many-body entanglement.
-* **Measurement via the Loschmidt Echo Protocol**
+* **Measurement via the Loschmidt Echo Protocol** (Only non-commutativity survives unitary forward-backward cancellation)
   1. Forward evolution under $e^{-iHt}$.
   2. Apply the butterfly perturbation $V$ (e.g. a local Pauli-$X$).
   3. Backward evolution under $e^{+iHt}$ (implemented on quantum hardware via phase reversal).
   4. Projective overlap measurement with probe $W$.
-* Only the non-commutativity survives the unitary forward-backward cancellation.
 
 **Three Dimensions of Operator Growth**
-
-| Dimension | Metric | Growth Law | Bound / Universality |
-| --- | --- | --- | --- |
-| **Rate** (time) | Quantum Lyapunov exponent $\lambda_L$ | $C(t) \sim \frac{1}{N}e^{\lambda_L t}$ | **MSS bound:** $\lambda_L \leq \frac{2\pi k_B T}{\hbar} = \frac{2\pi}{\beta}$ |
-| **Reach** (space) | Butterfly velocity $v_B$ | Front: $C(t,x) \sim \frac{1}{N}\exp[\lambda_L(t - x/v_B)]$ | **Lieb-Robinson bound:** $\Vert{}[A(t), B]\Vert{} \leq C e^{-\mu(d - v_{LR}t)}$, $v_B \leq v_{LR}$ |
-| **Depth** (operator space) | Krylov complexity $K(t)$ | Free: $t$ <br>Integrable: $t^2$ <br> Chaotic: $e^{2\alpha t}$ | **UOGH hypothesis:** $b_n \sim \alpha n$ with $\alpha \leq \frac{\pi}{\beta}$ |
-
-* **Rate (Time) in Detail**
-  * Semiclassical limit: $-\langle[x(t), p(0)]^2\rangle \to \hbar^2 \{x(t), p(0)\}_{\text{PB}}^2 \sim \hbar^2 e^{2\lambda_{\text{cl}}t}$; $\lambda_L$ is the quantum analogue of the classical Lyapunov exponent.
-  * Timescale hierarchy: $t_{\text{therm}} \sim \mathcal{O}(1) < t_* \sim \lambda_L^{-1}\ln N$ (scrambling time) $< t_K \sim e^S$ (Poincaré time).
-  * In finite 1D spin chains, the spatial front $v_B$ can be measured numerically much more robustly than $\lambda_L$.
-* **Reach (Space) in Detail**
-  * $v_{LR}$ is a state-independent norm bound ("light cone"), whereas $v_B$ depends on the state and the temperature.
-  * Determines the minimum depth of quantum circuits for generating global entanglement ($d \sim n$ in 1D, $d \sim \sqrt{n}$ in 2D, $d \sim \log n$ for all-to-all).
-  * Fluctuations of the wavefront follow KPZ universality (Kardar-Parisi-Zhang) with broadening $\sigma(t) \sim t^{1/3}$; entropy growth $S(t) = v_E t$ with $v_E \leq v_B$.
-* **Depth (Operator Space) in Detail**
-  * The Liouvillian $\mathcal{L} = [H, \cdot]$ tridiagonalizes the Krylov space $\mathcal{K} = \text{span}\{W, [H,W], [H,[H,W]], \dots\}$ via the Lanczos coefficients $b_n$.
-  * Krylov complexity: $K(t) = \sum_n n \vert{}\varphi_n(t)\vert{}^2$ measures the mean position of the operator wave on the chain.
+* **Rate (Time):**
+  * **Metric:** Quantum Lyapunov exponent $\lambda_L$
+  * **Growth Law:** $C(t) \sim \frac{1}{N}e^{\lambda_L t}$
+  * **Bound / Universality:** **MSS bound:** $\lambda_L \leq \frac{2\pi k_B T}{\hbar} = \frac{2\pi}{\beta}$
+  * **Semiclassical limit:** $-\langle[x(t), p(0)]^2\rangle \to \hbar^2 \{x(t), p(0)\}_{\text{PB}}^2 \sim \hbar^2 e^{2\lambda_{\text{cl}}t}$; $\lambda_L$ is the quantum analogue of the classical Lyapunov exponent.
+  * **Timescale hierarchy:** $t_{\text{therm}} \sim \mathcal{O}(1) < t_* \sim \lambda_L^{-1}\ln N$ (scrambling time) $< t_K \sim e^S$ (Poincaré time).
+  * **Numerical measurability:** In finite 1D spin chains, spatial front $v_B$ can be measured numerically much more robustly than $\lambda_L$.
+* **Reach (Space):**
+  * **Metric:** Butterfly velocity $v_B$
+  * **Growth Law:** Front: $C(t,x) \sim \frac{1}{N}\exp[\lambda_L(t - x/v_B)]$
+  * **Bound / Universality:** **Lieb-Robinson bound:** $\Vert{}[A(t), B]\Vert{} \leq C e^{-\mu(d - v_{LR}t)}$, $v_B \leq v_{LR}$
+  * **State dependence:** $v_{LR}$ is a state-independent norm bound ("light cone"), whereas $v_B$ depends on the state and the temperature.
+  * **Circuit depth:** Determines the minimum depth of quantum circuits for generating global entanglement ($d \sim n$ in 1D, $d \sim \sqrt{n}$ in 2D, $d \sim \log n$ for all-to-all).
+  * **Front fluctuations:** Fluctuations of the wavefront follow KPZ universality (Kardar-Parisi-Zhang) with broadening $\sigma(t) \sim t^{1/3}$; entropy growth $S(t) = v_E t$ with $v_E \leq v_B$.
+* **Depth (Operator Space):**
+  * **Metric:** Krylov complexity $K(t)$
+  * **Growth Law:** Free: $t$ | Integrable: $t^2$ | Chaotic: $e^{2\alpha t}$
+  * **Bound / Universality:** **UOGH hypothesis:** $b_n \sim \alpha n$ with $\alpha \leq \frac{\pi}{\beta}$
+  * **Krylov space:** The Liouvillian $\mathcal{L} = [H, \cdot]$ tridiagonalizes the Krylov space $\mathcal{K} = \text{span}\{W, [H,W], [H,[H,W]], \dots\}$ via the Lanczos coefficients $b_n$.
+  * **Operator wave:** Krylov complexity: $K(t) = \sum_n n \vert{}\varphi_n(t)\vert{}^2$ measures the mean position of the operator wave on the chain.
 
 **Bounds, Dualities & Models**
 
@@ -372,16 +333,18 @@ $\color{#1E88E5}{\text{Dieser Text ist in individuellem Blau}}$
   * The characteristic **Dip–Ramp–Plateau** profile at late times ($t > t_*$) reveals discrete level correlations long after spatial OTOCs have saturated.
 
 **Scrambling vs. Decoherence**
-
-| Feature | Unitary Scrambling | Lindblad Decoherence (Open) |
-| --- | --- | --- |
-| **Information** | Reversibly delocalized into many-body entanglement; globally reconstructible | Irreversibly dissipated into bath degrees of freedom |
-| **Entropy** | Local subsystem entropy rises; global state stays pure ($S_{\text{vN}} = 0$) | Global von Neumann entropy $S_{\text{vN}}(\rho)$ grows non-unitarily |
-| **OTOC Response** | $F(t) \to 0$ through genuine operator growth | $F(t) \to 0$ through phase/amplitude damping |
-| **Risk** | Genuine quantum chaos | Noise mimics a **false Lyapunov exponent** $\lambda_L$ |
+* **Unitary Scrambling**
+  * **Information**: Reversibly delocalized into many-body entanglement; globally reconstructible
+  * **Entropy**: Local subsystem entropy rises; global state stays pure ($S_{\text{vN}} = 0$)
+  * **OTOC Response**: $F(t) \to 0$ through genuine operator growth
+  * **Risk**: Genuine quantum chaos
+* **Lindblad Decoherence (Open)**
+  * **Information**: Irreversibly dissipated into bath degrees of freedom
+  * **Entropy**: Global von Neumann entropy $S_{\text{vN}}(\rho)$ grows non-unitarily
+  * **OTOC Response**: $F(t) \to 0$ through phase/amplitude damping
+  * **Risk**: Noise mimics a **false Lyapunov exponent** $\lambda_L$
 
 **Applications: Black Holes & Quantum Computing**
-
 * **Scrambling as a Resource: Hayden-Preskill & Yoshida-Kitaev**
   * Black holes act as optimal information mirrors: After the Page time, infalling quantum states can be reconstructed from a few Hawking quanta in time $\mathcal{O}(\ln N)$.
   * The Yoshida-Kitaev decoding circuit achieves a reconstruction fidelity proportional to the OTOC value.
