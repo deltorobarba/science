@@ -230,9 +230,9 @@ Core axiom: For static problems, QC stores information. In dynamical evolution, 
   * Nature switches on all terms simultaneously; quantum gates run sequentially.
   * Since terms do not commute ($[A, B] \neq 0$), we have: $e^{-i(A+B)t} \neq e^{-iAt}e^{-iBt}$.
 * **Propagation Strategies**
-  * **Discretize Time** via Trotter-Suzuki, qDRIFT. Decomposed Element: Physical time $t$ split into $r$ time steps. Ideal for **NISQ** (low depth, no ancillas).
-  * **Transform the Spectrum** via Qubitization / QSVT. Decomposed Element: Continuous energy spectrum mapped to rotation angles ($E_k = \lambda\cos\theta_k$). Ideal for **Fault-Tolerant** (ancilla register, block encoding).
-  * **Reduce the Space** via Shadow Simulation. Decomposed Element: Full state space ($2^n$) projected onto $M$ observable expectation values. Ideal for **NISQ & Fault-Tolerant** (requires algebraic closure).
+  * **Trotter-Suzuki** (and qDRIFT) to Discretize Time. Decomposed Element: Physical time $t$ split into $r$ time steps. Ideal for **NISQ** (low depth, no ancillas).
+  * **Qubitization** (and QSVT) to transform the Spectrum*. Decomposed Element: Continuous energy spectrum mapped to rotation angles ($E_k = \lambda\cos\theta_k$). Ideal for **Fault-Tolerant** (ancilla register, block encoding).
+  * **Shadow Simulation** to reduce the space. Decomposed Element: Full state space ($2^n$) projected onto $M$ observable expectation values. Ideal for **NISQ & Fault-Tolerant** (requires algebraic closure).
 * **Bounds & Fast-Forwarding**
   * *No-fast-forwarding theorem:* The linear dependence of the runtime on the time $t$ is strictly optimal for generic Hamiltonians; additive term $\log(1/\epsilon)$ for function approximations.
   * *Exceptions:* Fast-forwarding ($t \ll \Vert{}H\Vert{}t$) is only possible for special structures (e.g. commuting terms, quadratic fermionic systems).
