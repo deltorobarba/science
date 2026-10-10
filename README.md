@@ -25,11 +25,11 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 ## Heisenberg-Weyl
 
-### 1. Physics: Quantum Harmonic Oscillator as Source of All Operators
+### Quantum Harmonic Oscillator and Quantum Operators
 
 ![Quantum Harmonic Oscillator](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/HarmOsziFunktionen.png/330px-HarmOsziFunktionen.png)
 
-* **Quantum Harmonic Oscillator**
+* **Quantum Harmonic Oscillator as Source of All Operators (Physics Basis)**
   * **Analytically:** Every smooth potential near a local minimum approximates a parabola (Taylor expansion $V(x) \approx \frac{1}{2}k x^2$). Consequently, the QHO $\hat H \propto \hat P^2 + \hat Q^2 = \hbar\omega\left(\hat a^\dagger\hat a + \tfrac12\right) = \hbar\omega(\hat n + \tfrac12)$ serves as the universal local model of any bound physical system.
   * **Algebraically:** $\hat Q^2 + \hat P^2$ is the canonical degree-2 element of the Weyl algebra ($\mathrm{Sym}^2 V \cong \mathfrak{sp}$) — the bosonic counterpart of the Dirac operator. All quantum gates and dynamical evolutions derive from this single generator evaluated at different polynomial degrees.
   * **Every quantum gate is a time evolution** $U = e^{-i\hat Ht}$. **Time evolution as phase rotation:** In $\hat U(t) = e^{-i\hat Ht/\hbar}$, the exponent is dimensionless: time is fundamentally an angle. Quantum states do not travel along classical trajectories; their phase rotates (in an energy eigenstate at angular frequency $\omega = E/\hbar$).
@@ -65,7 +65,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 ---
 
-### 2. Degree Ladder and Quantum Operators
+### Degree Ladder of Quantum Operators
 
 The physical and information-theoretic complexity of the gate is determined by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
 
@@ -94,11 +94,9 @@ The physical and information-theoretic complexity of the gate is determined by t
 
 <br>
 
-## Tensor Algebra $T(V)$ 
+## Tensor Algebra $T(V)$
 
-### 1. Tensor Algebra is Basis for Exterior, Symmetric, Clifford and Weyl algebra
-
-*The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** in that ideal (symmetric $`Q`$ or antisymmetric $`\omega`$), plus whether you switch its value on at all.*
+Tensor Algebra is the basis for Exterior, Symmetric, Clifford and Weyl algebra. The recipe: quotient the tensor algebra by a two-sided ideal generated in degree 2. The knob: the **parity of the bilinear form** in that ideal (symmetric $`Q`$ or antisymmetric $`\omega`$), plus whether you switch its value on at all.
 
 ```mermaid
 flowchart TD
@@ -202,9 +200,9 @@ A **form** evaluates to a scalar: $0$-form = scalar function, $1$-form = covecto
 
 <br>
 
-## Quantum Simulation
+## Quantum Dynamics
 
-### 1. Classification of Simulation Methods
+### Quantum and Classical Simulation Methods
 
 Every simulation method in physics and chemistry can be classified along three axes:
 
@@ -223,9 +221,7 @@ Every simulation method in physics and chemistry can be classified along three a
     * *Core axiom:* For static problems, the quantum computer stores information; in dynamical evolution, *it is the physical Hilbert space*.
 
 
----
-
-### 2. Simulation Techniques Matrix
+<font color="blue">**Simulation Techniques Matrix**</font>
 
 | Model / Computing | **Static** (optimization via variational principle, states) | **Dynamic** (explicit time propagation, time evolution) |
 | --- | --- | --- |
@@ -234,9 +230,7 @@ Every simulation method in physics and chemistry can be classified along three a
 | **Quantum Model / Classical Hardware** | **HF, DFT, Post-HF:** $\hat{H}\vert{}\psi\rangle = E\vert{}\psi\rangle$<br>• HF ignores correlation<br>• DFT approximates via the electron density $\rho$<br>• Post-HF (CC, CI) exact, but exponential in $N$ | **TD-DFT & Wave Packet Dynamics:** Excitations, spectra, fluorescence.<br>• Exact propagation $e^{-i\hat{H}t/\hbar}\vert{}\Psi(0)\rangle$ scales exponentially in $N$ |
 | **Quantum Model / Quantum Hardware** | **VQE (NISQ) & QPE (Fault-Tolerant):** Determination of the correlation energy via parametrized entanglement / phase measurement | **Hamiltonian Simulation:** Coherent time evolution $e^{-iHt}\vert{}\psi(0)\rangle$ in the $2^n$-dimensional Hilbert space via Trotter, QSVT, or Shadow Simulation |
 
----
-
-### 3. Static Quantum Chemistry
+**Static Quantum Chemistry**
 
 * **The Correlation Problem**
   * Only the 1-electron hydrogen atom is analytically solvable; from two electrons on, the Coulomb repulsion forces approximation methods.
@@ -258,9 +252,7 @@ Every simulation method in physics and chemistry can be classified along three a
   * Achieves Heisenberg-limited precision with respect to oracle queries.
   * **The Overlap Bottleneck:** If the overlap between the classical initial state $\vert{}\phi\rangle$ and the ground state $\vert{}\psi_0\rangle$ is exponentially small ($\vert{}\langle\phi\vert{}\psi_0\rangle\vert{}^2 \leq 2^{-\Omega(n)}$), QPE requires exponentially many repetitions (Guided Local Hamiltonian Problem).
 
----
-
-### 4. Dynamic Simulation on Quantum Computers
+**Dynamic Simulation on Quantum Computers**
 
 * **The Fundamental Problem**
   * Nature switches on all terms simultaneously; quantum gates run sequentially.
@@ -277,9 +269,7 @@ Every simulation method in physics and chemistry can be classified along three a
   * *No-fast-forwarding theorem:* The linear dependence of the runtime on the time $t$ is strictly optimal for generic Hamiltonians; additive term $\log(1/\epsilon)$ for function approximations.
   * *Exceptions:* Fast-forwarding ($t \ll \Vert{}H\Vert{}t$) is only possible for special structures (e.g. commuting terms, quadratic fermionic systems).
 
----
-
-### 5. Open Quantum Systems: Non-Unitary Dynamics
+**Open Quantum Systems: Non-Unitary Dynamics**
 
 * **From Unitaries to Quantum Channels**
   * Isolated systems: Unitary evolution via the Schrödinger equation ($U^\dagger U = \mathbb{1}$, reversibility, purity is preserved).
@@ -296,11 +286,11 @@ Every simulation method in physics and chemistry can be classified along three a
   * *Fault-Tolerant:* Block encoding of Kraus and Lindblad operators via LCU methods (Linear Combinations of Unitaries); scales in time as $\mathcal{O}(t\,\mathrm{polylog}(t/\epsilon))$.
   * *Non-Markovian dynamics:* Environments with memory effects and strong entanglement fall outside the Lindblad formalism and form a current research frontier.
 
-<br>
+---
 
-## Quantum Dynamics (Chaos, Scrambling & OTOCs)
+### Chaos, Scrambling & OTOCs
 
-### 1. Fundamentals & Core Concepts
+**Fundamentals & Core Concepts**
 
 * **Operator Growth in the Heisenberg Picture**
   * Time evolution: $W(t) = e^{iHt}We^{-iHt}$ spreads from a local operator into a highly non-local superposition of Pauli strings.
@@ -312,9 +302,7 @@ Every simulation method in physics and chemistry can be classified along three a
   * Chaotic case ($h_z \neq 0$, e.g. $0.5$): Breaks integrability, leads to diffusive operator scrambling.
   * Simulation setup: OTOC probe ($Z$ operator per lattice site) vs. butterfly perturbation ($X$ gate at the edge) for a direct comparison of ballistic spreading and chaotic decay.
 
----
-
-### 2. Out-of-Time-Order Correlator (OTOC)
+**Out-of-Time-Order Correlator (OTOC)**
 
 * **Definition as a Four-Point Function**
   * $C(t) = \big\langle [W(t), V(0)]^\dagger [W(t), V(0)] \big\rangle = 2\big(1 - \mathrm{Re}\,F(t)\big)$
@@ -333,9 +321,7 @@ Every simulation method in physics and chemistry can be classified along three a
   4. Projective overlap measurement with probe $W$.
 * Only the non-commutativity survives the unitary forward-backward cancellation.
 
----
-
-### 3. The Three Dimensions of Operator Growth
+**Three Dimensions of Operator Growth**
 
 | Dimension | Metric | Growth Law | Bound / Universality |
 | --- | --- | --- | --- |
@@ -355,9 +341,7 @@ Every simulation method in physics and chemistry can be classified along three a
   * The Liouvillian $\mathcal{L} = [H, \cdot]$ tridiagonalizes the Krylov space $\mathcal{K} = \text{span}\{W, [H,W], [H,[H,W]], \dots\}$ via the Lanczos coefficients $b_n$.
   * Krylov complexity: $K(t) = \sum_n n \vert{}\varphi_n(t)\vert{}^2$ measures the mean position of the operator wave on the chain.
 
----
-
-### 4. Bounds, Dualities & Models
+**Bounds, Dualities & Models**
 
 * **Logical Stack of Bounds**
   * $\text{KMS condition} \implies \text{UOGH } (\alpha \leq \pi/\beta) \implies \text{MSS bound } (\lambda_L \leq 2\pi/\beta)$.
@@ -368,9 +352,7 @@ Every simulation method in physics and chemistry can be classified along three a
   * Exactly solvable at large $N$, holographically dual to JT gravity in $\mathrm{AdS}_2$.
   * **Saturates the MSS bound** ($\lambda_L = 2\pi/\beta$): Black holes are the fastest scramblers in nature.
 
----
-
-### 5. Static Signatures: ETH & Spectral Statistics
+**Static Signatures: ETH & Spectral Statistics**
 
 * **Eigenstate Thermalization Hypothesis (ETH)**
   * Matrix elements: $A_{mn} = \mathcal{A}(\bar{E})\delta_{mn} + e^{-S(\bar{E})/2}f_A(\bar{E},\omega)R_{mn}$.
@@ -383,9 +365,7 @@ Every simulation method in physics and chemistry can be classified along three a
   * $K(\tau) = \langle \vert{}\mathrm{Tr}(e^{-iHt})\vert{}^2 \rangle$.
   * The characteristic **Dip–Ramp–Plateau** profile at late times ($t > t_*$) reveals discrete level correlations long after spatial OTOCs have saturated.
 
----
-
-### 6. Scrambling vs. Decoherence
+**Scrambling vs. Decoherence**
 
 | Feature | Unitary Scrambling | Lindblad Decoherence (Open) |
 | --- | --- | --- |
@@ -394,9 +374,7 @@ Every simulation method in physics and chemistry can be classified along three a
 | **OTOC Response** | $F(t) \to 0$ through genuine operator growth | $F(t) \to 0$ through phase/amplitude damping |
 | **Risk** | Genuine quantum chaos | Noise mimics a **false Lyapunov exponent** $\lambda_L$ |
 
----
-
-### 7. Applications: Black Holes & Quantum Computing
+**Applications: Black Holes & Quantum Computing**
 
 * **Scrambling as a Resource: Hayden-Preskill & Yoshida-Kitaev**
   * Black holes act as optimal information mirrors: After the Page time, infalling quantum states can be reconstructed from a few Hawking quanta in time $\mathcal{O}(\ln N)$.
