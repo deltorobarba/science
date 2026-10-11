@@ -9,11 +9,16 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 <br>
 
 ## Quantum Computing 🪼
-* https://deltorobarba.github.io/science/ 
+* [Quantum Learning](https://deltorobarba.github.io/science/) - research notes
 * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/dynamics.ipynb) - research code
 * [Quantum Computing](https://github.com/deltorobarba/science/blob/main/circuit.ipynb) - research code
 
+## Mathematics 🌸
+* [Maths topics](https://github.com/deltorobarba/science/blob/main/maths.md) - overview
+
+
 ## Astrophysics 🔭
+* [Astrophysics topics](https://github.com/deltorobarba/science/blob/main/astrophysics.md) - overview
 * [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) 🧬 research code
 * [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanets.ipynb) 🪐 research code
 * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) 🛰️ research code
