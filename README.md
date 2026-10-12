@@ -18,7 +18,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
   * [JWST Transmissions Spektroscopy](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_atmospheres.ipynb): Skalenhöhe, Molekülabsorption in Exoplaneten-Atmosphären
   * [Superresolution beyond Rayleigh limit](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_spade.ipynb): Spatial-Mode Demultiplexing und Quanten-Fisher-Information
 * **Gravitational Waves** 📡
-  * [Gravitational Wave Catalog](https://github.com/deltorobarba/science/blob/main/astro/gw_catalog.ipynb): GWTC-1 bis GWTC-5, Massenlücken, Reichweite der Detektoren, Auswahleffekt
+  * [Gravitational Wave Catalog](https://github.com/deltorobarba/science/blob/main/astro/gw_catalog.ipynb): GWTC-1 bis GWTC-5, Massenlücken, Reichweite der Detektoren
   * [Gravitational Wave GW150914](https://github.com/deltorobarba/science/blob/main/astro/gw150914.ipynb): Whitening, Bandpass, Q-Transformation, Chirp-Masse
 * **Sun** ☀️
   * [Sunspot Cycle](https://github.com/deltorobarba/science/blob/main/astro/sun_cycle.ipynb): Sunspots since 1749, Periodogramm, Hathaway-Kurve, Waldmeier-Effekt, Zyklus 25
