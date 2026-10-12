@@ -27,7 +27,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * **Quantum Information**
   * [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/bornrule.ipynb)
   * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md)
-  * [Heisenberg-Weyl Algebra](https://github.com/deltorobarba/science/blob/main/quantum/heisenbergweyl.ipynb)
+  * [Heisenberg-Weyl Algebra](https://github.com/deltorobarba/science/blob/main/quantum/heisenbergweyl.md)
 * **Quantum Computing**
   * [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb)
 * **Quantum Simulation**
