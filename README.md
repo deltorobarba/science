@@ -11,7 +11,8 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 ## Astrophysics 🔭
 * [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/astro/galaxies.ipynb) 🧬
 * **Exoplanets** 🪐
-  * [Vom Rohpixel zum bestätigten Planeten](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_transits.ipynb) - Lichtkurven, BLS, MCMC/Limb-Darkening-Fit, Differenzbilder, Gaia-Vetting, Odd/Even
+  * [Vom Rohpixel zum Transitmodell](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_transits.ipynb) - Lichtkurven, BLS, Transit-Fit mit Randverdunkelung, Sterndichte
+  * [Vom Kandidaten zum bestätigten Planeten](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_vetting.ipynb) - Differenzbilder, Gaia-Vetting, Odd/Even, sekundäre Bedeckung, Vergleich mit Kepler DV
   * [Demographie der Exoplaneten](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_populations.ipynb) - Radius Valley / Photoevaporation, Masse-Radius-Beziehungen, Dichteverteilungen
   * [JWST-Transmissionsspektroskopie](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_atmospheres.ipynb) - Skalenhöhe, Molekülabsorption in Exoplaneten-Atmosphären
   * [Überwindung des Rayleigh-Limits](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_spade.ipynb) via Spatial-Mode Demultiplexing und Quanten-Fisher-Information
@@ -28,7 +29,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
   * [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/bornrule.ipynb)
   * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md)
 * **Quantum Computing**
-  * [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum/circuit.ipynb)
+  * [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb)
 * **Quantum Simulation**
   * [Quantum Chaos and Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb)
 * **Quantum Learning**
