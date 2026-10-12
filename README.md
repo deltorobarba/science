@@ -54,7 +54,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md): Symplektischer Vektorraum, Pauli-Spektrum, Bell-Sampling
 
 **Quantum Computing**
-* [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): quantum circuit, transpilation, nois + noiseless simulation
+* [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): quantum circuit, transpilation, noisy & noiseless simulation
 
 **Quantum Simulation**
 * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md): Static vs. dynamic simulation, OTOCs, operator growth, ETH, scrambling
