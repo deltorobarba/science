@@ -9,7 +9,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 <br>
 
 ## Astrophysics 🔭
-* **Galaxies and Nebulae** 🧬
+* **Galaxies and Nebulae** 🛰️
   * [Multi-Wavelength Analysis](https://github.com/deltorobarba/science/blob/main/astro/galaxies.ipynb)
 * **Exoplanets** 🪐
   * [Transit Model Analysis](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_transits.ipynb): Lichtkurven, BLS, Transit-Fit mit Randverdunkelung, Sterndichte
@@ -17,13 +17,14 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
   * [Demography of Exoplanets](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_populations.ipynb): Radius Valley / Photoevaporation, Masse-Radius-Beziehungen
   * [JWST Transmissions Spektroscopy](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_atmospheres.ipynb): Skalenhöhe, Molekülabsorption in Exoplaneten-Atmosphären
   * [Superresolution beyond Rayleigh limit](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_spade.ipynb): Spatial-Mode Demultiplexing und Quanten-Fisher-Information
-* **Gravitational Waves** 🛰️
-  * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/astro/gravitationalwaves.ipynb)
+* **Gravitational Waves** 📡
+  * [Gravitational Wave Catalog](https://github.com/deltorobarba/science/blob/main/astro/gw_catalog.ipynb): GWTC-1 bis GWTC-5, Massenlücken, Reichweite der Detektoren, Auswahleffekt
   * [Gravitational Wave GW150914](https://github.com/deltorobarba/science/blob/main/astro/gw150914.ipynb): Whitening, Bandpass, Q-Transformation, Chirp-Masse
 * **Sun** ☀️
-  * [The Sunspot Cycle](https://github.com/deltorobarba/science/blob/main/astro/sun_cycle.ipynb): Sonnenfleckenzahl seit 1749, Periodogramm, Hathaway-Kurve, Waldmeier-Effekt, Prognose für Zyklus 25
-  * [Solar Flares in X-Rays](https://github.com/deltorobarba/science/blob/main/astro/sun_flares.ipynb): GOES-Flare-Listen, Rate gegen Sonnenfleckenzahl, Potenzgesetz der Spitzenflüsse, Lichtkurve eines X-Flares
-  * [An X-Flare seen by SDO](https://github.com/deltorobarba/science/blob/main/astro/sun_sdo.ipynb): AIA und HMI, heliographische Koordinaten, magnetischer Fluss, Flare-Bänder und Umkehrlinie
+  * [Sunspot Cycle](https://github.com/deltorobarba/science/blob/main/astro/sun_cycle.ipynb): Sunspots since 1749, Periodogramm, Hathaway-Kurve, Waldmeier-Effekt, Zyklus 25
+  * [Solar Flares in X-Rays](https://github.com/deltorobarba/science/blob/main/astro/sun_flares.ipynb): GOES-Flares, Potenzgesetz der Spitzenflüsse, Lichtkurve eines X-Flares
+  * [Where Flares Occur](https://github.com/deltorobarba/science/blob/main/astro/sun_flarepositions.ipynb): Flare-Positionen, aktive Breiten, δ-Regionen, Schmetterlingsdiagramm
+  * [An X-Flare seen by SDO](https://github.com/deltorobarba/science/blob/main/astro/sun_sdo.ipynb): AIA und HMI, heliographische Koordinaten, magnetischer Fluss, Flare-Bänder
 
 ## Maths 🌸
 * **Algebra**
@@ -40,16 +41,16 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 ## Quantum 🪼
 * **Quantum Information**
-  * [Heisenberg-Weyl Algebra](https://github.com/deltorobarba/science/blob/main/quantum/heisenbergweyl.md)
-  * [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/bornrule.ipynb)
-  * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md)
+  * [Heisenberg-Weyl Algebra](https://github.com/deltorobarba/science/blob/main/quantum/heisenbergweyl.md): Harmonic oscillator, qudit shift and clock, Clifford vs. non-Clifford
+  * [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/bornrule.ipynb): Spektralsatz, Born- und Lüders-Regel, simulierte Messungen, Qutrit
+  * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md): Symplektischer Vektorraum, Pauli-Spektrum, Bell-Sampling, Decoder
 * **Quantum Computing**
-  * [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb)
+  * [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): Qiskit circuit, transpilation, noisy simulation, IBM Quantum hardware
 * **Quantum Simulation**
-  * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md) 
-  * [Quantum Chaos](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb)
+  * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md): Static vs. dynamic simulation, OTOCs, operator growth, ETH, scrambling
+  * [Quantum Chaos](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb): OTOCs in Ising chains, butterfly velocity, Hayden–Preskill, Page curve
 * **Quantum Learning**
-  * [Quantum Learning (papers)](https://deltorobarba.github.io/science/)
-  * [QML with classical data](https://github.com/deltorobarba/science/blob/main/quantum/qml.md)
+  * [Quantum Learning (papers)](https://deltorobarba.github.io/science/): Paper summaries on searching, identifying and estimating
+  * [QML with classical data](https://github.com/deltorobarba/science/blob/main/quantum/qml.md): Dequantization, input models, low rank, quantum memory advantage
 
 <br>
