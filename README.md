@@ -20,21 +20,23 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * **Gravitational Waves** 🛰️
   * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/astro/gravitationalwaves.ipynb)
   * [Gravitational Wave GW150914](https://github.com/deltorobarba/science/blob/main/astro/gw150914.ipynb): Whitening, Bandpass, Q-Transformation, Chirp-Masse
-* **Stars and Solar]** ✨
-  * [Stars and Solar](https://github.com/deltorobarba/science/blob/main/astro/stars.ipynb)
+* **Sun** ☀️
+  * [The Sunspot Cycle](https://github.com/deltorobarba/science/blob/main/astro/sun_cycle.ipynb): Sonnenfleckenzahl seit 1749, Periodogramm, Hathaway-Kurve, Waldmeier-Effekt, Prognose für Zyklus 25
+  * [Solar Flares in X-Rays](https://github.com/deltorobarba/science/blob/main/astro/sun_flares.ipynb): GOES-Flare-Listen, Rate gegen Sonnenfleckenzahl, Potenzgesetz der Spitzenflüsse, Lichtkurve eines X-Flares
+  * [An X-Flare seen by SDO](https://github.com/deltorobarba/science/blob/main/astro/sun_sdo.ipynb): AIA und HMI, heliographische Koordinaten, magnetischer Fluss, Flare-Bänder und Umkehrlinie
 
 ## Maths 🌸
 * **Algebra**
   * [Tensor Algebra](https://github.com/deltorobarba/science/blob/main/maths/tensoralgebra.md): Exterior, Symmetric, Clifford and Weyl algebra (quotient tensor algebra by ideal)
 * **Analysis**
   * [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
-  * [Differential Equations](https://github.com/deltorobarba/science/blob/main/maths/differentialequations.ipynb): Matrixexponential, Runge-Kutta und symplektische Integratoren, steife Gleichungen, Wärmeleitung, Welle, Schrödinger (Split-Step), Floquet
+  * [Differential Equations](https://github.com/deltorobarba/science/blob/main/maths/differentialequations.ipynb): Matrixexponential, Runge-Kutta, Schrödinger (Split-Step), Floquet
 * **Geometry**
-  * [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): metric, Christoffel symbols, parallel transport, geodesics, Riemann tensor, Bianchi identities, Gauss–Bonnet, light bending, perihelion of Mercury
+  * [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
 * **Complex Systems**
-  * [Dynamical Systems and Chaos](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Phasenraum, Lyapunov-Funktionen, Bifurkationen, Lorenz-Attraktor, Lyapunov-Exponenten, fraktale Dimension
-  * [Random Matrices](https://github.com/deltorobarba/science/blob/main/maths/randommatrices.ipynb): Wigner-Halbkreis, Niveauabstoßung, Marchenko-Pastur, Quantenchaos und Lokalisierung
-  * [Complex Networks](https://github.com/deltorobarba/science/blob/main/maths/complexnetworks.ipynb): Zufallsgraphen, kleine Welt, skalenfreie Netze, Epidemieschwelle, Kuramoto-Synchronisation
+  * [Dynamical Systems and Chaos](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
+  * [Random Matrices](https://github.com/deltorobarba/science/blob/main/maths/randommatrices.ipynb): Wigner-Halbkreis, Niveauabstoßung, Marchenko-Pastur, Quantenchaos
+  * [Complex Networks](https://github.com/deltorobarba/science/blob/main/maths/complexnetworks.ipynb): Zufallsgraphen,skalenfreie Netze, Epidemieschwelle, Kuramoto-Synchronisation
 
 ## Quantum 🪼
 * **Quantum Information**
