@@ -8,20 +8,25 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
-## Quantum Computing 🪼
-* [Quantum Learning](https://deltorobarba.github.io/science/) - research notes
-* [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/dynamics.ipynb) - research code
-* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/circuit.ipynb) - research code
-
-## Mathematics 🌸
-* [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths_calculus_of_variations.ipynb) - notebook
-
-
 ## Astrophysics 🔭
-* [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) 🧬 research code
-* [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanets.ipynb) 🪐 research code
-* [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) 🛰️ research code
-* [Stars and Solar](https://github.com/deltorobarba/science/blob/main/stars.ipynb) ✨ research code
+* [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) 🧬
+* [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanets.ipynb) 🪐
+* [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) 🛰️
+* [Gravitational Wave GW150914](https://github.com/deltorobarba/science/blob/main/gw150914.ipynb)
+* [Stars and Solar](https://github.com/deltorobarba/science/blob/main/stars.ipynb) ✨
+
+## Maths 🌸
+* [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths_calculus_of_variations.ipynb)
+
+## Quantum 🪼
+* [Quantum Learning](https://deltorobarba.github.io/science/) (notes)
+* [Quantum Chaos and Dynamics](https://github.com/deltorobarba/science/blob/main/quantum_chaos.ipynb)
+* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum_circuit.ipynb)
+* [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum_born_rule.ipynb)
+* [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum_stabilizer.md)
+* [QML with classical data](https://github.com/deltorobarba/science/blob/main/qml.md) (notes)
+
+
 
 <br>
 
