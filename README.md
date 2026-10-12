@@ -21,14 +21,14 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Stars and Solar](https://github.com/deltorobarba/science/blob/main/astrophysics/stars.ipynb) ✨
 
 ## Maths 🌸
-* [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/maths_calculus_of_variations.ipynb)
+* [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb)
 
 ## Quantum 🪼
 * [Quantum Learning](https://deltorobarba.github.io/science/) (notes)
-* [Quantum Chaos and Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantum_chaos.ipynb)
-* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum/quantum_circuit.ipynb)
-* [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/quantum_born_rule.ipynb)
-* [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/quantum_stabilizer.md)
+* [Quantum Chaos and Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb)
+* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum/circuit.ipynb)
+* [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/bornrule.ipynb)
+* [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md)
 * [QML with classical data](https://github.com/deltorobarba/science/blob/main/quantum/qml.md) (notes)
 
 
