@@ -43,9 +43,9 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * **Quantum Information**
   * [Heisenberg-Weyl Algebra](https://github.com/deltorobarba/science/blob/main/quantum/heisenbergweyl.md): Harmonic oscillator, qudit shift and clock, Clifford vs. non-Clifford
   * [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/bornrule.ipynb): Spektralsatz, Born- und Lüders-Regel, simulierte Messungen, Qutrit
-  * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md): Symplektischer Vektorraum, Pauli-Spektrum, Bell-Sampling, Decoder
+  * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md): Symplektischer Vektorraum, Pauli-Spektrum, Bell-Sampling
 * **Quantum Computing**
-  * [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): Qiskit circuit, transpilation, noisy simulation, IBM Quantum hardware
+  * [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): Qiskit circuit, transpilation, noisy simulation, quantum simulation
 * **Quantum Simulation**
   * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md): Static vs. dynamic simulation, OTOCs, operator growth, ETH, scrambling
   * [Quantum Chaos](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb): OTOCs in Ising chains, butterfly velocity, Hayden–Preskill, Page curve
