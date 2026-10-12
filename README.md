@@ -10,9 +10,14 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 ## Astrophysics 🔭
 * [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) 🧬
-* [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanets.ipynb) 🪐
-* [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb) 🛰️
-* [Gravitational Wave GW150914](https://github.com/deltorobarba/science/blob/main/gw150914.ipynb)
+* **Exoplanets** 🪐
+  * [Vom Rohpixel zum bestätigten Planeten](https://github.com/deltorobarba/science/blob/main/exoplanets_transit.ipynb) - Lichtkurven, BLS, MCMC/Limb-Darkening-Fit, Differenzbilder, Gaia-Vetting, Odd/Even
+  * [Demographie der Exoplaneten](https://github.com/deltorobarba/science/blob/main/exoplanets_populations.ipynb) - Radius Valley / Photoevaporation, Masse-Radius-Beziehungen, Dichteverteilungen
+  * [JWST-Transmissionsspektroskopie](https://github.com/deltorobarba/science/blob/main/exoplanets_atmospheres.ipynb) - Skalenhöhe, Molekülabsorption in Exoplaneten-Atmosphären
+  * [Überwindung des Rayleigh-Limits](https://github.com/deltorobarba/science/blob/main/quantum_spade.ipynb) via Spatial-Mode Demultiplexing und Quanten-Fisher-Information
+* **Gravitational Waves** 🛰️
+  * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb)
+  * [Gravitational Wave GW150914](https://github.com/deltorobarba/science/blob/main/gw150914.ipynb)
 * [Stars and Solar](https://github.com/deltorobarba/science/blob/main/stars.ipynb) ✨
 
 ## Maths 🌸
