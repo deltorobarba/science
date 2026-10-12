@@ -9,27 +9,27 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 <br>
 
 ## Astrophysics 🔭
-* [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/galaxies.ipynb) 🧬
+* [Galaxies and Nebulae](https://github.com/deltorobarba/science/blob/main/astrophysics/galaxies.ipynb) 🧬
 * **Exoplanets** 🪐
-  * [Vom Rohpixel zum bestätigten Planeten](https://github.com/deltorobarba/science/blob/main/exoplanets_transit.ipynb) - Lichtkurven, BLS, MCMC/Limb-Darkening-Fit, Differenzbilder, Gaia-Vetting, Odd/Even
-  * [Demographie der Exoplaneten](https://github.com/deltorobarba/science/blob/main/exoplanets_populations.ipynb) - Radius Valley / Photoevaporation, Masse-Radius-Beziehungen, Dichteverteilungen
-  * [JWST-Transmissionsspektroskopie](https://github.com/deltorobarba/science/blob/main/exoplanets_atmospheres.ipynb) - Skalenhöhe, Molekülabsorption in Exoplaneten-Atmosphären
-  * [Überwindung des Rayleigh-Limits](https://github.com/deltorobarba/science/blob/main/exoplanets_spade.ipynb) via Spatial-Mode Demultiplexing und Quanten-Fisher-Information
+  * [Vom Rohpixel zum bestätigten Planeten](https://github.com/deltorobarba/science/blob/main/astrophysics/exoplanets_transits.ipynb) - Lichtkurven, BLS, MCMC/Limb-Darkening-Fit, Differenzbilder, Gaia-Vetting, Odd/Even
+  * [Demographie der Exoplaneten](https://github.com/deltorobarba/science/blob/main/astrophysics/exoplanets_populations.ipynb) - Radius Valley / Photoevaporation, Masse-Radius-Beziehungen, Dichteverteilungen
+  * [JWST-Transmissionsspektroskopie](https://github.com/deltorobarba/science/blob/main/astrophysics/exoplanets_atmospheres.ipynb) - Skalenhöhe, Molekülabsorption in Exoplaneten-Atmosphären
+  * [Überwindung des Rayleigh-Limits](https://github.com/deltorobarba/science/blob/main/astrophysics/exoplanets_spade.ipynb) via Spatial-Mode Demultiplexing und Quanten-Fisher-Information
 * **Gravitational Waves** 🛰️
-  * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/gravitationalwaves.ipynb)
-  * [Gravitational Wave GW150914](https://github.com/deltorobarba/science/blob/main/gw150914.ipynb)
-* [Stars and Solar](https://github.com/deltorobarba/science/blob/main/stars.ipynb) ✨
+  * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/astrophysics/gravitationalwaves.ipynb)
+  * [Gravitational Wave GW150914](https://github.com/deltorobarba/science/blob/main/astrophysics/gw150914.ipynb)
+* [Stars and Solar](https://github.com/deltorobarba/science/blob/main/astrophysics/stars.ipynb) ✨
 
 ## Maths 🌸
-* [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths_calculus_of_variations.ipynb)
+* [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/maths_calculus_of_variations.ipynb)
 
 ## Quantum 🪼
 * [Quantum Learning](https://deltorobarba.github.io/science/) (notes)
-* [Quantum Chaos and Dynamics](https://github.com/deltorobarba/science/blob/main/quantum_chaos.ipynb)
-* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum_circuit.ipynb)
-* [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum_born_rule.ipynb)
-* [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum_stabilizer.md)
-* [QML with classical data](https://github.com/deltorobarba/science/blob/main/qml.md) (notes)
+* [Quantum Chaos and Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantum_chaos.ipynb)
+* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/quantum/quantum_circuit.ipynb)
+* [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/quantum_born_rule.ipynb)
+* [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/quantum_stabilizer.md)
+* [QML with classical data](https://github.com/deltorobarba/science/blob/main/quantum/qml.md) (notes)
 
 
 
