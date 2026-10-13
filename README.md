@@ -60,6 +60,8 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Quantum Information**
 * [Heisenberg-Weyl Algebra](https://github.com/deltorobarba/science/blob/main/quantum/heisenbergweyl.md): Harmonic oscillator, qudit shift and clock, Clifford vs. non-Clifford
 * [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/bornrule.ipynb): Spektralsatz, Born-, Lüders-Regel, simulierte Messungen, Qutrit
+* [Quantum Measurement](https://github.com/deltorobarba/science/blob/main/quantum/quantummeasurement.ipynb): POVM, Naimark, Helstrom, Weak Values, Trajektorien, Zeno, Feedback, Tomographie, RB, Shadows
+* [Quantum Information Theory and Distance Measures](https://github.com/deltorobarba/science/blob/main/quantum/quantuminformation.ipynb): Spurabstand, Fidelity, Chernoff, Entropien, Holevo, Kapazitäten, No-Cloning, Diamantnorm
 * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md): Symplektischer Vektorraum, Pauli-Spektrum, Bell-Sampling
 
 **Quantum Computing**
