@@ -43,7 +43,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 **Geometry**
 * [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
-* [Quadrics & Elliptic Curves](https://github.com/deltorobarba/science/blob/main/maths/quadrics_ellipticcurves.ipynb): conic sections, Kepler orbits, rational points, Hasse & Sato–Tate, ECDH, Shor's ECDLP
+* [Quadrics & Elliptic Curves](https://github.com/deltorobarba/science/blob/main/maths/quadrics_ellipticcurves.ipynb): conic sections, Kepler orbits, rational points, Hasse, Sato–Tate, ECDH, ECDLP
 
 **Complex Systems**
 * [Dynamical Systems and Chaos](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
