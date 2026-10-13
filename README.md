@@ -12,7 +12,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Galaxies and Nebulae** 🛰️
 * [Galaxy Photometry](https://github.com/deltorobarba/science/blob/main/astro/galaxies_photometry.ipynb): Entfernungsleiter, sechs Bänder, Sérsic-Profil, Bulge und Scheibe, Farbkarte (M 51)
 * [Emission Lines of HII Regions](https://github.com/deltorobarba/science/blob/main/astro/galaxies_hiiregions.ipynb): Linienfits, BPT-Diagramm, Elektronendichte, Staub, Metallizitätsgradient (M 101)
-* [Warps in Edge-on Galaxies](https://github.com/deltorobarba/science/blob/main/astro/galaxies_warps.ipynb): DECaLS-Bilder, Spine-Fit, Warp-Profil und Warp-Winkel, Staubtest in g, r und z, Vergleich mit dem Warp-Katalog (ESO 240-011)
+* [Warps in Edge-on Galaxies](https://github.com/deltorobarba/science/blob/main/astro/galaxies_warps.ipynb): DECaLS-Bilder, Spine-Fit, Warp-Profil und Warp-Winkel, Staubtest in g, r und z
 * [Rotation Curves and Dark Matter](https://github.com/deltorobarba/science/blob/main/astro/galaxies_rotationcurves.ipynb): SPARC, NFW- und Kern-Halo, baryonische Tully-Fisher-Beziehung
 * [The Shadow of M87\*](https://github.com/deltorobarba/science/blob/main/astro/galaxies_m87.ipynb): EHT-Visibilities, Closure-Phasen, Ringdurchmesser und Masse, Dirty Beam, CLEAN
 
