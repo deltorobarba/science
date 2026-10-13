@@ -32,6 +32,8 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Where Flares Occur](https://github.com/deltorobarba/science/blob/main/astro/sun_flarepositions.ipynb): Flare-Positionen, aktive Breiten, δ-Regionen, Schmetterlingsdiagramm
 * [An X-Flare seen by SDO](https://github.com/deltorobarba/science/blob/main/astro/sun_sdo.ipynb): AIA und HMI, heliographische Koordinaten, magnetischer Fluss, Flare-Bänder
 
+<br>
+
 ## Mathematics 🌸
 
 **Algebra**
@@ -49,6 +51,8 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Dynamical Systems and Chaos](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
 * [Random Matrices](https://github.com/deltorobarba/science/blob/main/maths/randommatrices.ipynb): Wigner-Halbkreis, Niveauabstoßung, Marchenko-Pastur, Quantenchaos
 * [Complex Networks](https://github.com/deltorobarba/science/blob/main/maths/complexnetworks.ipynb): Zufallsgraphen,skalenfreie Netze, Epidemieschwelle, Kuramoto-Synchronisation
+
+<br>
 
 ## Quantum 🪼
 
