@@ -32,7 +32,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Where Flares Occur](https://github.com/deltorobarba/science/blob/main/astro/sun_flarepositions.ipynb): Flare-Positionen, aktive Breiten, δ-Regionen, Schmetterlingsdiagramm
 * [An X-Flare seen by SDO](https://github.com/deltorobarba/science/blob/main/astro/sun_sdo.ipynb): AIA und HMI, heliographische Koordinaten, magnetischer Fluss, Flare-Bänder
 
-## Maths 🌸
+## Mathematics 🌸
 
 **Algebra**
 * [Tensor Algebra](https://github.com/deltorobarba/science/blob/main/maths/tensoralgebra.md): Exterior, Symmetric, Clifford and Weyl algebra (quotient tensor algebra by ideal)
