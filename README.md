@@ -27,7 +27,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Gravitational Wave Catalog](https://github.com/deltorobarba/science/blob/main/astro/gw_catalog.ipynb): GWTC-1 bis GWTC-5, Massenlücken, Reichweite der Detektoren
 * [Gravitational Wave GW150914](https://github.com/deltorobarba/science/blob/main/astro/gw150914.ipynb): Whitening, Bandpass, Q-Transformation, Chirp-Masse
 
-**Sun** ☀️
+**Sun & Stars** ☀️
 * [Sunspot Cycle](https://github.com/deltorobarba/science/blob/main/astro/sun_cycle.ipynb): Sunspots since 1749, Periodogramm, Hathaway-Kurve, Waldmeier-Effekt, Zyklus 25
 * [Solar Flares in X-Rays](https://github.com/deltorobarba/science/blob/main/astro/sun_flares.ipynb): GOES-Flares, Potenzgesetz der Spitzenflüsse, Lichtkurve eines X-Flares
 * [Where Flares Occur](https://github.com/deltorobarba/science/blob/main/astro/sun_flarepositions.ipynb): Flare-Positionen, aktive Breiten, δ-Regionen, Schmetterlingsdiagramm
@@ -47,6 +47,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Geometry**
 * [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
 * [Quadrics & Elliptic Curves](https://github.com/deltorobarba/science/blob/main/maths/quadrics_ellipticcurves.ipynb): conic sections, Kepler orbits, rational points, Hasse, Sato–Tate, ECDH, ECDLP
+* [Projective Geometry](https://github.com/deltorobarba/science/blob/main/maths/projectivegeometry.ipynb): Fluchtpunkte, Doppelverhältnis, Pascal, Cayley–Klein, PG(2,q), Bloch-Kugel als ℂP¹, Fubini–Study, Hopf, Majorana
 
 **Complex Systems**
 * [Dynamical Systems and Chaos](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
