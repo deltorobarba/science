@@ -43,12 +43,12 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Analysis**
 * [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
 * [Differential Equations](https://github.com/deltorobarba/science/blob/main/maths/differentialequations.ipynb): Matrixexponential, Runge-Kutta, Schrödinger (Split-Step), Floquet
-* [Complex Analysis](https://github.com/deltorobarba/science/blob/main/maths/complexanalysis.ipynb): Phasenbilder, Cauchy, Singularitäten, Residuen, Nyquist, Laplace, Kramers–Kronig, Resolvente, Zeta, Lee–Yang
+* [Complex Analysis](https://github.com/deltorobarba/science/blob/main/maths/complexanalysis.ipynb): Phasenbilder, Cauchy, Singularitäten, Nyquist, Laplace, Kramers–Kronig, Zeta, Lee–Yang
 
 **Geometry**
 * [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
 * [Quadrics & Elliptic Curves](https://github.com/deltorobarba/science/blob/main/maths/quadrics_ellipticcurves.ipynb): conic sections, Kepler orbits, rational points, Hasse, Sato–Tate, ECDH, ECDLP
-* [Projective Geometry](https://github.com/deltorobarba/science/blob/main/maths/projectivegeometry.ipynb): Fluchtpunkte, Doppelverhältnis, Pascal, Cayley–Klein, PG(2,q), Bloch-Kugel als ℂP¹, Fubini–Study, Hopf, Majorana
+* [Projective Geometry](https://github.com/deltorobarba/science/blob/main/maths/projectivegeometry.ipynb): Pascal, Cayley–Klein, PG(2,q), Bloch-Kugel als ℂP¹, Fubini–Study, Hopf, Majorana
 
 **Complex Systems**
 * [Dynamical Systems and Chaos](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
@@ -62,8 +62,8 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Quantum Information**
 * [Heisenberg-Weyl Algebra](https://github.com/deltorobarba/science/blob/main/quantum/heisenbergweyl.md): Harmonic oscillator, qudit shift and clock, Clifford vs. non-Clifford
 * [Born Rule and Projective Measurement](https://github.com/deltorobarba/science/blob/main/quantum/bornrule.ipynb): Spektralsatz, Born-, Lüders-Regel, simulierte Messungen, Qutrit
-* [Quantum Measurement](https://github.com/deltorobarba/science/blob/main/quantum/quantummeasurement.ipynb): POVM, Naimark, Helstrom, Weak Values, Trajektorien, Zeno, Feedback, Tomographie, RB, Shadows
-* [Quantum Information Theory and Distance Measures](https://github.com/deltorobarba/science/blob/main/quantum/quantuminformation.ipynb): Spurabstand, Fidelity, Chernoff, Entropien, Holevo, Kapazitäten, No-Cloning, Diamantnorm
+* [Quantum Measurement](https://github.com/deltorobarba/science/blob/main/quantum/quantummeasurement.ipynb): POVM, Naimark, Helstrom, Weak Values, Trajektorien, Zeno, Tomographie, Shadows
+* [Quantum Information and Distance Measures](https://github.com/deltorobarba/science/blob/main/quantum/quantuminformation.ipynb): Spurabstand, Fidelity, Chernoff, Entropien, Holevo, No-Cloning, Diamantnorm
 * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md): Symplektischer Vektorraum, Pauli-Spektrum, Bell-Sampling
 
 **Quantum Computing**
