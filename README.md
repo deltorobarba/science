@@ -44,7 +44,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
 * [Differential Equations](https://github.com/deltorobarba/science/blob/main/maths/differentialequations.ipynb): Matrixexponential, Runge-Kutta, Schrödinger (Split-Step), Floquet
 * [Complex Analysis](https://github.com/deltorobarba/science/blob/main/maths/complexanalysis.ipynb): Phasenbilder, Cauchy, Singularitäten, Nyquist, Laplace, Kramers–Kronig, Zeta, Lee–Yang
-* [Test Functions](https://github.com/deltorobarba/science/blob/main/maths/testfunctions.ipynb): Bump-Funktionen, Distributionen, Himmelblau, Rosenbrock, Rastrigin, QPE-Fenster, Barren Plateaus
+* [Test Functions](https://github.com/deltorobarba/science/blob/main/maths/testfunctions.ipynb): Bump, Distributionen, Himmelblau, Rosenbrock, Rastrigin, QPE-Fenster, Barren Plateaus
 
 **Geometry**
 * [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
