@@ -45,6 +45,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Differential Equations](https://github.com/deltorobarba/science/blob/main/maths/differentialequations.ipynb): Matrixexponential, Runge-Kutta, Schrödinger (Split-Step), Floquet
 * [Complex Analysis](https://github.com/deltorobarba/science/blob/main/maths/complexanalysis.ipynb): Phasenbilder, Cauchy, Singularitäten, Nyquist, Laplace, Kramers–Kronig, Zeta, Lee–Yang
 * [Test Functions](https://github.com/deltorobarba/science/blob/main/maths/testfunctions.ipynb): Bump, Distributionen, Himmelblau, Rosenbrock, Rastrigin, QPE-Fenster, Barren Plateaus
+* [Vector Calculus](https://github.com/deltorobarba/science/blob/main/maths/vectorcalculus.ipynb): Gradient, Divergenz, Rotation, Gauß, Stokes, Helmholtz, Liouville, Hutchinson, Berry-Krümmung
 
 **Geometry**
 * [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
