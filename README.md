@@ -39,6 +39,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 **Algebra**
 * [Tensor Algebra](https://github.com/deltorobarba/science/blob/main/maths/tensoralgebra.md): Exterior, Symmetric, Clifford and Weyl algebra (quotient tensor algebra by ideal)
+* [Eigenvalues and Eigenvectors](https://github.com/deltorobarba/science/blob/main/maths/eigenvalues.ipynb): Spur, Gershgorin, Schur–Horn, QR, Lanczos, Hadamard-Test, QPE, HHL, VQE
 
 **Analysis**
 * [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
