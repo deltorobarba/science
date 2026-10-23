@@ -9,13 +9,14 @@ Working notebooks for building and running generative AI on Google Cloud: models
 | [evaluation.ipynb](evaluation.ipynb) | Agent evaluation and model evaluation: computed metrics (ROUGE, BLEU), rubric-based quality, comparison of open models | Gen AI evaluation service |
 | [mcp.ipynb](mcp.ipynb) | BigQuery MCP server on a private Cloud Run service, called from an ADK agent with an OIDC ID token; managed MCP server (Developer Knowledge API); comparison with `claude.ipynb` | Cloud Run, BigQuery, MCP |
 | [claude.ipynb](claude.ipynb) | "Repo Intelligence": combines `agents.ipynb` and `mcp.ipynb` into one system that uses every authentication path once: ADC, Agent Identity (SPIFFE), Auth Manager, agent-to-agent (A2A), private Cloud Run, Agent Registry, Gemini Enterprise | Agent Engine, A2A, Agent Identity |
+| [identity.ipynb](identity.ipynb) | A single ADK agent deployed with its own Agent Identity (SPIFFE ID) and queried directly; its automatic Agent Registry entry with the runtime identity; optional binding to an Agent Gateway | Agent Runtime, Agent Identity, Agent Registry, Agent Gateway |
 | [googleaistudio.ipynb](googleaistudio.ipynb) | Gemini API with an AI Studio key: image generation (Gemini 3.1 Flash Image) and music generation (Lyria 3) | Google AI Studio |
 | [huggingface.ipynb](huggingface.ipynb) | Running Mistral-7B-Instruct with `transformers`, including 4-bit quantization (bitsandbytes) | Hugging Face Hub, Colab |
 | [sdlc.md](sdlc.md) | Study notes: authentication and authorization for agents on Google Cloud, and a twelve-module agenda "AI for Software Engineering" | – |
 
 ## Reading order
 
-`models` → `agents` → `evaluation` → `mcp` → `claude`. The last notebook builds on the deployed agent from `agents.ipynb` and the Cloud Run service from `mcp.ipynb`; the security part of `sdlc.md` explains the concepts behind it.
+`models` → `agents` → `evaluation` → `mcp` → `claude` → `identity`. `claude.ipynb` builds on the deployed agent from `agents.ipynb` and the Cloud Run service from `mcp.ipynb`; `identity.ipynb` stands alone and deploys its own engine. The security part of `sdlc.md` explains the concepts behind both.
 
 ## Before running
 
