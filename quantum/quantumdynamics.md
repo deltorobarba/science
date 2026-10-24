@@ -68,14 +68,14 @@ Core axiom: For static problems, QC stores information. In dynamical evolution, 
 
 ## Quantum Dynamics (Chaos, Scrambling & OTOCs)
 
-The theory of quantum chaos and scrambling (operator growth, OTOCs, quantum Lyapunov exponent, butterfly velocity and Lieb-Robinson bound, Krylov complexity, MSS bound and SYK model, spectral statistics and ETH, scrambling vs. decoherence, Hayden-Preskill and the Page curve, barren plateaus and random circuit sampling) is in the notebook [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb), together with simulations of OTOC light cones in Ising chains, the butterfly velocity of random circuits, the Hayden-Preskill protocol and the Page curve.
+The theory of quantum chaos and scrambling (operator growth, OTOCs, quantum Lyapunov exponent, butterfly velocity and Lieb-Robinson bound, Krylov complexity, MSS bound and SYK model, spectral statistics and ETH, scrambling vs. decoherence, Hayden-Preskill and the Page curve, barren plateaus and random circuit sampling) is in the notebook [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/chaos_scrambling.ipynb), together with simulations of OTOC light cones in Ising chains, the butterfly velocity of random circuits, the Hayden-Preskill protocol and the Page curve.
 
 ### Seven Perspectives on Quantum Chaos
 
-* **Spreading:** Lieb-Robinson bound, quasiparticles, quenches, entanglement growth. Notebook: [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb).
-* **Operator growth and scrambling:** OTOCs, butterfly velocity, quantum Lyapunov exponent, Krylov complexity, random circuits. Notebooks: [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb), [Krylov-Komplexität](https://github.com/deltorobarba/science/blob/main/quantum/chaos_krylov.ipynb) (German).
+* **Spreading:** Lieb-Robinson bound, quasiparticles, quenches, entanglement growth. Notebook: [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/chaos_scrambling.ipynb).
+* **Operator growth and scrambling:** OTOCs, butterfly velocity, quantum Lyapunov exponent, Krylov complexity, random circuits. Notebooks: [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/chaos_scrambling.ipynb), [Krylov-Komplexität](https://github.com/deltorobarba/science/blob/main/quantum/chaos_krylov.ipynb) (German).
 * **Spectral statistics:** level repulsion, the gap ratio $r$, the spectral form factor, random-matrix theory. Notebook: [Spektralstatistik und Quantenchaos](https://github.com/deltorobarba/science/blob/main/quantum/chaos_spectra.ipynb) (German).
 * **Eigenstates and thermalization:** eigenstate thermalization hypothesis (ETH), generalized Gibbs ensemble. Notebook: [Eigenzustands-Thermalisierung](https://github.com/deltorobarba/science/blob/main/quantum/chaos_eth.ipynb) (German).
-* **When thermalization fails:** integrability, many-body localization, quantum many-body scars, Hilbert-space fragmentation.
-* **Information and gravity:** Hayden-Preskill protocol, Page curve, SYK model, MSS bound on chaos. Notebook: [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb).
+* **When thermalization fails:** integrability, many-body localization, quantum many-body scars, Hilbert-space fragmentation. Notebook: [Vielteilchenlokalisierung](https://github.com/deltorobarba/science/blob/main/quantum/chaos_mbl.ipynb) (German).
+* **Information and gravity:** Hayden-Preskill protocol, Page curve, SYK model, MSS bound on chaos. Notebook: [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/chaos_scrambling.ipynb).
 * **Measurement and driving:** measurement-induced phase transitions, Floquet systems, time crystals.
