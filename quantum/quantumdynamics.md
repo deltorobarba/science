@@ -75,7 +75,7 @@ The theory of quantum chaos and scrambling (operator growth, OTOCs, quantum Lyap
 * **Spreading:** Lieb-Robinson bound, quasiparticles, quenches, entanglement growth. Notebook: [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb).
 * **Operator growth and scrambling:** OTOCs, butterfly velocity, quantum Lyapunov exponent, Krylov complexity, random circuits. Notebook: [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb).
 * **Spectral statistics:** level repulsion, the gap ratio $r$, the spectral form factor, random-matrix theory. Notebook: [Spektralstatistik und Quantenchaos](https://github.com/deltorobarba/science/blob/main/quantum/chaos_spectra.ipynb) (German).
-* **Eigenstates and thermalization:** eigenstate thermalization hypothesis (ETH), generalized Gibbs ensemble.
+* **Eigenstates and thermalization:** eigenstate thermalization hypothesis (ETH), generalized Gibbs ensemble. Notebook: [Eigenzustands-Thermalisierung](https://github.com/deltorobarba/science/blob/main/quantum/chaos_eth.ipynb) (German).
 * **When thermalization fails:** integrability, many-body localization, quantum many-body scars, Hilbert-space fragmentation.
 * **Information and gravity:** Hayden-Preskill protocol, Page curve, SYK model, MSS bound on chaos. Notebook: [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb).
 * **Measurement and driving:** measurement-induced phase transitions, Floquet systems, time crystals.
