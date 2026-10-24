@@ -68,104 +68,14 @@ Core axiom: For static problems, QC stores information. In dynamical evolution, 
 
 ## Quantum Dynamics (Chaos, Scrambling & OTOCs)
 
-### Fundamentals & Core Concepts
+The theory of quantum chaos and scrambling (operator growth, OTOCs, quantum Lyapunov exponent, butterfly velocity and Lieb-Robinson bound, Krylov complexity, MSS bound and SYK model, spectral statistics and ETH, scrambling vs. decoherence, Hayden-Preskill and the Page curve, barren plateaus and random circuit sampling) is in the notebook [Quantum Chaos and Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb), together with simulations of OTOC light cones in Ising chains, the butterfly velocity of random circuits, the Hayden-Preskill protocol and the Page curve.
 
-* **Operator Growth in the Heisenberg Picture**
-  * Time evolution: $W(t) = e^{iHt}We^{-iHt}$ spreads from a local operator into a highly non-local superposition of Pauli strings.
-  * Chaos diagnostics require the exact unitary dynamics; without $e^{-iHt}$, neither $W(t)$ nor OTOCs exist.
-  * Growth proceeds along three dimensions: **Rate** (time), **Reach** (space), and **Depth** (operator space).
-* **Model System: Mixed-Field Ising Model (MFIM)**
-  * Hamiltonian: $H = \sum_i Z_i Z_{i+1} + h_x\sum_i X_i + h_z\sum_i Z_i$.
-  * Integrable limit ($h_z = 0$): Ballistic wave packets, Poincaré recurrence, no scrambling.
-  * Chaotic case ($h_z \neq 0$, e.g. $0.5$): Breaks integrability, leads to diffusive operator scrambling.
-  * Simulation setup: OTOC probe ($Z$ operator per lattice site) vs. butterfly perturbation ($X$ gate at the edge) for a direct comparison of ballistic spreading and chaotic decay.
+### Seven Perspectives on Quantum Chaos
 
-### Out-of-Time-Order Correlator (OTOC)
-
-* **Definition as a Four-Point Function**
-  * $C(t) = \big\langle [W(t), V(0)]^\dagger [W(t), V(0)] \big\rangle = 2\big(1 - \mathrm{Re}\,F(t)\big)$
-  * Correlator: $F(t) = \langle W^\dagger(t) V^\dagger W(t) V \rangle$
-* **Physical Meaning & Mechanism**
-  * Measures the **non-commutation** of two operators that still commuted at $t = 0$ ($[W(0), V(0)] = 0$).
-  * Scrambling corresponds to the decay $F(t) \to 0$.
-  * As soon as the support of $W(t)$ reaches the site of $V$, the commutator grows.
-* **Why "Out-of-Time-Order"?**
-  * The time contour runs through $t \to 0 \to t \to 0$.
-  * Standard 2-point functions already decay on the local thermalization timescale $t_{\text{therm}}$ and are blind to scrambling into many-body entanglement.
-* **Measurement via the Loschmidt Echo Protocol** (Only non-commutativity survives unitary forward-backward cancellation)
-  1. Forward evolution under $e^{-iHt}$.
-  2. Apply the butterfly perturbation $V$ (e.g. a local Pauli-$X$).
-  3. Backward evolution under $e^{+iHt}$ (implemented on quantum hardware via phase reversal).
-  4. Projective overlap measurement with probe $W$.
-
-### Three Dimensions of Operator Growth
-
-* **Rate (Time):**
-  * **Metric:** Quantum Lyapunov exponent $\lambda_L$
-  * **Growth Law:** $C(t) \sim \frac{1}{N}e^{\lambda_L t}$
-  * **Bound / Universality:** **MSS bound:** $\lambda_L \leq \frac{2\pi k_B T}{\hbar} = \frac{2\pi}{\beta}$
-  * **Semiclassical limit:** $-\langle[x(t), p(0)]^2\rangle \to \hbar^2 \{x(t), p(0)\}_{\text{PB}}^2 \sim \hbar^2 e^{2\lambda_{\text{cl}}t}$; $\lambda_L$ is the quantum analogue of the classical Lyapunov exponent.
-  * **Timescale hierarchy:** $t_{\text{therm}} \sim \mathcal{O}(1) < t_* \sim \lambda_L^{-1}\ln N$ (scrambling time) $< t_K \sim e^S$ (Poincaré time).
-  * **Numerical measurability:** In finite 1D spin chains, spatial front $v_B$ can be measured numerically much more robustly than $\lambda_L$.
-* **Reach (Space):**
-  * **Metric:** Butterfly velocity $v_B$
-  * **Growth Law:** Front: $C(t,x) \sim \frac{1}{N}\exp[\lambda_L(t - x/v_B)]$
-  * **Bound / Universality:** **Lieb-Robinson bound:** $\Vert{}[A(t), B]\Vert{} \leq C e^{-\mu(d - v_{LR}t)}$, $v_B \leq v_{LR}$
-  * **State dependence:** $v_{LR}$ is a state-independent norm bound ("light cone"), whereas $v_B$ depends on the state and the temperature.
-  * **Circuit depth:** Determines the minimum depth of quantum circuits for generating global entanglement ($d \sim n$ in 1D, $d \sim \sqrt{n}$ in 2D, $d \sim \log n$ for all-to-all).
-  * **Front fluctuations:** Fluctuations of the wavefront follow KPZ universality (Kardar-Parisi-Zhang) with broadening $\sigma(t) \sim t^{1/3}$; entropy growth $S(t) = v_E t$ with $v_E \leq v_B$.
-* **Depth (Operator Space):**
-  * **Metric:** Krylov complexity $K(t)$
-  * **Growth Law:** Free: $t$ | Integrable: $t^2$ | Chaotic: $e^{2\alpha t}$
-  * **Bound / Universality:** **UOGH hypothesis:** $b_n \sim \alpha n$ with $\alpha \leq \frac{\pi}{\beta}$
-  * **Krylov space:** The Liouvillian $\mathcal{L} = [H, \cdot]$ tridiagonalizes the Krylov space $\mathcal{K} = \text{span}\{W, [H,W], [H,[H,W]], \dots\}$ via the Lanczos coefficients $b_n$.
-  * **Operator wave:** Krylov complexity: $K(t) = \sum_n n \vert{}\varphi_n(t)\vert{}^2$ measures the mean position of the operator wave on the chain.
-
-### Bounds, Dualities & Models
-
-* **Logical Stack of Bounds**
-  * $\text{KMS condition} \implies \text{UOGH } (\alpha \leq \pi/\beta) \implies \text{MSS bound } (\lambda_L \leq 2\pi/\beta)$.
-  * **UOGH:** Maximal linear growth of the Lanczos coefficients ($b_n \sim \alpha n$) in thermal chaotic systems.
-  * **MSS bound:** Follows from analyticity in the thermal strip $0 \leq \mathrm{Im}(t) \leq \beta$.
-* **Sachdev-Ye-Kitaev (SYK) Model**
-  * $N$ Majorana fermions with random all-to-all 4-body interactions.
-  * Exactly solvable at large $N$, holographically dual to JT gravity in $\mathrm{AdS}_2$.
-  * **Saturates the MSS bound** ($\lambda_L = 2\pi/\beta$): Black holes are the fastest scramblers in nature.
-
-### Static Signatures: ETH & Spectral Statistics
-
-* **Eigenstate Thermalization Hypothesis (ETH)**
-  * Matrix elements: $A_{mn} = \mathcal{A}(\bar{E})\delta_{mn} + e^{-S(\bar{E})/2}f_A(\bar{E},\omega)R_{mn}$.
-  * A single energy eigenstate behaves like a thermal ensemble for local observables.
-  * Integrable systems relax to the *Generalized Gibbs Ensemble (GGE)*; *Many-Body Localization (MBL)* prevents thermalization via local integrals of motion (LIOMs).
-* **Random Matrices & Level Repulsion (BGS Conjecture)**
-  * Chaos: Wigner-Dyson level repulsion with mean gap ratio $\langle r \rangle \approx 0.53$.
-  * Integrability: Poisson statistics without level repulsion with $\langle r \rangle \approx 0.39$.
-* **Spectral Form Factor (SFF)**
-  * $K(\tau) = \langle \vert{}\mathrm{Tr}(e^{-iHt})\vert{}^2 \rangle$.
-  * The characteristic **Dip–Ramp–Plateau** profile at late times ($t > t_*$) reveals discrete level correlations long after spatial OTOCs have saturated.
-
-### Scrambling vs. Decoherence
-
-* **Unitary Scrambling**
-  * **Information**: Reversibly delocalized into many-body entanglement; globally reconstructible
-  * **Entropy**: Local subsystem entropy rises; global state stays pure ($S_{\text{vN}} = 0$)
-  * **OTOC Response**: $F(t) \to 0$ through genuine operator growth
-  * **Risk**: Genuine quantum chaos
-* **Lindblad Decoherence (Open)**
-  * **Information**: Irreversibly dissipated into bath degrees of freedom
-  * **Entropy**: Global von Neumann entropy $S_{\text{vN}}(\rho)$ grows non-unitarily
-  * **OTOC Response**: $F(t) \to 0$ through phase/amplitude damping
-  * **Risk**: Noise mimics a **false Lyapunov exponent** $\lambda_L$
-
-### Applications: Black Holes & Quantum Computing
-
-* **Scrambling as a Resource: Hayden-Preskill & Yoshida-Kitaev**
-  * Black holes act as optimal information mirrors: After the Page time, infalling quantum states can be reconstructed from a few Hawking quanta in time $\mathcal{O}(\ln N)$.
-  * The Yoshida-Kitaev decoding circuit achieves a reconstruction fidelity proportional to the OTOC value.
-* **Scrambling as an Obstacle: Barren Plateaus**
-  * Deeply entangling quantum circuits approximate unitary $t$-designs on $U(2^n)$.
-  * Haar integration leads to exponentially vanishing gradients: $\mathrm{Var}_{\theta}[\partial_\theta \langle H \rangle] \sim 2^{-n}$.
-  * Makes randomly initialized variational algorithms (VQAs) untrainable.
-* **Random Circuit Sampling (RCS)**
-  * Entering the Porter-Thomas distribution ($P(p) \approx N e^{-Np}$) requires a minimum circuit depth that corresponds to the geometric scrambling time ($d \sim n$ in 1D, $d \sim \sqrt{n}$ in 2D).
+* **Spreading:** Lieb-Robinson bound, quasiparticles, quenches, entanglement growth.
+* **Operator growth and scrambling:** OTOCs, butterfly velocity, quantum Lyapunov exponent, Krylov complexity, random circuits.
+* **Spectral statistics:** level repulsion, the gap ratio $r$, the spectral form factor, random-matrix theory.
+* **Eigenstates and thermalization:** eigenstate thermalization hypothesis (ETH), generalized Gibbs ensemble.
+* **When thermalization fails:** integrability, many-body localization, quantum many-body scars, Hilbert-space fragmentation.
+* **Information and gravity:** Hayden-Preskill protocol, Page curve, SYK model, MSS bound on chaos.
+* **Measurement and driving:** measurement-induced phase transitions, Floquet systems, time crystals.

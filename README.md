@@ -73,7 +73,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): quantum circuit, transpilation, noisy & noiseless simulation
 
 **Quantum Simulation**
-* [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md): Static vs. dynamic simulation, OTOCs, operator growth, ETH, scrambling
+* [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md): Static vs. dynamic simulation, open systems, seven perspectives on quantum chaos
 * [Quantum Chaos](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb): OTOCs in Ising chains, butterfly velocity, Hayden–Preskill, Page curve
 
 **Quantum Learning**
