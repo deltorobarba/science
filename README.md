@@ -75,6 +75,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Quantum Simulation**
 * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md): Static vs. dynamic simulation, open systems, seven perspectives on quantum chaos
 * [Quantum Chaos](https://github.com/deltorobarba/science/blob/main/quantum/quantumchaos.ipynb): OTOCs in Ising chains, butterfly velocity, Hayden–Preskill, Page curve
+* [Spectral Statistics](https://github.com/deltorobarba/science/blob/main/quantum/chaos_spectra.ipynb): Niveauabstoßung, Symmetriesektoren, Übergang integrabel–chaotisch, spektraler Formfaktor
 
 **Quantum Learning**
 * [Quantum Learning (papers)](https://deltorobarba.github.io/science/): Paper summaries on searching, identifying and estimating
