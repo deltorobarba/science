@@ -8,6 +8,31 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
+## Mathematics 🌸
+
+**Algebra**
+* [Tensor Algebra](https://github.com/deltorobarba/science/blob/main/maths/tensoralgebra.md): Exterior, Symmetric, Clifford and Weyl algebra (quotient tensor algebra by ideal)
+* [Eigenvalues and Eigenvectors](https://github.com/deltorobarba/science/blob/main/maths/eigenvalues.ipynb): Spur, Gershgorin, Schur–Horn, QR, Lanczos, Hadamard-Test, QPE, HHL, VQE
+
+**Analysis**
+* [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
+* [Differential Equations](https://github.com/deltorobarba/science/blob/main/maths/differentialequations.ipynb): Matrixexponential, Runge-Kutta, Schrödinger (Split-Step), Floquet
+* [Complex Analysis](https://github.com/deltorobarba/science/blob/main/maths/complexanalysis.ipynb): Phasenbilder, Cauchy, Singularitäten, Nyquist, Laplace, Kramers–Kronig, Zeta, Lee–Yang
+* [Test Functions](https://github.com/deltorobarba/science/blob/main/maths/testfunctions.ipynb): Bump, Distributionen, Himmelblau, Rosenbrock, Rastrigin, QPE-Fenster, Barren Plateaus
+* [Vector Calculus](https://github.com/deltorobarba/science/blob/main/maths/vectorcalculus.ipynb): Gradient, Divergenz, Rotation, Gauß, Stokes, Helmholtz, Liouville, Hutchinson, Berry-Krümmung
+
+**Geometry**
+* [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
+* [Quadrics & Elliptic Curves](https://github.com/deltorobarba/science/blob/main/maths/quadrics_ellipticcurves.ipynb): conic sections, Kepler orbits, rational points, Hasse, Sato–Tate, ECDH, ECDLP
+* [Projective Geometry](https://github.com/deltorobarba/science/blob/main/maths/projectivegeometry.ipynb): Pascal, Cayley–Klein, PG(2,q), Bloch-Kugel als ℂP¹, Fubini–Study, Hopf, Majorana
+
+**Complex Systems**
+* [Dynamical Systems and Chaos](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
+* [Random Matrices](https://github.com/deltorobarba/science/blob/main/maths/randommatrices.ipynb): Wigner-Halbkreis, Niveauabstoßung, Marchenko-Pastur, Quantenchaos
+* [Complex Networks](https://github.com/deltorobarba/science/blob/main/maths/complexnetworks.ipynb): Zufallsgraphen,skalenfreie Netze, Epidemieschwelle, Kuramoto-Synchronisation
+
+<br>
+
 ## Astrophysics 🔭
 **Galaxies and Nebulae** 🛰️
 * [Galaxy Photometry](https://github.com/deltorobarba/science/blob/main/astro/galaxies_photometry.ipynb): Entfernungsleiter, sechs Bänder, Sérsic-Profil, Bulge und Scheibe, Farbkarte (M 51)
@@ -32,31 +57,6 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Solar Flares in X-Rays](https://github.com/deltorobarba/science/blob/main/astro/sun_flares.ipynb): GOES-Flares, Potenzgesetz der Spitzenflüsse, Lichtkurve eines X-Flares
 * [Where Flares Occur](https://github.com/deltorobarba/science/blob/main/astro/sun_flarepositions.ipynb): Flare-Positionen, aktive Breiten, δ-Regionen, Schmetterlingsdiagramm
 * [An X-Flare seen by SDO](https://github.com/deltorobarba/science/blob/main/astro/sun_sdo.ipynb): AIA und HMI, heliographische Koordinaten, magnetischer Fluss, Flare-Bänder
-
-<br>
-
-## Mathematics 🌸
-
-**Algebra**
-* [Tensor Algebra](https://github.com/deltorobarba/science/blob/main/maths/tensoralgebra.md): Exterior, Symmetric, Clifford and Weyl algebra (quotient tensor algebra by ideal)
-* [Eigenvalues and Eigenvectors](https://github.com/deltorobarba/science/blob/main/maths/eigenvalues.ipynb): Spur, Gershgorin, Schur–Horn, QR, Lanczos, Hadamard-Test, QPE, HHL, VQE
-
-**Analysis**
-* [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
-* [Differential Equations](https://github.com/deltorobarba/science/blob/main/maths/differentialequations.ipynb): Matrixexponential, Runge-Kutta, Schrödinger (Split-Step), Floquet
-* [Complex Analysis](https://github.com/deltorobarba/science/blob/main/maths/complexanalysis.ipynb): Phasenbilder, Cauchy, Singularitäten, Nyquist, Laplace, Kramers–Kronig, Zeta, Lee–Yang
-* [Test Functions](https://github.com/deltorobarba/science/blob/main/maths/testfunctions.ipynb): Bump, Distributionen, Himmelblau, Rosenbrock, Rastrigin, QPE-Fenster, Barren Plateaus
-* [Vector Calculus](https://github.com/deltorobarba/science/blob/main/maths/vectorcalculus.ipynb): Gradient, Divergenz, Rotation, Gauß, Stokes, Helmholtz, Liouville, Hutchinson, Berry-Krümmung
-
-**Geometry**
-* [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
-* [Quadrics & Elliptic Curves](https://github.com/deltorobarba/science/blob/main/maths/quadrics_ellipticcurves.ipynb): conic sections, Kepler orbits, rational points, Hasse, Sato–Tate, ECDH, ECDLP
-* [Projective Geometry](https://github.com/deltorobarba/science/blob/main/maths/projectivegeometry.ipynb): Pascal, Cayley–Klein, PG(2,q), Bloch-Kugel als ℂP¹, Fubini–Study, Hopf, Majorana
-
-**Complex Systems**
-* [Dynamical Systems and Chaos](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
-* [Random Matrices](https://github.com/deltorobarba/science/blob/main/maths/randommatrices.ipynb): Wigner-Halbkreis, Niveauabstoßung, Marchenko-Pastur, Quantenchaos
-* [Complex Networks](https://github.com/deltorobarba/science/blob/main/maths/complexnetworks.ipynb): Zufallsgraphen,skalenfreie Netze, Epidemieschwelle, Kuramoto-Synchronisation
 
 <br>
 
@@ -90,9 +90,9 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 **Generative AI on Google Cloud**
 * [Multi-Agent Pipeline](https://github.com/deltorobarba/science/blob/main/gcp/agents.ipynb): ADK workflow graph, parallel fan-out, Google Search, Vertex AI Search, retry loop, Memory Bank, Agent Engine deployment, agent evaluation
-* [Agent Identity](https://github.com/deltorobarba/science/blob/main/gcp/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, Agent Gateway, IAM, Agent Runtime
 * [MCP on Cloud Run](https://github.com/deltorobarba/science/blob/main/gcp/mcp.ipynb): BigQuery MCP server, OIDC, ADK MCPToolset, managed MCP, Gemini Enterprise connectors (BAP to remote MCP)
 * [Models on Google Cloud](https://github.com/deltorobarba/science/blob/main/gcp/models.ipynb): Gemini, Gemma and open models via GenAI SDK, OpenAI SDK and LiteLLM, latency benchmark (TTFT, P50–P99), LLM-as-a-judge, Model Garden deployment
+* [Agent Identity](https://github.com/deltorobarba/science/blob/main/gcp/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, Agent Gateway, IAM, Agent Runtime
 * [AI for Software Engineering](https://github.com/deltorobarba/science/blob/main/gcp/sdlc.md): Agent authentication and authorization, access vs. ID tokens, ADC, SDLC agenda
 
 <br>
