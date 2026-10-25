@@ -64,9 +64,12 @@ uv run pytest                                  # Tests, ohne Google Cloud
 uv run python scripts/check_mcp.py             # Registry-Eintrag + tools/list des Cloud-Run-Servers
 uv run python scripts/ask.py "Welche Namen …"  # bq_analyst einmal fragen
 MCP_DISCOVERY=registry uv run python scripts/ask.py   # dasselbe, Server über die Agent Registry gefunden
+uv run python scripts/ask.py --agent docs_expert "…" # docs_expert einmal fragen
 uv run adk web                                 # Browser-Oberfläche: bq_analyst oder docs_expert wählen
-uv run adk run bq_analyst                      # Chat im Terminal
+uv run adk run bq_analyst                      # Chat im Terminal (ebenso: adk run docs_expert; Ende mit exit)
 ```
+
+`python bq_analyst/agent.py` startet nichts: Die Datei *definiert* den Agent (`root_agent`) nur. Ausgeführt wird er über `adk run`, `adk web` oder `scripts/ask.py`. Mit aktivierter Umgebung (`source .venv/bin/activate`) entfällt jeweils das `uv run`.
 
 Den MCP-Server kann man auch lokal starten (`uv run uvicorn main:app --app-dir mcp_server --port 8080`) und mit `MCP_SERVER_URL=http://localhost:8080` dagegen arbeiten; BigQuery läuft dann als dein User.
 
