@@ -85,3 +85,14 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [QML with classical data](https://github.com/deltorobarba/science/blob/main/quantum/qml.md): Dequantization, input models, low rank, quantum memory advantage
 
 <br>
+
+## Machine Learning 🤖
+
+**Generative AI on Google Cloud**
+* [Multi-Agent Pipeline](https://github.com/deltorobarba/science/blob/main/gcp/agents.ipynb): ADK workflow graph, parallel fan-out, Google Search, Vertex AI Search, retry loop, Memory Bank, Agent Engine deployment, agent evaluation
+* [Agent Identity](https://github.com/deltorobarba/science/blob/main/gcp/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, Agent Gateway, IAM, Agent Runtime
+* [MCP on Cloud Run](https://github.com/deltorobarba/science/blob/main/gcp/mcp.ipynb): BigQuery MCP server, OIDC, ADK MCPToolset, managed MCP, Gemini Enterprise connectors (BAP to remote MCP)
+* [Models on Google Cloud](https://github.com/deltorobarba/science/blob/main/gcp/models.ipynb): Gemini, Gemma and open models via GenAI SDK, OpenAI SDK and LiteLLM, latency benchmark (TTFT, P50–P99), LLM-as-a-judge, Model Garden deployment
+* [AI for Software Engineering](https://github.com/deltorobarba/science/blob/main/gcp/sdlc.md): Agent authentication and authorization, access vs. ID tokens, ADC, SDLC agenda
+
+<br>
