@@ -1,0 +1,32 @@
+[project]
+name = "model-lab"
+version = "0.1.0"
+description = "Call, benchmark, evaluate and deploy models on Google Cloud (Gemini, partner and open models)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "google-genai>=2.33,<3",
+    "google-cloud-aiplatform[evaluation]>=2.6,<3",  # Model Garden and the Gen AI evaluation service
+    "openai>=1.50",                                  # OpenAI SDK against Vertex AI's OpenAI-compatible endpoint
+    "pandas>=2",
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+model-lab = "model_lab.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["model_lab"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]  # inside vertexai / pydantic, not our code
