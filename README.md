@@ -78,7 +78,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Spectral Statistics](https://github.com/deltorobarba/science/blob/main/quantum/chaos_spectra.ipynb): Niveauabstoßung, Symmetriesektoren, integrabel–chaotisch, spectral form factor
 * [Eigenstate Thermalization](https://github.com/deltorobarba/science/blob/main/quantum/chaos_eth.ipynb): ETH, Thermalisierung nach Quenches, verallgemeinertes Gibbs-Ensemble
 * [Krylov Complexity](https://github.com/deltorobarba/science/blob/main/quantum/chaos_krylov.ipynb): Lanczos-Koeffizienten, universelles Operatorwachstum, Krylov-Kette, free fermions
-* [Many-Body Localization](https://github.com/deltorobarba/science/blob/main/quantum/chaos_mbl.ipynb): Unordnung, Poisson-Spektrum, Flächengesetz, Gedächtnis, logarithmisches Verschränkungswachstum
+* [Many-Body Localization](https://github.com/deltorobarba/science/blob/main/quantum/chaos_mbl.ipynb): Unordnung, Poisson-Spektrum, logarithmisches Verschränkungswachstum
 
 **Quantum Learning**
 * [Quantum Learning (papers)](https://deltorobarba.github.io/science/): Paper summaries on searching, identifying and estimating
