@@ -28,6 +28,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Projective Geometry](https://github.com/deltorobarba/science/blob/main/maths/projectivegeometry.ipynb): Pascal, Cayley–Klein, PG(2,q), Bloch-Kugel als ℂP¹, Fubini–Study, Hopf, Majorana
 
 **Stochastic**
+* [Stochastic Processes](https://github.com/deltorobarba/science/blob/main/maths/stochasticprocesses.ipynb): Random Walk, Markov, Martingale, Poisson, white Noise, Brownsche Bewegung und Brücke, Ornstein-Uhlenbeck, fBM, Lévy, Gauß-Prozesse, Galton-Watson
 * [Random Matrices](https://github.com/deltorobarba/science/blob/main/maths/randommatrices.ipynb): Wigner-Halbkreis, Niveauabstoßung, Marchenko-Pastur, Quantenchaos
 
 **Discrete Mathematics**
