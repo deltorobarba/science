@@ -20,15 +20,17 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Complex Analysis](https://github.com/deltorobarba/science/blob/main/maths/complexanalysis.ipynb): Phasenbilder, Cauchy, Singularitäten, Nyquist, Laplace, Kramers–Kronig, Zeta, Lee–Yang
 * [Test Functions](https://github.com/deltorobarba/science/blob/main/maths/testfunctions.ipynb): Bump, Distributionen, Himmelblau, Rosenbrock, Rastrigin, QPE-Fenster, Barren Plateaus
 * [Vector Calculus](https://github.com/deltorobarba/science/blob/main/maths/vectorcalculus.ipynb): Gradient, Divergenz, Rotation, Gauß, Stokes, Helmholtz, Liouville, Hutchinson, Berry
+* [Dynamical Systems](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Chaos, Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
 
 **Geometry**
 * [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
 * [Quadrics & Elliptic Curves](https://github.com/deltorobarba/science/blob/main/maths/quadrics_ellipticcurves.ipynb): conic sections, Kepler orbits, rational points, Hasse, Sato–Tate, ECDH, ECDLP
 * [Projective Geometry](https://github.com/deltorobarba/science/blob/main/maths/projectivegeometry.ipynb): Pascal, Cayley–Klein, PG(2,q), Bloch-Kugel als ℂP¹, Fubini–Study, Hopf, Majorana
 
-**Complex Systems**
-* [Dynamical Systems and Chaos](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
+**Stochastic**
 * [Random Matrices](https://github.com/deltorobarba/science/blob/main/maths/randommatrices.ipynb): Wigner-Halbkreis, Niveauabstoßung, Marchenko-Pastur, Quantenchaos
+
+**Discrete Mathematics**
 * [Complex Networks](https://github.com/deltorobarba/science/blob/main/maths/complexnetworks.ipynb): Zufallsgraphen,skalenfreie Netze, Epidemieschwelle, Kuramoto-Synchronisation
 
 <br>
@@ -92,7 +94,10 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Agent](https://github.com/deltorobarba/science/blob/main/gcp/agents.ipynb): Pipeline with ADK workflow graph, Memory Bank, Agent Engine deployment, agent evaluation
 * [MCP](https://github.com/deltorobarba/science/blob/main/gcp/mcp.ipynb): on Cloud Run & Agent Platform. BigQuery MCP server, OIDC, ADK MCPToolset, Managed MCP
 * [Models](https://github.com/deltorobarba/science/blob/main/gcp/models.ipynb): Gemini, Gemma and open models via GenAI SDK, OpenAI SDK, latency benchmark (TTFT, P50–P99)
-* [Identity](https://github.com/deltorobarba/science/blob/main/gcp/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, Agent Gateway, IAM, Agent Runtime
+* [Identity](https://github.com/deltorobarba/science/blob/main/gcp/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, IAM, Agent Runtime
+* [Gateway](https://github.com/deltorobarba/science/blob/main/gcp/gateway.ipynb):  Agent Gateway
+* [A2A](https://github.com/deltorobarba/science/blob/main/gcp/a2a.ipynb): A2A Agent
+* [Github](https://github.com/deltorobarba/science/blob/main/gcp/github.ipynb):  Github MCP Agent
 * [SDLC](https://github.com/deltorobarba/science/blob/main/gcp/sdlc.md): AI for Agent authentication and authorization, access vs. ID tokens, ADC, SDLC agenda
 
 <br>
