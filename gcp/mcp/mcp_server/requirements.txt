@@ -1,3 +1,0 @@
-mcp>=1.30,<2
-google-cloud-bigquery>=3
-uvicorn>=0.30

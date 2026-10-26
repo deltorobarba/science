@@ -89,12 +89,10 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 ## Machine Learning 🤖
 
 **Generative AI on Google Cloud**
-* [Multi-Agent Pipeline](https://github.com/deltorobarba/science/blob/main/gcp/agents.ipynb): ADK workflow graph, parallel fan-out, Google Search, Vertex AI Search, retry loop, Memory Bank, Agent Engine deployment, agent evaluation
-* [MCP on Cloud Run](https://github.com/deltorobarba/science/blob/main/gcp/mcp.ipynb): BigQuery MCP server, OIDC, ADK MCPToolset, managed MCP, Gemini Enterprise connectors (BAP to remote MCP)
-* [MCP Project (uv)](https://github.com/deltorobarba/science/tree/main/gcp/mcp): the MCP notebook as a developer project: FastMCP server on Cloud Run (Streamable HTTP), ADK agent packages, Agent Registry lookup, Agent Runtime deployment scripts, pytest
-* [Models on Google Cloud](https://github.com/deltorobarba/science/blob/main/gcp/models.ipynb): Gemini, Gemma and open models via GenAI SDK, OpenAI SDK and LiteLLM, latency benchmark (TTFT, P50–P99), LLM-as-a-judge, Model Garden deployment
-* [Model Lab (uv)](https://github.com/deltorobarba/science/tree/main/gcp/models): the models notebook as a command-line project: GenAI and OpenAI SDK, speed benchmark with thinking tokens, latency percentiles, rubric evaluation, Model Garden deployment
-* [Agent Identity](https://github.com/deltorobarba/science/blob/main/gcp/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, Agent Gateway, IAM, Agent Runtime
-* [AI for Software Engineering](https://github.com/deltorobarba/science/blob/main/gcp/sdlc.md): Agent authentication and authorization, access vs. ID tokens, ADC, SDLC agenda
+* [Agent](https://github.com/deltorobarba/science/blob/main/gcp/agents.ipynb): Pipeline with ADK workflow graph, Vertex AI Search, Memory Bank, Agent Engine deployment, agent evaluation
+* [MCP](https://github.com/deltorobarba/science/blob/main/gcp/mcp.ipynb): on Cloud Run & Agent Platform. BigQuery MCP server, OIDC, ADK MCPToolset, Managed MCP
+* [Models](https://github.com/deltorobarba/science/blob/main/gcp/models.ipynb): Gemini, Gemma and open models via GenAI SDK, OpenAI SDK, latency benchmark (TTFT, P50–P99)
+* [Identity](https://github.com/deltorobarba/science/blob/main/gcp/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, Agent Gateway, IAM, Agent Runtime
+* [SDLC](https://github.com/deltorobarba/science/blob/main/gcp/sdlc.md): AI for Agent authentication and authorization, access vs. ID tokens, ADC, SDLC agenda
 
 <br>
