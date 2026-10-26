@@ -18,6 +18,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
 * [Differential Equations](https://github.com/deltorobarba/science/blob/main/maths/differentialequations.ipynb): Matrixexponential, Runge-Kutta, Schrödinger (Split-Step), Floquet
 * [Complex Analysis](https://github.com/deltorobarba/science/blob/main/maths/complexanalysis.ipynb): Phasenbilder, Cauchy, Singularitäten, Nyquist, Laplace, Kramers–Kronig, Zeta, Lee–Yang
+* [Harmonic Analysis](https://github.com/deltorobarba/science/blob/main/maths/fourieranalysis.ipynb): Fourier-Reihen, Gibbs, Parseval, Unschärfe, FFT, Abtasttheorem, Fenster, Wavelets, Beugung, Shor
 * [Test Functions](https://github.com/deltorobarba/science/blob/main/maths/testfunctions.ipynb): Bump, Distributionen, Himmelblau, Rosenbrock, Rastrigin, QPE-Fenster, Barren Plateaus
 * [Vector Calculus](https://github.com/deltorobarba/science/blob/main/maths/vectorcalculus.ipynb): Gradient, Divergenz, Rotation, Gauß, Stokes, Helmholtz, Liouville, Hutchinson, Berry
 * [Dynamical Systems](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Chaos, Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
