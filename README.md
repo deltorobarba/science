@@ -75,9 +75,9 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Quantum Simulation**
 * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md): Static vs. dynamic simulation, open systems, seven perspectives on quantum chaos
 * [Quantum Chaos (Scrambling)](https://github.com/deltorobarba/science/blob/main/quantum/chaos_scrambling.ipynb): OTOCs in Ising chains, butterfly velocity, Hayden–Preskill, Page curve
-* [Spectral Statistics](https://github.com/deltorobarba/science/blob/main/quantum/chaos_spectra.ipynb): Niveauabstoßung, Symmetriesektoren, Übergang integrabel–chaotisch, spektraler Formfaktor
-* [Eigenstate Thermalization](https://github.com/deltorobarba/science/blob/main/quantum/chaos_eth.ipynb): ETH, Diagonal- und Nichtdiagonalelemente, Thermalisierung nach Quenches, verallgemeinertes Gibbs-Ensemble
-* [Krylov Complexity](https://github.com/deltorobarba/science/blob/main/quantum/chaos_krylov.ipynb): Lanczos-Koeffizienten, universelles Operatorwachstum, Krylov-Kette bis zum Rand, freie Fermionen
+* [Spectral Statistics](https://github.com/deltorobarba/science/blob/main/quantum/chaos_spectra.ipynb): Niveauabstoßung, Symmetriesektoren, integrabel–chaotisch, spectral form factor
+* [Eigenstate Thermalization](https://github.com/deltorobarba/science/blob/main/quantum/chaos_eth.ipynb): ETH, Thermalisierung nach Quenches, verallgemeinertes Gibbs-Ensemble
+* [Krylov Complexity](https://github.com/deltorobarba/science/blob/main/quantum/chaos_krylov.ipynb): Lanczos-Koeffizienten, universelles Operatorwachstum, Krylov-Kette, free fermions
 * [Many-Body Localization](https://github.com/deltorobarba/science/blob/main/quantum/chaos_mbl.ipynb): Unordnung, Poisson-Spektrum, Flächengesetz, Gedächtnis, logarithmisches Verschränkungswachstum
 
 **Quantum Learning**
@@ -89,7 +89,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 ## Machine Learning 🤖
 
 **Generative AI on Google Cloud**
-* [Agent](https://github.com/deltorobarba/science/blob/main/gcp/agents.ipynb): Pipeline with ADK workflow graph, Vertex AI Search, Memory Bank, Agent Engine deployment, agent evaluation
+* [Agent](https://github.com/deltorobarba/science/blob/main/gcp/agents.ipynb): Pipeline with ADK workflow graph, Memory Bank, Agent Engine deployment, agent evaluation
 * [MCP](https://github.com/deltorobarba/science/blob/main/gcp/mcp.ipynb): on Cloud Run & Agent Platform. BigQuery MCP server, OIDC, ADK MCPToolset, Managed MCP
 * [Models](https://github.com/deltorobarba/science/blob/main/gcp/models.ipynb): Gemini, Gemma and open models via GenAI SDK, OpenAI SDK, latency benchmark (TTFT, P50–P99)
 * [Identity](https://github.com/deltorobarba/science/blob/main/gcp/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, Agent Gateway, IAM, Agent Runtime
