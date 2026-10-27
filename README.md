@@ -15,6 +15,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Eigenvalues and Eigenvectors](https://github.com/deltorobarba/science/blob/main/maths/eigenvalues.ipynb): Spur, Gershgorin, Schur–Horn, QR, Lanczos, Hadamard-Test, QPE, HHL
 * [Group Theory](https://github.com/deltorobarba/science/blob/main/maths/grouptheory.ipynb): kleine Gruppen, Sₙ, Zauberwürfel, einfache und sporadische Gruppen, Monster, Punktgruppen, Clifford-Gruppe, SO(3)
 * [Rings, Fields and Commutative Algebra](https://github.com/deltorobarba/science/blob/main/maths/rings_fields.ipynb): ℤₙ, Gaußsche Zahlen, Klassenzahlen, endliche Körper, Reed-Solomon, Gröbner-Basen, Galois und Chebotarev, p-adisch, Homologie, ML-KEM
+* [Lie Groups, Lie Algebras and Representation Theory](https://github.com/deltorobarba/science/blob/main/maths/lie.ipynb): Exponentialabbildung, BCH, Trotter, Lie-Integratoren, Killing-Form, Wurzelsysteme und E₈, dynamische Lie-Algebren, Charaktertafeln, IR/Raman, Spin, Clebsch-Gordan, SU(3), Schur-Weyl
 
 **Analysis**
 * [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
