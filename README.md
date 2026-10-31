@@ -13,16 +13,16 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Algebra**
 * [Tensor Algebra](https://github.com/deltorobarba/science/blob/main/maths/tensoralgebra.md): Exterior, Symmetric, Clifford and Weyl algebra (quotient tensor algebra by ideal)
 * [Eigenvalues and Eigenvectors](https://github.com/deltorobarba/science/blob/main/maths/eigenvalues.ipynb): Spur, Gershgorin, Schur–Horn, QR, Lanczos, Hadamard-Test, QPE, HHL
-* [Group Theory](https://github.com/deltorobarba/science/blob/main/maths/grouptheory.ipynb): kleine Gruppen, Sₙ, Zauberwürfel, einfache und sporadische Gruppen, Monster, Punktgruppen, Clifford-Gruppe, SO(3)
-* [Rings, Fields and Commutative Algebra](https://github.com/deltorobarba/science/blob/main/maths/rings_fields.ipynb): ℤₙ, Gaußsche Zahlen, Reed-Solomon, Gröbner, Galois, Chebotarev, p-adisch, Homologie
+* [Group Theory](https://github.com/deltorobarba/science/blob/main/maths/grouptheory.ipynb): Sₙ, Zauberwürfel, einfache und sporadische Gruppen, Monster, Punktgruppen, Clifford-Gruppe, SO(3)
+* [Rings, Fields and Commutative Algebra](https://github.com/deltorobarba/science/blob/main/maths/rings_fields.ipynb): ℤₙ, Reed-Solomon, Gröbner, Galois, Chebotarev, p-adisch, Homologie
 * [Lie Groups, Lie Algebras and Representation Theory](https://github.com/deltorobarba/science/blob/main/maths/lie.ipynb): Exponentialabbildung, E₈, Charaktertafeln, Clebsch-Gordan, SU(3)
 
 **Analysis**
 * [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
 * [Differential Equations](https://github.com/deltorobarba/science/blob/main/maths/differentialequations.ipynb): Matrixexponential, Runge-Kutta, Schrödinger (Split-Step), Floquet
 * [Complex Analysis](https://github.com/deltorobarba/science/blob/main/maths/complexanalysis.ipynb): Phasenbilder, Cauchy, Singularitäten, Nyquist, Laplace, Kramers–Kronig, Zeta, Lee–Yang
-* [Harmonic Analysis](https://github.com/deltorobarba/science/blob/main/maths/fourieranalysis.ipynb): Fourier-Reihen, Gibbs, Parseval, Unschärfe, FFT, Abtasttheorem, Fenster, Wavelets, Beugung, Shor
-* [Functional Analysis and Operator Theory](https://github.com/deltorobarba/science/blob/main/maths/functionalanalysis.ipynb): Hahn-Banach, Kern-Hilberträume, kompakte Operatoren, Pseudospektren
+* [Harmonic Analysis](https://github.com/deltorobarba/science/blob/main/maths/fourieranalysis.ipynb): Fourier-Reihen, Gibbs, Parseval, Unschärfe, FFT, Abtasttheorem, Fenster, Wavelets, Shor
+* [Functional Analysis and Operator Theory](https://github.com/deltorobarba/science/blob/main/maths/functionalanalysis.ipynb): Hahn-Banach, Kern-Hilberträume, kompakte Operatoren
 * [Test Functions](https://github.com/deltorobarba/science/blob/main/maths/testfunctions.ipynb): Bump, Distributionen, Himmelblau, Rosenbrock, Rastrigin, QPE-Fenster, Barren Plateaus
 * [Vector Calculus](https://github.com/deltorobarba/science/blob/main/maths/vectorcalculus.ipynb): Gradient, Divergenz, Rotation, Gauß, Stokes, Helmholtz, Liouville, Hutchinson, Berry
 * [Dynamical Systems](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Chaos, Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
