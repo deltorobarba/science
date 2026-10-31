@@ -13,9 +13,9 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Algebra**
 * [Tensor Algebra](https://github.com/deltorobarba/science/blob/main/maths/tensoralgebra.md): Exterior, Symmetric, Clifford and Weyl algebra (quotient tensor algebra by ideal)
 * [Eigenvalues and Eigenvectors](https://github.com/deltorobarba/science/blob/main/maths/eigenvalues.ipynb): Spur, Gershgorin, Schur–Horn, QR, Lanczos, Hadamard-Test, QPE, HHL
-* [Group Theory](https://github.com/deltorobarba/science/blob/main/maths/grouptheory.ipynb): Sₙ, Zauberwürfel, einfache und sporadische Gruppen, Monster, Punktgruppen, Clifford-Gruppe, SO(3)
+* [Group Theory](https://github.com/deltorobarba/science/blob/main/maths/grouptheory.ipynb): Sₙ, Zauberwürfel, sporadische Gruppen, Monster, Punktgruppen, Clifford-Gruppe, SO(3)
 * [Rings, Fields and Commutative Algebra](https://github.com/deltorobarba/science/blob/main/maths/rings_fields.ipynb): ℤₙ, Reed-Solomon, Gröbner, Galois, Chebotarev, p-adisch, Homologie
-* [Lie Groups, Lie Algebras and Representation Theory](https://github.com/deltorobarba/science/blob/main/maths/lie.ipynb): Exponentialabbildung, E₈, Charaktertafeln, Clebsch-Gordan, SU(3)
+* [Lie Groups, Lie Algebras and Representation Theory](https://github.com/deltorobarba/science/blob/main/maths/lie.ipynb): Exponential, E₈, Charaktertafeln, Clebsch-Gordan, SU(3)
 
 **Analysis**
 * [Calculus of Variations](https://github.com/deltorobarba/science/blob/main/maths/calculus_of_variations.ipynb): Euler–Lagrange-Gleichung, Beltrami-Identität, Brachistochrone
