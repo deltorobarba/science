@@ -35,8 +35,6 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Stochastic**
 * [Stochastic Processes](https://github.com/deltorobarba/science/blob/main/maths/stochasticprocesses.ipynb): Random Walk, Markov, Poisson, Brownian, Ornstein-Uhlenbeck, Lévy, Gauß
 * [Random Matrices](https://github.com/deltorobarba/science/blob/main/maths/randommatrices.ipynb): Wigner-Halbkreis, Niveauabstoßung, Marchenko-Pastur, Quantenchaos
-
-**Discrete Mathematics**
 * [Complex Networks](https://github.com/deltorobarba/science/blob/main/maths/complexnetworks.ipynb): Zufallsgraphen,skalenfreie Netze, Epidemieschwelle, Kuramoto-Synchronisation
 
 <br>
