@@ -28,7 +28,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Dynamical Systems](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Chaos, Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
 
 **Geometry**
-* [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel, parallel transport, Riemann tensor, Bianchi, Gauss–Bonnet
+* [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel-Symbole, Paralleltransport, Riemann-Tensor, Bianchi, Gauß–Bonnet, Merkur-Perihel
 * [Quadrics & Elliptic Curves](https://github.com/deltorobarba/science/blob/main/maths/quadrics_ellipticcurves.ipynb): conic sections, Kepler orbits, rational points, Hasse, Sato–Tate, ECDH, ECDLP
 * [Projective Geometry](https://github.com/deltorobarba/science/blob/main/maths/projectivegeometry.ipynb): Pascal, Cayley–Klein, PG(2,q), Bloch-Kugel als ℂP¹, Fubini–Study, Hopf, Majorana
 
@@ -76,7 +76,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md): Symplektischer Vektorraum, Pauli-Spektrum, Bell-Sampling
 
 **Quantum Computing**
-* [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): quantum circuit, transpilation, noisy & noiseless simulation
+* [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): Schaltkreis, Transpilation, Simulation mit und ohne Rauschen, Lauf auf ibm_aachen
 
 **Quantum Simulation**
 * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md): Static vs. dynamic simulation, open systems, seven perspectives on quantum chaos
