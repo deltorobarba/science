@@ -51,6 +51,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Electron Temperature of HII Regions](https://github.com/deltorobarba/science/blob/main/astro/nebulae_temperature.ipynb): Aurorale Linien, Fünf-Niveau-Atom, direkte Methode, Stapeln, Gradient gegen CHAOS (M 101)
 * [Expansion of the Crab Nebula](https://github.com/deltorobarba/science/blob/main/astro/nebulae_crab.ipynb): Fotoplatten 1951 und 1991 gegen Pan-STARRS, Gaia-Astrometrie, Konvergenzjahr, Expansionsparallaxe, Pulsar-Bremsung, Energiebilanz
 * [Planetary Nebulae](https://github.com/deltorobarba/science/blob/main/astro/nebulae_planetary.ipynb): Gaia-Entfernungen der Zentralsterne, Rötung, kinematisches Alter, Zanstra-Temperaturen aus Hβ und He II, HR-Diagramm und Kernmassen, [O III]-Leuchtkraftfunktion im Bulge und in M 31, Entfernung von M 31
+* [Dust in the ρ Ophiuchi Cloud](https://github.com/deltorobarba/science/blob/main/astro/nebulae_dust.ipynb): Extinktionskarte aus 2MASS-Farben, Staubtemperatur aus Planck und IRIS, Heizung durch einen B-Stern, Entfernung aus dem Sprung der Gaia-Extinktion, Masse, Extinktionsgesetz, Vergleich mit VLBI und der SFD-Karte
 
 **Exoplanets** 🪐
 * [Transit Model Analysis](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_transits.ipynb): Lichtkurven, BLS, Transit-Fit mit Randverdunkelung, Sterndichte
@@ -70,6 +71,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [An X-Flare seen by SDO](https://github.com/deltorobarba/science/blob/main/astro/sun_sdo.ipynb): AIA und HMI, heliographische Koordinaten, magnetischer Fluss, Flare-Bänder
 
 **Cosmology** ⚗️
+* [The Hubble Diagram](https://github.com/deltorobarba/science/blob/main/astro/cosmology_hubblediagram.ipynb): Pantheon+ und SH0ES, absolute Helligkeit der Supernovae, H₀ mit voller Kovarianz, Ω_m, beschleunigte Expansion, die Hubble-Spannung
 
 <br>
 
