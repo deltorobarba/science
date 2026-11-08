@@ -79,6 +79,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Cosmic Chronometers](https://github.com/deltorobarba/science/blob/main/astro/cosmology_chronometers.ipynb): H(z) aus Galaxienaltern, Kovarianz, Gauß-Prozess, r_d ohne CMB, M_B
 * [Standard Sirens](https://github.com/deltorobarba/science/blob/main/astro/cosmology_sirens.ipynb): GW170817, NGC 4993, Bayes-Analyse, Neigung, Jet, Eigenbewegung
 * [Big Bang Nucleosynthesis](https://github.com/deltorobarba/science/blob/main/astro/cosmology_bbn.ipynb): eigenes Netzwerk, D/H, ω_b, PRIMAT gegen NACRE II, N_eff, Lithiumproblem
+* [N-Body Simulation](https://github.com/deltorobarba/science/blob/main/astro/cosmology_nbody.ipynb): Particle-Mesh, kosmisches Netz, σ(R), BAO-Peak, KBC-Leere, lokales H₀
 
 <br>
 
