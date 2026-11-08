@@ -75,6 +75,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [A Local Void?](https://github.com/deltorobarba/science/blob/main/astro/cosmology_localvoid.ipynb): H₀ in Schalen, Void-Modell, σ(R), Bayes-Faktor, KBC-Leere
 * [Acoustic Peaks of the CMB](https://github.com/deltorobarba/science/blob/main/astro/cosmology_cmbpeaks.ipynb): Planck-Karten, Kreuzspektrum, Peaks, Schallhorizont, θ*, H₀
 * [Baryon Acoustic Oscillations](https://github.com/deltorobarba/science/blob/main/astro/cosmology_bao.ipynb): DESI DR2, Alcock-Paczynski, inverse Entfernungsleiter, w₀w_a, MCMC
+* [Cosmic Chronometers](https://github.com/deltorobarba/science/blob/main/astro/cosmology_chronometers.ipynb): H(z) aus Galaxienaltern, Kovarianz, Gauß-Prozess, r_d ohne CMB, M_B
 
 <br>
 
