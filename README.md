@@ -28,7 +28,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Dynamical Systems](https://github.com/deltorobarba/science/blob/main/maths/chaos.ipynb): Chaos, Phasenraum, Bifurkationen, Lorenz-Attraktor, Lyapunov, Fraktale
 
 **Geometry**
-* [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel-Symbole, Paralleltransport, Riemann-Tensor, Bianchi, Gauß–Bonnet, Merkur-Perihel
+* [Tensor Analysis on Manifolds](https://github.com/deltorobarba/science/blob/main/maths/tensoranalysis.ipynb): Christoffel-Symbole, Paralleltransport, Riemann-Tensor, Bianchi, Gauß–Bonnet
 * [Quadrics & Elliptic Curves](https://github.com/deltorobarba/science/blob/main/maths/quadrics_ellipticcurves.ipynb): conic sections, Kepler orbits, rational points, Hasse, Sato–Tate, ECDH, ECDLP
 * [Projective Geometry](https://github.com/deltorobarba/science/blob/main/maths/projectivegeometry.ipynb): Pascal, Cayley–Klein, PG(2,q), Bloch-Kugel als ℂP¹, Fubini–Study, Hopf, Majorana
 
@@ -48,10 +48,10 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [The Shadow of M87\*](https://github.com/deltorobarba/science/blob/main/astro/galaxies_m87.ipynb): EHT-Visibilities, Closure-Phasen, Ringdurchmesser und Masse, Dirty Beam, CLEAN
 
 **Nebulae** 🧬
-* [Electron Temperature of HII Regions](https://github.com/deltorobarba/science/blob/main/astro/nebulae_temperature.ipynb): Aurorale Linien, Fünf-Niveau-Atom, direkte Methode, Stapeln, Gradient gegen CHAOS (M 101)
-* [Expansion of the Crab Nebula](https://github.com/deltorobarba/science/blob/main/astro/nebulae_crab.ipynb): Fotoplatten 1951 und 1991 gegen Pan-STARRS, Gaia-Astrometrie, Konvergenzjahr, Expansionsparallaxe, Pulsar-Bremsung, Energiebilanz
-* [Planetary Nebulae](https://github.com/deltorobarba/science/blob/main/astro/nebulae_planetary.ipynb): Gaia-Entfernungen der Zentralsterne, Rötung, kinematisches Alter, Zanstra-Temperaturen aus Hβ und He II, HR-Diagramm und Kernmassen, [O III]-Leuchtkraftfunktion im Bulge und in M 31, Entfernung von M 31
-* [Dust in the ρ Ophiuchi Cloud](https://github.com/deltorobarba/science/blob/main/astro/nebulae_dust.ipynb): Extinktionskarte aus 2MASS-Farben, Staubtemperatur aus Planck und IRIS, Heizung durch einen B-Stern, Entfernung aus dem Sprung der Gaia-Extinktion, Masse, Extinktionsgesetz, Vergleich mit VLBI und der SFD-Karte
+* [Electron Temperature of HII Regions](https://github.com/deltorobarba/science/blob/main/astro/nebulae_temperature.ipynb): Aurorale Linien, Fünf-Niveau-Atom, Gradient gegen CHAOS (M 101)
+* [Expansion of the Crab Nebula](https://github.com/deltorobarba/science/blob/main/astro/nebulae_crab.ipynb): Pan-STARRS, Gaia-Astrometrie, Konvergenzjahr, Expansionsparallaxe, Pulsar-Bremsung
+* [Planetary Nebulae](https://github.com/deltorobarba/science/blob/main/astro/nebulae_planetary.ipynb): Gaia-Entfernungen, Zanstra-Temperaturen aus Hβ und He II, HR-Diagramm, [O III], M31
+* [Dust in the ρ Ophiuchi Cloud](https://github.com/deltorobarba/science/blob/main/astro/nebulae_dust.ipynb): Extinktionskarte aus 2MASS-Farben, Staubtemperatur aus IRIS, B-Stern, VLBI, SFD-Karte
 
 **Exoplanets** 🪐
 * [Transit Model Analysis](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_transits.ipynb): Lichtkurven, BLS, Transit-Fit mit Randverdunkelung, Sterndichte
@@ -71,7 +71,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [An X-Flare seen by SDO](https://github.com/deltorobarba/science/blob/main/astro/sun_sdo.ipynb): AIA und HMI, heliographische Koordinaten, magnetischer Fluss, Flare-Bänder
 
 **Cosmology** ⚗️
-* [The Hubble Diagram](https://github.com/deltorobarba/science/blob/main/astro/cosmology_hubblediagram.ipynb): Pantheon+ und SH0ES, absolute Helligkeit der Supernovae, H₀ mit voller Kovarianz, Ω_m, beschleunigte Expansion, die Hubble-Spannung
+* [Hubble Diagram](https://github.com/deltorobarba/science/blob/main/astro/cosmology_hubblediagram.ipynb): Pantheon+ und SH0ES, H₀ mit Kovarianz, Ω_m, beschleunigte Expansion, Hubble tension
 
 <br>
 
@@ -85,7 +85,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Algebraic Promise of Stabilizer States](https://github.com/deltorobarba/science/blob/main/quantum/stabilizer.md): Symplektischer Vektorraum, Pauli-Spektrum, Bell-Sampling
 
 **Quantum Computing**
-* [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): Schaltkreis, Transpilation, Simulation mit und ohne Rauschen, Lauf auf ibm_aachen
+* [Two-Qubit Entangled Bell State Preparation](https://github.com/deltorobarba/science/blob/main/quantum/bellstatepreparation.ipynb): Schaltkreis, Transpilation, Simulation mit und ohne Rauschen
 
 **Quantum Simulation**
 * [Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/quantum/quantumdynamics.md): Static vs. dynamic simulation, open systems, seven perspectives on quantum chaos
@@ -107,7 +107,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Agent](https://github.com/deltorobarba/science/blob/main/gcp/agents.ipynb): Pipeline with ADK workflow graph, Memory Bank, Agent Engine deployment, agent evaluation
 * [MCP](https://github.com/deltorobarba/science/blob/main/gcp/mcp.ipynb): on Cloud Run & Agent Platform. BigQuery MCP server, OIDC, ADK MCPToolset, Managed MCP
 * [Models](https://github.com/deltorobarba/science/blob/main/gcp/models.ipynb): Gemini, Gemma and open models via GenAI SDK, OpenAI SDK, latency benchmark (TTFT, P50–P99)
-* [Evaluations](https://github.com/deltorobarba/science/blob/main/gcp/evaluations.md): LLM- und Agent-Leaderboards, Modell vs. Harness, pass@k vs. pass^k, LLM-Judge kalibrieren, Checkliste für neue Modelle
+* [Evaluations](https://github.com/deltorobarba/science/blob/main/gcp/evaluations.md): LLM- und Agent-Leaderboards, Modell vs. Harness, pass@k vs. pass^k, LLM-Judge kalibrieren
 * [Identity](https://github.com/deltorobarba/science/blob/main/gcp/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, IAM, Agent Runtime, least-privilege BigQuery tool
 * [Gateway](https://github.com/deltorobarba/science/blob/main/gcp/gateway.ipynb): Agent Gateway, ingress (CLIENT_TO_AGENT) vs. egress, Model Armor, IAP, binding at create time
 * [A2A](https://github.com/deltorobarba/science/blob/main/gcp/a2a.ipynb): Agent-to-Agent 1.0, Agent Card, A2aAgent server, a2a-sdk client, Agent Identity, mTLS, custom IAM role
