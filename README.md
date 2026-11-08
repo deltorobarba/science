@@ -73,6 +73,7 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 **Cosmology** ⚗️
 * [Hubble Diagram](https://github.com/deltorobarba/science/blob/main/astro/cosmology_hubblediagram.ipynb): Pantheon+ und SH0ES, H₀ mit Kovarianz, Ω_m, beschleunigte Expansion, Hubble tension
 * [A Local Void?](https://github.com/deltorobarba/science/blob/main/astro/cosmology_localvoid.ipynb): H₀ in Schalen, Void-Modell, σ(R), Bayes-Faktor, KBC-Leere
+* [Acoustic Peaks of the CMB](https://github.com/deltorobarba/science/blob/main/astro/cosmology_cmbpeaks.ipynb): Planck-Karten, Kreuzspektrum, Peaks, Schallhorizont, θ*, H₀
 
 <br>
 
