@@ -49,9 +49,9 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 **Nebulae** 🧬
 * [Electron Temperature of HII Regions](https://github.com/deltorobarba/science/blob/main/astro/nebulae_temperature.ipynb): Aurorale Linien, Fünf-Niveau-Atom, Gradient gegen CHAOS (M 101)
-* [Expansion of the Crab Nebula](https://github.com/deltorobarba/science/blob/main/astro/nebulae_crab.ipynb): Pan-STARRS, Gaia-Astrometrie, Konvergenzjahr, Expansionsparallaxe, Pulsar-Bremsung
+* [Expansion of the Crab Nebula](https://github.com/deltorobarba/science/blob/main/astro/nebulae_crab.ipynb): Pan-STARRS, Gaia-Astrometrie, Konvergenzjahr, Expansionsparallaxe, Pulsar
 * [Planetary Nebulae](https://github.com/deltorobarba/science/blob/main/astro/nebulae_planetary.ipynb): Gaia-Entfernungen, Zanstra-Temperaturen aus Hβ und He II, HR-Diagramm, [O III], M31
-* [Dust in the ρ Ophiuchi Cloud](https://github.com/deltorobarba/science/blob/main/astro/nebulae_dust.ipynb): Extinktionskarte aus 2MASS-Farben, Staubtemperatur aus IRIS, B-Stern, VLBI, SFD-Karte
+* [Dust in the ρ Ophiuchi Cloud](https://github.com/deltorobarba/science/blob/main/astro/nebulae_dust.ipynb): Extinktionskarte aus 2MASS-Farben, Staubtemperatur aus IRIS, B-Stern, VLBI, SFD
 
 **Exoplanets** 🪐
 * [Transit Model Analysis](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_transits.ipynb): Lichtkurven, BLS, Transit-Fit mit Randverdunkelung, Sterndichte
