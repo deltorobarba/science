@@ -40,12 +40,17 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 <br>
 
 ## Astrophysics 🔭
-**Galaxies and Nebulae** 🛰️
+**Galaxies** 🛰️
 * [Galaxy Photometry](https://github.com/deltorobarba/science/blob/main/astro/galaxies_photometry.ipynb): Entfernungsleiter, sechs Bänder, Sérsic-Profil, Bulge und Scheibe, Farbkarte (M 51)
 * [Emission Lines of HII Regions](https://github.com/deltorobarba/science/blob/main/astro/galaxies_hiiregions.ipynb): Linienfits, BPT-Diagramm, Elektronendichte, Staub, Metallizitätsgradient (M 101)
 * [Warps in Edge-on Galaxies](https://github.com/deltorobarba/science/blob/main/astro/galaxies_warps.ipynb): DECaLS-Bilder, Spine-Fit, Warp-Profil und Warp-Winkel, Staubtest in g, r und z
 * [Rotation Curves and Dark Matter](https://github.com/deltorobarba/science/blob/main/astro/galaxies_rotationcurves.ipynb): SPARC, NFW- und Kern-Halo, baryonische Tully-Fisher-Beziehung
 * [The Shadow of M87\*](https://github.com/deltorobarba/science/blob/main/astro/galaxies_m87.ipynb): EHT-Visibilities, Closure-Phasen, Ringdurchmesser und Masse, Dirty Beam, CLEAN
+
+**Nebulae** 🧬
+* [Electron Temperature of HII Regions](https://github.com/deltorobarba/science/blob/main/astro/nebulae_temperature.ipynb): Aurorale Linien, Fünf-Niveau-Atom, direkte Methode, Stapeln, Gradient gegen CHAOS (M 101)
+* [Expansion of the Crab Nebula](https://github.com/deltorobarba/science/blob/main/astro/nebulae_crab.ipynb): Fotoplatten 1951 und 1991 gegen Pan-STARRS, Gaia-Astrometrie, Konvergenzjahr, Expansionsparallaxe, Pulsar-Bremsung, Energiebilanz
+* [Planetary Nebulae](https://github.com/deltorobarba/science/blob/main/astro/nebulae_planetary.ipynb): Gaia-Entfernungen der Zentralsterne, Rötung, kinematisches Alter, Zanstra-Temperaturen aus Hβ und He II, HR-Diagramm und Kernmassen, [O III]-Leuchtkraftfunktion im Bulge und in M 31, Entfernung von M 31
 
 **Exoplanets** 🪐
 * [Transit Model Analysis](https://github.com/deltorobarba/science/blob/main/astro/exoplanets_transits.ipynb): Lichtkurven, BLS, Transit-Fit mit Randverdunkelung, Sterndichte
@@ -63,6 +68,8 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 * [Solar Flares in X-Rays](https://github.com/deltorobarba/science/blob/main/astro/sun_flares.ipynb): GOES-Flares, Potenzgesetz der Spitzenflüsse, Lichtkurve eines X-Flares
 * [Where Flares Occur](https://github.com/deltorobarba/science/blob/main/astro/sun_flarepositions.ipynb): Flare-Positionen, aktive Breiten, δ-Regionen, Schmetterlingsdiagramm
 * [An X-Flare seen by SDO](https://github.com/deltorobarba/science/blob/main/astro/sun_sdo.ipynb): AIA und HMI, heliographische Koordinaten, magnetischer Fluss, Flare-Bänder
+
+**Cosmology** ⚗️
 
 <br>
 
