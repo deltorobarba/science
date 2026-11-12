@@ -11,3 +11,5 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/multiwavelength_astronomy.ipynb): SIMBAD, SkyView, Galaxien, Nebel, Röntgen bis Radio
 
 [Reconstruction from Incomplete Measurements](https://github.com/deltorobarba/science/blob/main/reconstruction.ipynb): Compressed Sensing, ℓ1, EHT, Tomographie, Classical Shadows
+
+[Principal Axes](https://github.com/deltorobarba/science/blob/main/principal_axes.ipynb): Kovarianz, Marchenko-Pastur, LIGO-Whitening, Kepler, Autoencoder, Schmidt

@@ -1,11 +1,12 @@
-"""Quantenzustände aus wenigen Messungen für reconstruction.ipynb: Tomographie mit Pauli-Stichproben und Classical Shadows.
+"""Quantenzustände für reconstruction.ipynb (Tomographie, Classical Shadows) und principal_axes.ipynb (Schmidt-Zerlegung).
 
 Alles simuliert mit numpy und scipy (keine Downloads, kein Quanten-SDK). Teil 1: Ein reiner Zustand aus q Qubits hat
 4^q − 1 Pauli-Erwartungswerte; gemessen wird nur eine zufällige Auswahl, jeweils mit endlich vielen Schüssen.
 Rekonstruiert wird linear (fehlende Werte = 0, das Gegenstück zum Dirty Image) und mit der Annahme „Rang 1“
 (projizierter Gradientenabstieg, wie Compressed Sensing für Matrizen). Teil 2: Classical Shadows (Huang, Kueng,
 Preskill 2020) sagen viele Erwartungswerte des Grundzustands einer Ising-Kette voraus, ohne den Zustand zu
-rekonstruieren.
+rekonstruieren. Teil 3: Die Schmidt-Zerlegung ist die Singulärwertzerlegung eines Zustands über einen Schnitt; ihre
+Koeffizienten sind die Hauptachsen des Zustands, wie bei einer PCA.
 """
 import itertools
 import numpy as np
@@ -209,5 +210,58 @@ def plot_shadows(q, dist, exact_zz, shadow_zz, n_used, ns, errors):
     axes[1].set_ylabel("mittlerer Fehler |Schätzwert − exakt|")
     axes[1].set_title("Fehler gegen Schnappschüsse; gestrichelt √(2/π)·√(3^w/N)", fontsize=10)
     axes[1].legend(fontsize=9)
+    fig.tight_layout()
+    plt.show()
+
+
+# ---- Teil 3: Schmidt-Zerlegung = Singulärwertzerlegung eines Zustands (principal_axes.ipynb)
+
+def ghz_state(q):
+    """GHZ-Zustand (|00…0⟩ + |11…1⟩)/√2."""
+    psi = np.zeros(2 ** q, dtype=complex)
+    psi[0] = psi[-1] = 1 / np.sqrt(2)
+    return psi
+
+
+def schmidt(psi, q, cut):
+    """Schmidt-Koeffizienten (absteigend) für den Schnitt nach `cut` Qubits: Singulärwerte von ψ als 2^cut × 2^(q−cut)-Matrix.
+
+    Ihre Quadrate sind die Eigenwerte der reduzierten Dichtematrix ρ_A = M M†, also die Varianzen entlang der
+    Hauptachsen des Zustands; ihre Summe ist 1.
+    """
+    return np.linalg.svd(psi.reshape(2 ** cut, 2 ** (q - cut)), compute_uv=False)
+
+
+def entanglement_entropy(s):
+    """Von-Neumann-Entropie −Σ s² ln s² der Schmidt-Koeffizienten (0 = Produktzustand)."""
+    p = s ** 2
+    p = p[p > 1e-15]
+    return float(-(p * np.log(p)).sum())
+
+
+def schmidt_study(q, states, keep=0.999):
+    """Schmidt-Spektrum am mittleren Schnitt für mehrere Zustände: wie viele Achsen tragen den Zustand?"""
+    cut = q // 2
+    print(f"{q} Qubits, Schnitt in der Mitte: höchstens {2 ** cut} Schmidt-Achsen, "
+          f"größte mögliche Entropie ln {2 ** cut} = {np.log(2 ** cut):.2f}")
+    fig, axes = plt.subplots(1, 2, figsize=(14, 4.6))
+    for (name, psi), c in zip(states.items(), ["tab:green", "tab:red", "tab:purple", "black"]):
+        s = schmidt(psi, q, cut)
+        p = s ** 2
+        chi = int(np.searchsorted(np.cumsum(p), keep) + 1)
+        print(f"  {name:32s} Entropie {entanglement_entropy(s):.3f}; {chi:2d} Achsen tragen {keep:.1%} des Gewichts")
+        idx = np.arange(1, len(p) + 1)
+        axes[0].semilogy(idx, np.maximum(p, 1e-16), "o-", ms=3, color=c, label=name)
+        axes[1].semilogx(idx, np.cumsum(p), "o-", ms=3, color=c, label=name)
+    axes[0].set_ylim(1e-14, 2)
+    axes[0].set_xlabel("Index i der Schmidt-Achse")
+    axes[0].set_ylabel("Gewicht s_i² (Eigenwert von ρ_A)")
+    axes[0].set_title("Schmidt-Spektrum: die Eigenwerte der reduzierten Dichtematrix", fontsize=10)
+    axes[0].legend(fontsize=8)
+    axes[1].axhline(keep, color="grey", ls="--", lw=1)
+    axes[1].set_xlabel("Zahl der behaltenen Achsen χ")
+    axes[1].set_ylabel("behaltenes Gewicht Σ s_i² (Fidelity der Kürzung)")
+    axes[1].set_title("Wie bei der PCA: erklärter Anteil gegen Zahl der Achsen", fontsize=10)
+    axes[1].legend(fontsize=8, loc="lower right")
     fig.tight_layout()
     plt.show()
