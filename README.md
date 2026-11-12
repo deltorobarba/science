@@ -8,6 +8,4 @@ Alexander Del Toro Barba, PhD. [Google Scholar](https://scholar.google.com/citat
 
 <br>
 
-## Notebooks 🌸
-
-* [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/multiwavelength_astronomy.ipynb): SIMBAD, SkyView, Galaxien, Nebel, Röntgen bis Radio
+[Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/multiwavelength_astronomy.ipynb): SIMBAD, SkyView, Galaxien, Nebel, Röntgen bis Radio
