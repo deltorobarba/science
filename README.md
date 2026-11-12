@@ -19,7 +19,7 @@ Structural priors ($\ell_1$-sparsity, low rank, positivity) recover underdetermi
 
 [Principal Axes](https://github.com/deltorobarba/science/blob/main/principal_axes.ipynb) 🧬
 
-Eigendecomposition of covariance matrices ($C = V\Lambda V^T$) separates signal from noise (Marchenko-Pastur): LIGO whitening and the GW150914 chirp, Kepler systematics, linear autoencoders, and Schmidt decomposition of quantum states.
+Eigendecomposition of covariance matrices ($C = V\Lambda V^T$) separates signal from noise: LIGO whitening and the GW150914 chirp, Kepler systematics, autoencoders, quantum states, and the Pantheon+ covariance behind H₀.
 
 [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/multiwavelength_astronomy.ipynb) 🔭🪐
 

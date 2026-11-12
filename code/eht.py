@@ -124,6 +124,60 @@ def plot_data(df, fit):
     plt.show()
 
 
+def _baseline(sub, a, b):
+    """Visibilities einer Basislinie a-b als Zeitreihe (Sekunden); liegt sie als b-a vor, konjugiert."""
+    s = sub[(sub["st1"] == a) & (sub["st2"] == b)].set_index("t")["vis"]
+    if len(s) == 0:
+        s = np.conj(sub[(sub["st1"] == b) & (sub["st2"] == a)].set_index("t")["vis"])
+    return s[~s.index.duplicated()]
+
+
+def circular(deg):
+    """Mittelwert und Streuung von Winkeln über Einheitszeiger (359° und 1° liegen nah beieinander)."""
+    z = np.mean(np.exp(1j * np.deg2rad(deg)))
+    return float(np.rad2deg(np.angle(z))), float(np.rad2deg(np.sqrt(-2 * np.log(np.abs(z)))))
+
+
+def plot_closure(df, triangle=("AA", "AZ", "LM"), band="lo"):
+    """Phase einer Basislinie gegen die Closure-Phase eines Dreiecks, in allen Nächten.
+
+    Closure-Phase = Phase(a-b) + Phase(b-c) − Phase(a-c): Der Phasenfehler jeder Station (Atmosphäre, Uhr) kommt
+    einmal mit Plus und einmal mit Minus vor und fällt heraus; übrig bleibt eine Eigenschaft der Quelle.
+    """
+    a, b, c = triangle
+    nights = {}
+    for day in DAYS:
+        sub = df[(df["day"] == day) & (df["band"] == band)].copy()
+        sub["t"] = np.round((sub["time"] - sub["time"].min()) * 86400).astype(int)
+        ab, bc, ac = _baseline(sub, a, b), _baseline(sub, b, c), _baseline(sub, a, c)
+        common = ab.index.intersection(bc.index).intersection(ac.index)
+        if len(common) == 0:
+            continue
+        nights[day] = dict(t=np.asarray(common) / 3600, phase=np.angle(ab[common], deg=True),
+                           closure=np.angle(ab[common] * bc[common] * np.conj(ac[common]), deg=True))
+    names = "–".join(STATIONS[s] for s in triangle)
+    print(f"Dreieck {names}, Band {band}: Phase der Basislinie {STATIONS[a]}–{STATIONS[b]} gegen Closure-Phase")
+    for day, d in nights.items():
+        pm, ps = circular(d["phase"])
+        cm, cs = circular(d["closure"])
+        print(f"  {DAYS[day]:>10s} ({len(d['t'])} Zeitpunkte): Phase {pm:+6.1f}° ± {ps:5.1f}°,  Closure-Phase {cm:+5.1f}° ± {cs:4.1f}°")
+    first = next(iter(nights))
+    d = nights[first]
+    fig, ax = plt.subplots(figsize=(12, 4))
+    ax.plot(d["t"], d["phase"], ".", ms=3, color="tab:blue", label=f"Phase der Basislinie {STATIONS[a]}–{STATIONS[b]}")
+    ax.plot(d["t"], d["closure"], ".", ms=3, color="tab:red", label=f"Closure-Phase {names}")
+    ax.axhline(0, color="black", lw=0.6)
+    ax.set_ylim(-180, 180)
+    ax.set_yticks(range(-180, 181, 90))
+    ax.set_xlabel(f"Zeit seit Beginn der Beobachtung am {DAYS[first]} [h]")
+    ax.set_ylabel("Phase [°]")
+    ax.set_title("Die Fehler der Stationen heben sich in der Closure-Phase heraus", fontsize=10)
+    ax.legend(fontsize=8, loc="lower right")
+    fig.tight_layout()
+    plt.show()
+    return nights
+
+
 def coverage(df, minutes=10):
     """(u,v)-Punkte je Basislinie und Nacht über `minutes` gemittelt (ohne die gespiegelten), Form (K, 2)."""
     tbin = np.floor((df["time"] - df["time"].min()) * 24 * 60 / minutes)

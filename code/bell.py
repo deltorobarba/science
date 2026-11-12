@@ -151,14 +151,16 @@ def one_basis(data=ZZ_2026_09_11):
     c, n = data["counts"], data["shots"]
     E = expectations({"ZZ": probabilities(c)})
     corr = (c.get("00", 0) + c.get("11", 0)) / n
-    print(f"{data['backend']}, {data['date']}: {n} Schüsse in der Z-Basis: " + ", ".join(f"{k}: {c.get(k, 0)}" for k in KEYS))
-    print(f"Gemessen sind 3 von 15 Pauli-Werten: " + ", ".join(f"⟨{p}⟩ = {E[p]:+.2f}" for p in E)
-          + f" (Unsicherheit je etwa ±{1 / np.sqrt(n):.2f})")
-    print(f"Korrelierte Ergebnisse (00 oder 11): {corr:.0%}; das ist nur eine obere Schranke der Fidelity mit |Φ⁺⟩")
+    print(f"{data['backend']}, {data['date']}: {n} Schüsse, beide Qubits in der Z-Basis gemessen (Ergebnis 0 oder 1)")
+    print("Zählungen:  " + ",  ".join(f"{k}: {c.get(k, 0)}" for k in KEYS)
+          + f"   →  {corr:.0%} korreliert (00 oder 11)")
+    print(f"Daraus 3 von 15 Pauli-Werten (je etwa ± {1 / np.sqrt(n):.2f}):  "
+          + ",  ".join(f"⟨{p}⟩ = {E[p]:+.2f}" for p in ["ZI", "IZ", "ZZ"]))
+    print("\nWas drei Zustände vorhersagen        ⟨ZI⟩  ⟨IZ⟩  ⟨ZZ⟩ │ ⟨XX⟩  ⟨YY⟩")
     for name, rho in CANDIDATES.items():
         Ec = expectations_of(rho)
-        print(f"  {name:32s} ⟨ZI⟩ = {Ec['ZI']:+.0f}, ⟨IZ⟩ = {Ec['IZ']:+.0f}, ⟨ZZ⟩ = {Ec['ZZ']:+.0f};  "
-              f"aber ⟨XX⟩ = {Ec['XX']:+.0f}, ⟨YY⟩ = {Ec['YY']:+.0f}")
+        print(f"  {name:34s} {Ec['ZI']:+4.0f}  {Ec['IZ']:+4.0f}  {Ec['ZZ']:+4.0f} │ {Ec['XX']:+4.0f}  {Ec['YY']:+4.0f}")
+    print("Links vom Strich gleich, also passen alle drei zur Messung; erst XX und YY würden sie unterscheiden.")
     fig, ax = plt.subplots(figsize=(13, 4.5))
     x = np.arange(len(PAULIS))
     measured = [p in E for p in PAULIS]
@@ -190,25 +192,35 @@ def tomography_study(data):
     A = confusion_matrix({k: c["cal_" + k] for k in KEYS})
     raw = {s: probabilities(c["bell_" + s]) for s in SETTINGS}
     fixed = {s: correct(p, A) for s, p in raw.items()}
-    print(f"{data['backend']}, {data['date']} (Job {data.get('job_id', '?')}), Qubits {data.get('qubits', '?')}: "
+    print(f"{data['backend']}, {data['date']}, Job {data.get('job_id', '?')}, physikalische Qubits {data.get('qubits', '?')}: "
           f"9 Basen und 4 Kalibrierungen zu je {data['shots']} Schüssen")
-    print("Konfusionsmatrix der Auslese (Spalte: präpariert 00, 01, 10, 11; Zeile: gemessen):")
+    print("\nKonfusionsmatrix der Auslese (Spalte: präpariert, Zeile: gemessen; Diagonale: richtig gelesen)")
+    print("              " + "  ".join(f"präp. {k}" for k in KEYS))
     for k, row in zip(KEYS, A):
-        print(f"  {k}: " + "  ".join(f"{v:.3f}" for v in row))
-    results = {}
+        print(f"  gemessen {k}  " + "  ".join(f"{v:8.3f}" for v in row))
+    print("  richtig gelesen: " + ", ".join(f"{k} {A[i, i]:.1%}" for i, k in enumerate(KEYS)))
+    results, rows = {}, []
     for label, probs in [("roh", raw), ("ohne Auslesefehler", fixed)]:
         E = expectations(probs)
         rl, rm = linear_inversion(E), maximum_likelihood(probs)
-        lam = np.linalg.eigvalsh(rl)
         results[label] = dict(E=E, linear=rl, mle=rm)
         if label == "roh":                          # Binomialstreuung der Rohdaten; die Korrektur macht sie eher größer
             sigma = np.sqrt(sum((1 - E[p] ** 2) / data["shots"] for p in ["XX", "YY", "ZZ"])) / 4
-        print(f"{label}: direkte Fidelity aus XX, YY, ZZ {direct_fidelity(E):.3f} ± {sigma:.3f}; linear {fidelity(rl):.3f} "
-              f"(kleinster Eigenwert {lam.min():+.3f}); Maximum-Likelihood {fidelity(rm):.3f}, "
-              f"Reinheit Tr ρ² {np.real(np.trace(rm @ rm)):.3f}")
+        rows.append([direct_fidelity(E), fidelity(rl), np.linalg.eigvalsh(rl).min(), fidelity(rm),
+                     np.real(np.trace(rm @ rm)), np.real(rm[0, 3])])
+    names = [("Fidelity aus XX, YY, ZZ (direkt)", f"± {sigma:.3f} aus der Zahl der Schüsse"),
+             ("Fidelity, lineare Inversion", "aus allen 15 Pauli-Werten"),
+             ("  kleinster Eigenwert dieser ρ", "negativ: kein möglicher Zustand"),
+             ("Fidelity, Maximum-Likelihood", "nur erlaubte Zustände"),
+             ("Reinheit Tr ρ²", "1 = rein, 0.25 = völlig zufällig"),
+             ("Kohärenz Re ρ(00, 11)", "ideal 0.5, beim Gemisch 0")]
+    print(f"\n{'':34s}{'roh':>8s}{'ohne Auslesefehler':>20s}")
+    for (name, note), a, b in zip(names, *rows):
+        print(f"{name:34s}{a:8.3f}{b:20.3f}   ({note})")
     inv = {s: correct(p, A, "invert") for s, p in raw.items()}
     neg = sum((v < 0).sum() for v in inv.values())
-    print(f"Einfaches Invertieren von A gibt {neg} negative Wahrscheinlichkeiten in 36 Werten; mit x ≥ 0 keine")
+    print(f"\nAuslese korrigieren heißt A·x = y lösen: direkt invertiert {neg} negative von 36 Wahrscheinlichkeiten, "
+          "mit der Bedingung x ≥ 0 keine")
     ideal = expectations_of(CANDIDATES["|Φ⁺⟩ = (|00⟩ + |11⟩)/√2"])
     fig, axes = plt.subplots(1, 2, figsize=(15, 4.8), gridspec_kw={"width_ratios": [1.7, 1]})
     x = np.arange(len(PAULIS))
