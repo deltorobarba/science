@@ -52,17 +52,32 @@ def decorate(ax, target, fov, color="white", ellipse=True):
         ax.text(x1 + length / 2, -0.83 * h, label, color=color, ha="center", va="bottom", fontsize=9)
 
 
-def sky_map(df):
-    """Messier-Objekte in galaktischen Koordinaten (Mollweide): Mitte der Milchstraße in der Mitte."""
-    g = SkyCoord(df["ra"].values, df["dec"].values, unit="deg").galactic
-    lon = -np.radians(((g.l.deg + 180) % 360) - 180)   # l wächst nach links, wie am Himmel
-    lat = np.radians(g.b.deg)
+def _galactic(ra, dec):
+    g = SkyCoord(np.asarray(ra), np.asarray(dec), unit="deg").galactic
+    return -np.radians(((g.l.deg + 180) % 360) - 180), np.radians(g.b.deg)   # l wächst nach links, wie am Himmel
+
+
+def sky_map(df, galaxies=None, label_n=15):
+    """Himmelskarte in galaktischen Koordinaten (Mollweide), Mitte der Milchstraße in der Mitte.
+
+    Ohne `galaxies`: alle Messier-Objekte. Mit `galaxies` (Tabelle aus catalog.bright_galaxies): diese Galaxien, Punkte
+    nach Größe, die `label_n` hellsten mit Namen, dazu Nebel und Sternhaufen aus dem Messier-Katalog `df`.
+    """
+    lon, lat = _galactic(df["ra"], df["dec"])
     fig = plt.figure(figsize=(12, 6.2))
     ax = fig.add_subplot(111, projection="mollweide")
     kind = df["kind"].values
-    groups = [("Sternhaufen und sonstiges", ~np.isin(kind, ["Galaxie", "Nebel"]), "0.6", 12),
-              ("Galaxien", kind == "Galaxie", KIND_COLORS["Galaxie"], 40),
-              ("Nebel", kind == "Nebel", KIND_COLORS["Nebel"], 40)]
+    groups = [("Messier: Sternhaufen und sonstiges", ~np.isin(kind, ["Galaxie", "Nebel"]), "0.6", 12),
+              ("Messier: Galaxien", kind == "Galaxie", KIND_COLORS["Galaxie"], 40),
+              ("Messier: Nebel", kind == "Nebel", KIND_COLORS["Nebel"], 40)]
+    if galaxies is not None:
+        groups = [g for g in groups if "Galaxien" not in g[0]]
+        gl, gb = _galactic(galaxies["ra"], galaxies["dec"])
+        size = 8 + 25 * np.log10(np.clip(galaxies["galdim_majaxis"].values, 3, None) / 3 + 1) ** 2
+        ax.scatter(gl, gb, s=size, c=KIND_COLORS["Galaxie"], alpha=0.8, zorder=2,
+                   label=f"Galaxien heller als V = {galaxies['vmag'].max():.1f} ({len(galaxies)})")
+        for x, y, name in list(zip(gl, gb, galaxies["name"]))[:label_n]:
+            ax.annotate(name, (x, y), xytext=(3, 3), textcoords="offset points", fontsize=7, color="tab:blue")
     for label, m, color, size in groups:
         ax.scatter(lon[m], lat[m], s=size, c=color, alpha=0.9 if size > 12 else 0.6,
                    label=f"{label} ({m.sum()})", zorder=3 if size > 12 else 1)
@@ -76,7 +91,9 @@ def sky_map(df):
     ax.grid(alpha=0.3)
     ax.set_xlabel("galaktische Länge l")
     ax.set_ylabel("galaktische Breite b")
-    ax.set_title("Die Messier-Objekte am Himmel (Linie: Ebene der Milchstraße, Zahlen: Messier-Nummer)", fontsize=11)
+    title = ("Die hellsten Galaxien und die Messier-Objekte am Himmel" if galaxies is not None
+             else "Die Messier-Objekte am Himmel")
+    ax.set_title(title + " (Linie: Ebene der Milchstraße, Zahlen: Messier-Nummer)", fontsize=11)
     ax.legend(loc="lower right", fontsize=9, bbox_to_anchor=(1.08, -0.08))
     plt.show()
 

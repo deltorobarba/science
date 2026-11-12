@@ -1,4 +1,5 @@
-"""SIMBAD-Abfragen für multiwavelength_astronomy.ipynb: der Messier-Katalog, ein Objekt nach Namen, seine Entfernung.
+"""SIMBAD-Abfragen für multiwavelength_astronomy.ipynb: die hellsten Galaxien, der Messier-Katalog, ein Objekt nach
+Namen, seine Entfernung.
 
 SIMBAD läuft in Straßburg (CDS) und als Spiegel an der CfA in Harvard. Fällt einer aus (CDS antwortete am 2026-11-12
 mit 404), fragt der Code den nächsten. Jede Antwort wird in `cache_dir` gespeichert, ein zweiter Lauf braucht SIMBAD
@@ -83,18 +84,57 @@ def messier(cache_dir):
     return df
 
 
-def show_messier(df):
-    """Galaxien und Nebel als kurze Liste: Name, SIMBAD-Typ, Größe in Bogenminuten."""
+def show_messier(df, kinds=("Galaxie", "Nebel")):
+    """Galaxien und Nebel (oder nur `kinds`) als kurze Liste: Name, SIMBAD-Typ, Größe in Bogenminuten."""
     plural = {"Galaxie": "Galaxien", "Nebel": "Nebel", "Sternhaufen": "Sternhaufen", "sonstiges": "sonstige"}
     counts = df["kind"].value_counts()
     print(f"{len(df)} Messier-Objekte: " + ", ".join(f"{n} {plural[k]}" for k, n in counts.items()))
     print("In Klammern der SIMBAD-Typ und die Größe (große Achse in Bogenminuten).")
-    for kind in ["Galaxie", "Nebel"]:
+    for kind in kinds:
         sub = df[df["kind"] == kind]
         items = [f"{r.name} ({r.otype}, {r.size:.0f}′)" if np.isfinite(r.size) else f"{r.name} ({r.otype})"
                  for r in sub.itertuples()]
         print(f"\n{plural[kind]} ({len(sub)}):")
         print(textwrap.fill(", ".join(items), width=110, initial_indent="  ", subsequent_indent="  "))
+
+
+def bright_galaxies(cache_dir, vmax=10.5, min_size=3.0):
+    """Alle Galaxien heller als V = vmax und mit großer Achse ab min_size Bogenminuten, ohne Gruppen und Haufen.
+
+    Mit SIMBAD-Typ, Hubble-Typ, Helligkeit in B und V, Farbindex B − V, Größe und Radialgeschwindigkeit
+    (Cache: galaxies_V<vmax>_<min_size>.csv).
+    """
+    path = Path(cache_dir) / f"galaxies_V{vmax}_{min_size}.csv"
+    if path.exists():
+        return pd.read_csv(path)
+    df = simbad(f"""
+        SELECT b.main_id, d.label AS typ, b.morph_type, b.ra, b.dec, b.rvz_radvel,
+               b.galdim_majaxis, f.B AS bmag, f.V AS vmag
+        FROM basic AS b JOIN allfluxes AS f ON f.oidref = b.oid
+        JOIN otypedef AS d ON d.otype = b.otype
+        WHERE d.path LIKE 'G%' AND b.otype NOT IN ('GrG', 'CGG', 'ClG', 'SCG', 'PCG')
+          AND f.V < {vmax} AND b.galdim_majaxis >= {min_size}
+        ORDER BY vmag""")                      # nach dem Alias: die CfA lehnt "ORDER BY f.V" ab
+    df["name"] = df["main_id"].str.replace(r"^NAME\s+", "", regex=True).str.replace(r"\s+", " ", regex=True)
+    df["b_v"] = df["bmag"] - df["vmag"]
+    df["kind"] = "Galaxie"
+    df = df.drop_duplicates("name").reset_index(drop=True)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(path, index=False)
+    return df
+
+
+def show_galaxies(df, n=15, vmax=10.5, min_size=3.0):
+    """Zahl, häufigste SIMBAD-Typen und die n hellsten Galaxien als Tabelle."""
+    print(f"{len(df)} Galaxien mit V < {vmax} und Durchmesser ≥ {min_size}′ in SIMBAD")
+    print("Häufigste Typen: " + ", ".join(f"{k} {v}" for k, v in df["typ"].value_counts().head(6).items()))
+    cols = {"name": "Name", "typ": "Typ", "morph_type": "Hubble-Typ", "vmag": "V", "b_v": "B−V",
+            "galdim_majaxis": "Größe [′]", "rvz_radvel": "v [km/s]"}
+    t = df.head(n)[list(cols)].rename(columns=cols).fillna("")
+    for c, fmt in [("V", "{:.2f}"), ("B−V", "{:.2f}"), ("Größe [′]", "{:.1f}"), ("v [km/s]", "{:.0f}")]:
+        t[c] = [fmt.format(v) if v != "" else "" for v in t[c]]
+    print(f"\nDie {n} hellsten:")
+    print(t.to_string(index=False))
 
 
 @dataclass

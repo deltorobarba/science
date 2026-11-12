@@ -139,3 +139,63 @@ def plot_whitening(data, fs, t, lo=35, hi=350, length=128, window=0.2):
     axes[1].legend(fontsize=8, loc="upper left")
     fig.tight_layout()
     plt.show()
+
+
+# ---- Der Chirp im Zeit-Frequenz-Bild
+
+G, C, MSUN = 6.674e-11, 2.998e8, 1.989e30
+
+
+def scalogram(w, fs, freqs, q=8):
+    """Energie je Zeit und Frequenz: Bandpass mit einem Gauß der Breite f/q um jede Frequenz (Morlet-Wavelet).
+
+    Ein Wellenpaket enthält dann etwa q Schwingungen, wie bei der Q-Transformation von LIGO.
+    """
+    X = np.fft.rfft(w)
+    fr = np.fft.rfftfreq(len(w), 1 / fs)
+    out = np.empty((len(freqs), len(w)))
+    for i, f0 in enumerate(freqs):
+        band = X * np.exp(-0.5 * ((fr - f0) / (f0 / q)) ** 2)
+        out[i] = np.abs(np.fft.ifft(np.concatenate([band, np.zeros(len(w) - len(fr))]) * 2)) ** 2
+    return out
+
+
+def chirp_frequency(tau, mchirp):
+    """Newtonsche Frequenz der Gravitationswelle τ Sekunden vor der Verschmelzung, Chirp-Masse in Sonnenmassen."""
+    m = mchirp * MSUN * G / C ** 3                       # Chirp-Masse als Zeit [s]
+    return (5 / (256 * tau)) ** 0.375 * m ** -0.625 / np.pi
+
+
+def plot_chirp(data, fs, t, mchirp=31, fmin=20, fmax=512, before=0.35, after=0.1):
+    """Zeit-Frequenz-Bild beider Detektoren nach dem Whitening, darüber die Newtonsche Chirp-Kurve.
+
+    Energie normiert auf ihren Median im ruhigen Rauschen (1 = typisches Rauschen). Die Verschmelzung wird als Zeitpunkt
+    der größten Energie genommen.
+    """
+    freqs = np.geomspace(fmin, fmax, 120)
+    quiet = (np.abs(t) > 2) & (t > t[0] + 2) & (t < t[-1] - 2)
+    show = (t > -before) & (t < after)
+    fig, axes = plt.subplots(1, 2, figsize=(14, 4.8), sharey=True)
+    for ax, (ifo, x) in zip(axes, data.items()):
+        S = scalogram(whiten(x, fs), fs, freqs)
+        S /= np.median(S[:, quiet], axis=1, keepdims=True)
+        i, j = np.unravel_index(np.argmax(S[:, show]), S[:, show].shape)
+        tc = t[show][j]
+        tau = np.array([0.1, 0.05])
+        ridge = [freqs[np.argmax(S[:, np.argmin(np.abs(t - (tc - d)))])] for d in tau]
+        print(f"{ifo}: größte Energie {S[:, show].max():.0f}-mal das Rauschen bei {freqs[i]:.0f} Hz, t = {tc * 1000:+.1f} ms; "
+              f"0.1 s und 0.05 s davor bei {ridge[0]:.0f} und {ridge[1]:.0f} Hz "
+              f"(Newton mit {mchirp} Sonnenmassen: {chirp_frequency(0.1, mchirp):.0f} und {chirp_frequency(0.05, mchirp):.0f} Hz)")
+        im = ax.pcolormesh(t[show], freqs, S[:, show], shading="auto", cmap="viridis", vmax=25)
+        tt = np.linspace(tc - before + 0.01, tc - 0.004, 200)
+        fc = chirp_frequency(tc - tt, mchirp)
+        ok = (fc > fmin) & (fc < fmax)
+        ax.plot(tt[ok], fc[ok], "w--", lw=1.2, label=f"Newton, Chirp-Masse {mchirp} M☉")
+        ax.set_yscale("log")
+        ax.set_yticks([20, 50, 100, 200, 500], ["20", "50", "100", "200", "500"])
+        ax.set_xlabel("Zeit relativ zu GPS 1126259462.4 [s]")
+        ax.set_title(f"{ifo}: Energie nach dem Whitening", fontsize=10)
+        ax.legend(fontsize=8, loc="upper left")
+    axes[0].set_ylabel("Frequenz [Hz]")
+    fig.colorbar(im, ax=axes, fraction=0.03, label="Energie / Median im Rauschen")
+    plt.show()
