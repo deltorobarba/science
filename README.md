@@ -17,4 +17,8 @@ Alexander Del Toro Barba, PhD
 
 [Principal Axes](https://github.com/deltorobarba/science/blob/main/principal_axes.ipynb) 🧬 Eigendecomposition of covariance matrices ($C = V\Lambda V^T$) separates signal from noise: LIGO whitening and the GW150914 chirp, Kepler systematics, autoencoders, quantum states, and the Pantheon+ covariance behind H₀.
 
+[Limits of Knowledge](https://github.com/deltorobarba/science/blob/main/limits_of_knowledge.ipynb) 🔬 Where physics, statistics, and computation stop us: Rayleigh's curse and quantum-limited SPADE imaging of exoplanets, the Heisenberg limit under noise, learning parity with noise, and how many tasks an AI evaluation needs.
+
+[Symmetries](https://github.com/deltorobarba/science/blob/main/symmetries.ipynb) ❄️ What repeats needs computing only once: Fourier modes, conserved sectors in a spin chain, Clifford circuits on a laptop, the Berry phase, Mercury's perihelion, and what cosmic isotropy tells us (Planck, DESI).
+
 [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/multiwavelength_astronomy.ipynb) 🔭🪐 Queries SIMBAD, NASA SkyView and SDSS for any galaxy or nebula: the brightest galaxies, false-color composites from X-ray to radio, and fiber spectra with emission lines in a BPT diagram (M 51).
