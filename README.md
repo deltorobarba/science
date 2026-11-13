@@ -30,4 +30,4 @@ Alexander Del Toro Barba, PhD
 **Special Interest Notebooks**
 
 * **Astrophysics**: [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/multiwavelength_astronomy.ipynb) 🔭🪐 Queries SIMBAD, NASA SkyView and SDSS for any galaxy or nebula: the brightest galaxies, false-color composites from X-ray to radio, and fiber spectra with emission lines in a BPT diagram (M 51).
-* **Quantum Information**: [Heisenberg-Weyl & Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/heisenbergweyl.ipynb)
+* **Quantum Information**: [Heisenberg-Weyl & Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/heisenbergweyl.ipynb) ⚛️ One recipe, the tensor algebra modulo a degree-2 rule, gives bosons and fermions; since the commutator lowers the degree by two, everything up to degree 2 stays classically simulable. Examples: transmon and H₂ anharmonicity, Weyl and Clifford algebras, qudit clock and shift, Wigner negativity and magic, Ehrenfest revivals, Clifford+T Pauli paths and free versus interacting fermions.
