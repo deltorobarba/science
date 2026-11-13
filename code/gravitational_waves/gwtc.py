@@ -17,7 +17,7 @@ from gwpy.timeseries import TimeSeries
 
 
 def load():
-    """Daten (Zellen 5 von gw_catalog.ipynb)."""
+    """9. Daten (Zellen 5 von gw_catalog.ipynb)."""
     global ASTRODATA, COLS, CONFIDENT, REFRESH, allev, path, raw
     plt.style.use("default")      # gwpy stellt beim Import den Plotstil um; der Katalog zeigt wie früher den Stil von matplotlib
     ASTRODATA = gwdata.DATA
@@ -42,7 +42,7 @@ def load():
 
 
 def selection():
-    """1. Den Katalog bereinigen (Zellen 8 von gw_catalog.ipynb)."""
+    """10. Den Katalog bereinigen (Zellen 8 von gw_catalog.ipynb)."""
     global cat, ev, nopar
     cat = allev[allev.katalog.isin(CONFIDENT)].copy()
     cat["prio"] = cat.katalog.map({k: i for i, k in enumerate(CONFIDENT)})
@@ -63,7 +63,7 @@ def selection():
 
 
 def extremes():
-    """2. Die lautesten und extremsten Ereignisse (Zellen 11 von gw_catalog.ipynb)."""
+    """11. Die lautesten und extremsten Ereignisse (Zellen 11 von gw_catalog.ipynb)."""
     global label, row, show
     show = ["name", "katalog", "snr", "m1", "m2", "dl", "z"]
     print("Die zehn lautesten Ereignisse (Netzwerk-SNR):")
@@ -75,7 +75,7 @@ def extremes():
 
 
 def masses():
-    """3. Die Massen (Zellen 14 von gw_catalog.ipynb)."""
+    """12. Die Massen (Zellen 14 von gw_catalog.ipynb)."""
     global axes, col, cols, fig, lower_gap, s, t, upper_gap
     lower_gap = ev[((ev.m1 > 3) & (ev.m1 < 5)) | ((ev.m2 > 3) & (ev.m2 < 5))]
     upper_gap = ev[(ev.m1 > 65) | (ev.m2 > 65)]
@@ -109,7 +109,7 @@ def masses():
 
 
 def distances():
-    """4. Entfernung und Masse (Zellen 17 von gw_catalog.ipynb)."""
+    """13. Entfernung und Masse (Zellen 17 von gw_catalog.ipynb)."""
     global ax, col, fig, k, k_o4, mm, ref, s
     print(ev.groupby("kampagne", observed=True).agg(n=("name", "size"), dl_median=("dl", "median"), dl_max=("dl", "max"),
                                                    z_max=("z", "max"), mc_det_median=("mc_det", "median")).round(2).to_string())
@@ -132,7 +132,7 @@ def distances():
 
 
 def event_spectrogram():
-    """5. Ein Ereignis aus dem Katalog ansehen (Zellen 20 von gw_catalog.ipynb)."""
+    """14. Ein Ereignis aus dem Katalog ansehen (Zellen 20 von gw_catalog.ipynb)."""
     global DET, G_C3, PADDING, SELECTED_EVENT, ax, dets, gps, plot, q, row, strain, tau30
     global white, window
     SELECTED_EVENT = "GW250114_082203"               # Name aus der Tabelle, z. B. "GW150914", "GW190521" oder "GW170817"
@@ -168,7 +168,7 @@ def event_spectrogram():
 
 
 def snr_scaling():
-    """6. Signalstärke, Chirp-Masse und die Reichweite der Detektoren (Zellen 23 von gw_catalog.ipynb)."""
+    """15. Signalstärke, Chirp-Masse und die Reichweite der Detektoren (Zellen 23 von gw_catalog.ipynb)."""
     global RUNS, ax, coef, col, d, err, fig, fit_scaling, g, lim, r, reach
     global s, sd, xx
     RUNS = ["O1", "O2", "O3", "O4"]
@@ -208,7 +208,7 @@ def snr_scaling():
 
 
 def mass_distribution():
-    """7. Der Auswahleffekt (Zellen 26 von gw_catalog.ipynb)."""
+    """16. Der Auswahleffekt (Zellen 26 von gw_catalog.ipynb)."""
     global _, ax, bbh, bins, centers, fig, obs, tab, wgt, width
     bbh = ev[ev.typ == "BBH"].dropna(subset=["dl", "snr"]).copy()
     bbh["d_max"] = bbh.dl * bbh.snr / 8
@@ -240,7 +240,7 @@ def mass_distribution():
 
 
 def literature():
-    """8. Vergleich mit den Katalogwerten und der Literatur (Zellen 29 von gw_catalog.ipynb)."""
+    """17. Vergleich mit den Katalogwerten und der Literatur (Zellen 29 von gw_catalog.ipynb)."""
     global lit, mc_own, r, ratio, worst
     mc_own = (ev.m1 * ev.m2) ** 0.6 / (ev.m1 + ev.m2) ** 0.2
     ratio = mc_own / ev.mc

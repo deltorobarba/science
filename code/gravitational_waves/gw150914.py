@@ -14,7 +14,7 @@ from gwpy.timeseries import TimeSeries
 
 
 def load():
-    """Daten (Zellen 5 von gw150914.ipynb)."""
+    """1. Daten (Zellen 5 von gw150914.ipynb)."""
     global EREIGNIS, daten, gps, ifo
     EREIGNIS = "GW150914"
     gps = event_gps(EREIGNIS)
@@ -27,7 +27,7 @@ def load():
 
 
 def raw_data():
-    """1. Rohdaten (Zellen 8 von gw150914.ipynb)."""
+    """2. Rohdaten (Zellen 8 von gw150914.ipynb)."""
     global ax, fig, h, ifo
     fig, ax = plt.subplots(figsize=(10, 3.5))
     for ifo in daten:
@@ -41,7 +41,7 @@ def raw_data():
 
 
 def noise_spectrum():
-    """2. Rauschspektrum (Zellen 11 von gw150914.ipynb)."""
+    """3. Rauschspektrum (Zellen 11 von gw150914.ipynb)."""
     global asd, ax, fig, ifo
     fig, ax = plt.subplots(figsize=(9, 4.5))
     for ifo in daten:
@@ -58,7 +58,7 @@ def noise_spectrum():
 
 
 def whitened():
-    """3. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
+    """4. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
     global VERSATZ, ax, fig, gefiltert, h1, l1
     gefiltert = {ifo: daten[ifo].whiten(4, 2).bandpass(35, 350) for ifo in daten}
     VERSATZ = 0.0069        # Sekunden: L1 sah das Signal etwa 7 ms vor H1
@@ -78,7 +78,7 @@ def whitened():
 
 
 def spectrogram():
-    """4. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
+    """5. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
     global ax, plot, qt
     qt = daten["H1"].q_transform(outseg=(gps - 0.3, gps + 0.05), qrange=(4, 64), frange=(20, 500))
 
@@ -93,7 +93,7 @@ def spectrogram():
 
 
 def chirp_mass():
-    """5. Die Chirp-Masse (Zellen 20 von gw150914.ipynb)."""
+    """6. Die Chirp-Masse (Zellen 20 von gw150914.ipynb)."""
     global G, M_SONNE, M_chirp, S, a, ax1, ax2, b, c, chirp_frequenz, chirp_suche, fig
     global im, massen, t, t_c, tau, zeiten_c
     G, c, M_SONNE = 6.674e-11, 2.998e8, 1.989e30
@@ -150,7 +150,7 @@ def chirp_mass():
 
 
 def robustness():
-    """5. Die Chirp-Masse (Zellen 23 von gw150914.ipynb)."""
+    """7. Die Chirp-Masse (Zellen 23 von gw150914.ipynb)."""
     global M_, M_mittel, M_streuung, S_, ifo, q, tau_max, tau_min, werte
     werte = []
     for ifo in ["H1", "L1"]:
@@ -165,7 +165,7 @@ def robustness():
 
 
 def catalog_check():
-    """6. Vergleich mit dem Katalog (Zellen 26 von gw150914.ipynb)."""
+    """8. Vergleich mit dem Katalog (Zellen 26 von gw150914.ipynb)."""
     global Mc_quelle, eintraege, schluessel, z
     eintraege = fetch_event_json(EREIGNIS)["events"]
     schluessel = sorted(eintraege)[-1]                     # neueste Version des Katalogeintrags
