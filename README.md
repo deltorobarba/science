@@ -14,23 +14,23 @@ Alexander Del Toro Barba, PhD
 
 **Trinity of Reduction (How do you make the complicated simple?)**
 
-* **Principle 1**: [Symmetries](https://github.com/deltorobarba/science/blob/main/symmetries.ipynb) ❄️ What repeats needs computing only once: symmetry gives the right coordinates *a priori*. Examples: Fourier modes, conserved sectors, Clifford circuits, the Berry phase, Mercury's perihelion, isotropy.
-* **Principle 2**: [Principal Axes](https://github.com/deltorobarba/science/blob/main/principal_axes.ipynb) 🧬 Without symmetry, find the relevant directions *a posteriori*: covariance eigenvectors separate signal from noise. Examples: LIGO whitening, Kepler systematics, autoencoders, entangled states, Pantheon+.
-* **Principle 3**: [Approximation](https://github.com/deltorobarba/science/blob/main/approximation.ipynb) 🐚 Keep the leading terms or the best member of a family, and watch where the remainder blows up. Examples: radii of convergence, cosmography, post-Newtonian chirps, Trotter error, variational bounds, neural networks outside their training range.
+* **Principle 1**: [Symmetries](https://github.com/deltorobarba/science/blob/main/experiments/symmetries.ipynb) ❄️ What repeats needs computing only once: symmetry gives the right coordinates *a priori*. Examples: Fourier modes, conserved sectors, Clifford circuits, the Berry phase, Mercury's perihelion, isotropy.
+* **Principle 2**: [Principal Axes](https://github.com/deltorobarba/science/blob/main/experiments/principal_axes.ipynb) 🧬 Without symmetry, find the relevant directions *a posteriori*: covariance eigenvectors separate signal from noise. Examples: LIGO whitening, Kepler systematics, autoencoders, entangled states, Pantheon+.
+* **Principle 3**: [Approximation](https://github.com/deltorobarba/science/blob/main/experiments/approximation.ipynb) 🐚 Keep the leading terms or the best member of a family, and watch where the remainder blows up. Examples: radii of convergence, cosmography, post-Newtonian chirps, Trotter error, variational bounds, neural networks outside their training range.
 
 **Duality of Information (What can we know and reconstruct?)**
 
-* **Principle 4**: [Reconstruction](https://github.com/deltorobarba/science/blob/main/reconstruction.ipynb) 🌸 (from Incomplete Measurements) Recover more unknowns than measurements via a structural prior (sparsity, low rank). Examples: compressed sensing, EHT imaging of M 87\*, quantum tomography, classical shadows.
-* **Principle 5**: [Limits of Knowledge](https://github.com/deltorobarba/science/blob/main/limits_of_knowledge.ipynb) 🔬 Barriers no algorithm crosses: physical, statistical, computational. Examples: Rayleigh's curse and SPADE, the Heisenberg limit, learning parity with noise, sizing an AI evaluation.
+* **Principle 4**: [Reconstruction](https://github.com/deltorobarba/science/blob/main/experiments/reconstruction.ipynb) 🌸 (from Incomplete Measurements) Recover more unknowns than measurements via a structural prior (sparsity, low rank). Examples: compressed sensing, EHT imaging of M 87\*, quantum tomography, classical shadows.
+* **Principle 5**: [Limits of Knowledge](https://github.com/deltorobarba/science/blob/main/experiments/limits_of_knowledge.ipynb) 🔬 Barriers no algorithm crosses: physical, statistical, computational. Examples: Rayleigh's curse and SPADE, the Heisenberg limit, learning parity with noise, sizing an AI evaluation.
 
 **Dynamics (How does a system evolve?)**
 
-* **Principle 6**: [Stability](https://github.com/deltorobarba/science/blob/main/stability.ipynb) 🦋 Does a small disturbance grow or die out? The sign of one eigenvalue decides. Examples: Lyapunov exponents, Kirkwood gaps, scrambling and many-body localization, synchronization, neutron freeze-out, feedback and learning rates, optimal control at L2.
+* **Principle 6**: [Stability](https://github.com/deltorobarba/science/blob/main/experiments/stability.ipynb) 🦋 Does a small disturbance grow or die out? The sign of one eigenvalue decides. Examples: Lyapunov exponents, Kirkwood gaps, scrambling and many-body localization, synchronization, neutron freeze-out, feedback and learning rates, optimal control at L2.
 
 **Special Interest Notebooks**
 
-* [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/multiwavelength_astronomy.ipynb) 🔭🪐 SIMBAD, SkyView and SDSS for any galaxy or nebula: false-color composites from X-ray to radio and emission-line spectra (M 51).
-* [Exoplanets](https://github.com/deltorobarba/science/blob/main/exoplanets.ipynb) 🌗 Planets from light, with real data: a Kepler transit search and its vetting, the radius valley of 6470 planets, the JWST spectrum of HATS-6 b, and SPADE below the diffraction limit.
-* [Solar Astronomy](https://github.com/deltorobarba/science/blob/main/solar_astronomy.ipynb) ☀️ The solar cycle since 1749, 20 000 GOES X-ray flares, where flares erupt (butterfly diagram), and the strongest flare of cycle 25 in SDO images.
-* [Nebulae](https://github.com/deltorobarba/science/blob/main/nebulae.ipynb) 🌌 Five nebulae from star birth to supernova: the dark cloud ρ Ophiuchi, Orion from X-ray to radio, gas temperatures in M 101, planetary nebulae out to M 31, and the Crab expanding since 1054.
-* [Heisenberg-Weyl](https://github.com/deltorobarba/science/blob/main/heisenbergweyl.ipynb) ⚛️ One recipe, the tensor algebra modulo a degree-2 rule, gives bosons and fermions; up to degree 2 all stays classically simulable. Examples: transmon anharmonicity, qudit clock and shift, Wigner negativity, Clifford+T, Hubbard.
+* [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/experiments/multiwavelength_astronomy.ipynb) 🔭🪐 SIMBAD, SkyView and SDSS for any galaxy or nebula: false-color composites from X-ray to radio and emission-line spectra (M 51).
+* [Exoplanets](https://github.com/deltorobarba/science/blob/main/experiments/exoplanets.ipynb) 🌗 Planets from light, with real data: a Kepler transit search and its vetting, the radius valley of 6470 planets, the JWST spectrum of HATS-6 b, and SPADE below the diffraction limit.
+* [Solar Astronomy](https://github.com/deltorobarba/science/blob/main/experiments/solar_astronomy.ipynb) ☀️ The solar cycle since 1749, 20 000 GOES X-ray flares, where flares erupt (butterfly diagram), and the strongest flare of cycle 25 in SDO images.
+* [Nebulae](https://github.com/deltorobarba/science/blob/main/experiments/nebulae.ipynb) 🌌 Five nebulae from star birth to supernova: the dark cloud ρ Ophiuchi, Orion from X-ray to radio, gas temperatures in M 101, planetary nebulae out to M 31, and the Crab expanding since 1054.
+* [Heisenberg-Weyl](https://github.com/deltorobarba/science/blob/main/experiments/heisenbergweyl.ipynb) ⚛️ One recipe, the tensor algebra modulo a degree-2 rule, gives bosons and fermions; up to degree 2 all stays classically simulable. Examples: transmon anharmonicity, qudit clock and shift, Wigner negativity, Clifford+T, Hubbard.
