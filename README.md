@@ -20,7 +20,7 @@ Alexander Del Toro Barba, PhD
 
 **Duality of Information (What can we know and reconstruct?)**
 
-* **Principle 4**: [Reconstruction from Incomplete Measurements](https://github.com/deltorobarba/science/blob/main/reconstruction.ipynb) 🌸 Recover more unknowns than measurements via a structural prior (sparsity, low rank). Examples: compressed sensing, EHT imaging of M 87\*, quantum tomography, classical shadows.
+* **Principle 4**: [Reconstruction](https://github.com/deltorobarba/science/blob/main/reconstruction.ipynb) 🌸 (from Incomplete Measurements) Recover more unknowns than measurements via a structural prior (sparsity, low rank). Examples: compressed sensing, EHT imaging of M 87\*, quantum tomography, classical shadows.
 * **Principle 5**: [Limits of Knowledge](https://github.com/deltorobarba/science/blob/main/limits_of_knowledge.ipynb) 🔬 Barriers no algorithm crosses: physical, statistical, computational. Examples: Rayleigh's curse and SPADE, the Heisenberg limit, learning parity with noise, sizing an AI evaluation.
 
 **Dynamics (How does a system evolve?)**
