@@ -10,9 +10,7 @@ Alexander Del Toro Barba, PhD
 
 <br>
 
-*Working where AI Engineering, Quantum Computing, Mathematics, and Astrophysics meet. The core challenge is often identical: extracting hidden structure from incomplete, noisy measurements.*
-
-*Organized by principle, not by field: real problems (simulating a protein, sifting a sky survey) don't come labeled with a method, so the work is to recognize the principle underneath and map the right tool to it. The arc: use structure a priori → filter structure from data → approximate complexity under control → reconstruct what is missing with prior knowledge → accept fundamental limits → ask whether a small disturbance grows or dies out.*
+*Working where AI Engineering, Quantum Computing, Mathematics, and Astrophysics meet. The core challenge is often identical: extracting hidden structure from incomplete, noisy measurements. At the same time, real problems (simulating a protein, sifting a sky survey) are <u>not</u> organized by field or tool, but by principle. So the work is to recognize the first principle underneath and map the right tool to it. The arc: use structure a priori → filter structure from data → approximate complexity under control → reconstruct what is missing with prior knowledge → accept fundamental limits → ask whether a small disturbance grows or dies out.*
 
 **Trinity of Reduction (How do you make the complicated simple?)**
 
