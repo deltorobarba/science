@@ -28,8 +28,10 @@ Alexander Del Toro Barba, PhD
 
 **Dynamics (How does a system evolve?)**
 
-**Principle 6**: [Stability](https://github.com/deltorobarba/science/blob/main/stability.ipynb) 🦋 Does a small disturbance grow or die out? The sign of one eigenvalue decides whether a system stays predictable, forgets its past, or remembers it. Examples: Lyapunov exponents from the logistic map to Lorenz, chaotic star orbits and the Kirkwood gaps, scrambling (OTOCs) and many-body localization, Kuramoto synchronization, the neutron freeze-out that set the cosmic helium abundance, and feedback from adaptive optics to learning rates.
+**Principle 6**: [Stability](https://github.com/deltorobarba/science/blob/main/stability.ipynb) 🦋 Does a small disturbance grow or die out? The sign of one eigenvalue decides whether a system stays predictable, forgets its past, or remembers it. Examples: Lyapunov exponents from the logistic map to Lorenz, chaotic star orbits and the Kirkwood gaps, scrambling (OTOCs) and many-body localization, Kuramoto synchronization, the neutron freeze-out that set the cosmic helium abundance, and feedback from adaptive optics to learning rates, and optimal control at the unstable Lagrange point L2, learned model-free by Q-learning.
 
 **Special Interest Notebooks**
 
 [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/multiwavelength_astronomy.ipynb) 🔭🪐 Queries SIMBAD, NASA SkyView and SDSS for any galaxy or nebula: the brightest galaxies, false-color composites from X-ray to radio, and fiber spectra with emission lines in a BPT diagram (M 51).
+
+[Heisenberg-Weyl & Quantum Dynamics](https://github.com/deltorobarba/science/blob/main/heisenbergweyl.ipynb)
