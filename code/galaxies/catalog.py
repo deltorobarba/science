@@ -1,5 +1,5 @@
-"""SIMBAD-Abfragen für multiwavelength_astronomy.ipynb: die hellsten Galaxien, der Messier-Katalog, ein Objekt nach
-Namen, seine Entfernung.
+"""SIMBAD-Abfragen für galaxies.ipynb (über overview.py) und nebulae.ipynb (über messier.py): die hellsten Galaxien,
+der Messier-Katalog, ein Objekt nach Namen, seine Entfernung. Bis 2026-11-14 Teil von multiwavelength_astronomy.ipynb.
 
 SIMBAD läuft in Straßburg (CDS) und als Spiegel an der CfA in Harvard. Fällt einer aus (CDS antwortete am 2026-11-12
 mit 404), fragt der Code den nächsten. Jede Antwort wird in `cache_dir` gespeichert, ein zweiter Lauf braucht SIMBAD

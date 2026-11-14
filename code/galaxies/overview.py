@@ -1,10 +1,10 @@
 """Überblick für galaxies.ipynb: die hellsten Galaxien und die Messier-Objekte am Himmel, M 51 in Farbbildern des nahen
 und mittleren Infrarots und vom Röntgen- bis zum Radiobereich, die SDSS-Spektren in M 51 und ihr BPT-Diagramm.
 
-Nutzt die Module von multiwavelength_astronomy.ipynb aus code/multiwavelength_astronomy/ (`catalog` für SIMBAD mit
-Spiegel in Harvard, `surveys` für NASA SkyView, `plotting` für Karte und Bilder, `spectra` für SDSS und das BPT-Diagramm);
-das Notebook legt diesen Ordner als zweiten auf sys.path. Die Funktionen teilen ihre Variablen über Modulvariablen und
-laufen in dieser Reihenfolge: sky_map, ir_composites, wide_bands, m51_spectra, m51_bpt.
+Nutzt die Module `catalog` (SIMBAD mit Spiegel in Harvard), `surveys` (NASA SkyView), `plotting` (Karte und Bilder) und
+`spectra` (SDSS und BPT-Diagramm), die bis 2026-11-14 zu multiwavelength_astronomy.ipynb gehörten und jetzt hier in
+code/galaxies/ liegen. Die Funktionen teilen ihre Variablen über Modulvariablen und laufen in dieser Reihenfolge:
+sky_map, ir_composites, wide_bands, m51_spectra, m51_bpt.
 Downloads und Cache: data/galaxies/images/.
 """
 import galdata                                        # zuerst: Cache-Ordner für astropy

@@ -1,4 +1,5 @@
-"""Bilder aus NASA SkyView für multiwavelength_astronomy.ipynb: Bänder, Download mit Cache und Wiederholungen.
+"""Bilder aus NASA SkyView für galaxies.ipynb (über overview.py): Bänder, Download mit Cache und Wiederholungen.
+Bis 2026-11-14 Teil von multiwavelength_astronomy.ipynb.
 
 SkyView schneidet aus über 100 Himmelsdurchmusterungen ein Bild um eine Position aus und rechnet es auf ein
 gemeinsames Pixelgitter (Norden oben, Osten links). Jedes Bild wird als FITS in `cache_dir/<Objekt>/` gespeichert.

@@ -1,4 +1,5 @@
-"""Bilder zeichnen für multiwavelength_astronomy.ipynb: Helligkeit strecken, Farbbilder mischen, Tafeln, Himmelskarte.
+"""Bilder zeichnen für galaxies.ipynb (über overview.py) und nebulae.ipynb (über messier.py): Helligkeit strecken,
+Farbbilder mischen, Tafeln, Himmelskarte. Bis 2026-11-14 Teil von multiwavelength_astronomy.ipynb.
 
 Alle Bilder haben Norden oben und Osten links (wie am Himmel von der Erde aus gesehen); die Achsen zählen
 Bogenminuten vom Objekt aus.

@@ -13,7 +13,7 @@ Alexander Del Toro Barba (PhD) $\cdot$  [Google Scholar](https://scholar.google.
 **Trinity of Reduction (How do you make the complicated simple?)**
 
 * **Principle 1**: [Symmetries](https://github.com/deltorobarba/science/blob/main/experiments/symmetries.ipynb) ❄️ What repeats needs computing once: symmetry gives coordinates *a priori*.
-* **Principle 2**: [Principal Axes](https://github.com/deltorobarba/science/blob/main/experiments/principal_axes.ipynb) 🧬 No symmetry? Covariance eigenvectors separate signal from noise *a posteriori*.
+* **Principle 2**: [Principal Axes](https://github.com/deltorobarba/science/blob/main/experiments/principal_axes.ipynb) 🧬 Covariance eigenvectors separate signal from noise *a posteriori*.
 * **Principle 3**: [Approximation](https://github.com/deltorobarba/science/blob/main/experiments/approximation.ipynb) 🐚 Keep the leading terms and watch where the remainder blows up.
 
 **Duality of Information (What can we know and reconstruct?)**
@@ -38,12 +38,16 @@ ___
 * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/experiments/gravitational_waves.ipynb) 🌊 GW150914 from raw LIGO data, then mass gaps and selection in the catalog.
 * [Cosmology](https://github.com/deltorobarba/science/blob/main/experiments/cosmology.ipynb) 💥 Eight ways to measure the universe, from supernovae to Big Bang nucleosynthesis.
 
-**Mathematics & Quantum** 💎
+**Mathematics** 🌸
 
 * [Algebra](https://github.com/deltorobarba/science/blob/main/experiments/algebra.ipynb) 🧮 Groups, rings, fields, eigenvalues and Lie theory, from Rubik's cube to SU(3).
 * [Analysis](https://github.com/deltorobarba/science/blob/main/experiments/analysis.ipynb) 🎼 What a function reveals in another form: residues, the FFT, spectra, barren plateaus.
 * [Geometry](https://github.com/deltorobarba/science/blob/main/experiments/geometry.ipynb) 📐 What stays invariant: vector calculus, curvature, projective geometry, elliptic curves.
 * [Dynamics](https://github.com/deltorobarba/science/blob/main/experiments/dynamics.ipynb) 🌪️ Equations of motion: where they come from, how to solve, when they turn chaotic.
 * [Stochastics](https://github.com/deltorobarba/science/blob/main/experiments/stochastics.ipynb) 🕸️ Random processes, matrices and networks: from Brownian motion to epidemics.
+
+**Quantum** 💎
+
+* [Heisenberg-Weyl](https://github.com/deltorobarba/science/blob/main/experiments/heisenbergweyl.md) 🌀 Tensor Algebra, Quantum Operators from QHO and Quantum Dynamics.
 * [Quantum Information](https://github.com/deltorobarba/science/blob/main/experiments/quantum_information.ipynb) 🎲 Born rule, measurement, tomography, entropies and channel capacities.
 * [Quantum Computing](https://github.com/deltorobarba/science/blob/main/experiments/bellstatepreparation.ipynb) $\vert\Phi^+\rangle$ 🔗 A Bell state from two abstract gates to a run on noisy IBM hardware.

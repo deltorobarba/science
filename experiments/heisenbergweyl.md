@@ -86,6 +86,14 @@ flowchart TD
 
 ```
 
+Allgemein enthält die Tensoralgebra $T(V) = \bigoplus_k V^{\otimes k}$ alle Wörter in den Basisvektoren $e_i$ eines Raums $V$, ohne Regeln. Setzt man die Elemente $e_ie_j - s\,e_je_i - B_{ij}$ gleich null (man teilt durch das Ideal, das sie erzeugen), entstehen vier Algebren, je nach Vorzeichen $s$ und Form $B$:
+
+| | $B = 0$ (klassisch) | $B \neq 0$ (quantisiert) |
+|---|---|---|
+| $s = +1$, $B$ antisymmetrisch | $\mathrm{Sym}(V)$: Polynome, die Observablen der klassischen Mechanik | Weyl-Algebra: Bosonen, $[\hat q, \hat p] = i\hbar$ |
+| $s = -1$, $B$ symmetrisch | $\Lambda(V)$: Differentialformen | Clifford-Algebra: Fermionen, $\gamma_i\gamma_j + \gamma_j\gamma_i = 2\delta_{ij}$ |
+
+
 *Solid arrows: quotient by the ideal on the label (upper two homogeneous, lower two inhomogeneous, i.e. quantized). Dashed arrows: the associated-graded functor, dequantization. Note the parity crossing: the symmetric form lands in the exterior square, the antisymmetric form in the symmetric square.*
 
 |  | **Symmetric form $`Q`$** | **Antisymmetric form $`\omega`$** |

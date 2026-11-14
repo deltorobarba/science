@@ -1,9 +1,8 @@
 """Die Messier-Objekte am Himmel für nebulae.ipynb: der Katalog aus SIMBAD, die zwölf Nebel und eine Himmelskarte in
 galaktischen Koordinaten.
 
-Nutzt die Module `catalog` (SIMBAD mit Spiegel in Harvard) und `plotting` (das `surveys` importiert) von
-multiwavelength_astronomy.ipynb aus code/multiwavelength_astronomy/; das Notebook legt diesen Ordner als zweiten auf
-sys.path.
+Nutzt die Module `catalog` (SIMBAD mit Spiegel in Harvard) und `plotting` (das `surveys` importiert) aus
+code/galaxies/; das Notebook legt diesen Ordner als zweiten auf sys.path.
 Downloads und Cache: data/nebulae/images/.
 """
 import nebdata                                        # zuerst: Cache-Ordner für astropy

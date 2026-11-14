@@ -1,4 +1,5 @@
-"""SDSS-Spektren für multiwavelength_astronomy.ipynb: das Licht einzelner Stellen einer Galaxie, Emissionslinien, BPT.
+"""SDSS-Spektren für galaxies.ipynb (über overview.py): das Licht einzelner Stellen einer Galaxie, Emissionslinien,
+BPT. Bis 2026-11-14 Teil von multiwavelength_astronomy.ipynb.
 
 Daten: Sloan Digital Sky Survey, Data Release 17. Die Suche läuft als SQL über SkyServer
 (skyserver.sdss.org/dr17/SkyServerWS/SearchTools/SqlSearch): alle Spektren in einem Kasten um das Objekt, deren
