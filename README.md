@@ -50,4 +50,4 @@ ___
 
 * [Heisenberg-Weyl](https://github.com/deltorobarba/science/blob/main/experiments/heisenbergweyl.md) Tensor Algebra, Quantum Operators from QHO and Quantum Dynamics.
 * [Quantum Information](https://github.com/deltorobarba/science/blob/main/experiments/quantum_information.ipynb) Born rule, measurement, tomography, entropies and channel capacities.
-* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/experiments/bellstatepreparation.ipynb) $\vert\Phi^+\rangle$ A Bell state from two abstract gates to a run on noisy IBM hardware.
+* [Quantum Computing](https://github.com/deltorobarba/science/blob/main/experiments/bellstatepreparation.ipynb) $\vert\Phi^+\rangle$ A Bell state preparation run on noisy quantum hardware.
