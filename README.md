@@ -1,9 +1,7 @@
 
 # Science 🎨
 
-Alexander Del Toro Barba, PhD
-
-[Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/)
+Alexander Del Toro Barba (PhD) $\cdot$  [Google Scholar](https://scholar.google.com/citations?hl=en&user=fddyK-wAAAAJ) $\cdot$ [LinkedIn](https://www.linkedin.com/in/deltorobarba/)
 
 
 <img src="https://raw.githubusercontent.com/deltorobarba/science/main/code/nature.JPG" alt="science">
