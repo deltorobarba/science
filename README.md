@@ -10,7 +10,7 @@ Alexander Del Toro Barba, PhD
 
 <br>
 
-*AI, quantum computing, math, and astrophysics: Extract structure from noisy, incomplete data. Map underlying principles: exploit symmetry → extract structure → approximate → reconstruct → know limits → test stability.*
+*AI, quantum, math, and astrophysics: Extract structure from noisy, incomplete data. Map underlying principles: exploit symmetry → extract structure → approximate → reconstruct → know limits → test stability.*
 
 **Trinity of Reduction (How do you make the complicated simple?)**
 
