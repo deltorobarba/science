@@ -3,12 +3,17 @@
 Schritt 1: Die Taylor-Reihe von 1/(1+x²) bricht bei |x| = 1 ab, obwohl die Funktion auf der reellen Achse glatt ist;
 schuld sind die Pole bei ±i. Interpolation mit gleichabständigen Stützstellen divergiert (Runge), mit
 Tschebyschow-Knoten konvergiert sie mit der Rate, die der Abstand der Pole vorgibt; ein Knick (|x|) bremst sie.
-Schritt 2: Die Stirling-Reihe für ln n! divergiert für jedes n und ist trotzdem die beste Näherung, wenn man beim
+Schritt 2: Mikroskop, Weitwinkel und Mosaik. softplus(x) = ln(1 + eˣ) auf [−5, 5], mit gleich vielen Parametern
+genähert durch Taylor um 0 und Padé (lokal, aus den Ableitungen bei 0), Tschebyschow-Interpolation und Minimax-Polynom
+(global, Fehler über das Intervall bewertet; Minimax mit dem Remez-Algorithmus) und kubischen Spline (stückweise).
+Schritt 3: Die Stirling-Reihe für ln n! divergiert für jedes n und ist trotzdem die beste Näherung, wenn man beim
 kleinsten Term abschneidet; ihr erster Term macht aus dem Zählen von Bitfolgen die Entropie. Alles ohne Daten.
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.interpolate import BarycentricInterpolator
+import mpmath
+from numpy.polynomial import chebyshev as cheb, polynomial as poly
+from scipy.interpolate import BarycentricInterpolator, CubicSpline
 from scipy.special import gammaln
 
 
@@ -86,7 +91,116 @@ def plot_radius(L=5.0, degree=16, degrees=(2, 4, 8, 12, 16, 24, 32, 48, 64)):
     plt.show()
 
 
-# ---- Schritt 2: asymptotische Reihen
+# ---- Schritt 2: Mikroskop, Weitwinkel und Mosaik
+
+def _softplus(x):
+    return np.logaddexp(0, x)                                       # ln(1 + eˣ) ohne Überlauf
+
+
+def _softplus_mp(z):
+    return mpmath.log(1 + mpmath.exp(z))
+
+
+def _remez(f, n, L, grid_size=20001, iters=80):
+    """Minimax-Polynom vom Grad n auf [−L, L] (Remez-Austausch): Fehler pendelt mit gleicher Höhe ±E an n + 2 Stellen."""
+    k = np.arange(n + 2)
+    xs = -L * np.cos(np.pi * k / (n + 1))                           # Start: Extrema des Tschebyschow-Polynoms
+    grid = np.linspace(-L, L, grid_size)
+    for _ in range(iters):
+        A = np.hstack([np.vander(xs, n + 1, increasing=True), ((-1.0) ** k)[:, None]])
+        sol = np.linalg.solve(A, f(xs))
+        c, E = sol[:-1], sol[-1]
+        err = f(grid) - poly.polyval(grid, c)
+        cuts = np.flatnonzero(np.diff(np.sign(err)) != 0) + 1          # Abschnitte mit gleichem Vorzeichen
+        ext = [seg[np.argmax(np.abs(err[seg]))] for seg in np.split(np.arange(grid.size), cuts)]
+        while len(ext) > n + 2:                                      # zu viele Abschnitte: die kleinsten Ausschläge weg
+            ext.pop(min(range(len(ext)), key=lambda j: abs(err[ext[j]])))
+        if len(ext) < n + 2:
+            break
+        new = grid[ext]
+        if np.allclose(new, xs, atol=1e-10):
+            break
+        xs = new
+    return c, abs(E)
+
+
+def _lenses(n, L, x):
+    """Die fünf Näherungen mit je n + 1 Parametern (Polynome vom Grad n, Padé [n − n//2 / n//2], Spline durch n + 1 Punkte)."""
+    mpmath.mp.dps = 50
+    t = mpmath.taylor(_softplus_mp, 0, n)
+    p, q = mpmath.pade(t, n - n // 2, n // 2)
+    c_minimax, E = _remez(_softplus, n, L)
+    knots = np.linspace(-L, L, n + 1)
+    approx = {
+        "Taylor um 0": poly.polyval(x, [float(a) for a in t]),
+        f"Padé [{n - n // 2}/{n // 2}]": poly.polyval(x, [float(a) for a in p]) / poly.polyval(x, [float(a) for a in q]),
+        "Tschebyschow-Interpolation": cheb.Chebyshev.interpolate(_softplus, n, domain=[-L, L])(x),
+        "Minimax (Remez)": poly.polyval(x, c_minimax),
+        "kubischer Spline": CubicSpline(knots, _softplus(knots))(x),
+    }
+    return approx, E, knots
+
+
+def plot_lenses(L=5.0, n_param=10, n_params=range(4, 27, 2), points=(0.1, 1.0, 3.0, 5.0)):
+    """softplus auf [−L, L]: links die Näherungen, Mitte der Fehler über x, rechts der größte Fehler gegen die Parameter."""
+    x = np.linspace(-L, L, 20001)
+    f = _softplus(x)
+    n = n_param - 1
+    approx, E, knots = _lenses(n, L, x)
+    colors = dict(zip(approx, ["tab:red", "tab:orange", "tab:blue", "tab:purple", "tab:green"]))
+    print(f"softplus(x) = ln(1 + eˣ) auf [−{L:g}, {L:g}]; Singularitäten bei ±iπ, Taylor-Reihe um 0 konvergiert für |x| < π")
+    print(f"Je {n_param} Parameter (Polynome vom Grad {n}, Spline durch {n_param} Punkte). Fehler bei x = "
+          + ", ".join(f"{p:g}" for p in points) + " und größter Fehler auf dem Intervall:")
+    for name, y in approx.items():
+        err = np.abs(y - f)
+        at = [err[np.argmin(np.abs(x - p))] for p in points]
+        print(f"  {name:27s} " + "  ".join(f"{e:8.1e}" for e in at) + f"   | größter {err.max():.1e}")
+    print(f"Minimax: Der Fehler pendelt zwischen +{E:.2e} und −{E:.2e} an {n + 2} Stellen (Satz von Tschebyschow)")
+    rows = []
+    for m in n_params:
+        a, _, _ = _lenses(m - 1, L, x)
+        rows.append([np.max(np.abs(y - f)) for y in a.values()])
+    rows = np.array(rows)
+    print("Größter Fehler gegen die Zahl der Parameter (Taylor | Padé | Tschebyschow | Minimax | Spline):")
+    for m, r in zip(n_params, rows):
+        print(f"  {m:2d}: " + " | ".join(f"{v:.1e}" for v in r))
+
+    fig, axes = plt.subplots(1, 3, figsize=(17, 4.6))
+    ax = axes[0]
+    ax.plot(x, f, color="black", lw=3, label="softplus(x) = ln(1 + eˣ)")
+    for name, y in approx.items():
+        ax.plot(x, y, color=colors[name], lw=1.2, label=name)
+    ax.set_ylim(-1, 6)
+    ax.set_xlabel("x")
+    ax.set_ylabel("Wert")
+    ax.set_title(f"{n_param} Parameter je Verfahren: nur Taylor fällt sichtbar heraus", fontsize=10)
+    ax.legend(fontsize=8, loc="upper left")
+    ax = axes[1]
+    for name, y in approx.items():
+        ax.semilogy(x, np.maximum(np.abs(y - f), 1e-17), color=colors[name], lw=1, label=name)
+    ax.axhline(E, color="tab:purple", ls="--", lw=0.8)
+    ax.text(-L, E * 2, f" Minimax: ±{E:.1e}", fontsize=8, color="tab:purple")
+    ax.plot(knots, np.full(knots.size, 3e-17), "|", color="tab:green", ms=8)
+    for s in (-np.pi, np.pi):
+        ax.axvline(s, color="grey", ls=":", lw=1)
+    ax.text(np.pi, 1e1, " |x| = π", fontsize=8, color="grey")
+    ax.set_ylim(1e-17, 1e2)
+    ax.set_xlabel("x")
+    ax.set_ylabel("Fehler |Näherung − softplus|")
+    ax.set_title("Mikroskop gegen Weitwinkel: wo der Fehler sitzt", fontsize=10)
+    ax.legend(fontsize=7, loc="lower left")
+    ax = axes[2]
+    for j, name in enumerate(approx):
+        ax.semilogy(list(n_params), rows[:, j], "o-", ms=4, color=colors[name], label=name.split(" [")[0])
+    ax.set_xlabel("Zahl der Parameter")
+    ax.set_ylabel(f"größter Fehler auf [−{L:g}, {L:g}]")
+    ax.set_title("Mehr Parameter: Taylor divergiert, der Spline wird nur langsam besser", fontsize=10)
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    plt.show()
+
+
+# ---- Schritt 3: asymptotische Reihen
 
 def stirling_error(n, K):
     """|Stirling mit K Korrekturtermen − ln n!|, mit 50 Stellen gerechnet (mpmath)."""
