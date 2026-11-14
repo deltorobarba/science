@@ -15,7 +15,7 @@ Alexander Del Toro Barba, PhD
 **Trinity of Reduction (How do you make the complicated simple?)**
 
 * **Principle 1**: [Symmetries](https://github.com/deltorobarba/science/blob/main/experiments/symmetries.ipynb) ❄️ What repeats needs computing once: symmetry gives coordinates *a priori*.
-* **Principle 2**: [Principal Axes](https://github.com/deltorobarba/science/blob/main/experiments/principal_axes.ipynb) 🧬 Broken symmetry? Covariance eigenvectors separate signal from noise *a posteriori*.
+* **Principle 2**: [Principal Axes](https://github.com/deltorobarba/science/blob/main/experiments/principal_axes.ipynb) 🧬 Without symmetry, covariance eigenvectors separate signal from noise *a posteriori*.
 * **Principle 3**: [Approximation](https://github.com/deltorobarba/science/blob/main/experiments/approximation.ipynb) 🐚 Keep the leading terms and watch where the remainder blows up.
 
 **Duality of Information (What can we know and reconstruct?)**
