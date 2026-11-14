@@ -22,7 +22,7 @@ from astroquery.hips2fits import hips2fits
 
 
 def sdss_spectra():
-    """10. Die Galaxie und ihre SDSS-Spektren (Zellen 5, 7 von galaxies_hiiregions.ipynb)."""
+    """15. Die Galaxie und ihre SDSS-Spektren (Zellen 5, 7 von galaxies_hiiregions.ipynb)."""
     global ASTRODATA, C_KMS, GROUPS, LABEL, LINES, MAX_SPECTRA, SN_MIN, SPEC_GALAXY, axes, cls, col, dist
     global dx_all, dy_all, fig, first, g, g_a, g_dec, g_dist, g_pa, g_q, g_ra, half_g
     global img_opt, k, kpc_per_arcmin, lab, ln, m, query, r_deg, sdss_query, spec_list, spectra, v_sys
@@ -121,7 +121,7 @@ ORDER BY s.snMedian DESC'''
 
 
 def line_fits():
-    """11. Linienfits (Zellen 10 von galaxies_hiiregions.ipynb)."""
+    """16. Linienfits (Zellen 10 von galaxies_hiiregions.ipynb)."""
     global L, ax, axes, best, col, curve, curves, d, dv, er, err, f
     global fig, fit_group, fl, flux, gas, good, grp, ha_pipe, hdul, ivar, k, keys
     global ln, mcurve, n_masked, rec, rows, sp, stars, title, w, wave, z_fit, zl
@@ -214,7 +214,7 @@ def line_fits():
 
 
 def density_dust():
-    """12. Dichte und Staub (Zellen 13 von galaxies_hiiregions.ipynb)."""
+    """17. Dichte und Staub (Zellen 13 von galaxies_hiiregions.ipynb)."""
     global A_SII, B_SII, C_SII, R_hi, R_lo, R_med, R_of_ne, above, axes, ebv_med, fig, n_med
     global ne, ne_of_R, ok_b, ok_s
     np.seterr(divide="ignore", invalid="ignore")                          # log von Nicht-Nachweisen -> NaN
@@ -264,7 +264,7 @@ def density_dust():
 
 
 def bpt():
-    """13. Das BPT-Diagramm (Zellen 16 von galaxies_hiiregions.ipynb)."""
+    """18. Das BPT-Diagramm (Zellen 16 von galaxies_hiiregions.ipynb)."""
     global ax, below_kauff, below_kewley, bpt_ok, dxs, dys, fig, kauff, kewley, rN2, rO3, ref
     global ref_class, sc, xx, xx2
     L["logN2"] = np.log10(L["NII6584"] / L["Ha"])
@@ -321,7 +321,7 @@ FROM galSpecLine AS l WHERE l.h_alpha_flux > 5 * l.h_alpha_flux_err AND l.h_beta
 
 
 def metallicity_gradient():
-    """14. Der Metallizitätsgradient (Zellen 19 von galaxies_hiiregions.ipynb)."""
+    """19. Der Metallizitätsgradient (Zellen 19 von galaxies_hiiregions.ipynb)."""
     global R_disk, _, axes, c, col, ds, dz0, fig, fits, gradient, ls, mk
     global rr, s, sc, use, z0
     L["O3N2"] = L["logO3"] - L["logN2"]
@@ -364,7 +364,7 @@ def metallicity_gradient():
 
 
 def pipeline_check():
-    """15. Vergleich mit der SDSS-Pipeline und dem MPA-JHU-Katalog (Zellen 22 von galaxies_hiiregions.ipynb)."""
+    """20. Vergleich mit der SDSS-Pipeline und dem MPA-JHU-Katalog (Zellen 22 von galaxies_hiiregions.ipynb)."""
     global _, axes, bd_mpa, c, col, cov_t, dev, ds, dz0, fac, fig, i_t
     global lim, ln, ls, m, m_oh, m_ratio, mpa_N2, mpa_O3, ok_pipe, ratio_pipe, rr, rt
     global s, s_t, z0

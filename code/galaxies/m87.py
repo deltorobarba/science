@@ -17,7 +17,7 @@ from astropy.io import fits
 
 
 def visibilities():
-    """31. Die Visibilities (Zellen 4, 6 von galaxies_m87.ipynb)."""
+    """36. Die Visibilities (Zellen 4, 6 von galaxies_m87.ipynb)."""
     global ASTRODATA, C, DAYS, EHT_FILES, EHT_URL, G, MPC, MSUN, REFRESH, STATIONS, UAS, axes
     global bl, d, eht, fig, fname, freq, g, grp, hdul, n_bl, names, ok
     global path, pts, rows, s1, s2, short, vis, w, wsum
@@ -85,7 +85,7 @@ def visibilities():
 
 
 def closure_phases():
-    """32. Phasen und Closure-Phasen (Zellen 9 von galaxies_m87.ipynb)."""
+    """37. Phasen und Closure-Phasen (Zellen 9 von galaxies_m87.ipynb)."""
     global BAND, DAY, TRI, a, ax, b, c, circ_stats, cl_all, closure, cm, common
     global day, fig, hours, label, mean, ph, phase_ab, series, std, sub, v_ab, v_ac
     global v_bc, x, y, z
@@ -137,7 +137,7 @@ def closure_phases():
 
 
 def ring_diameter():
-    """33. Der Ringdurchmesser aus den Amplituden (Zellen 12 von galaxies_m87.ipynb)."""
+    """38. Der Ringdurchmesser aus den Amplituden (Zellen 12 von galaxies_m87.ipynb)."""
     global F_ring, ax, c_ring, d_days, d_ring, day, fig, fit_ring, long_bl, p, p_ring, per_day
     global rho_null, ring_amp, rr, w_ring
     def ring_amp(rho, F, d_uas, w_uas):
@@ -179,7 +179,7 @@ def ring_diameter():
 
 
 def dirty_map():
-    """34. Dirty Beam und Dirty Image (Zellen 15 von galaxies_m87.ipynb)."""
+    """39. Dirty Beam und Dirty Image (Zellen 15 von galaxies_m87.ipynb)."""
     global BEAM2, EX, EY, FOV_UAS, N_PIX, PIX_UAS, axes, dirty_beam, dirty_image, ext, fig, lm
     global lm2, ring_dirty, ring_src, show, side, sky_visibilities, uv
     eht["tbin"] = np.floor((eht["time"] - eht["time"].min()) * 24 * 6)        # 10-Minuten-Intervalle
@@ -226,7 +226,7 @@ def dirty_map():
 
 
 def clean():
-    """35. CLEAN (Zellen 18 von galaxies_m87.ipynb)."""
+    """40. CLEAN (Zellen 18 von galaxies_m87.ipynb)."""
     global K_EX, NOISE, _, ax, axes, centre_ratio, fig, hogbom_clean, img, noisy, pix_to_uas, pk
     global r_pix, random_sky, ring_comps, ring_restored, rng, sp_comps, sp_dirty, sp_res, sp_restored, sparse_sky, title, top_k_peaks
     global xx_, yy_
@@ -291,7 +291,7 @@ def clean():
 
 
 def point_sources():
-    """36. Wie viele Punktquellen findet man wieder? (Zellen 21 von galaxies_m87.ipynb)."""
+    """41. Wie viele Punktquellen findet man wieder? (Zellen 21 von galaxies_m87.ipynb)."""
     global K_LIST, N_TRIALS, _, ax, dimg, e_, ec, ed, fig, k, key, label
     global m_, mk, r_c, r_d, rc, rd, rec, recall, s
     def recall(sources, img, tol_uas=8):
@@ -330,7 +330,7 @@ def point_sources():
 
 
 def mass():
-    """37. Durchmesser und Masse im Vergleich (Zellen 24 von galaxies_m87.ipynb)."""
+    """42. Durchmesser und Masse im Vergleich (Zellen 24 von galaxies_m87.ipynb)."""
     global D_M87, _, alpha_eht, ax, d_err, fig, j, label, m, m_err, m_own, m_shadow
     global masses, quote, theta_g
     D_M87 = 16.8                                     # Mpc, wie in EHT Collaboration (2019)

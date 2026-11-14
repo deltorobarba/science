@@ -34,23 +34,23 @@ def load():
     ASTRODATA = nebdata.DATA
 
 
-    SNR_PLX = 5.0          # Mindest-S/N der Parallaxe (Schritt 44)
+    SNR_PLX = 5.0          # Mindest-S/N der Parallaxe (Schritt 45)
     PLX_ZP = -0.017        # Nullpunkt der Gaia-Parallaxen [mas]: wahre = gemessene − PLX_ZP (Lindegren et al. 2021)
     RUWE_MAX = 1.4         # darüber ist die Astrometrie eines Einzelsterns unzuverlässig
     REL_MIN = 0.8          # Mindestzuverlässigkeit der Zuordnung Gaia-Stern = Zentralstern (Chornay & Walton 2021)
-    R_V = 3.1              # Staubgesetz von Cardelli, Clayton & Mathis (1989) mit R_V = A_V / E(B−V) (Schritt 45)
-    T_NEB = 1.0e4          # Elektronentemperatur der Nebel [K] für die Rekombinationskoeffizienten (Schritt 47)
+    R_V = 3.1              # Staubgesetz von Cardelli, Clayton & Mathis (1989) mit R_V = A_V / E(B−V) (Schritt 46)
+    T_NEB = 1.0e4          # Elektronentemperatur der Nebel [K] für die Rekombinationskoeffizienten (Schritt 48)
     LAM_V = 5480.0         # effektive Wellenlänge des V-Filters [Å]
     FNU_V0 = 3.63e-20      # F_ν eines Sterns mit V = 0 [erg s⁻¹ cm⁻² Hz⁻¹] (Bessell et al. 1998)
     Z_TRACKS = 0.016       # Metallizität der Entwicklungswege (Vassiliadis & Wood 1994), etwa solar
     M_CORE = {1.0: 0.569, 1.5: 0.597, 2.0: 0.633, 2.5: 0.677, 3.5: 0.754, 5.0: 0.900}   # Anfangs- -> Kernmasse [M☉]
-    R0_PC = 8178.0         # Entfernung zum Galaktischen Zentrum [pc] (GRAVITY Collaboration 2019) (Schritt 51)
-    C_BULGE_MAX = 1.5      # nur Bulge-Nebel mit mäßiger Rötung, c(Hβ) < 1.5 (Schritt 51)
+    R0_PC = 8178.0         # Entfernung zum Galaktischen Zentrum [pc] (GRAVITY Collaboration 2019) (Schritt 52)
+    C_BULGE_MAX = 1.5      # nur Bulge-Nebel mit mäßiger Rötung, c(Hβ) < 1.5 (Schritt 52)
     SIG_BULGE = 0.3        # Streuung von M5007 im Bulge [mag]: Rötungsfehler und Tiefe des Bulge
     M_STAR_LIT = -4.53     # Abbruchhelligkeit der PNLF, an Cepheiden geeicht (Ciardullo 2012)
     EBV_M31 = 0.057        # Vordergrundrötung vor M 31 (Schlafly & Finkbeiner 2011, Mittel 2.5° bis 3.3° um M 31)
-    SIG_C89, SIG_M06 = 0.07, 0.15   # Messfehler von m5007 bei Ciardullo et al. und Merrett et al. [mag] (Schritt 52)
-    M5007_LIM = {"Ciardullo 1989": 22.0, "Merrett 2006": 22.5}   # Grenze der Vollständigkeit [mag] (Schritt 53)
+    SIG_C89, SIG_M06 = 0.07, 0.15   # Messfehler von m5007 bei Ciardullo et al. und Merrett et al. [mag] (Schritt 53)
+    M5007_LIM = {"Ciardullo 1989": 22.0, "Merrett 2006": 22.5}   # Grenze der Vollständigkeit [mag] (Schritt 54)
     rng = np.random.default_rng(42)
     pd.set_option("display.width", 160)
     np.seterr(divide="ignore", invalid="ignore")      # log von fehlenden Werten -> NaN
@@ -280,7 +280,7 @@ def load():
 
 
 def images():
-    """42. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
+    """43. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
     global SHOW, ax, axes, bar, cw_by_png, d, fig, h, img, name, png, r
     global rows, size, stretch
     SHOW = [("NGC 7662", "106.5-17.6", 60, "&asinh=True&autoscale=99.99"),   # Name, PNG, Bildgröße [″], Streckung
@@ -314,7 +314,7 @@ def images():
 
 
 def catalogs():
-    """43. Kataloge und Auswahl (Zellen 13 von nebulae_planetary.ipynb)."""
+    """44. Kataloge und Auswahl (Zellen 13 von nebulae_planetary.ipynb)."""
     global ALL, GAIA, S, _, ax, ax2, cstar, fig, funnel, g, i, in_v84
     global lb, lbg, lines, main, n, s_, saturated, sc, vel
     main = V84["main"][["PNG", "Name"]].copy()
@@ -331,7 +331,7 @@ def catalogs():
                .merge(lines[["PNG", "I4686", "I5007", "I6563"]], on="PNG", how="left")
                .merge(cstar[["PNG", "Vmag", "Quality"]], on="PNG", how="left")
                .merge(vel[["PNG", "ExpVel"]], on="PNG", how="left"))
-    ALL = deredden(ALL)                                                  # Rötung und entrötete Flüsse (Schritt 45)
+    ALL = deredden(ALL)                                                  # Rötung und entrötete Flüsse (Schritt 46)
 
     GAIA = CW[["PNG", "Name", "RA_ICRS", "DE_ICRS", "Rel", "Gmag", "plx", "e_plx", "RUWE", "pnRad", "rcomb"]].copy()
     GAIA = GAIA.rename(columns={"Name": "Name_HASH"})
@@ -381,7 +381,7 @@ def catalogs():
 
 
 def distances():
-    """44. Entfernungen aus Gaia (Zellen 16 von nebulae_planetary.ipynb)."""
+    """45. Entfernungen aus Gaia (Zellen 16 von nebulae_planetary.ipynb)."""
     global ax, axes, col, df, e, fig, hi_q, k, lab, ls, mid_q, ok
     global q, sure, v, x
     S["d"] = 1000 / (S["plx"] - PLX_ZP)
@@ -429,7 +429,7 @@ def distances():
 
 
 def reddening():
-    """45. Rötung aus dem Balmer-Dekrement (Zellen 19 von nebulae_planetary.ipynb)."""
+    """46. Rötung aus dem Balmer-Dekrement (Zellen 19 von nebulae_planetary.ipynb)."""
     global _, ax, axes, far, fig, near, r, ratio, row, sc
     r = S.dropna(subset=["EBV"])
     ratio = r["I6563"] / 100
@@ -462,7 +462,7 @@ def reddening():
 
 
 def ages():
-    """46. Größe und kinematisches Alter (Zellen 22 von nebulae_planetary.ipynb)."""
+    """47. Größe und kinematisches Alter (Zellen 22 von nebulae_planetary.ipynb)."""
     global ax, axes, fig, kin, lab, m, name, off, rho, sc, t, v
     S["R_pc"] = S["pnRad"] / 206265 * S["d"]
     S["t_kin"] = S["R_pc"] * PC / (S["ExpVel"] * KM) / YEAR
@@ -507,7 +507,7 @@ def ages():
 
 
 def zanstra_h():
-    """47. Die Zanstra-Temperatur aus Wasserstoff (Zellen 25 von nebulae_planetary.ipynb)."""
+    """48. Die Zanstra-Temperatur aus Wasserstoff (Zellen 25 von nebulae_planetary.ipynb)."""
     global EXAMPLES, S, T, WEID_COLS, ax, axes, fig, i, name, q, row, th
     global usable
     WEID_COLS = ["PNG", "SpType1", "TpTeff", "logTeff", "logL"]
@@ -559,7 +559,7 @@ def zanstra_h():
 
 
 def zanstra_he():
-    """48. Ein zweites Thermometer: He II (Zellen 28 von nebulae_planetary.ipynb)."""
+    """49. Ein zweites Thermometer: He II (Zellen 28 von nebulae_planetary.ipynb)."""
     global _, ax, axes, both, both_r, fig, large, q, rho, row, sc, setter
     global small
     S["T_He"] = np.where(usable, zanstra_T(S["F_He2"] / S["FnuV"], "He"), np.nan)
@@ -606,7 +606,7 @@ def zanstra_he():
 
 
 def hr_diagram():
-    """49. Das HR-Diagramm der Zentralsterne (Zellen 31 von nebulae_planetary.ipynb)."""
+    """50. Das HR-Diagramm der Zentralsterne (Zellen 31 von nebulae_planetary.ipynb)."""
     global M, ax, axes, cmap, col, df, fig, g, hr, hr_h, hr_he, hv
     global i, j, kw, mk, rho, t, v
     S["L"] = luminosity(S["FnuV"], S["d"], S["T"])
@@ -653,7 +653,7 @@ def hr_diagram():
 
 
 def core_masses():
-    """50. Kernmassen und zwei Uhren (Zellen 34 von nebulae_planetary.ipynb)."""
+    """51. Kernmassen und zwei Uhren (Zellen 34 von nebulae_planetary.ipynb)."""
     global OFFSETS, _, age, ax, axes, clocks, fig, he, masses, mc, q, row
     global sc, under, x
     he = ~S["T_limit"] & S["T"].notna() & S["L"].notna()
@@ -700,7 +700,7 @@ def core_masses():
 
 
 def brightest_oiii():
-    """51. Die hellsten Nebel der Milchstraße in [O III] (Zellen 37 von nebulae_planetary.ipynb)."""
+    """52. Die hellsten Nebel der Milchstraße in [O III] (Zellen 37 von nebulae_planetary.ipynb)."""
     global BULGE_LIM, FIT_BULGE, FIT_BULGE_ALL, M_STAR_OWN, M_STAR_OWN_ERR, ax, axes, bins, bulge, calib, col, f
     global fig, g, lab, local, nfit
     S["M5007"] = S["m5007"] - 5 * np.log10(S["d"] / 10)
@@ -753,7 +753,7 @@ def brightest_oiii():
 
 
 def m31_nebulae():
-    """52. Planetarische Nebel in M 31 (Zellen 40 von nebulae_planetary.ipynb)."""
+    """53. Planetarische Nebel in M 31 (Zellen 40 von nebulae_planetary.ipynb)."""
     global DE_M31, RA_M31, SIG_DIFF, V_M31, ax, axes, bins, c89, col, de, diff, fig
     global k, m31, match, ra, sc, sgn
     m31 = M06[(M06["Host"] == "") & M06["m5007"].notna()].copy()
@@ -803,7 +803,7 @@ def m31_nebulae():
 
 
 def luminosity_function():
-    """53. Die Leuchtkraftfunktion von M 31 (Zellen 43 von nebulae_planetary.ipynb)."""
+    """54. Die Leuchtkraftfunktion von M 31 (Zellen 43 von nebulae_planetary.ipynb)."""
     global A5007_M31, FIT, SAMPLES, ax, axes, col, e, f, fig, g, h, hi
     global k, lo, m, mu, sel, sig
     A5007_M31 = K["O3"] * EBV_M31
@@ -849,7 +849,7 @@ def luminosity_function():
 
 
 def literature():
-    """54. Temperaturen und Leuchtkräfte gegen die Literatur (Zellen 46 von nebulae_planetary.ipynb)."""
+    """55. Temperaturen und Leuchtkräfte gegen die Literatur (Zellen 46 von nebulae_planetary.ipynb)."""
     global _, ax, axes, cmp, col, eff, fig, groups, lab, m, v
     cmp = S[S["T"].notna() & S["logTeff"].notna()].copy()
     cmp["dT"] = np.log10(cmp["T"]) - cmp["logTeff"]
@@ -889,7 +889,7 @@ def literature():
 
 
 def m31_distance():
-    """55. Die Entfernung von M 31 (Zellen 49 von nebulae_planetary.ipynb)."""
+    """56. Die Entfernung von M 31 (Zellen 49 von nebulae_planetary.ipynb)."""
     global EBV_ERR, LIT_MU, MU, M_STARS, M_STAR_LIT_ERR, ax, axes, ceph, col, err, err_m, f
     global fig, i, items, k, lab, ms, ms_err, mu, sec
     LIT_MU = {"Cepheiden (Li et al. 2021)": (24.407, 0.032),
@@ -897,8 +897,8 @@ def m31_distance():
               "Bedeckungsveränderliche (Vilardell et al. 2010)": (24.36, 0.08)}
     M_STAR_LIT_ERR, EBV_ERR = 0.06, 0.011
     M_STARS = {"Ciardullo 2012 (Cepheiden)": (M_STAR_LIT, M_STAR_LIT_ERR),
-               f"Bulge, c < {C_BULGE_MAX} (Schritt 51)": (M_STAR_OWN, M_STAR_OWN_ERR),
-               "Bulge, alle Nebel (Schritt 51)": (FIT_BULGE_ALL["m_star"], (FIT_BULGE_ALL["hi"] - FIT_BULGE_ALL["lo"]) / 2),
+               f"Bulge, c < {C_BULGE_MAX} (Schritt 52)": (M_STAR_OWN, M_STAR_OWN_ERR),
+               "Bulge, alle Nebel (Schritt 52)": (FIT_BULGE_ALL["m_star"], (FIT_BULGE_ALL["hi"] - FIT_BULGE_ALL["lo"]) / 2),
                "Kovacevic et al. 2011, auf 8.18 kpc": (-4.38 - 5 * np.log10(R0_PC / 7520), 0.13)}
     MU = {}
     for k, f in FIT.items():

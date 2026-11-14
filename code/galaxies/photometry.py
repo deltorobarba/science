@@ -62,7 +62,7 @@ ORDER BY vmag
 
 
 def target():
-    """2. Die ausgewählte Galaxie und ihre Entfernung (Zellen 10 von galaxies_photometry.ipynb)."""
+    """3. Die ausgewählte Galaxie und ihre Entfernung (Zellen 10 von galaxies_photometry.ipynb)."""
     global M_V, a_arcmin, attempt, ax, b_arcmin, coord, d, d_hubble, dist, dist_mpc, e, error
     global fig, info, j, kpc_per_arcmin, m, match, methods, ned, order, pa_deg, rng, size_kpc
     global to_mpc, v_rec
@@ -137,7 +137,7 @@ WHERE i.id = '{SELECTED_GALAXY}'
 
 
 def band_images():
-    """3. Bilder in sechs Wellenlängenbereichen (Zellen 13 von galaxies_photometry.ipynb)."""
+    """4. Bilder in sechs Wellenlängenbereichen (Zellen 13 von galaxies_photometry.ipynb)."""
     global FOV_FACTOR, PIXELS, SURVEYS, ax, axes, catalog_ellipse, data, extent, fig, fov, half, hdul
     global hdus, images, img, name, ncol, nrow, pix_arcmin, stretch
     SURVEYS = {
@@ -194,7 +194,7 @@ def band_images():
 
 
 def composites():
-    """4. Bilder in sechs Wellenlängenbereichen (Zellen 16 von galaxies_photometry.ipynb)."""
+    """5. Bilder in sechs Wellenlängenbereichen (Zellen 16 von galaxies_photometry.ipynb)."""
     global CHANNELS, HIPS, available, ax, axes, fig, optical, rgb
     HIPS = "CDS/P/DSS2/color"   # Alternativen: "CDS/P/PanSTARRS/DR1/color-z-zg-g" (Dec > -30°), "CDS/P/SDSS9/color"
     optical = hips2fits.query(hips=HIPS, width=PIXELS, height=PIXELS, ra=Angle(info["ra"] * u.deg),
@@ -220,7 +220,7 @@ def composites():
 
 
 def sky_profile():
-    """5. Himmelshintergrund und radiales Profil (Zellen 19 von galaxies_photometry.ipynb)."""
+    """8. Himmelshintergrund und radiales Profil (Zellen 19 von galaxies_photometry.ipynb)."""
     global BAND, N_BINS, a_cat, axes, col, dx, dy, edges, f, fig, img, nx
     global ny, pa, prof, q, r_ell, r_mid, raw, ring_median, robust_std, sky, sky_noise, sky_region
     global x_a, x_b, xx, yy
@@ -290,7 +290,7 @@ def sky_profile():
 
 
 def sersic_fit():
-    """6. Das Sérsic-Profil (Zellen 22 von galaxies_photometry.ipynb)."""
+    """9. Das Sérsic-Profil (Zellen 22 von galaxies_photometry.ipynb)."""
     global I_e, R_FIT, axes, fig, h_single, kind, n, n_err, p0, pcov, popt, r_e
     global r_plot, re_err, resid_single, sel, sersic
     R_FIT = (0.05, 0.9)   # Fitbereich in Einheiten der großen Halbachse
@@ -337,7 +337,7 @@ def sersic_fit():
 
 
 def color_map():
-    """7. Die Farbkarte (Zellen 25 von galaxies_photometry.ipynb)."""
+    """10. Die Farbkarte (Zellen 25 von galaxies_photometry.ipynb)."""
     global axes, c_prof, colour, colour_ok, covered, det, fig, im, in_ring, inner, nuv, nuv_n
     global nuv_sky, outer, w1, w1_n, w1_sky
     colour_ok = "GALEX Near UV" in images and "WISE 3.4" in images
@@ -379,7 +379,7 @@ def color_map():
 
 
 def bulge_and_disk():
-    """8. Bulge und Scheibe (Zellen 28 von galaxies_photometry.ipynb)."""
+    """11. Bulge und Scheibe (Zellen 28 von galaxies_photometry.ipynb)."""
     global BT, L_bulge, L_disk, PSF_ARCMIN, _, at_bound, ax, b_nb, bd_bounds, bulge_disk, fig, h_d
     global lnI0_d, lnIe_b, n_b, p0_bd, p_bd, re_b, rms_double, rms_single, rp, sel2
     PSF_ARCMIN = 0.2      # WISE 3.4 µm löst etwa 6" auf, die SkyView-Pixel sind etwa 2"
@@ -430,7 +430,7 @@ def bulge_and_disk():
 
 
 def s4g():
-    """9. Vergleich mit der S4G-Zerlegung (Zellen 31 von galaxies_photometry.ipynb)."""
+    """12. Vergleich mit der S4G-Zerlegung (Zellen 31 von galaxies_photometry.ipynb)."""
     global _, bul, comps, disk, h_s4, hit, p_all, rows, s4, sel_all, table, viz
     viz = Vizier(columns=["**"], row_limit=-1)
     hit = viz.query_region(coord, radius=1 * u.arcmin, catalog="J/ApJS/219/4/galaxies")

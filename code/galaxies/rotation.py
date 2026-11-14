@@ -20,7 +20,7 @@ from astroquery.simbad import Simbad
 
 
 def sparc_data():
-    """16. Die SPARC-Datenbank (Zellen 5, 7 von galaxies_rotationcurves.ipynb)."""
+    """21. Die SPARC-Datenbank (Zellen 5, 7 von galaxies_rotationcurves.ipynb)."""
     global ACC, ASTRODATA, GALAXY, G_KPC, H0_KPC, HUBBLE, REFRESH, SPARC_COLS, SPARC_GALAXY, SPARC_URL, UPS_BUL, UPS_DISK
     global ax, axes, d, fig, mrt, name, props, rc, rd, rotmod, sparc, sparc_file
     global sparc_name, zf
@@ -106,7 +106,7 @@ def sparc_data():
 
 
 def quality_cuts():
-    """17. Qualitätsschnitte (Zellen 10 von galaxies_rotationcurves.ipynb)."""
+    """22. Qualitätsschnitte (Zellen 10 von galaxies_rotationcurves.ipynb)."""
     global axes, fig, keep, label, m, pts, pts_ok, steps, v_bar_sq
     def v_bar_sq(d, ups_disk=UPS_DISK, ups_bul=UPS_BUL):
         # Gas mit Vorzeichen, Sterne mit Masse-Leuchtkraft-Verhältnis
@@ -144,7 +144,7 @@ def quality_cuts():
 
 
 def baryons_vs_rotation():
-    """18. Sichtbare Materie gegen beobachtete Rotation (Zellen 13 von galaxies_rotationcurves.ipynb)."""
+    """23. Sichtbare Materie gegen beobachtete Rotation (Zellen 13 von galaxies_rotationcurves.ipynb)."""
     global ax, axes, below, f_dm, fig, m_bar, m_dyn, r22, r_half, r_kep, r_kpc, v_bar
     global v_obs
     r_kpc = rc["R"].to_numpy()
@@ -189,7 +189,7 @@ def baryons_vs_rotation():
 
 
 def halo_fits():
-    """19. NFW-Halo gegen Halo mit Kern (Zellen 16 von galaxies_rotationcurves.ipynb)."""
+    """24. NFW-Halo gegen Halo mit Kern (Zellen 16 von galaxies_rotationcurves.ipynb)."""
     global axes, c_iso, c_nfw, chi2_iso, chi2_nfw, dof, err, fig, m200, p_iso, p_nfw, r200
     global v_iso, v_nfw, v_tot_iso, v_tot_nfw
     def v_nfw(r, v200, c):
@@ -242,7 +242,7 @@ def halo_fits():
 
 
 def radial_acceleration():
-    """20. Die radiale Beschleunigungsrelation (Zellen 19 von galaxies_rotationcurves.ipynb)."""
+    """25. Die radiale Beschleunigungsrelation (Zellen 19 von galaxies_rotationcurves.ipynb)."""
     global ax, fig, g_bar, g_obs, gb, gdag, gdag_err, hb, hi, lg_cov, lg_dag, lo
     global m, own, rar, resid
     g_obs = pts_ok["Vobs"] ** 2 / pts_ok["R"] * ACC
@@ -282,7 +282,7 @@ def radial_acceleration():
 
 
 def tully_fisher():
-    """21. Die baryonische Tully-Fisher-Beziehung (Zellen 22 von galaxies_rotationcurves.ipynb)."""
+    """26. Die baryonische Tully-Fisher-Beziehung (Zellen 22 von galaxies_rotationcurves.ipynb)."""
     global G_SI, MSUN, ax, btf, fig, fit, icpt, icpt_err, icpt_ols, icpt_pred, m_pred, scatter
     global slope, slope_err, slope_ols, sx, sy, vv, x_btf, y_btf
     btf = sparc[(sparc["Vflat"] > 0) & (sparc["Q"] < 3)].copy()
@@ -317,7 +317,7 @@ def tully_fisher():
     vv = np.logspace(1.3, 2.6, 50)
     ax.plot(vv, 10 ** icpt * vv ** slope, "r-", label=f"orthogonale Regression: M ∝ V^{slope:.2f}")
     ax.plot(vv, 10 ** icpt_ols * vv ** slope_ols, c="tab:red", ls=":", lw=1, label=f"gewöhnliche Regression: M ∝ V^{slope_ols:.2f}")
-    ax.plot(vv, m_pred(vv), "b--", lw=1, label="M = V⁴ / (G g†) aus Schritt 20")
+    ax.plot(vv, m_pred(vv), "b--", lw=1, label="M = V⁴ / (G g†) aus Schritt 25")
     if props["Vflat"] > 0:
         ax.scatter([props["Vflat"]], [(UPS_DISK * props["L36"] + 1.33 * props["MHI"]) * 1e9], marker="*", s=250,
                    c="tab:orange", edgecolor="k", zorder=5, label=SPARC_GALAXY)
@@ -332,7 +332,7 @@ def tully_fisher():
 
 
 def literature():
-    """22. Vergleich mit den SPARC-Veröffentlichungen (Zellen 25 von galaxies_rotationcurves.ipynb)."""
+    """27. Vergleich mit den SPARC-Veröffentlichungen (Zellen 25 von galaxies_rotationcurves.ipynb)."""
     global rows
     rows = [("g† [10⁻¹⁰ m/s²]", f"{gdag * 1e10:.2f} ± {gdag_err * 1e10:.2f}", "1.20 ± 0.02 (stat.) ± 0.24 (syst.)", "McGaugh, Lelli & Schombert (2016)"),
             ("Streuung der Beschleunigungsrelation [dex]", f"{resid.std():.2f}", "0.13", "McGaugh, Lelli & Schombert (2016)"),

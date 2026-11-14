@@ -25,7 +25,7 @@ from IPython.display import display
 
 
 def load():
-    """23. Daten (Zellen 5, 7 von galaxies_warps.ipynb)."""
+    """28. Daten (Zellen 5, 7 von galaxies_warps.ipynb)."""
     global ASTRODATA, BIN, C_KMS, DEMO, EBENEN, GALAXY, H0, NPIX_MAX, PIXSCALE, REFRESH, R_INNER, SNR_MIN
     global ax, axes, ebene, fig, fn, half, maj, pix, r, s, size_arcsec, titel
     global url
@@ -87,7 +87,7 @@ def load():
 
 
 def image():
-    """24. Bild und Katalogdaten laden (Zellen 10 von galaxies_warps.ipynb)."""
+    """29. Bild und Katalogdaten laden (Zellen 10 von galaxies_warps.ipynb)."""
     global DEMO_CASES, GALAXY, d_hubble, demo_galaxy, ext, hi, img, info, legacy_cutout, lo, load_galaxy, pix
     global simbad_info, wcs
     @lru_cache
@@ -176,7 +176,7 @@ def image():
 
 
 def orientation():
-    """25. Himmel abziehen, Lage der Scheibe bestimmen, Bild drehen (Zellen 13 von galaxies_warps.ipynb)."""
+    """30. Himmel abziehen, Lage der Scheibe bestimmen, Bild drehen (Zellen 13 von galaxies_warps.ipynb)."""
     global bg_std, pa_own, r_max, reduce_image, rot
     def reduce_image(img, wcs):
         _, med, std = sigma_clipped_stats(img, sigma=3)
@@ -212,7 +212,7 @@ def orientation():
 
 
 def spine_fit():
-    """26. Spine-Fit: Wo ist die Scheibe in jeder Spalte am hellsten? (Zellen 16 von galaxies_warps.ipynb)."""
+    """31. Spine-Fit: Wo ist die Scheibe in jeder Spalte am hellsten? (Zellen 16 von galaxies_warps.ipynb)."""
     global ax, cx, cy, fig, fit_spine, gauss, hi, lo, ok, sc, spine, w
     def gauss(z, A, z0, s, c): return A * np.exp(-0.5 * ((z - z0) / s) ** 2) + c
 
@@ -258,7 +258,7 @@ def spine_fit():
 
 
 def warp_shape():
-    """27. Referenzebene, Warp-Profil und Form (Zellen 19 von galaxies_warps.ipynb)."""
+    """32. Referenzebene, Warp-Profil und Form (Zellen 19 von galaxies_warps.ipynb)."""
     global Rk, c, classify, label, r_in, res, sel, side, warp_profile, zw
     def warp_profile(spine, ok, r_max, kpc_per_px):
         s = spine[ok]
@@ -312,7 +312,7 @@ def warp_shape():
 
 
 def dust_or_geometry():
-    """28. Staub oder Geometrie? (Zellen 22 von galaxies_warps.ipynb)."""
+    """33. Staub oder Geometrie? (Zellen 22 von galaxies_warps.ipynb)."""
     global Rk_b, band, c, res_b, warp_in_band, zw_b
     def warp_in_band(name, band):
         img_b, wcs_b, _, info_b = load_galaxy(name, band)
@@ -336,7 +336,7 @@ def dust_or_geometry():
 
 
 def sample():
-    """29. Stichprobe und Warp-Katalog (Zellen 25 von galaxies_warps.ipynb)."""
+    """34. Stichprobe und Warp-Katalog (Zellen 25 von galaxies_warps.ipynb)."""
     global SAMPLE, SS03, SS03_TYP, SS03_URL, analyse, e, name, profiles, row, rows, ss03_catalog, ss03_entry
     global tab
     SS03_URL = "https://cdsarc.cds.unistra.fr/ftp/J/A+A/399/457/"
@@ -400,7 +400,7 @@ def sample():
 
 
 def sample_profiles():
-    """30. Stichprobe und Warp-Katalog (Zellen 28 von galaxies_warps.ipynb)."""
+    """35. Stichprobe und Warp-Katalog (Zellen 28 von galaxies_warps.ipynb)."""
     global Rk_g, ax, axs, fig, name, ncol, nrow, res_g, zw_g
     ncol = 2; nrow = int(np.ceil(len(profiles) / ncol))
     fig, axs = plt.subplots(nrow, ncol, figsize=(11, 2.7 * nrow), squeeze=False)

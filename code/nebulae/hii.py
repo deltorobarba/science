@@ -24,7 +24,7 @@ from astroquery.sdss import SDSS
 
 
 def regions():
-    """27. Die H-II-Regionen von M 101 (Zellen 12, 13, 14, 16 von nebulae_temperature.ipynb)."""
+    """28. Die H-II-Regionen von M 101 (Zellen 12, 13, 14, 16 von nebulae_temperature.ipynb)."""
     global AIR, ASTRODATA, Atom, CH, C_CGS, C_KMS, DEC0, D_MPC, FOV, GROUPS, HA_HB, HG_HB
     global H_PLANCK, INC_DEG, K, KPC_PER_R25, K_B, LINES, N2, N_E, N_MC, O2, O3, PA_DEG
     global PYNEB, R25_ARCSEC, RA0, S, S2, S3, SH95, SN_AUR, SN_STRONG, SPEC, VIZIER, V_SYS
@@ -38,9 +38,9 @@ def regions():
     V_SYS = 241.0                                   # systemische Geschwindigkeit von M 101 [km/s]
     D_MPC = 7.4                                     # Entfernung wie bei CHAOS (Croxall et al. 2016)
     R25_ARCSEC, PA_DEG, INC_DEG = 864.0, 39.0, 18.0 # Scheibenradius, Lagewinkel und Neigung wie bei CHAOS
-    N_E = 100.0                                     # Elektronendichte [cm⁻³] (Schritt 31)
+    N_E = 100.0                                     # Elektronendichte [cm⁻³] (Schritt 32)
     SN_STRONG = 3.0                                 # Mindest-S/N der starken Linien
-    SN_AUR = 5.0                                    # Mindest-S/N der schwachen Temperaturlinien (Schritt 29)
+    SN_AUR = 5.0                                    # Mindest-S/N der schwachen Temperaturlinien (Schritt 30)
     N_MC = 500                                      # Ziehungen für die Fehlerfortpflanzung
     C_KMS = 299792.458
     rng = np.random.default_rng(42)
@@ -379,7 +379,7 @@ ORDER BY s.snMedian DESC''')
 
 
 def weak_lines():
-    """28. Erster Blick auf die schwachen Linien (Zellen 19 von nebulae_temperature.ipynb)."""
+    """29. Erster Blick auf die schwachen Linien (Zellen 19 von nebulae_temperature.ipynb)."""
     global I_SHOW, ax, c5471, core, cs, dist, fig, k, lab, lam, lo, m
     global masked, n, n5471, names, peak, sp, title, w0, weak, z_show, zooms
     # Die Faser auf NGC 5471, der hellen, metallarmen Riesen-H-II-Region am Ostrand von M 101
@@ -436,7 +436,7 @@ def weak_lines():
 
 
 def line_fits():
-    """29. Linienfits mit fester Lage und Breite (Zellen 22 von nebulae_temperature.ipynb)."""
+    """30. Linienfits mit fester Lage und Breite (Zellen 22 von nebulae_temperature.ipynb)."""
     global EMPTY, F, L, W, _, ax, axes, examples, fig, h, i, j
     global lam, mad, model, n, noise, null, order, r, rec, res, rows, sn
     global sp, xx
@@ -504,7 +504,7 @@ def line_fits():
 
 
 def saturation():
-    """30. Gesättigte Linien und Staub (Zellen 25 von nebulae_temperature.ipynb)."""
+    """31. Gesättigte Linien und Staub (Zellen 25 von nebulae_temperature.ipynb)."""
     global I, R59, axes, bright, d_ebv, ebv_a, ebv_g, fig, lim, ok59, r59, sat5007
     global use_a, use_g
     # [O III] 5007 aus 4959, wo 5007 gesättigt ist: beide Linien kommen vom selben Niveau
@@ -560,7 +560,7 @@ def saturation():
 
 
 def density():
-    """31. Die Dichte (Zellen 28 von nebulae_temperature.ipynb)."""
+    """32. Die Dichte (Zellen 28 von nebulae_temperature.ipynb)."""
     global R_lim, R_meas, R_ref, R_s2, THERMO, T_true, T_wrong, atom, axes, col, fig, i1
     global i2, lo_pair, n, name, ne_grid, ne_of, ratio, up
     ne_grid = np.logspace(0, 5, 120)
@@ -610,7 +610,7 @@ def density():
 
 
 def thermometer():
-    """32. Das Atom als Thermometer (Zellen 31 von nebulae_temperature.ipynb)."""
+    """33. Das Atom als Thermometer (Zellen 31 von nebulae_temperature.ipynb)."""
     global CHT, RATIO, TG, T_from, axes, c, ch_T, col, d, fig, i10, kind
     global lab, obs95, of, r95, table
     # Thermometer als Tabellen: Linienverhältnis gegen Temperatur bei N_E
@@ -667,7 +667,7 @@ def thermometer():
 
 
 def region_temperatures():
-    """33. Die Temperaturen der Regionen (Zellen 34 von nebulae_temperature.ipynb)."""
+    """34. Die Temperaturen der Regionen (Zellen 34 von nebulae_temperature.ipynb)."""
     global AURORAL, DRAWS, STRONG, ax, axes, c, ch_m, col, dic, draw, dsl, e
     global fig, fit_gradient, hi, ic, j, kind, lab, lo, m, med, mm, r
     global r_n2, s, s_int, sl, t, temperatures
@@ -767,7 +767,7 @@ def region_temperatures():
 
 
 def tt_relations():
-    """34. Temperatur gegen Temperatur (Zellen 37 von nebulae_temperature.ipynb)."""
+    """35. Temperatur gegen Temperatur (Zellen 37 von nebulae_temperature.ipynb)."""
     global TT, a, ax, axes, b, col, d, dc, fig, kind, lab, m
     global tt
     # Temperatur-Temperatur-Beziehungen von CHAOS (Croxall et al. 2016, Gl. 5 und 7; T in 10⁴ K)
@@ -798,7 +798,7 @@ def tt_relations():
 
 
 def stacking():
-    """35. Stapeln (Zellen 40 von nebulae_temperature.ipynb)."""
+    """36. Stapeln (Zellen 40 von nebulae_temperature.ipynb)."""
     global EW_MIN, F, R_STACK, STACK, T_st, W, _, acc, ax, axes, c, cand
     global dered, e, f, fig, good, grid, hi, k, kind, lam, lo, med
     global mm, mode, model, n, names, r, sd, sig, sp, st, title, v
@@ -884,7 +884,7 @@ def stacking():
 
 
 def abundances():
-    """36. Von der Temperatur zur Häufigkeit (Zellen 43 von nebulae_temperature.ipynb)."""
+    """37. Von der Temperatur zur Häufigkeit (Zellen 43 von nebulae_temperature.ipynb)."""
     global D, EMIS, T0, Tl, axes, c, col, d, dop, e, fig, high
     global ionic, j, key, lab, low, oh, op, opp, osrc, sc, src, t
     global zones
@@ -965,7 +965,7 @@ def abundances():
 
 
 def gradient():
-    """37. Der direkte Metallizitätsgradient (Zellen 46 von nebulae_temperature.ipynb)."""
+    """38. Der direkte Metallizitätsgradient (Zellen 46 von nebulae_temperature.ipynb)."""
     global axes, dp_own, fig, m, mk, p_own, res, rr, sec, sint_own, src
     p_own, dp_own, sint_own = fit_gradient(D["RR25"], D["OH"], D["OH_e"])
     res = D["OH"] - np.polyval(p_own, D["RR25"])
@@ -1001,7 +1001,7 @@ def gradient():
 
 
 def fibers_vs_chaos():
-    """38. Faser für Faser gegen CHAOS (Zellen 49 von nebulae_temperature.ipynb)."""
+    """39. Faser für Faser gegen CHAOS (Zellen 49 von nebulae_temperature.ipynb)."""
     global P, a, axes, b, c, chP, chcol, cmp_rows, cols, d, fig, kind
     global lab, n, ok, own_I, pairs, x, y
     P = L[L["chaos"].notna()].copy()
@@ -1057,7 +1057,7 @@ def fibers_vs_chaos():
 
 
 def gradient_vs_chaos():
-    """39. Der Gradient gegen CHAOS (Zellen 52 von nebulae_temperature.ipynb)."""
+    """40. Der Gradient gegen CHAOS (Zellen 52 von nebulae_temperature.ipynb)."""
     global PAPER, R0, ax, chg, dp_ch, dv, fig, name, p_ch, pdv, pv, rr
     global sint_ch, v
     chg = pd.DataFrame({"R": ch_pos.set_index("HIIid")["RgR25"], "OH": ch_ab["12+log(O/H)"], "e": ch_ab["e_12+log(O/H)"]}).dropna()
@@ -1089,7 +1089,7 @@ def gradient_vs_chaos():
 
 
 def strong_lines():
-    """40. Starke Linien gegen die direkte Methode (Zellen 55 von nebulae_temperature.ipynb)."""
+    """41. Starke Linien gegen die direkte Methode (Zellen 55 von nebulae_temperature.ipynb)."""
     global CAL, L, axes, c, cols, d, fig, ids, m, mpa, name, p_cal
     global rr, sf, val
     # Häufigkeiten aus starken Linien für alle Fasern mit Sternentstehung
@@ -1114,7 +1114,7 @@ def strong_lines():
         m = sf & val.notna()
         p_cal[name] = np.polyfit(L.loc[m, "RR25"], val[m], 1)
         print(f"{name:34s} {d.notna().sum():5d} {d.median():+13.3f} {d.std():9.3f} {p_cal[name][0]:+19.3f}")
-    print(f"{'direkt (Schritt 37)':34s} {'':5s} {'':>13s} {'':>9s} {p_own[0]:+19.3f}")
+    print(f"{'direkt (Schritt 38)':34s} {'':5s} {'':>13s} {'':>9s} {p_own[0]:+19.3f}")
 
     fig, axes = plt.subplots(1, 2, figsize=(15, 5.5))
     cols = ["tab:blue", "tab:cyan", "tab:green", "lime", "tab:purple"]

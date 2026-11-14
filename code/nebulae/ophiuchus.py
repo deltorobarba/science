@@ -35,15 +35,15 @@ def load():
 
     RA0, DE0, SIZE = 247.0, -24.2, 3.0   # Mitte und Kantenlänge des Feldes [°]: L1688, L1689 und ρ Oph
     NPIX_MAP, NPIX_IMG = 60, 200         # Pixel des Rechengitters (3′) und der Bilder (0.9′)
-    CTRL = (241.0, -29.0, 1.0)           # Kontrollfeld mit wenig Staub: Mitte und Radius [°] (Schritt 4)
+    CTRL = (241.0, -29.0, 1.0)           # Kontrollfeld mit wenig Staub: Mitte und Radius [°] (Schritt 5)
     R_JHK = {"J": 0.282, "H": 0.175, "K": 0.112}   # A_λ / A_V im nahen Infrarot (Rieke & Lebofsky 1985)
-    MIN_STARS = 3                        # mindestens so viele Sterne pro Pixel der Extinktionskarte (Schritt 5)
-    BETA_FIX = 1.6                       # Spektralindex des Staubs, wenn er nicht frei ist (Schritt 7)
+    MIN_STARS = 3                        # mindestens so viele Sterne pro Pixel der Extinktionskarte (Schritt 6)
+    BETA_FIX = 1.6                       # Spektralindex des Staubs, wenn er nicht frei ist (Schritt 8)
     K_CMB_TO_MJY = 287.45                # 353 GHz: MJy/sr pro K_CMB (Planck 2013 IX)
     AV_TAU_DIFFUSE = 3.1 * 1.49e4        # A_V / τ353 im diffusen Gas (Planck 2013 XI: E(B−V)/τ353 = 1.49·10⁴)
     NH_PER_AV = 1.87e21                  # Wasserstoffsäule pro A_V [cm⁻² mag⁻¹] (Bohlin et al. 1978, R_V = 3.1)
     MU_H = 1.37                          # Masse pro Wasserstoffatom in Einheiten von m_H (mit Helium)
-    AV_CLOUD = 5.0                       # Sterne in Pixeln mit A_V über diesem Wert gelten als "auf der Wolke" (Schritt 6)
+    AV_CLOUD = 5.0                       # Sterne in Pixeln mit A_V über diesem Wert gelten als "auf der Wolke" (Schritt 7)
     HD147889 = (246.3513, -24.4658)      # B2-Stern am Rand von L1688 (Gaia DR3 6049140417677195136)
     STARS = {"ρ Oph": (246.3963, -23.4473), "HD 147889": HD147889, "22 Sco": (247.5520, -25.1153)}
     rng = np.random.default_rng(42)
@@ -230,7 +230,7 @@ def load():
 
 
 def bands():
-    """2. Die Wolke in sechs Bändern (Zellen 8 von nebulae_dust.ipynb)."""
+    """3. Die Wolke in sechs Bändern (Zellen 8 von nebulae_dust.ipynb)."""
     global ax, axes, dec, fig, hi, img, lo, name, ra, s, title, v
     global x, y
     fig, axes = plt.subplots(2, 3, figsize=(16, 10.5))
@@ -257,7 +257,7 @@ def bands():
 
 
 def stars():
-    """3. Sterne in Richtung der Wolke (Zellen 11 von nebulae_dust.ipynb)."""
+    """4. Sterne in Richtung der Wolke (Zellen 11 von nebulae_dust.ipynb)."""
     global CTRL2M, I857, N2M, NGA, STARS2M, _, ax, axes, bins, clean_2mass, col, ctrl_area
     global dens_ctrl, fig, hi857, idx, im, lab, m, title, xs, ys
     def clean_2mass(t):
@@ -310,7 +310,7 @@ def stars():
 
 
 def colors():
-    """4. Farben ohne und mit Staub (Zellen 14 von nebulae_dust.ipynb)."""
+    """5. Farben ohne und mit Staub (Zellen 14 von nebulae_dust.ipynb)."""
     global HK0, JH0, SIG_HK, SIG_JH, av, av_ctrl, ax, axes, cj, df, fig, k_hk
     global k_jh, title
     k_hk, k_jh = 1 / (R_JHK["H"] - R_JHK["K"]), 1 / (R_JHK["J"] - R_JHK["H"])
@@ -343,7 +343,7 @@ def colors():
 
 
 def extinction_map():
-    """5. Die Extinktionskarte (Zellen 17 von nebulae_dust.ipynb)."""
+    """6. Die Extinktionskarte (Zellen 17 von nebulae_dust.ipynb)."""
     global AV_MAP, N_MAP, av_star, ax, axes, dec, fig, good, im, logI, name, ra
     global rho, x, y
     def av_star(t):
@@ -391,7 +391,7 @@ def extinction_map():
 
 
 def reddening_distance():
-    """6. Rötung gegen Entfernung (Zellen 20 von nebulae_dust.ipynb)."""
+    """7. Rötung gegen Entfernung (Zellen 20 von nebulae_dust.ipynb)."""
     global EDGES, ax, axes, col, fig, g, lab, m, mid, off, ok, on
     global s, table, xi, yi
     GAIA["d"] = 1000 / (GAIA["parallax"] + 0.017)
@@ -435,7 +435,7 @@ def reddening_distance():
 
 
 def dust_temperature():
-    """7. Wie warm ist der Staub? (Zellen 23 von nebulae_dust.ipynb)."""
+    """8. Wie warm ist der Staub? (Zellen 23 von nebulae_dust.ipynb)."""
     global BETA, EXAMPLES, TAU, TEMP, TEMP_FIX, ax, cmap, col, core, dec, dense, edge
     global fig, hi, hot, i, im, j, k, lab, lo, m, name, nu_plot
     global ox, oy, ra, title, x, y
@@ -493,7 +493,7 @@ def dust_temperature():
 
 
 def heating():
-    """8. Ein Stern heizt den Staub (Zellen 26 von nebulae_dust.ipynb)."""
+    """9. Ein Stern heizt den Staub (Zellen 26 von nebulae_dust.ipynb)."""
     global R_ARC, T_B, ax, axes, cov, dx, dy, excess, fig, fit_r, heat_model, med
     global n_b, near, p, pc_per_arcmin, perr, pos, r_ring, rr, slope, sx, sy
     dx, dy = offsets(RA_MAP, DE_MAP)
@@ -548,7 +548,7 @@ def heating():
 
 
 def distance_jump():
-    """9. Die Entfernung aus dem Sprung (Zellen 29 von nebulae_dust.ipynb)."""
+    """10. Die Entfernung aus dem Sprung (Zellen 29 von nebulae_dust.ipynb)."""
     global D_JUMP, D_JUMP_ERR, JUMP, ax, axes, b, boot, cloud, dd, fig, inside, n_front
     global s
     cloud = GAIA[on & (GAIA["d"] < 3000)]
@@ -595,7 +595,7 @@ def distance_jump():
 
 
 def extinction_law():
-    """10. Das Extinktionsgesetz im Infraroten (Zellen 32 von nebulae_dust.ipynb)."""
+    """11. Das Extinktionsgesetz im Infraroten (Zellen 32 von nebulae_dust.ipynb)."""
     global DELTA, SLOPE, SLOPE_ERR, SLOPE_PA, ax, boot, deming_slope, fig, keep, principal_slope, red, resid
     global s1, sel, slope_rl, x
     red = STARS2M[STARS2M["has_j"] & STARS2M["AV"].between(3, 25)]
@@ -645,7 +645,7 @@ def extinction_law():
 
 
 def obscuring_vs_emitting():
-    """11. Staub, der verdeckt, gegen Staub, der leuchtet (Zellen 35 von nebulae_dust.ipynb)."""
+    """12. Staub, der verdeckt, gegen Staub, der leuchtet (Zellen 35 von nebulae_dust.ipynb)."""
     global AV_PER_TAU, AV_TAU_MAP, ax, axes, fig, hi, lo, m, ratio, sc, t, use
     use = (N_MAP >= 5) & np.isfinite(AV_MAP) & (AV_MAP > 0.5)
     ratio = AV_MAP[use] / TAU[use]
@@ -685,10 +685,10 @@ def obscuring_vs_emitting():
 
 
 def mass():
-    """12. Die Masse der Wolke (Zellen 38 von nebulae_dust.ipynb)."""
+    """13. Die Masse der Wolke (Zellen 38 von nebulae_dust.ipynb)."""
     global AV_BEST, A_2M, D_CLOUD, M_2M, M_TAU, ax, axes, fig, k, mass_per_mag, pix_cm, t
     global thresholds
-    D_CLOUD = D_JUMP                                                    # Entfernung aus Schritt 9 [pc]
+    D_CLOUD = D_JUMP                                                    # Entfernung aus Schritt 10 [pc]
     pix_cm = np.radians(SIZE / NPIX_MAP) * D_CLOUD * PC
     mass_per_mag = MU_H * M_H * NH_PER_AV * pix_cm**2 / M_SUN           # Sonnenmassen pro Pixel und Magnitude A_V
     AV_BEST = np.where(np.isfinite(AV_MAP), AV_MAP, AV_TAU_MAP)
@@ -723,7 +723,7 @@ def mass():
 
 
 def distance_check():
-    """13. Die Entfernung gegen VLBI und Hipparcos (Zellen 41 von nebulae_dust.ipynb)."""
+    """14. Die Entfernung gegen VLBI und Hipparcos (Zellen 41 von nebulae_dust.ipynb)."""
     global CHECKS, D_SYS, LIT, ax, d, e, fig, i, items, k, lab, m
     global s, v
     LIT = {"VLBI, L1688 (Ortiz-León et al. 2017)": (137.3, 1.2), "VLBI, L1689 (Ortiz-León et al. 2017)": (147.3, 3.4),
@@ -762,7 +762,7 @@ def distance_check():
 
 
 def sfd():
-    """14. Die Extinktion gegen die Staubkarte von Schlegel, Finkbeiner & Davis (Zellen 44 von nebulae_dust.ipynb)."""
+    """15. Die Extinktion gegen die Staubkarte von Schlegel, Finkbeiner & Davis (Zellen 44 von nebulae_dust.ipynb)."""
     global SFD_AV, ax, axes, dec, fig, hi, i, im, j, lo, m, name
     global px, py, q, ra, use, wsfd, x, y
     wsfd = WCS(SFD.header)
@@ -787,7 +787,7 @@ def sfd():
     ax.axhline(1, color="k", lw=1)
     ax.axhline(1 / 0.86, color="k", ls=":", label="Nacheichung 0.86 (Schlafly & Finkbeiner)")
     ax.set_yscale("log")
-    ax.set_xlabel("Staubtemperatur aus Schritt 7 [K]")
+    ax.set_xlabel("Staubtemperatur aus Schritt 8 [K]")
     ax.set_ylabel("A_V (SFD) / A_V (2MASS)")
     ax.set_title("Verhältnis gegen Temperatur", fontsize=10)
     ax.legend(fontsize=9)

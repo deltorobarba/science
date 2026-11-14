@@ -166,12 +166,12 @@ def load():
         return np.exp(lnA) * (nu / 1e12) ** beta * planck(nu, T) * 1e26                # Jy
 
 
-    D_FROM_GAIA = None                                               # wird in Schritt 18 gesetzt
+    D_FROM_GAIA = None                                               # wird in Schritt 19 gesetzt
     print(f"Pixel der Übersicht {np.degrees(PIX_WIDE) * 3600:.0f}″, Öffnung {APER:.0f}′, Hintergrund {BG[0]:.0f}–{BG[1]:.0f}′")
 
 
 def multiwavelength():
-    """16. Der Orionnebel vom Röntgen- bis zum Radiobereich (Zellen 8 von nebulae_orion.ipynb)."""
+    """17. Der Orionnebel vom Röntgen- bis zum Radiobereich (Zellen 8 von nebulae_orion.ipynb)."""
     global ax, axs, dx, dy, ext, fig, i, img, j, key, show
     show = ["ROSAT", "DSS2 R", "Hα", "2MASS K", "WISE 3.4", "WISE 22", "IRIS 60", "IRIS 100", "Planck 857", "Planck 353", "Planck 28", "NVSS"]
     ext = [WIDE / 2 * 60, -WIDE / 2 * 60, -WIDE / 2 * 60, WIDE / 2 * 60]
@@ -200,7 +200,7 @@ def multiwavelength():
 
 
 def color_images():
-    """17. Farbbilder in drei Wellenlängenbereichen (Zellen 11 von nebulae_orion.ipynb)."""
+    """18. Farbbilder in drei Wellenlängenbereichen (Zellen 11 von nebulae_orion.ipynb)."""
     global ax, axs, e1, fig, hp, img, key, keys, lab, name, peaks, rc
     global s, xc, yc
     fig, axs = plt.subplots(1, 3, figsize=(18, 6.4))
@@ -224,7 +224,7 @@ def color_images():
 
 
 def distance():
-    """18. Die Entfernung aus Gaia (Zellen 14 von nebulae_orion.ipynb)."""
+    """19. Die Entfernung aus Gaia (Zellen 14 von nebulae_orion.ipynb)."""
     global D_ERR, D_FROM_GAIA, PLX, PLX_SYS, ax, col, d, e, fig, lab, mem, plx
     global w
     mem = (GAIA.parallax > 2.0) & (GAIA.parallax < 3.5)
@@ -253,7 +253,7 @@ def distance():
 
 
 def region_photometry():
-    """19. Photometrie der ganzen Region (Zellen 17 von nebulae_orion.ipynb)."""
+    """20. Photometrie der ganzen Region (Zellen 17 von nebulae_orion.ipynb)."""
     global CAL, FLUX, ax, e, f, fig, grow, img, key, radii
     CAL = [k for k, v in BANDS.items() if v[1] is not None]
     radii = np.arange(5, 56, 2.5)
@@ -279,7 +279,7 @@ def region_photometry():
 
 
 def free_free():
-    """20. Frei-frei-Strahlung und der Stern, der den Nebel ionisiert (Zellen 20 von nebulae_orion.ipynb)."""
+    """21. Frei-frei-Strahlung und der Stern, der den Nebel ionisiert (Zellen 20 von nebulae_orion.ipynb)."""
     global ALPHA_FF, E_ff, L28, Q_ERR, Q_ION, S_ff, ax, ax2, d_cm, ff_keys, fig, lnS0
     global nn, nu_ff, typ
     ff_keys = ["Planck 28", "Planck 44", "Planck 70"]
@@ -323,7 +323,7 @@ def free_free():
 
 
 def extinction():
-    """21. Wie viel Staub vor den Sternen liegt (Zellen 23 von nebulae_orion.ipynb)."""
+    """22. Wie viel Staub vor den Sternen liegt (Zellen 23 von nebulae_orion.ipynb)."""
     global AV_CTL, AV_ONC, JH0, ax, ax2, bins, colors, ctl, ex_c, ex_o, fig, hk_c
     global hk_o, jh_c, jh_o, onc, sat_area, sc
     def colors(df):
@@ -367,7 +367,7 @@ def extinction():
 
 
 def density():
-    """22. Dichte, Größe und die Strömgren-Kugel (Zellen 26 von nebulae_orion.ipynb)."""
+    """23. Dichte, Größe und die Strömgren-Kugel (Zellen 26 von nebulae_orion.ipynb)."""
     global EM_CORE, EPS, M_HII, N_CORE, N_RMS, R_ION, R_cm, SRC, TAU_14, T_B, ax, ax2
     global c0, c1, fig, fit70, fwhm, gauss2d, im, nn, nv, om_nvss, z70, zoom
     nv = WIDEMAP["NVSS"]
@@ -423,7 +423,7 @@ def density():
 
 
 def spectrum():
-    """23. Das Spektrum der ganzen Region (Zellen 29 von nebulae_orion.ipynb)."""
+    """24. Das Spektrum der ganzen Region (Zellen 29 von nebulae_orion.ipynb)."""
     global BETA, E_BETA, E_T, E_all, J, LNA, L_DATA, L_MBB, L_O7, M_GAS, S_all, T_DUST
     global ax, cov, d_m, dust, ff_all, fig, fitm, kappa353, keys, nf, nn, nu_all
     global o, res, top
@@ -468,11 +468,11 @@ def spectrum():
     print(f"Staub: T = {T_DUST:.1f} ± {E_T:.1f} K, β = {BETA:.2f} ± {E_BETA:.2f}; Maximum von νS_ν bei {2.998e14 / nu_all[np.argmax(nu_all * S_all)]:.0f} µm")
     print(f"Infrarot-Leuchtkraft: Modell {L_MBB:.2e} L☉, Messpunkte {L_DATA:.2e} L☉; O7 V nach Martins: {L_O7:.2e} L☉ "
           f"(Verhältnis Messpunkte/O7 V = {L_DATA / L_O7:.1f})")
-    print(f"Masse von Gas und Staub aus 353 GHz: {M_GAS:.0f} M☉; ionisiertes Gas (Schritt 22): {M_HII:.0f} M☉")
+    print(f"Masse von Gas und Staub aus 353 GHz: {M_GAS:.0f} M☉; ionisiertes Gas (Schritt 23): {M_HII:.0f} M☉")
 
 
 def dust_temperature():
-    """24. Eine Karte der Staubtemperatur (Zellen 32 von nebulae_orion.ipynb)."""
+    """25. Eine Karte der Staubtemperatur (Zellen 32 von nebulae_orion.ipynb)."""
     global SLOPE, TMAP, Tg, ax, ax2, bg100, bg60, fig, i100, i60, im, lnT0
     global ok, ratio, rg, rr, tprof
     i60, i100 = to_jy_sr("IRIS 60"), to_jy_sr("IRIS 100")
@@ -509,9 +509,9 @@ def dust_temperature():
 
 
 def young_stars():
-    """25. Junge Sterne mit Infrarot-Überschuss (Zellen 35 von nebulae_orion.ipynb)."""
+    """26. Junge Sterne mit Infrarot-Überschuss (Zellen 35 von nebulae_orion.ipynb)."""
     global F_CORR, F_CTRL, F_ONC, ax, axs, ex, fig, hk, hk_line, jh, lab
-    # jh_o, hk_o, ex_o und jh_c, hk_c, ex_c aus Schritt 21 (Funktion colors)
+    # jh_o, hk_o, ex_o und jh_c, hk_c, ex_c aus Schritt 22 (Funktion colors)
     F_ONC, F_CTRL = ex_o.mean(), ex_c.mean()
     F_CORR = (F_ONC - F_CTRL) / (1 - F_CTRL)
     fig, axs = plt.subplots(1, 2, figsize=(16, 6.5), sharex=True, sharey=True)
@@ -536,7 +536,7 @@ def young_stars():
 
 
 def literature():
-    """26. Gegen die Literatur (Zellen 38 von nebulae_orion.ipynb)."""
+    """27. Gegen die Literatur (Zellen 38 von nebulae_orion.ipynb)."""
     global ax, col, e, fig, i, lab, rows, v
     rows = [("Entfernung / Kounkel et al. 2017", D_FROM_GAIA / DIST_REF["Kounkel et al. 2017 (VLBA)"][0],
              np.hypot(D_ERR / D_FROM_GAIA, 5 / 388), "C0"),

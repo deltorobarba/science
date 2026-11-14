@@ -34,10 +34,10 @@ def load():
 
     warnings.simplefilter("ignore", FITSFixedWarning)     # die DSS-Köpfe enthalten veraltete Schlüsselwörter
     RA0, DE0 = 83.63308, 22.01450      # Bezugspunkt aller Bilder: Crab-Pulsar (ICRS, gerundet)
-    HALF = 360                         # halbe Kantenlänge des gemeinsamen Rasters [″], 1″ pro Pixel (Schritt 61)
-    FWHM_COMMON = 4.4                  # gemeinsame Bildschärfe nach dem Angleichen [″] (Schritt 61)
+    HALF = 360                         # halbe Kantenlänge des gemeinsamen Rasters [″], 1″ pro Pixel (Schritt 62)
+    FWHM_COMMON = 4.4                  # gemeinsame Bildschärfe nach dem Angleichen [″] (Schritt 62)
     HP_SIGMA = 6.0                     # Breite des Hochpasses [″]: Strukturen größer als das werden entfernt
-    PATCH, SEARCH, STEP = 10, 20, 8    # halbe Ausschnittgröße, Suchradius und Abstand der Ausschnitte [″] (Schritt 62)
+    PATCH, SEARCH, STEP = 10, 20, 8    # halbe Ausschnittgröße, Suchradius und Abstand der Ausschnitte [″] (Schritt 63)
     PEAK_MIN = 0.6                     # Mindestkorrelation, ab der eine Verschiebung zählt
     T_SN = 1054.5                      # Supernova: erstmals gesehen am 4. Juli 1054
     I_NS = 1e45                        # Trägheitsmoment des Neutronensterns [g cm²]
@@ -151,7 +151,7 @@ def load():
 
 
 def photos():
-    """57. Drei Fotos aus 60 Jahren (Zellen 13, 14, 16 von nebulae_crab.ipynb)."""
+    """58. Drei Fotos aus 60 Jahren (Zellen 13, 14, 16 von nebulae_crab.ipynb)."""
     global DESC, EPOCH, EXTENT, RAW, ZOOM, astrometry, axes, band, cut, d, de_c, design
     global epoch, fig, find_stars, first, fit_expansion, fit_poly, gaia_at, hdr, hi, im, img, info
     global j, k, last, lo, masked_ncc, measure, name, p, pair, prep, px, py
@@ -418,7 +418,7 @@ def photos():
 
 
 def filaments():
-    """58. Filamente und Synchrotronlicht (Zellen 19 von nebulae_crab.ipynb)."""
+    """59. Filamente und Synchrotronlicht (Zellen 19 von nebulae_crab.ipynb)."""
     global EBV, G_s, K_LINE, LAM_I, LAM_R, _, alpha, alpha_meas, ax, axes, cmap, de_s
     global ext, fig, frac, gmax, gx, gy, hi, i_img, im, inner, is_, k10
     global line, lo, nx, ny, pcx, pcy, r_img, ra_s, rad, redden, rs, sel
@@ -470,7 +470,7 @@ def filaments():
 
 
 def gaia_frame():
-    """59. Gaia-Sterne als Bezugssystem (Zellen 22 von nebulae_crab.ipynb)."""
+    """60. Gaia-Sterne als Bezugssystem (Zellen 22 von nebulae_crab.ipynb)."""
     global G, PSR_1054, SCALE, ax, axes, bins, eta_g, fast, fig, hi, lo, pm
     global psr_eta, psr_xi, r_img, sc, shift60, xi_g
     G = gaia["phot_g_mean_mag"].values
@@ -520,7 +520,7 @@ def gaia_frame():
 
 
 def epoch_astrometry():
-    """60. Astrometrie jeder Epoche (Zellen 25 von nebulae_crab.ipynb)."""
+    """61. Astrometrie jeder Epoche (Zellen 25 von nebulae_crab.ipynb)."""
     global AST, S, a, ax, axes, bins, col, fig, fwhm, gmin, h, idx
     global k, name, order, r, rms, title, v, vec
     AST = {}
@@ -572,7 +572,7 @@ def epoch_astrometry():
 
 
 def common_grid():
-    """61. Gemeinsames Raster und die Expansion auf einen Blick (Zellen 28 von nebulae_crab.ipynb)."""
+    """62. Gemeinsames Raster und die Expansion auf einen Blick (Zellen 28 von nebulae_crab.ipynb)."""
     global EPOCHS3, ETA_G, FWHM, GRID, H, NEB, NEB_LEVEL, S_GRID, S_MAX, XI_G, _, a
     global a2, ax, axes, corr, enlarge, fig, fwhm_on_grid, h1, h2, hi, i, lab
     global lo, m1, m2, n, name, norm, ok, p, s, s_1054, sm, smooth
@@ -675,7 +675,7 @@ def common_grid():
 
 
 def displacements():
-    """62. Wie weit sind die Filamente gewandert? (Zellen 31 von nebulae_crab.ipynb)."""
+    """63. Wie weit sind die Filamente gewandert? (Zellen 31 von nebulae_crab.ipynb)."""
     global P60, SC, ax, c, cand, clean, cm, df, dt60, ex, ext_win, fig
     global gs, h1, h2, hp_, im, k, m1, m2, m_, n, n_all, ncc_ex
     global qv, r, rad, rr_, tan_, title, v, win
@@ -750,13 +750,13 @@ def displacements():
 
 
 def expansion_center():
-    """63. Das Expansionszentrum und der Geburtsort des Pulsars (Zellen 34 von nebulae_crab.ipynb)."""
+    """64. Das Expansionszentrum und der Geburtsort des Pulsars (Zellen 34 von nebulae_crab.ipynb)."""
     global _, ax, axes, cx, cy, d, ex_, ey_, f, fig, m_eta, m_xi
     global psr_1054, psr_t, row_
     f = P60
     cx, cy = f["cx"], f["cy"]
     ex_, ey_ = f["cx_err"], f["cy_err"]
-    # Pulsar: heute (2016.0) und zurückgerechnet auf 1054 (Schritt 59)
+    # Pulsar: heute (2016.0) und zurückgerechnet auf 1054 (Schritt 60)
     psr_1054 = PSR_1054
     psr_t = np.linspace(T_SN, 2016.0, 50) - 2016.0
     # Martin et al. (2025): Zentrum bei 5h34m32.67s +22°00'46.7" (J2000), Fehler 1.2"
@@ -801,7 +801,7 @@ def expansion_center():
 
 
 def hubble_diagram():
-    """64. Ein Hubble-Diagramm des Nebels und das Konvergenzjahr (Zellen 37 von nebulae_crab.ipynb)."""
+    """65. Ein Hubble-Diagramm des Nebels und das Konvergenzjahr (Zellen 37 von nebulae_crab.ipynb)."""
     global T0, YEARS, _, ax, axes, bins, closest_approach, d, e_rate, fig, idx, med
     global nx_, ny_, px, py, r_c, rg, sc_data, sc_true, sig, t2, t_ca, t_sim
     global v_rad, vx, vx_true, vy, vy_true
@@ -868,7 +868,7 @@ def hubble_diagram():
 
 
 def three_epochs():
-    """65. Drei Epochen, drei Paare: Wie sicher ist das Jahr? (Zellen 40 von nebulae_crab.ipynb)."""
+    """66. Drei Epochen, drei Paare: Wie sicher ist das Jahr? (Zellen 40 von nebulae_crab.ipynb)."""
     global Hv, PAIRS, RES, T0_SYS, VAR, a_, ax, axes, b_, col, delta, dts
     global fig, i, k_chain, kw, lab, labs, ls, t0_var, v
     PAIRS = {"1951 → 2011": ("POSS-I E", "PS1 r"), "1951 → 1991": ("POSS-I E", "POSS-II F"), "1991 → 2011": ("POSS-II F", "PS1 r")}
@@ -929,7 +929,7 @@ def three_epochs():
 
 
 def distance():
-    """66. Wie weit ist der Krebsnebel entfernt? (Zellen 43 von nebulae_crab.ipynb)."""
+    """67. Wie weit ist der Krebsnebel entfernt? (Zellen 43 von nebulae_crab.ipynb)."""
     global A_AX, B_AX, D_EXP, D_GAIA, L, PA_AX, ang, ax, axes, col, cov, dd
     global eplx, ex_eta, ex_xi, fig, lab, lam, mu_b, p, pa, pdf, plx, rel
     global s, tt, vec, xm, xx_, y, ym, yy_
@@ -988,7 +988,7 @@ def distance():
 
 
 def pulsar():
-    """67. Der Pulsar bremst (Zellen 46 von nebulae_crab.ipynb)."""
+    """68. Der Pulsar bremst (Zellen 46 von nebulae_crab.ipynb)."""
     global B_EQ, EDOT, GLITCH, JB, P, Pdot, TAU_C, ax, axes, big, dsec, fig
     global g, j, jumps, k, line, m, ndig, now, nu, nud, p, pred
     global rows, t
@@ -1054,7 +1054,7 @@ def pulsar():
 
 
 def braking_index():
-    """68. Bremsindex und Anfangsperiode (Zellen 49 von nebulae_crab.ipynb)."""
+    """69. Bremsindex und Anfangsperiode (Zellen 49 von nebulae_crab.ipynb)."""
     global AGE, E_ROT, N_ALL, N_BRAKE, P0, P0_BEST, Pt, SEG, ax, axes, braking_segments, col
     global fig, g, n, p0_from, pw, tw, yrs
     def braking_segments(skip=150, min_span=500):
@@ -1127,7 +1127,7 @@ def braking_index():
 
 
 def literature():
-    """69. Das Konvergenzjahr gegen die Literatur (Zellen 52 von nebulae_crab.ipynb)."""
+    """70. Das Konvergenzjahr gegen die Literatur (Zellen 52 von nebulae_crab.ipynb)."""
     global BETA, LIT, ax, axes, bb, cols, dbeta, fig, fmt_err, fmt_year, i, own
     global row_, t1, tc_of, v_hom
     LIT = pd.DataFrame([
@@ -1185,7 +1185,7 @@ def literature():
 
 
 def energy():
-    """70. Energiebilanz: Kann der Pulsar die Filamente beschleunigen? (Zellen 55 von nebulae_crab.ipynb)."""
+    """71. Energiebilanz: Kann der Pulsar die Filamente beschleunigen? (Zellen 55 von nebulae_crab.ipynb)."""
     global DE_ACC, DE_ERR, E_KIN, E_KIN_ERR, E_R, L_SYN, ax, col, d, err, fig, i
     global items, lab, v2, v_perp, val
     d = P60["df"][P60["keep"]]
