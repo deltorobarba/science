@@ -248,14 +248,81 @@ Core axiom: For static problems, QC stores information. In dynamical evolution, 
 
 ## Quantum Dynamics (Chaos, Scrambling & OTOCs)
 
-The theory of quantum chaos and scrambling (operator growth, OTOCs, quantum Lyapunov exponent, butterfly velocity and Lieb-Robinson bound, Krylov complexity, MSS bound and SYK model, spectral statistics and ETH, scrambling vs. decoherence, Hayden-Preskill and the Page curve, barren plateaus and random circuit sampling) is in the notebook [Quantenchaos und Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/chaos_scrambling.ipynb) (German), together with simulations of OTOC light cones in Ising chains, the butterfly velocity of random circuits, the Hayden-Preskill protocol and the Page curve.
+Classical chaos means that nearby trajectories separate exponentially. The Schrödinger equation is linear and unitary, so two quantum states never separate: their overlap stays constant in time. Quantum chaos therefore shows up elsewhere: in how fast simple operators become complicated, in how the energy levels are spaced, and in what the eigenstates look like. The terms below are sorted by these perspectives.
 
-### Seven Perspectives on Quantum Chaos
+**Timescales** for a system with $N$ degrees of freedom, entropy $S$ and inverse temperature $\beta$:
 
-* **Spreading:** Lieb-Robinson bound, quasiparticles, quenches, entanglement growth. Notebook: [Quantenchaos und Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/chaos_scrambling.ipynb) (German).
-* **Operator growth and scrambling:** OTOCs, butterfly velocity, quantum Lyapunov exponent, Krylov complexity, random circuits. Notebooks: [Quantenchaos und Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/chaos_scrambling.ipynb) (German), [Krylov-Komplexität](https://github.com/deltorobarba/science/blob/main/quantum/chaos_krylov.ipynb) (German).
-* **Spectral statistics:** level repulsion, the gap ratio $r$, the spectral form factor, random-matrix theory. Notebook: [Spektralstatistik und Quantenchaos](https://github.com/deltorobarba/science/blob/main/quantum/chaos_spectra.ipynb) (German).
-* **Eigenstates and thermalization:** eigenstate thermalization hypothesis (ETH), generalized Gibbs ensemble. Notebook: [Eigenzustands-Thermalisierung](https://github.com/deltorobarba/science/blob/main/quantum/chaos_eth.ipynb) (German).
-* **When thermalization fails:** integrability, many-body localization, quantum many-body scars, Hilbert-space fragmentation. Notebook: [Vielteilchenlokalisierung](https://github.com/deltorobarba/science/blob/main/quantum/chaos_mbl.ipynb) (German).
-* **Information and gravity:** Hayden-Preskill protocol, Page curve, SYK model, MSS bound on chaos. Notebook: [Quantenchaos und Scrambling](https://github.com/deltorobarba/science/blob/main/quantum/chaos_scrambling.ipynb) (German).
-* **Measurement and driving:** measurement-induced phase transitions, Floquet systems, time crystals.
+| Time | Scale | What happens |
+| --- | --- | --- |
+| Thermalization time $t_d$ | $\mathcal{O}(1)$ in lattice units, $\sim\beta$ in strongly coupled systems | Two-point functions decay, local observables look thermal |
+| Scrambling time $t_*$ | $\sim\lambda_L^{-1}\ln N$ (all-to-all), $\sim L/v_B$ (local chain of length $L$) | OTOCs decay, local information is spread over the whole system |
+| Heisenberg time $t_H$ | $\sim 2\pi\hbar/\Delta \sim e^{S}$, with $\Delta$ the mean level spacing | The discreteness of the spectrum becomes visible, the spectral form factor reaches its plateau |
+| Recurrence time | $\sim e^{e^{S}}$ | The state returns close to its initial state (Poincaré recurrence) |
+
+### 1. Spreading: How Fast Can Information Move?
+
+* **Lieb-Robinson bound:** For short-range interactions on a lattice, $`\Vert[A(t), B]\Vert \leq C e^{-\mu(d - v_{LR}t)}`$ for operators at distance $d$. Outside the light cone $d > v_{LR}t$ every signal is exponentially small, whatever the state. Consequence for hardware: a circuit of nearest-neighbour gates needs depth $\sim n$ in 1D, $\sim\sqrt{n}$ in 2D and $\sim\log n$ with all-to-all gates to entangle all $n$ qubits.
+* **Quench:** A sudden change of the Hamiltonian, e.g. preparing the ground state of $H_0$ and evolving it with $H_1$. The standard way to drive a closed system out of equilibrium.
+* **Quasiparticle picture:** After a quench, pairs of entangled quasiparticles fly apart ballistically and carry correlations and entanglement with them. This explains the linear light cones seen in correlation functions (Calabrese-Cardy).
+* **Entanglement growth:** After a quench the half-chain entanglement entropy grows linearly, $S(t) = v_E t$, until it saturates at a volume law. The entanglement velocity obeys $v_E \leq v_B \leq v_{LR}$. In localized systems it grows only like $\log t$.
+
+### 2. Operator Growth and Scrambling
+
+* **Operator growth:** In the Heisenberg picture, $W(t) = e^{iHt}We^{-iHt}$ turns a local operator (e.g. a single Pauli $Z$) into a superposition of ever longer Pauli strings. Chaos means that this weight spreads over all strings.
+* **Scrambling:** Local information is spread into non-local correlations among many degrees of freedom. Globally it is still there (the evolution is unitary and reversible), but no measurement on a small subsystem can recover it.
+* **Out-of-time-order correlator (OTOC):** $F(t) = \langle W^\dagger(t)V^\dagger W(t)V\rangle$ for two operators that commute at $t = 0$. For unitary $W, V$ the squared commutator is $`C(t) = \langle [W(t),V]^\dagger [W(t),V] \rangle = 2(1 - \mathrm{Re}\,F(t))`$; it grows, and $F(t)$ decays, once the support of $W(t)$ reaches $V$. "Out of time order" because the time contour runs $0 \to t \to 0 \to t \to 0$; ordinary two-point functions decay already at $t_d$ and do not see scrambling.
+* **Loschmidt echo:** The way to measure an OTOC. Evolve forward with $e^{-iHt}$, apply the "butterfly" perturbation $V$, evolve backward with $e^{+iHt}$ (on hardware by flipping the sign of $H$), then measure $W$. Only what fails to cancel because of non-commutation survives. OTOCs have been measured this way with NMR, trapped ions and superconducting qubits.
+* **Quantum Lyapunov exponent $\lambda_L$:** The early-time growth rate, $C(t) \sim \frac{1}{N}e^{\lambda_L t}$, in systems with many degrees of freedom per site. Semiclassically $`C(t) \to \hbar^2\{x(t), p\}^2 \sim \hbar^2 e^{2\lambda_{\mathrm{cl}} t}`$, so $\lambda_L$ is the quantum analogue of the classical Lyapunov exponent. Spin-1/2 chains usually have no clean exponential window.
+* **Butterfly velocity $v_B$:** The speed of the OTOC front, $C(t, x) \sim \frac{1}{N}\exp[\lambda_L(t - x/v_B)]$. Unlike $v_{LR}$ it depends on the state and the temperature, and $v_B \leq v_{LR}$. In 1D chains it is easier to measure than $\lambda_L$.
+* **Mixed-field Ising chain:** The standard test model, $H = \sum_i Z_i Z_{i+1} + h_x \sum_i X_i + h_z \sum_i Z_i$. With $h_z = 0$ it maps to free fermions (integrable, ballistic quasiparticles, no scrambling); with both fields on, e.g. $h_x = 1.05$, $h_z = 0.5$, it is chaotic.
+* **Random circuits:** A brickwork of random two-qubit gates, the minimal model of chaos without energy conservation. Operator fronts move at $v_B$ and broaden diffusively ($\propto\sqrt{t}$ in 1D); the fluctuations of entanglement growth follow KPZ scaling ($\propto t^{1/3}$).
+* **Unitary $t$-design:** An ensemble of unitaries whose first $t$ moments equal those of the Haar measure (uniformly random unitaries). Deep random circuits become approximate designs; a 2-design already fixes OTOC averages and barren plateaus.
+* **Krylov complexity:** The repeated commutators $W, [H,W], [H,[H,W]], \dots$ span the Krylov space. The Lanczos algorithm turns the Liouvillian $\mathcal{L} = [H,\cdot]$ into a tridiagonal hopping chain with coefficients $b_n$, and $`K(t) = \sum_n n\vert\varphi_n(t)\vert^2`$ is the mean position of the operator on that chain. It grows like $e^{2\alpha t}$ when $b_n \approx \alpha n$, more slowly otherwise.
+* **Operator growth hypothesis:** In chaotic systems the Lanczos coefficients grow as fast as possible, linearly, $b_n \approx \alpha n$ (Parker et al. 2019). Then $\lambda_L \leq 2\alpha$, and at temperature $T$ one has $\alpha \leq \pi T$, which reproduces the MSS bound. Caveat: exponential Krylov growth also appears at unstable saddle points of integrable systems, so it is not a unique signature of chaos.
+
+### 3. Spectral Statistics
+
+* **Level repulsion:** In chaotic systems neighbouring energy levels avoid each other, the spacing distribution vanishes as $P(s) \propto s^\beta$ for small $s$ (Wigner-Dyson). In integrable systems the levels are uncorrelated and $P(s) = e^{-s}$ (Poisson, Berry-Tabor 1977).
+* **BGS conjecture:** Quantum systems whose classical limit is chaotic have the level statistics of random matrices (Bohigas, Giannoni, Schmit 1984).
+* **Random-matrix ensembles:** GOE ($\beta = 1$, time-reversal symmetric), GUE ($\beta = 2$, time reversal broken), GSE ($\beta = 4$, time reversal with half-integer spin). $\beta$ is the exponent of level repulsion.
+* **Unfolding:** Rescaling the spectrum so that the mean level spacing is 1 everywhere, before comparing it with random matrices.
+* **Gap ratio:** $`r_n = \min(s_n, s_{n+1})/\max(s_n, s_{n+1})`$ for consecutive spacings; needs no unfolding. Mean value $\langle r\rangle \approx 0.39$ (Poisson), $0.53$ (GOE), $0.60$ (GUE).
+* **Symmetry resolution:** Levels from different symmetry sectors do not repel each other. Mixing sectors makes a chaotic spectrum look Poissonian, so all conserved quantities have to be resolved first.
+* **Spectral form factor (SFF):** $K(t) = \langle\vert\mathrm{Tr}\,e^{-iHt}\vert^2\rangle$. It shows a dip (the smooth density of states decays), a linear ramp (long-range correlations between levels, the signature of random matrices) and a plateau after the Heisenberg time; it sees chaos long after the OTOCs have saturated.
+
+### 4. Eigenstates and Thermalization
+
+* **Thermalization in a closed system:** Local observables relax to the values of a thermal ensemble at the same energy, although the global state stays pure. The rest of the system acts as the bath.
+* **Eigenstate thermalization hypothesis (ETH):** Matrix elements of local observables in energy eigenstates have the form $`A_{mn} = \mathcal{A}(\bar{E})\delta_{mn} + e^{-S(\bar{E})/2} f_A(\bar{E},\omega) R_{mn}`$. The diagonal part is the smooth thermal value, so a single eigenstate already looks thermal; the off-diagonal part is exponentially small and random and governs fluctuations and relaxation (Deutsch 1991, Srednicki 1994).
+* **Typicality and Page value:** A random pure state is almost maximally entangled. For subsystems of dimension $m \leq n$ the average entanglement entropy is $S_A \approx \ln m - \frac{m}{2n}$ (Page 1993). Eigenstates in the middle of a chaotic spectrum have such volume-law entanglement.
+* **Generalized Gibbs ensemble (GGE):** Integrable systems relax not to a Gibbs state but to $\rho \propto e^{-\sum_k \lambda_k I_k}$, one Lagrange multiplier for each conserved quantity $I_k$.
+* **Prethermalization:** A long-lived quasi-stationary state before full thermalization, typical for nearly integrable systems and for fast periodic driving.
+
+### 5. When Thermalization Fails
+
+* **Integrability:** An extensive number of local conserved quantities (free fermions, Bethe-ansatz models). Consequences: Poisson level statistics, relaxation to a GGE, ballistic transport.
+* **Anderson localization:** Disorder localizes single-particle wave functions exponentially, and transport stops.
+* **Many-body localization (MBL):** Strong disorder plus interactions. Local integrals of motion ("l-bits") keep a memory of the initial state forever; eigenstates have area-law entanglement, the levels are Poissonian, and entanglement grows only like $\log t$. Whether MBL is stable in infinitely large systems is debated (avalanches).
+* **Quantum many-body scars:** A few special non-thermal eigenstates inside an otherwise chaotic spectrum (weak violation of ETH). They cause long-lived revivals, first seen in Rydberg-atom arrays (PXP model).
+* **Hilbert-space fragmentation:** Kinetic constraints, e.g. conservation of the dipole moment, split the Hilbert space into exponentially many disconnected sectors; states do not thermalize even without disorder.
+
+### 6. Information and Gravity
+
+* **MSS bound:** $\lambda_L \leq 2\pi k_B T/\hbar = 2\pi/\beta$ (Maldacena, Shenker, Stanford 2016). It follows from analyticity of the OTOC in the thermal strip $0 \leq \mathrm{Im}\,t \leq \beta$.
+* **Fast scramblers:** Systems that scramble in $t_* \sim \log N$, the fastest possible. Black holes are conjectured to be the fastest scramblers in nature (Sekino-Susskind 2008).
+* **SYK model:** $N$ Majorana fermions with random all-to-all four-body interactions (Sachdev-Ye, Kitaev). Solvable at large $N$, saturates the MSS bound and is dual to JT gravity in $\mathrm{AdS}_2$.
+* **Hayden-Preskill protocol:** Information thrown into a black hole that is older than the Page time can be recovered from a few Hawking quanta after the scrambling time. The Yoshida-Kitaev decoder recovers it with a fidelity set by the OTOC.
+* **Page curve:** If black-hole evaporation is unitary, the entanglement entropy of the Hawking radiation first rises and then falls back to zero; the turnover is the Page time, when half of the entropy has been emitted.
+
+### 7. Measurement and Driving
+
+* **Floquet systems:** Periodically driven, $H(t + T) = H(t)$; the one-period evolution defines an effective Floquet Hamiltonian, $U_F = e^{-iH_F T}$. Generic interacting Floquet systems absorb energy until they reach infinite temperature; MBL or fast driving (prethermalization) delay this.
+* **Discrete time crystal:** A driven many-body system that responds at a multiple of the drive period (e.g. period doubling) and keeps doing so under perturbations. Needs MBL or prethermalization to avoid heating; observed on superconducting qubits, trapped ions and NV centres.
+* **Measurement-induced phase transition:** Random circuits interrupted by measurements at rate $p$. Below a critical rate the individual trajectories have volume-law entanglement, above it area-law. The transition is visible only in single measurement records, which makes it hard to observe (post-selection problem).
+* **Monitored dynamics:** Evolution conditioned on measurement outcomes, described by quantum trajectories instead of a single density matrix.
+
+### 8. Scrambling in Quantum Computing
+
+* **Scrambling vs. decoherence:** Both make OTOCs decay. Scrambling is unitary: the global state stays pure and the information can be recovered. Decoherence loses information irreversibly to an environment, raises the global entropy, and can mimic a false Lyapunov exponent. Echoes without the perturbation or teleportation-based protocols (Yoshida-Yao) separate the two.
+* **Barren plateaus:** Deep, randomly initialized parametrized circuits approximate 2-designs, and their gradients vanish exponentially, $`\mathrm{Var}_\theta[\partial_\theta\langle H\rangle] \sim 2^{-n}`$ (McClean et al. 2018). Scrambling as an obstacle: such variational algorithms cannot be trained.
+* **Random circuit sampling:** Scrambled circuits give output probabilities with Porter-Thomas statistics, $P(p) = D e^{-Dp}$ with $D = 2^n$. Scrambling as a resource: this is the basis of quantum-advantage experiments.
