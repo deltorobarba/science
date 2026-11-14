@@ -14,18 +14,18 @@ Alexander Del Toro Barba, PhD
 
 **Trinity of Reduction (How do you make the complicated simple?)**
 
-* **Principle 1**: [Symmetries](https://github.com/deltorobarba/science/blob/main/experiments/symmetries.ipynb) ❄️ What repeats needs computing only once: symmetry gives the right coordinates *a priori*. Examples: Fourier modes, Clifford circuits, the Berry phase, Mercury's perihelion.
-* **Principle 2**: [Principal Axes](https://github.com/deltorobarba/science/blob/main/experiments/principal_axes.ipynb) 🧬 Without symmetry, find the relevant directions *a posteriori*: covariance eigenvectors separate signal from noise. Examples: LIGO whitening, autoencoders, Pantheon+.
-* **Principle 3**: [Approximation](https://github.com/deltorobarba/science/blob/main/experiments/approximation.ipynb) 🐚 Keep the leading terms and watch where the remainder blows up. Examples: radii of convergence, Trotter error, variational bounds, networks outside their training range.
+* **Principle 1**: [Symmetries](https://github.com/deltorobarba/science/blob/main/experiments/symmetries.ipynb) ❄️ What repeats needs computing only once: symmetry gives the right coordinates *a priori*.
+* **Principle 2**: [Principal Axes](https://github.com/deltorobarba/science/blob/main/experiments/principal_axes.ipynb) 🧬 Without symmetry, find the relevant directions *a posteriori*: covariance eigenvectors separate signal from noise.
+* **Principle 3**: [Approximation](https://github.com/deltorobarba/science/blob/main/experiments/approximation.ipynb) 🐚 Keep the leading terms and watch where the remainder blows up.
 
 **Duality of Information (What can we know and reconstruct?)**
 
-* **Principle 4**: [Reconstruction](https://github.com/deltorobarba/science/blob/main/experiments/reconstruction.ipynb) 🌸 Recover more unknowns than measurements via a structural prior (sparsity, low rank). Examples: compressed sensing, the M 87\* image, tomography, classical shadows.
-* **Principle 5**: [Limits of Knowledge](https://github.com/deltorobarba/science/blob/main/experiments/limits_of_knowledge.ipynb) 🔬 Barriers no algorithm crosses: physical, statistical, computational. Examples: Rayleigh's curse, the Heisenberg limit, noisy parity, sizing an AI evaluation.
+* **Principle 4**: [Reconstruction](https://github.com/deltorobarba/science/blob/main/experiments/reconstruction.ipynb) 🌸 Recover more unknowns than measurements via a structural prior (sparsity, low rank).
+* **Principle 5**: [Limits of Knowledge](https://github.com/deltorobarba/science/blob/main/experiments/limits_of_knowledge.ipynb) 🔬 Barriers no algorithm crosses: physical, statistical, computational.
 
 **Dynamics (How does a system evolve?)**
 
-* **Principle 6**: [Stability](https://github.com/deltorobarba/science/blob/main/experiments/stability.ipynb) 🦋 Does a small disturbance grow or die out? The sign of one eigenvalue decides. Examples: chaos, Kirkwood gaps, scrambling, synchronization, learning rates, optimal control.
+* **Principle 6**: [Stability](https://github.com/deltorobarba/science/blob/main/experiments/stability.ipynb) 🦋 Does a small disturbance grow or die out? The sign of one eigenvalue decides.
 
 ___
 
