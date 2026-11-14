@@ -27,17 +27,18 @@ Alexander Del Toro Barba (PhD) $\cdot$  [Google Scholar](https://scholar.google.
 
 ___
 
-**Astrophysics**
+<br>
 
-* [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/experiments/multiwavelength_astronomy.ipynb) 🔭🪐 Any galaxy or nebula from X-ray to radio, in false color.
+**Astrophysics** 🔭
+
 * [Galaxies](https://github.com/deltorobarba/science/blob/main/experiments/galaxies.ipynb) 📡 M 51 from UV to infrared, dark matter from rotation curves, the black hole of M 87.
 * [Nebulae](https://github.com/deltorobarba/science/blob/main/experiments/nebulae.ipynb) 🛰️ From star birth to supernova: ρ Ophiuchi, Orion, planetary nebulae and the Crab.
 * [Solar Astronomy](https://github.com/deltorobarba/science/blob/main/experiments/solar_astronomy.ipynb) ☀️ Sunspot cycles since 1749, 20 000 X-ray flares and strongest flare of cycle 25.
-* [Exoplanets](https://github.com/deltorobarba/science/blob/main/experiments/exoplanets.ipynb) 🌗 A Kepler transit search, the radius valley of 6470 planets and a JWST spectrum.
+* [Exoplanets](https://github.com/deltorobarba/science/blob/main/experiments/exoplanets.ipynb) 🪐 A Kepler transit search, the radius valley of 6470 planets and a JWST spectrum.
 * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/experiments/gravitational_waves.ipynb) 🌊 GW150914 from raw LIGO data, then mass gaps and selection in the catalog.
 * [Cosmology](https://github.com/deltorobarba/science/blob/main/experiments/cosmology.ipynb) 💥 Eight ways to measure the universe, from supernovae to Big Bang nucleosynthesis.
 
-**Mathematics & Quantum**
+**Mathematics & Quantum** 💎
 
 * [Algebra](https://github.com/deltorobarba/science/blob/main/experiments/algebra.ipynb) 🧮 Groups, rings, fields, eigenvalues and Lie theory, from Rubik's cube to SU(3).
 * [Analysis](https://github.com/deltorobarba/science/blob/main/experiments/analysis.ipynb) 🎼 What a function reveals in another form: residues, the FFT, spectra, barren plateaus.
