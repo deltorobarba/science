@@ -27,6 +27,8 @@ Alexander Del Toro Barba, PhD
 
 * **Principle 6**: [Stability](https://github.com/deltorobarba/science/blob/main/experiments/stability.ipynb) 🦋 Does a small disturbance grow or die out? The sign of one eigenvalue decides. Examples: Lyapunov exponents, Kirkwood gaps, scrambling and many-body localization, synchronization, neutron freeze-out, feedback and learning rates, optimal control at L2.
 
+—-
+
 **Special Interest: Astroyphysics**
 
 * [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/experiments/multiwavelength_astronomy.ipynb) 🔭🪐 SIMBAD, SkyView and SDSS for any galaxy or nebula: false-color composites from X-ray to radio and emission-line spectra (M 51).
