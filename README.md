@@ -27,9 +27,7 @@ Alexander Del Toro Barba, PhD
 
 * **Principle 6**: [Stability](https://github.com/deltorobarba/science/blob/main/experiments/stability.ipynb) 🦋 Does a small disturbance grow or die out? The sign of one eigenvalue decides. Examples: Lyapunov exponents, Kirkwood gaps, scrambling and many-body localization, synchronization, neutron freeze-out, feedback and learning rates, optimal control at L2.
 
-——-
-
-**Special Interest: Astroyphysics**
+**Astroyphysics**
 
 * [Multiwavelength Astronomy](https://github.com/deltorobarba/science/blob/main/experiments/multiwavelength_astronomy.ipynb) 🔭🪐 SIMBAD, SkyView and SDSS for any galaxy or nebula: false-color composites from X-ray to radio and emission-line spectra (M 51).
 * [Galaxies](https://github.com/deltorobarba/science/blob/main/experiments/galaxies.ipynb) 📡 One galaxy from UV to infrared (M 51), gas and oxygen in M 101, dark matter from 175 rotation curves, warped disks seen edge-on, and the black hole of M 87 from Event Horizon Telescope data.
@@ -39,7 +37,8 @@ Alexander Del Toro Barba, PhD
 * [Gravitational Waves](https://github.com/deltorobarba/science/blob/main/experiments/gravitational_waves.ipynb) 🌊 GW150914 from raw LIGO data to its chirp mass, then GWOSC catalog: mass gaps, detector reach growing as M^(5/6), and the selection effect behind the black-hole mass distribution.
 * [Cosmology](https://github.com/deltorobarba/science/blob/main/experiments/cosmology.ipynb) 💥 Eight ways to measure the universe, from today back to the first minutes: supernovae, a local void, an N-body simulation, the siren GW170817, cosmic clocks, DESI BAO, Planck's acoustic peaks, and Big Bang nucleosynthesis.
 
-**Special Interest: Mathematics & Quantum**
+**Mathematics & Quantum**
+
 * [Heisenberg-Weyl](https://github.com/deltorobarba/science/blob/main/experiments/heisenbergweyl.ipynb) ⚛️ One recipe, the tensor algebra modulo a degree-2 rule, gives bosons and fermions; up to degree 2 all stays classically simulable. Examples: transmon anharmonicity, qudit clock and shift, Wigner negativity, Clifford+T, Hubbard.
 * [Bell State Preparation](https://github.com/deltorobarba/science/blob/main/experiments/bellstatepreparation.ipynb) $\vert\Phi^+\rangle$ 🔗 From two abstract gates to noisy quantum hardware: build $\vert{}\Phi^+\rangle$, transpile to native Heron gates, and compare ideal simulation, calibrated noise, and real IBM QPU runs. Covers: Hadamard & CNOT, entanglement, transpilation ($R_z$, $\sqrt{X}$, CZ), $T_1$/$T_2$ decoherence, and readout errors.
 * [Quantum Information](https://github.com/deltorobarba/science/blob/main/experiments/quantum_information.ipynb) 🎲 From the Born rule to channel capacities: POVMs, weak and continuous measurement, the Zeno effect, tomography and classical shadows, then distances, entropies, the Holevo bound, no-cloning and quantum Fisher information.
