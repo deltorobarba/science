@@ -10,7 +10,7 @@ Alexander Del Toro Barba, PhD
 
 <br>
 
-*Working across AI, quantum computing, math, and astrophysics. Instead of organizing by discipline, this repo maps the underlying principles: exploit symmetry → extract structure → approximate → reconstruct → know the limits → test stability.*
+*Working across AI, quantum computing, math, and astrophysics. Instead of organizing by discipline, map  underlying principles: exploit symmetry → extract structure → approximate → reconstruct → know limits → test stability.*
 
 **Trinity of Reduction (How do you make the complicated simple?)**
 
