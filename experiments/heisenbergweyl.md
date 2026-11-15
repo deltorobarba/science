@@ -196,6 +196,41 @@ Core axiom: For static problems, QC stores information. In dynamical evolution, 
 | **Quantum Model** | **Classical Hardware** | **HF, DFT, Post-HF:** $\hat{H}\vert{}\psi\rangle = E\vert{}\psi\rangle$<br>• HF ignores correlation<br>• DFT approximates via the electron density $\rho$<br>• Post-HF (CC, CI) exact, but exponential in $N$ | **TD-DFT & Wave Packet Dynamics:** Excitations, spectra, fluorescence.<br>• Exact propagation $e^{-i\hat{H}t/\hbar}\vert{}\Psi(0)\rangle$ scales exponentially in $N$ |
 | **Quantum Model** | **Quantum Hardware** | **VQE (NISQ) & QPE (Fault-Tolerant):** Determination of the correlation energy via parametrized entanglement / phase measurement | **Hamiltonian Simulation:** Coherent time evolution $e^{-iHt}\vert{}\psi(0)\rangle$ in the $2^n$-dimensional Hilbert space via Trotter, QSVT, or Shadow Simulation |
 
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>Computing</th>
+      <th><b>Static</b> (optimization via variational principle, states)</th>
+      <th><b>Dynamic</b> (explicit time propagation, time evolution)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="2"><b>Classical Model</b></td>
+      <td><b>Classical Hardware</b></td>
+      <td><b>Docking, Energy Minimization:</b> Geometric fitting (AutoDock, Rosetta)</td>
+      <td><b>Molecular Dynamics (MD):</b> $F = ma$, classical trajectories via force fields (GROMACS, NAMD, AMBER)</td>
+    </tr>
+    <tr>
+      <td><b>Quantum Hardware</b></td>
+      <td>Discrete combinatorial optimization (e.g. conformational search via QAOA / annealing)</td>
+      <td><b>Linear PDE Solvers:</b> Navier-Stokes via the HHL algorithm, flow and weather models</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><b>Quantum Model</b></td>
+      <td><b>Classical Hardware</b></td>
+      <td><b>HF, DFT, Post-HF:</b> $\hat{H}\vert\psi\rangle = E\vert\psi\rangle$<br>• HF ignores correlation<br>• DFT approximates via the electron density $\rho$<br>• Post-HF (CC, CI) exact, but exponential in $N$</td>
+      <td><b>TD-DFT &amp; Wave Packet Dynamics:</b> Excitations, spectra, fluorescence.<br>• Exact propagation $e^{-i\hat{H}t/\hbar}\vert\Psi(0)\rangle$ scales exponentially in $N$</td>
+    </tr>
+    <tr>
+      <td><b>Quantum Hardware</b></td>
+      <td><b>VQE (NISQ) &amp; QPE (Fault-Tolerant):</b> Determination of the correlation energy via parametrized entanglement / phase measurement</td>
+      <td><b>Hamiltonian Simulation:</b> Coherent time evolution $e^{-iHt}\vert\psi(0)\rangle$ in the $2^n$-dimensional Hilbert space via Trotter, QSVT, or Shadow Simulation</td>
+    </tr>
+  </tbody>
+</table>
+
 
 ### Static Quantum Chemistry
 
