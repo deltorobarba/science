@@ -1,7 +1,7 @@
 """Harmonische Analysis: Abfall der Koeffizienten, Gibbs, Parseval, Fourier-Paare, Unschärfe, Faltung, Poisson-Summe, FFT, Abtasttheorem, Fenster, Spektrogramm, Wavelets, Wärmeleitung, Beugung und Fourier auf endlichen Gruppen.
 
 Für analysis.ipynb aus fourieranalysis.ipynb übernommen, seit 2026-11-17 in maths.ipynb; dort ist nur finite_groups ein
-Schritt (67), die übrigen Funktionen bleiben zum Ausprobieren: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
+Schritt (43), die übrigen Funktionen bleiben zum Ausprobieren: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
 Die Funktionen teilen ihre Variablen über Modulvariablen wie die Zellen eines Notebooks und laufen deshalb
 in dieser Reihenfolge: load, smoothness_decay, gibbs_phenomenon, parseval, transform_pairs, uncertainty, convolution, poisson_summation, dft_fft, sampling, leakage, spectrogram, wavelets, heat_equation, diffraction, finite_groups.
 """
@@ -965,7 +965,7 @@ def diffraction():
 
 
 def finite_groups():
-    """67. Harmonische Analysis auf endlichen Gruppen: Hyperwürfel und Periodenfindung (Zellen 48 von fourieranalysis.ipynb)."""
+    """43. Harmonische Analysis auf endlichen Gruppen: Hyperwürfel und Periodenfindung (Zellen 48 von fourieranalysis.ipynb)."""
     global H, M, Nq, P, axes, base, bits, boolean, f, fhat, fig, fr
     global fx, h, i, infl, j, level, name, nbits, near, pm, r, rng
     global val, walsh_hadamard, wdt, weights, wv, xs_int, y

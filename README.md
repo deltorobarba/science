@@ -12,7 +12,7 @@ Alexander Del Toro Barba (PhD) $\cdot$  [Google Scholar](https://scholar.google.
 
 * [Quantum Information](https://github.com/deltorobarba/science/blob/main/experiments/quantum_information.ipynb) 🦋 Born rule, measurement, tomography, entropies and channel capacities.
 * [Quantum Computing](https://github.com/deltorobarba/science/blob/main/experiments/bellstatepreparation.ipynb) 💎 $\vert\Phi^+\rangle$ A Bell state preparation run on noisy quantum hardware.
-* [Mathematics](https://github.com/deltorobarba/science/blob/main/experiments/maths.ipynb) 🌸 Groups, rings, fields, eigenvalues and Lie theory, from Rubik's cube to Shor's algorithm.
+* [Mathematics](https://github.com/deltorobarba/science/blob/main/experiments/maths.ipynb) 🌸 Groups, rings, fields and Lie theory, from Rubik's cube to Shor's algorithm.
 * [Astrophysics](https://github.com/deltorobarba/science/blob/main/experiments/astrophysics.ipynb) 🔭 Galaxies, nebulae, exoplanets, gravitational waves, the Sun and cosmology with real data.
 
 

@@ -23,7 +23,7 @@ from sympy.liealgebras.cartan_type import CartanType
 
 
 def load():
-    """51. Daten (Zellen 4 von lie.ipynb)."""
+    """Daten (Zellen 4 von lie.ipynb)."""
     global PX, PY, PZ, character_table, comm, gell_mann, hat, killing, rodrigues, site_op, spin_matrices, structure_constants
     # Alles hier (numpy, scipy, sympy, matplotlib) ist in Colab vorinstalliert
 
@@ -111,7 +111,7 @@ def load():
 
 
 def tangent_space():
-    """52. Von der Gruppe zur Algebra: der Tangentialraum an der Eins (Zellen 6 von lie.ipynb)."""
+    """Von der Gruppe zur Algebra: der Tangentialraum an der Eins (Zellen 6 von lie.ipynb)."""
     global Jsym, Xa, Xg, Xt, ax, axes, bins, c, constraint, dims, eps, eta
     global f, fig, formula, g, lab, pairs, res_comm, res_prod, rng, skew_res, slope, st
     global t, tangent_dim, th, v, viol_sl, viol_so
@@ -201,7 +201,7 @@ def tangent_space():
 
 
 def exponential():
-    """53. Die Exponentialabbildung: von der Algebra zurück in die Gruppe (Zellen 9 von lie.ipynb)."""
+    """Die Exponentialabbildung: von der Algebra zurück in die Gruppe (Zellen 9 von lie.ipynb)."""
     global A0, K, V_, X, X1, Xs2, Y1, ax, axes, boost, c, err_sl2
     global exp_sl2, exp_taylor, fig, k, kinds, lab, nb, ok, orb, p, phi0, reach
     global rng, s, starts, taylor_err, terms, tt, tt_ell, v_rel, via_eig, via_ode, w3, w_
@@ -283,7 +283,7 @@ def exponential():
 
 
 def exp_limits():
-    """54. Grenzen der Exponentialabbildung: Surjektivität und Logarithmus (Zellen 12 von lie.ipynb)."""
+    """Grenzen der Exponentialabbildung: Surjektivität und Logarithmus (Zellen 12 von lie.ipynb)."""
     global Jrot, L, L_target, U_haar, Xs3, antiherm, ax, axes, dd, delta3, fig, log_err
     global product, recovered, rng, target, th, thetas, tr3, tr_formula
     rng = np.random.default_rng(3)
@@ -336,7 +336,7 @@ def exp_limits():
 
 
 def bch_formula():
-    """55. Die Baker-Campbell-Hausdorff-Formel (Zellen 15 von lie.ipynb)."""
+    """Die Baker-Campbell-Hausdorff-Formel (Zellen 15 von lie.ipynb)."""
     global A, A0, B, B0, P3, Q3, Z, ax, axes, bch, bch_err, e
     global eps4, fig, heis, i1, i3, k, rng, slopes4, small
     rng = np.random.default_rng(4)
@@ -400,7 +400,7 @@ def bch_formula():
 
 
 def trotter_formulas():
-    """56. Trotter-Produktformeln: Quantensimulation mit einfachen Bausteinen (Zellen 18 von lie.ipynb)."""
+    """Trotter-Produktformeln: Quantensimulation mit einfachen Bausteinen (Zellen 18 von lie.ipynb)."""
     global A_diag, B_op, H_tfim, S2, S4, U_exact, Zs, axes, comm_norm, cost, eA, eB
     global f, fig, h_field, i10, i20, n_q, name, need, ok, p_s, steps, t_sim
     global terr, trotter, tslopes
@@ -457,7 +457,7 @@ def trotter_formulas():
 
 
 def integrators():
-    """57. Lie-Gruppen-Integratoren: Drehbewegungen, ohne die Gruppe zu verlassen (Zellen 21 von lie.ipynb)."""
+    """33. Lie-Gruppen-Integratoren: Drehbewegungen, ohne die Gruppe zu verlassen (Zellen 21 von lie.ipynb)."""
     global R_exact6, Rex, a6, axes, b6, e, err6, fig, h6, half6, integrate6, methods6
     global name, omega6, orth6, paths6, rk4_step, t6, w2
     a6, b6 = np.array([0.6, 0.0, 0.8]), np.array([0.0, 0.0, 1.5])
@@ -514,7 +514,7 @@ def integrators():
 
 
 def killing_form():
-    """58. Strukturkonstanten, adjungierte Darstellung und Killing-Form (Zellen 24 von lie.ipynb)."""
+    """34. Strukturkonstanten, adjungierte Darstellung und Killing-Form (Zellen 24 von lie.ipynb)."""
     global Ad_err, E, Kf, Th, V7, Xr, _, ad, adT, ad_su3, algebras, ax
     global axes, basis, c, centre, coef, d, ev, fig, info7, jac, k, lab
     global lam, left, m_, name, names7, nonzero, p_, r, rng, roots7, series, sig
@@ -612,7 +612,7 @@ def killing_form():
 
 
 def root_systems():
-    """59. Wurzelsysteme, Dynkin-Diagramme und E₈ (Zellen 27 von lie.ipynb)."""
+    """35. Wurzelsysteme, Dynkin-Diagramme und E₈ (Zellen 27 von lie.ipynb)."""
     global Cox, E8s, F4_simple, G8, R8, R_, S_, Vc, W_, Wd, _, a
     global ax, cartan, degrees, dg, dim, dmax, dynkin, fig, gs, hh, is_simple, k
     global name, nb_i, nb_j, nr, plane, r, rad8, rank2, reflect, root_system, s, same
@@ -767,7 +767,7 @@ def root_systems():
 
 
 def dynamical_lie_algebras():
-    """60. Dynamische Lie-Algebren: Was ein Quantenschaltkreis erreicht und wo Barren Plateaus entstehen (Zellen 30 von lie.ipynb)."""
+    """36. Dynamische Lie-Algebren: Was ein Quantenschaltkreis erreicht und wo Barren Plateaus entstehen (Zellen 30 von lie.ipynb)."""
     global _, ax, axes, c, chain, depth6, dla_dims, dla_sets, f, fig, gate_data, gens
     global key, lie_closure, mk, n, name, ns9, ns_var, parity, pauli, random_circuits, rng, theo9
     global v, var9, var_theory
@@ -894,7 +894,7 @@ def dynamical_lie_algebras():
 
 
 def character_tables():
-    """61. Charaktertafeln endlicher Gruppen (Zellen 33 von lie.ipynb)."""
+    """37. Charaktertafeln endlicher Gruppen (Zellen 33 von lie.ipynb)."""
     global G, Q8, _, ax, axes, ch, chi, chi4, cl4, classes, cols, dims_
     global els, els4, fig, fmt_char, groups10, i, inv, j, lab, m, mul, n_
     global name, orders, perm_chars, perm_group_data, reps4, rows, sizes, sz4, tables10, vmax
@@ -957,7 +957,7 @@ def character_tables():
 
 
 def molecular_vibrations():
-    """62. Molekülschwingungen: IR- und Raman-Auswahlregeln aus der Charaktertafel (Zellen 36 von lie.ipynb)."""
+    """38. Molekülschwingungen: IR- und Raman-Auswahlregeln aus der Charaktertafel (Zellen 36 von lie.ipynb)."""
     global act, ax, axes, buckyball, c, c60_ir, c60_raman, cat, cats, class_name, counts11, elem_order
     global fig, fixed_axis, gold, ir, k, lab, modes, molecules11, mulliken, name, r, ra
     global ringpts, row, symmetry_ops, td, terms, v, v_, vals, vib11, vibrations, x_, xpos
@@ -1120,7 +1120,7 @@ def molecular_vibrations():
 
 
 def spin_j():
-    """63. Spin j: die irreduziblen Darstellungen von SU(2) (Zellen 39 von lie.ipynb)."""
+    """39. Spin j: die irreduziblen Darstellungen von SU(2) (Zellen 39 von lie.ipynb)."""
     global Jp, Jx, Jy, Jz, R_, ax, axes, beta, beta12, c, c1, c2
     global chi_j, d, d_half, de, derr, dsym, fig, im, j, j12, jlist, m12
     global ms, orth12, p_binom, p_sg, psi12, r2, rot2pi, spin_checks, th12, thq, wg, wq
@@ -1192,7 +1192,7 @@ def spin_j():
 
 
 def cg_coefficients():
-    """64. Clebsch-Gordan-Koeffizienten, Wigner-Eckart und die Auswahlregeln der Atomphysik (Zellen 42 von lie.ipynb)."""
+    """40. Clebsch-Gordan-Koeffizienten, Wigner-Eckart und die Auswahlregeln der Atomphysik (Zellen 42 von lie.ipynb)."""
     global CG11, Js, Mplus, Mz, R_, Y, Y4, Ylm, a, ax, axes, b
     global braket, cg_err, clebsch_gordan, cnt, cols11, e_, edges, err, fig, i, j1, j2
     global k, l, lm, lm4, m, m1s, m2s, mel, nplus, nz, overlap, phg
@@ -1307,7 +1307,7 @@ def cg_coefficients():
 
 
 def su3():
-    """65. SU(3) und der Achtfache Weg (Zellen 45 von lie.ipynb)."""
+    """41. SU(3) und der Achtfache Weg (Zellen 45 von lie.ipynb)."""
     global G, Q, T3s, W, W10, W3, W3b, W8, ax, axes, c, casimir_of
     global cnt, comm_err, decomp14, dim_of, done, err, ev, f_abc, fig, fitM, fitY, icpt14
     global irrep_name, k, kind, ksum, label, lam, legend14, mass10, n_, name, names, octet
@@ -1400,7 +1400,7 @@ def su3():
 
 
 def schur_weyl():
-    """66. Schur-Weyl-Dualität: Gesamtspin von n Qubits und Mittelung über U(d) (Zellen 48 von lie.ipynb)."""
+    """42. Schur-Weyl-Dualität: Gesamtspin von n Qubits und Mittelung über U(d) (Zellen 48 von lie.ipynb)."""
     global A15, F15, G15, N15, Ns, UU, Us, a, alpha15, ax, axes, b
     global beta15, c, checks15, d15, dim_ok, fig, form, hook, hook_dim, j, j10, jj
     global m, m10, mult_formula, n, n10, n_, num, ok, rng, running, samples15, share
