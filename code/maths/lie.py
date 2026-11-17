@@ -1,6 +1,6 @@
 """Lie-Gruppen, Lie-Algebren und Darstellungstheorie: Tangentialraum, Exponentialabbildung, BCH, Trotter, Lie-Gruppen-Integratoren, Killing-Form, Wurzelsysteme und E8, dynamische Lie-Algebren, Charaktertafeln, Molekülschwingungen, Spin j, Clebsch-Gordan, SU(3) und Schur-Weyl.
 
-Für algebra.ipynb aus lie.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
+Für maths.ipynb (bis 2026-11-17 algebra.ipynb) aus lie.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
 Die Funktionen teilen ihre Variablen über Modulvariablen wie die Zellen eines Notebooks und laufen deshalb
 in dieser Reihenfolge: load, tangent_space, exponential, exp_limits, bch_formula, trotter_formulas, integrators, killing_form, root_systems, dynamical_lie_algebras, character_tables, molecular_vibrations, spin_j, cg_coefficients, su3, schur_weyl.
 """

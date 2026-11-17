@@ -1,6 +1,6 @@
 """Ringe, Körper und kommutative Algebra: Restklassenringe, euklidischer Algorithmus und chinesischer Restsatz, Gaußsche Zahlen, endliche Körper, Reed-Solomon, Gröbner-Basen, Körpererweiterungen, Galois-Gruppen, p-adische Zahlen, Reziprozität, Quaternionen, Smith-Normalform und Post-Quanten-Kryptographie.
 
-Für algebra.ipynb aus rings_fields.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
+Für maths.ipynb (bis 2026-11-17 algebra.ipynb) aus rings_fields.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
 Die Funktionen teilen ihre Variablen über Modulvariablen wie die Zellen eines Notebooks und laufen deshalb
 in dieser Reihenfolge: load, residue_rings, euclid_crt, gaussian_integers, irreducible_polys, finite_fields, reed_solomon, groebner_bases, field_extensions, galois, padic, reciprocity, quaternions, smith_form, post_quantum.
 """

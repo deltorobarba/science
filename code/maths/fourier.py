@@ -1,6 +1,7 @@
 """Harmonische Analysis: Abfall der Koeffizienten, Gibbs, Parseval, Fourier-Paare, Unschärfe, Faltung, Poisson-Summe, FFT, Abtasttheorem, Fenster, Spektrogramm, Wavelets, Wärmeleitung, Beugung und Fourier auf endlichen Gruppen.
 
-Für analysis.ipynb aus fourieranalysis.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
+Für analysis.ipynb aus fourieranalysis.ipynb übernommen, seit 2026-11-17 in maths.ipynb; dort ist nur finite_groups ein
+Schritt (67), die übrigen Funktionen bleiben zum Ausprobieren: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
 Die Funktionen teilen ihre Variablen über Modulvariablen wie die Zellen eines Notebooks und laufen deshalb
 in dieser Reihenfolge: load, smoothness_decay, gibbs_phenomenon, parseval, transform_pairs, uncertainty, convolution, poisson_summation, dft_fft, sampling, leakage, spectrogram, wavelets, heat_equation, diffraction, finite_groups.
 """
@@ -13,7 +14,7 @@ from math import gcd
 
 
 def load():
-    """16. Daten (Zellen 4 von fourieranalysis.ipynb)."""
+    """Daten (Zellen 4 von fourieranalysis.ipynb)."""
     global continuous_ft, fourier_coefficients, partial_sum, spread
     # Alles hier (numpy, scipy, matplotlib) ist in Colab vorinstalliert
 
@@ -45,7 +46,7 @@ def load():
 
 
 def smoothness_decay():
-    """17. Glattheit und der Abfall der Fourier-Koeffizienten (Zellen 6 von fourieranalysis.ipynb)."""
+    """Glattheit und der Abfall der Fourier-Koeffizienten (Zellen 6 von fourieranalysis.ipynb)."""
     global K, Ns, _, axes, c, ck, coef, colors, err, ex, exact, f
     global fig, funcs, k, keep, kk, ls, mag, name, near, odd, p, ratio
     global slope, x, xe
@@ -109,7 +110,7 @@ def smoothness_decay():
 
 
 def gibbs_phenomenon():
-    """18. Das Gibbs-Phänomen und die Fejér-Mittel (Zellen 9 von fourieranalysis.ipynb)."""
+    """Das Gibbs-Phänomen und die Fejér-Mittel (Zellen 9 von fourieranalysis.ipynb)."""
     global D, F, N, Ns, axes, c, ck, fejer_weights, fig, gibbs, k, leb
     global m, over_F, over_S, square, xf, xl, xs, xz
     square = funcs["Rechteck (Sprung)"]
@@ -170,7 +171,7 @@ def gibbs_phenomenon():
 
 
 def parseval():
-    """19. Parseval und das Basel-Problem (Zellen 12 von fourieranalysis.ipynb)."""
+    """Parseval und das Basel-Problem (Zellen 12 von fourieranalysis.ipynb)."""
     global M, Ns, axes, c, ck, e_F, e_S, f, fig, k, l2, m
     global n, name, odd_k, parabola, partial_sum_grid, sawtooth, share, tail, tests, xg, xm
     xg = np.linspace(-np.pi, np.pi, 8193)
@@ -243,7 +244,7 @@ def parseval():
 
 
 def transform_pairs():
-    """20. Fourier-Transformation: Paare und Eigenfunktionen (Zellen 15 von fourieranalysis.ipynb)."""
+    """Fourier-Transformation: Paare und Eigenfunktionen (Zellen 15 von fourieranalysis.ipynb)."""
     global F, H, axes, back, c, fhat, fig, fx, h, hermite_function, lam, n
     global name, pairs, sel, x, xi
     x = np.linspace(-20, 20, 2 ** 14, endpoint=False)
@@ -302,7 +303,7 @@ def transform_pairs():
 
 
 def uncertainty():
-    """21. Unschärfeprinzipien (Zellen 18 von fourieranalysis.ipynb)."""
+    """Unschärfeprinzipien (Zellen 18 von fourieranalysis.ipynb)."""
     global F, N, _, a, axes, bound, comb, combs, d, ds_random, ds_struct, dxs
     global f, fig, fx, gauss_pts, n, name, names, products, random_pts, rng, s, shapes
     global ss, theory, wave_packets, x, xi
@@ -405,7 +406,7 @@ def uncertainty():
 
 
 def convolution():
-    """22. Der Faltungssatz (Zellen 21 von fourieranalysis.ipynb)."""
+    """Der Faltungssatz (Zellen 21 von fourieranalysis.ipynb)."""
     global L, _, a, axes, b, best, circular, clean, direct, f, fig, fun
     global kernel, lin_same, linear, m, n, noisy, rng, sizes, store, t, t0, t_direct
     global t_fft, tk, via_fft
@@ -465,7 +466,7 @@ def convolution():
 
 
 def poisson_summation():
-    """23. Die Poissonsche Summenformel (Zellen 24 von fourieranalysis.ipynb)."""
+    """Die Poissonsche Summenformel (Zellen 24 von fourieranalysis.ipynb)."""
     global Kk, Nn, a, axes, exact_sum, fig, i, left, left_partial, right, right_partial, t
     global theta_terms, ts
     def theta_terms(t, side, tol=1e-15):
@@ -522,7 +523,7 @@ def poisson_summation():
 
 
 def dft_fft():
-    """24. Diskrete Fourier-Transformation und FFT (Zellen 27 von fourieranalysis.ipynb)."""
+    """Diskrete Fourier-Transformation und FFT (Zellen 27 von fourieranalysis.ipynb)."""
     global F16, M, _, axes, best, cands, counts, dft_matrix, ev, fft_radix2, fig, fun
     global im, lab, labels, m, mk, name, rng, sizes, t0, th, times, v
     global z
@@ -595,7 +596,7 @@ def dft_fft():
 
 
 def sampling():
-    """25. Abtasttheorem und Aliasing (Zellen 30 von fourieranalysis.ipynb)."""
+    """Abtasttheorem und Aliasing (Zellen 30 von fourieranalysis.ipynb)."""
     global apparent_frequency, axes, band_limited, c, fig, folded, freqs, fs, kf, r, recon, seen
     global sinc_reconstruct, tc, te, tn
     fs = 10.0
@@ -652,7 +653,7 @@ def sampling():
 
 
 def leakage():
-    """26. Leckeffekt und Fensterfunktionen (Zellen 33 von fourieranalysis.ipynb)."""
+    """Leckeffekt und Fensterfunktionen (Zellen 33 von fourieranalysis.ipynb)."""
     global S, S0, W, W_db, axes, bins, c, f, f0, fig, first_null, fs
     global i61, n, name, pad, psl, scallop, sel, spectrum_db, stats_w, t, w, width
     global windows, x
@@ -711,7 +712,7 @@ def leakage():
 
 
 def spectrogram():
-    """27. Zeit-Frequenz-Analyse: das Spektrogramm (Zellen 36 von fourieranalysis.ipynb)."""
+    """Zeit-Frequenz-Analyse: das Spektrogramm (Zellen 36 von fourieranalysis.ipynb)."""
     global S, T, above, ax, axes, band, c, cut, dip, e, f, fig
     global fs, i, nper, specs, stft, t, tt, x
     fs, T = 4000, 2.0
@@ -759,7 +760,7 @@ def spectrogram():
 
 
 def wavelets():
-    """28. Wavelets gegen Fourier: wer braucht weniger Koeffizienten? (Zellen 39 von fourieranalysis.ipynb)."""
+    """Wavelets gegen Fourier: wer braucht weniger Koeffizienten? (Zellen 39 von fourieranalysis.ipynb)."""
     global axes, bases, basis, blocks, c, fig, fracs, fwd, haar_dwt, haar_idwt, inv, jumps
     global keep_largest, ls, mag, n, rel_error, s, smooth, sname, u
     def haar_dwt(x):
@@ -834,7 +835,7 @@ def wavelets():
 
 
 def heat_equation():
-    """29. Die Wärmeleitungsgleichung: Fouriers ursprüngliches Problem (Zellen 42 von fourieranalysis.ipynb)."""
+    """Die Wärmeleitungsgleichung: Fouriers ursprüngliches Problem (Zellen 42 von fourieranalysis.ipynb)."""
     global D, _, amp, axes, c, c0, ck, dt, dx, factor, fig, heat_kernel_images
     global heat_spectral, k, kk, n, sel, times, ts, tt, u, u0, x
     n, D = 256, 1.0
@@ -894,7 +895,7 @@ def heat_equation():
 
 
 def diffraction():
-    """30. Beugung: Fourier-Optik in zwei Dimensionen (Zellen 45 von fourieranalysis.ipynb)."""
+    """Beugung: Fourier-Optik in zwei Dimensionen (Zellen 45 von fourieranalysis.ipynb)."""
     global I, I_circ, I_slit, L, R, X, Y, airy, ap, axes, circle, counts
     global cut, d, ext_k, ext_x, far_field, fig, first_zero, inner, mins, n, name, radial
     global rbins, rc, row, sel, slits, sums, theory_slit, w, which, xi, xs
@@ -964,7 +965,7 @@ def diffraction():
 
 
 def finite_groups():
-    """31. Harmonische Analysis auf endlichen Gruppen: Hyperwürfel und Periodenfindung (Zellen 48 von fourieranalysis.ipynb)."""
+    """67. Harmonische Analysis auf endlichen Gruppen: Hyperwürfel und Periodenfindung (Zellen 48 von fourieranalysis.ipynb)."""
     global H, M, Nq, P, axes, base, bits, boolean, f, fhat, fig, fr
     global fx, h, i, infl, j, level, name, nbits, near, pm, r, rng
     global val, walsh_hadamard, wdt, weights, wv, xs_int, y

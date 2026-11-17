@@ -1,6 +1,6 @@
 """Eigenwerte und Eigenvektoren: Potenzen, lineare Differentialgleichungen, Schwingungen, Hauptkomponenten, Gershgorin, Störungstheorie, Jacobi, Potenzmethode, QR, Lanczos, Empfindlichkeit und Eigenwerte auf dem Quantencomputer (Hadamard-Test, QPE, HHL, VQE).
 
-Für algebra.ipynb aus eigenvalues.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
+Für maths.ipynb (bis 2026-11-17 algebra.ipynb) aus eigenvalues.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
 Die Funktionen teilen ihre Variablen über Modulvariablen wie die Zellen eines Notebooks und laufen deshalb
 in dieser Reihenfolge: see_eigenvectors, powers, linear_odes, vibrations, principal_components, trace_det, gershgorin, off_diagonal, jacobi_method, power_method, qr_algorithm, lanczos_method, sensitivity, quantum_measurement, hadamard_test, qpe, hhl_solver, vqe.
 """

@@ -1,6 +1,6 @@
 """Gruppentheorie: Verknüpfungstafeln, Gruppen kleiner Ordnung, Untergruppen und Normalteiler, Burnside und Isomere, symmetrische Gruppe, Zauberwürfel, einfache und sporadische Gruppen, Monster, Punkt- und Tapetengruppen, Pauli- und Clifford-Gruppe.
 
-Für algebra.ipynb aus grouptheory.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
+Für maths.ipynb (bis 2026-11-17 algebra.ipynb) aus grouptheory.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
 Die Funktionen teilen ihre Variablen über Modulvariablen wie die Zellen eines Notebooks und laufen deshalb
 in dieser Reihenfolge: load, cayley_tables, order_8_12, counting_groups, s4_lattice, burnside, chemical_isomers, symmetric_group, rubik, units_mod_n, simple_groups, sporadic_groups, monster_moonshine, point_groups, crystals, pauli_clifford, rotations.
 """

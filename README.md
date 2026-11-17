@@ -35,11 +35,7 @@ ___
 
 **Mathematics** 🌸
 
-* [Algebra](https://github.com/deltorobarba/science/blob/main/experiments/algebra.ipynb) Groups, rings, fields, eigenvalues and Lie theory, from Rubik's cube to SU(3).
-* [Analysis](https://github.com/deltorobarba/science/blob/main/experiments/analysis.ipynb) What a function reveals in another form: residues, the FFT, spectra, barren plateaus.
-* [Geometry](https://github.com/deltorobarba/science/blob/main/experiments/geometry.ipynb) What stays invariant: vector calculus, curvature, projective geometry, elliptic curves.
-* [Dynamics](https://github.com/deltorobarba/science/blob/main/experiments/dynamics.ipynb) Equations of motion: where they come from, how to solve, when they turn chaotic.
-* [Stochastics](https://github.com/deltorobarba/science/blob/main/experiments/stochastics.ipynb) Random processes, matrices and networks: from Brownian motion to epidemics.
+* [Maths](https://github.com/deltorobarba/science/blob/main/experiments/maths.ipynb) Groups, rings, fields, eigenvalues and Lie theory, from Rubik's cube to Shor's algorithm.
 
 **Quantum** 💎
 
