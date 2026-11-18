@@ -38,8 +38,8 @@ def load():
     PLX_ZP = -0.017        # Nullpunkt der Gaia-Parallaxen [mas]: wahre = gemessene − PLX_ZP (Lindegren et al. 2021)
     RUWE_MAX = 1.4         # darüber ist die Astrometrie eines Einzelsterns unzuverlässig
     REL_MIN = 0.8          # Mindestzuverlässigkeit der Zuordnung Gaia-Stern = Zentralstern (Chornay & Walton 2021)
-    R_V = 3.1              # Staubgesetz von Cardelli, Clayton & Mathis (1989) mit R_V = A_V / E(B−V) (Schritt 45)
-    T_NEB = 1.0e4          # Elektronentemperatur der Nebel [K] für die Rekombinationskoeffizienten (Schritt 47)
+    R_V = 3.1              # Staubgesetz von Cardelli, Clayton & Mathis (1989) mit R_V = A_V / E(B−V) (Funktion reddening)
+    T_NEB = 1.0e4          # Elektronentemperatur der Nebel [K] für die Rekombinationskoeffizienten (Schritt 33)
     LAM_V = 5480.0         # effektive Wellenlänge des V-Filters [Å]
     FNU_V0 = 3.63e-20      # F_ν eines Sterns mit V = 0 [erg s⁻¹ cm⁻² Hz⁻¹] (Bessell et al. 1998)
     Z_TRACKS = 0.016       # Metallizität der Entwicklungswege (Vassiliadis & Wood 1994), etwa solar
@@ -49,7 +49,7 @@ def load():
     SIG_BULGE = 0.3        # Streuung von M5007 im Bulge [mag]: Rötungsfehler und Tiefe des Bulge
     M_STAR_LIT = -4.53     # Abbruchhelligkeit der PNLF, an Cepheiden geeicht (Ciardullo 2012)
     EBV_M31 = 0.057        # Vordergrundrötung vor M 31 (Schlafly & Finkbeiner 2011, Mittel 2.5° bis 3.3° um M 31)
-    SIG_C89, SIG_M06 = 0.07, 0.15   # Messfehler von m5007 bei Ciardullo et al. und Merrett et al. [mag] (Schritt 49)
+    SIG_C89, SIG_M06 = 0.07, 0.15   # Messfehler von m5007 bei Ciardullo et al. und Merrett et al. [mag] (Funktion m31_nebulae)
     M5007_LIM = {"Ciardullo 1989": 22.0, "Merrett 2006": 22.5}   # Grenze der Vollständigkeit [mag] (Funktion luminosity_function)
     rng = np.random.default_rng(42)
     pd.set_option("display.width", 160)
@@ -280,7 +280,7 @@ def load():
 
 
 def images():
-    """43. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
+    """30. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
     global SHOW, ax, axes, bar, cw_by_png, d, fig, h, img, name, png, r
     global rows, size, stretch
     SHOW = [("NGC 7662", "106.5-17.6", 60, "&asinh=True&autoscale=99.99"),   # Name, PNG, Bildgröße [″], Streckung
@@ -314,7 +314,7 @@ def images():
 
 
 def catalogs():
-    """44. Kataloge und Auswahl (Zellen 13 von nebulae_planetary.ipynb)."""
+    """31. Kataloge und Auswahl (Zellen 13 von nebulae_planetary.ipynb)."""
     global ALL, GAIA, S, _, ax, ax2, cstar, fig, funnel, g, i, in_v84
     global lb, lbg, lines, main, n, s_, saturated, sc, vel
     main = V84["main"][["PNG", "Name"]].copy()
@@ -331,7 +331,7 @@ def catalogs():
                .merge(lines[["PNG", "I4686", "I5007", "I6563"]], on="PNG", how="left")
                .merge(cstar[["PNG", "Vmag", "Quality"]], on="PNG", how="left")
                .merge(vel[["PNG", "ExpVel"]], on="PNG", how="left"))
-    ALL = deredden(ALL)                                                  # Rötung und entrötete Flüsse (Schritt 45)
+    ALL = deredden(ALL)                                                  # Rötung und entrötete Flüsse (gezeigt in reddening)
 
     GAIA = CW[["PNG", "Name", "RA_ICRS", "DE_ICRS", "Rel", "Gmag", "plx", "e_plx", "RUWE", "pnRad", "rcomb"]].copy()
     GAIA = GAIA.rename(columns={"Name": "Name_HASH"})
@@ -429,7 +429,7 @@ def distances():
 
 
 def reddening():
-    """45. Rötung aus dem Balmer-Dekrement (Zellen 19 von nebulae_planetary.ipynb)."""
+    """Rötung aus dem Balmer-Dekrement (Zellen 19 von nebulae_planetary.ipynb)."""
     global _, ax, axes, far, fig, near, r, ratio, row, sc
     r = S.dropna(subset=["EBV"])
     ratio = r["I6563"] / 100
@@ -462,7 +462,7 @@ def reddening():
 
 
 def ages():
-    """46. Größe und kinematisches Alter (Zellen 22 von nebulae_planetary.ipynb)."""
+    """32. Größe und kinematisches Alter (Zellen 22 von nebulae_planetary.ipynb)."""
     global ax, axes, fig, kin, lab, m, name, off, rho, sc, t, v
     S["R_pc"] = S["pnRad"] / 206265 * S["d"]
     S["t_kin"] = S["R_pc"] * PC / (S["ExpVel"] * KM) / YEAR
@@ -507,7 +507,7 @@ def ages():
 
 
 def zanstra_h():
-    """47. Die Zanstra-Temperatur aus Wasserstoff (Zellen 25 von nebulae_planetary.ipynb)."""
+    """33. Die Zanstra-Temperatur aus Wasserstoff (Zellen 25 von nebulae_planetary.ipynb)."""
     global EXAMPLES, S, T, WEID_COLS, ax, axes, fig, i, name, q, row, th
     global usable
     WEID_COLS = ["PNG", "SpType1", "TpTeff", "logTeff", "logL"]
@@ -559,7 +559,7 @@ def zanstra_h():
 
 
 def zanstra_he():
-    """48. Ein zweites Thermometer: He II (Zellen 28 von nebulae_planetary.ipynb)."""
+    """34. Ein zweites Thermometer: He II (Zellen 28 von nebulae_planetary.ipynb)."""
     global _, ax, axes, both, both_r, fig, large, q, rho, row, sc, setter
     global small
     S["T_He"] = np.where(usable, zanstra_T(S["F_He2"] / S["FnuV"], "He"), np.nan)
@@ -601,7 +601,7 @@ def zanstra_he():
     print(f"{len(both)} Sterne mit beiden Temperaturen: T(He II)/T(H) Median {np.median(both['T_He'] / both['T_H']):.2f}; "
           f"Radius < 0.1 pc: {np.median(small['T_He'] / small['T_H']):.2f} ({len(small)}), "
           f"≥ 0.1 pc: {np.median(large['T_He'] / large['T_H']):.2f} ({len(large)}); Rangkorrelation mit dem Radius {rho:+.2f}")
-    print(f"Temperatur für die folgenden Schritte: {S['T'].notna().sum()} Sterne, davon {int(S['T_limit'].sum())} nur aus "
+    print(f"Temperatur je Stern: {S['T'].notna().sum()} Sterne, davon {int(S['T_limit'].sum())} nur aus "
           f"Wasserstoff (untere Grenze); Median mit He II {S.loc[~S['T_limit'] & S['T'].notna(), 'T'].median():.0f} K")
 
 
@@ -753,7 +753,7 @@ def brightest_oiii():
 
 
 def m31_nebulae():
-    """49. Planetarische Nebel in M 31 (Zellen 40 von nebulae_planetary.ipynb)."""
+    """Planetarische Nebel in M 31 (Zellen 40 von nebulae_planetary.ipynb)."""
     global DE_M31, RA_M31, SIG_DIFF, V_M31, ax, axes, bins, c89, col, de, diff, fig
     global k, m31, match, ra, sc, sgn
     m31 = M06[(M06["Host"] == "") & M06["m5007"].notna()].copy()

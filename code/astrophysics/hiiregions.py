@@ -22,7 +22,7 @@ from astroquery.hips2fits import hips2fits
 
 
 def sdss_spectra():
-    """12. Die Galaxie und ihre SDSS-Spektren (Zellen 5, 7 von galaxies_hiiregions.ipynb)."""
+    """11. Die Galaxie und ihre SDSS-Spektren (Zellen 5, 7 von galaxies_hiiregions.ipynb)."""
     global ASTRODATA, C_KMS, GROUPS, LABEL, LINES, MAX_SPECTRA, SN_MIN, SPEC_GALAXY, axes, cls, col, dist
     global dx_all, dy_all, fig, first, g, g_a, g_dec, g_dist, g_pa, g_q, g_ra, half_g
     global img_opt, k, kpc_per_arcmin, lab, ln, m, query, r_deg, sdss_query, spec_list, spectra, v_sys
@@ -214,7 +214,7 @@ def line_fits():
 
 
 def density_dust():
-    """13. Dichte und Staub (Zellen 13 von galaxies_hiiregions.ipynb)."""
+    """Dichte und Staub (Zellen 13 von galaxies_hiiregions.ipynb)."""
     global A_SII, B_SII, C_SII, R_hi, R_lo, R_med, R_of_ne, above, axes, ebv_med, fig, n_med
     global ne, ne_of_R, ok_b, ok_s
     np.seterr(divide="ignore", invalid="ignore")                          # log von Nicht-Nachweisen -> NaN
@@ -264,7 +264,7 @@ def density_dust():
 
 
 def bpt():
-    """14. Das BPT-Diagramm (Zellen 16 von galaxies_hiiregions.ipynb)."""
+    """Das BPT-Diagramm (Zellen 16 von galaxies_hiiregions.ipynb)."""
     global ax, below_kauff, below_kewley, bpt_ok, dxs, dys, fig, kauff, kewley, rN2, rO3, ref
     global ref_class, sc, xx, xx2
     L["logN2"] = np.log10(L["NII6584"] / L["Ha"])
@@ -321,7 +321,7 @@ FROM galSpecLine AS l WHERE l.h_alpha_flux > 5 * l.h_alpha_flux_err AND l.h_beta
 
 
 def metallicity_gradient():
-    """15. Der Metallizitätsgradient (Zellen 19 von galaxies_hiiregions.ipynb)."""
+    """Der Metallizitätsgradient (Zellen 19 von galaxies_hiiregions.ipynb)."""
     global R_disk, _, axes, c, col, ds, dz0, fig, fits, gradient, ls, mk
     global rr, s, sc, use, z0
     L["O3N2"] = L["logO3"] - L["logN2"]

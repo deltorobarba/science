@@ -62,7 +62,7 @@ def m51_spectra():
 
 
 def m51_bpt():
-    """11. Emissionslinien in M 51 und das BPT-Diagramm."""
+    """Emissionslinien in M 51 und das BPT-Diagramm."""
     global lines, fits
     lines, fits = spectra.measure(spec_table, specs, sn_min=SN_MIN)
     spectra.plot_bpt(target, spec_table, specs, lines, fits, CACHE)

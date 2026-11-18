@@ -38,7 +38,7 @@ def load():
     CTRL = (241.0, -29.0, 1.0)           # Kontrollfeld mit wenig Staub: Mitte und Radius [°] (Funktion colors)
     R_JHK = {"J": 0.282, "H": 0.175, "K": 0.112}   # A_λ / A_V im nahen Infrarot (Rieke & Lebofsky 1985)
     MIN_STARS = 3                        # mindestens so viele Sterne pro Pixel der Extinktionskarte (Funktion extinction_map)
-    BETA_FIX = 1.6                       # Spektralindex des Staubs, wenn er nicht frei ist (Schritt 32)
+    BETA_FIX = 1.6                       # Spektralindex des Staubs, wenn er nicht frei ist (Schritt 23)
     K_CMB_TO_MJY = 287.45                # 353 GHz: MJy/sr pro K_CMB (Planck 2013 IX)
     AV_TAU_DIFFUSE = 3.1 * 1.49e4        # A_V / τ353 im diffusen Gas (Planck 2013 XI: E(B−V)/τ353 = 1.49·10⁴)
     NH_PER_AV = 1.87e21                  # Wasserstoffsäule pro A_V [cm⁻² mag⁻¹] (Bohlin et al. 1978, R_V = 3.1)
@@ -230,7 +230,7 @@ def load():
 
 
 def bands():
-    """30. Die Wolke in sechs Bändern (Zellen 8 von nebulae_dust.ipynb)."""
+    """21. Die Wolke in sechs Bändern (Zellen 8 von nebulae_dust.ipynb)."""
     global ax, axes, dec, fig, hi, img, lo, name, ra, s, title, v
     global x, y
     fig, axes = plt.subplots(2, 3, figsize=(16, 10.5))
@@ -257,7 +257,7 @@ def bands():
 
 
 def stars():
-    """31. Sterne in Richtung der Wolke (Zellen 11 von nebulae_dust.ipynb)."""
+    """22. Sterne in Richtung der Wolke (Zellen 11 von nebulae_dust.ipynb)."""
     global CTRL2M, I857, N2M, NGA, STARS2M, _, ax, axes, bins, clean_2mass, col, ctrl_area
     global dens_ctrl, fig, hi857, idx, im, lab, m, title, xs, ys
     def clean_2mass(t):
@@ -435,7 +435,7 @@ def reddening_distance():
 
 
 def dust_temperature():
-    """32. Wie warm ist der Staub? (Zellen 23 von nebulae_dust.ipynb)."""
+    """23. Wie warm ist der Staub? (Zellen 23 von nebulae_dust.ipynb)."""
     global BETA, EXAMPLES, TAU, TEMP, TEMP_FIX, ax, cmap, col, core, dec, dense, edge
     global fig, hi, hot, i, im, j, k, lab, lo, m, name, nu_plot
     global ox, oy, ra, title, x, y
@@ -493,7 +493,7 @@ def dust_temperature():
 
 
 def heating():
-    """33. Ein Stern heizt den Staub (Zellen 26 von nebulae_dust.ipynb)."""
+    """Ein Stern heizt den Staub (Zellen 26 von nebulae_dust.ipynb)."""
     global R_ARC, T_B, ax, axes, cov, dx, dy, excess, fig, fit_r, heat_model, med
     global n_b, near, p, pc_per_arcmin, perr, pos, r_ring, rr, slope, sx, sy
     dx, dy = offsets(RA_MAP, DE_MAP)
@@ -787,7 +787,7 @@ def sfd():
     ax.axhline(1, color="k", lw=1)
     ax.axhline(1 / 0.86, color="k", ls=":", label="Nacheichung 0.86 (Schlafly & Finkbeiner)")
     ax.set_yscale("log")
-    ax.set_xlabel("Staubtemperatur aus Schritt 32 [K]")
+    ax.set_xlabel("Staubtemperatur aus Schritt 23 [K]")
     ax.set_ylabel("A_V (SFD) / A_V (2MASS)")
     ax.set_title("Verhältnis gegen Temperatur", fontsize=10)
     ax.legend(fontsize=9)

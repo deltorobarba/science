@@ -17,7 +17,7 @@ plt.rcParams.update(gwdata.RC_VORHER)                # die übrigen Teile von as
 
 
 def load():
-    """72. Daten (Zellen 5 von gw150914.ipynb)."""
+    """51. Daten (Zellen 5 von gw150914.ipynb)."""
     global EREIGNIS, daten, gps, ifo
     plt.rcParams.update(GWPY_STIL)                   # GW150914 im Plotstil von gwpy (wie im früheren Notebook)
     EREIGNIS = "GW150914"
@@ -31,7 +31,7 @@ def load():
 
 
 def raw_data():
-    """73. Rohdaten (Zellen 8 von gw150914.ipynb)."""
+    """52. Rohdaten (Zellen 8 von gw150914.ipynb)."""
     global ax, fig, h, ifo
     fig, ax = plt.subplots(figsize=(10, 3.5))
     for ifo in daten:
@@ -62,7 +62,7 @@ def noise_spectrum():
 
 
 def whitened():
-    """74. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
+    """53. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
     global VERSATZ, ax, fig, gefiltert, h1, l1
     gefiltert = {ifo: daten[ifo].whiten(4, 2).bandpass(35, 350) for ifo in daten}
     VERSATZ = 0.0069        # Sekunden: L1 sah das Signal etwa 7 ms vor H1
@@ -82,7 +82,7 @@ def whitened():
 
 
 def spectrogram():
-    """75. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
+    """54. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
     global ax, plot, qt
     qt = daten["H1"].q_transform(outseg=(gps - 0.3, gps + 0.05), qrange=(4, 64), frange=(20, 500))
 

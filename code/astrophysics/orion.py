@@ -171,7 +171,7 @@ def load():
 
 
 def multiwavelength():
-    """35. Der Orionnebel vom Röntgen- bis zum Radiobereich (Zellen 8 von nebulae_orion.ipynb)."""
+    """25. Der Orionnebel vom Röntgen- bis zum Radiobereich (Zellen 8 von nebulae_orion.ipynb)."""
     global ax, axs, dx, dy, ext, fig, i, img, j, key, show
     show = ["ROSAT", "DSS2 R", "Hα", "2MASS K", "WISE 3.4", "WISE 22", "IRIS 60", "IRIS 100", "Planck 857", "Planck 353", "Planck 28", "NVSS"]
     ext = [WIDE / 2 * 60, -WIDE / 2 * 60, -WIDE / 2 * 60, WIDE / 2 * 60]
@@ -200,7 +200,7 @@ def multiwavelength():
 
 
 def color_images():
-    """36. Farbbilder in drei Wellenlängenbereichen (Zellen 11 von nebulae_orion.ipynb)."""
+    """26. Farbbilder in drei Wellenlängenbereichen (Zellen 11 von nebulae_orion.ipynb)."""
     global ax, axs, e1, fig, hp, img, key, keys, lab, name, peaks, rc
     global s, xc, yc
     fig, axs = plt.subplots(1, 3, figsize=(18, 6.4))

@@ -13,7 +13,7 @@ CACHE = nebdata.DATA / "images"
 
 
 def sky():
-    """28. Die Nebel des Messier-Katalogs am Himmel."""
+    """19. Die Nebel des Messier-Katalogs am Himmel."""
     global messier_objects
     messier_objects = catalog.messier(CACHE)
     catalog.show_messier(messier_objects, kinds=["Nebel"])

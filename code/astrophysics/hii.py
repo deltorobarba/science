@@ -24,7 +24,7 @@ from astroquery.sdss import SDSS
 
 
 def regions():
-    """37. Die H-II-Regionen von M 101 (Zellen 12, 13, 14, 16 von nebulae_temperature.ipynb)."""
+    """27. Die H-II-Regionen von M 101 (Zellen 12, 13, 14, 16 von nebulae_temperature.ipynb)."""
     global AIR, ASTRODATA, Atom, CH, C_CGS, C_KMS, DEC0, D_MPC, FOV, GROUPS, HA_HB, HG_HB
     global H_PLANCK, INC_DEG, K, KPC_PER_R25, K_B, LINES, N2, N_E, N_MC, O2, O3, PA_DEG
     global PYNEB, R25_ARCSEC, RA0, S, S2, S3, SH95, SN_AUR, SN_STRONG, SPEC, VIZIER, V_SYS
@@ -40,7 +40,7 @@ def regions():
     R25_ARCSEC, PA_DEG, INC_DEG = 864.0, 39.0, 18.0 # Scheibenradius, Lagewinkel und Neigung wie bei CHAOS
     N_E = 100.0                                     # Elektronendichte [cm⁻³] (Funktion density)
     SN_STRONG = 3.0                                 # Mindest-S/N der starken Linien
-    SN_AUR = 5.0                                    # Mindest-S/N der schwachen Temperaturlinien (Schritt 39)
+    SN_AUR = 5.0                                    # Mindest-S/N der schwachen Temperaturlinien (Funktion line_fits)
     N_MC = 500                                      # Ziehungen für die Fehlerfortpflanzung
     C_KMS = 299792.458
     rng = np.random.default_rng(42)
@@ -379,7 +379,7 @@ ORDER BY s.snMedian DESC''')
 
 
 def weak_lines():
-    """38. Erster Blick auf die schwachen Linien (Zellen 19 von nebulae_temperature.ipynb)."""
+    """28. Erster Blick auf die schwachen Linien (Zellen 19 von nebulae_temperature.ipynb)."""
     global I_SHOW, ax, c5471, core, cs, dist, fig, k, lab, lam, lo, m
     global masked, n, n5471, names, peak, sp, title, w0, weak, z_show, zooms
     # Die Faser auf NGC 5471, der hellen, metallarmen Riesen-H-II-Region am Ostrand von M 101
@@ -436,7 +436,7 @@ def weak_lines():
 
 
 def line_fits():
-    """39. Linienfits mit fester Lage und Breite (Zellen 22 von nebulae_temperature.ipynb)."""
+    """Linienfits mit fester Lage und Breite (Zellen 22 von nebulae_temperature.ipynb)."""
     global EMPTY, F, L, W, _, ax, axes, examples, fig, h, i, j
     global lam, mad, model, n, noise, null, order, r, rec, res, rows, sn
     global sp, xx
@@ -884,7 +884,7 @@ def stacking():
 
 
 def abundances():
-    """40. Von der Temperatur zur Häufigkeit (Zellen 43 von nebulae_temperature.ipynb)."""
+    """Von der Temperatur zur Häufigkeit (Zellen 43 von nebulae_temperature.ipynb)."""
     global D, EMIS, T0, Tl, axes, c, col, d, dop, e, fig, high
     global ionic, j, key, lab, low, oh, op, opp, osrc, sc, src, t
     global zones
@@ -965,7 +965,7 @@ def abundances():
 
 
 def gradient():
-    """41. Der direkte Metallizitätsgradient (Zellen 46 von nebulae_temperature.ipynb)."""
+    """Der direkte Metallizitätsgradient (Zellen 46 von nebulae_temperature.ipynb)."""
     global axes, dp_own, fig, m, mk, p_own, res, rr, sec, sint_own, src
     p_own, dp_own, sint_own = fit_gradient(D["RR25"], D["OH"], D["OH_e"])
     res = D["OH"] - np.polyval(p_own, D["RR25"])
@@ -1114,7 +1114,7 @@ def strong_lines():
         m = sf & val.notna()
         p_cal[name] = np.polyfit(L.loc[m, "RR25"], val[m], 1)
         print(f"{name:34s} {d.notna().sum():5d} {d.median():+13.3f} {d.std():9.3f} {p_cal[name][0]:+19.3f}")
-    print(f"{'direkt (Schritt 41)':34s} {'':5s} {'':>13s} {'':>9s} {p_own[0]:+19.3f}")
+    print(f"{'direkt (gradient)':34s} {'':5s} {'':>13s} {'':>9s} {p_own[0]:+19.3f}")
 
     fig, axes = plt.subplots(1, 2, figsize=(15, 5.5))
     cols = ["tab:blue", "tab:cyan", "tab:green", "lime", "tab:purple"]

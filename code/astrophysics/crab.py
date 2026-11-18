@@ -151,7 +151,7 @@ def load():
 
 
 def photos():
-    """51. Drei Fotos aus 60 Jahren (Zellen 13, 14, 16 von nebulae_crab.ipynb)."""
+    """35. Drei Fotos aus 60 Jahren (Zellen 13, 14, 16 von nebulae_crab.ipynb)."""
     global DESC, EPOCH, EXTENT, RAW, ZOOM, astrometry, axes, band, cut, d, de_c, design
     global epoch, fig, find_stars, first, fit_expansion, fit_poly, gaia_at, hdr, hi, im, img, info
     global j, k, last, lo, masked_ncc, measure, name, p, pair, prep, px, py
@@ -418,7 +418,7 @@ def photos():
 
 
 def filaments():
-    """52. Filamente und Synchrotronlicht (Zellen 19 von nebulae_crab.ipynb)."""
+    """36. Filamente und Synchrotronlicht (Zellen 19 von nebulae_crab.ipynb)."""
     global EBV, G_s, K_LINE, LAM_I, LAM_R, _, alpha, alpha_meas, ax, axes, cmap, de_s
     global ext, fig, frac, gmax, gx, gy, hi, i_img, im, inner, is_, k10
     global line, lo, nx, ny, pcx, pcy, r_img, ra_s, rad, redden, rs, sel
@@ -750,7 +750,7 @@ def displacements():
 
 
 def expansion_center():
-    """53. Das Expansionszentrum und der Geburtsort des Pulsars (Zellen 34 von nebulae_crab.ipynb)."""
+    """Das Expansionszentrum und der Geburtsort des Pulsars (Zellen 34 von nebulae_crab.ipynb)."""
     global _, ax, axes, cx, cy, d, ex_, ey_, f, fig, m_eta, m_xi
     global psr_1054, psr_t, row_
     f = P60
@@ -801,7 +801,7 @@ def expansion_center():
 
 
 def hubble_diagram():
-    """54. Ein Hubble-Diagramm des Nebels und das Konvergenzjahr (Zellen 37 von nebulae_crab.ipynb)."""
+    """Ein Hubble-Diagramm des Nebels und das Konvergenzjahr (Zellen 37 von nebulae_crab.ipynb)."""
     global T0, YEARS, _, ax, axes, bins, closest_approach, d, e_rate, fig, idx, med
     global nx_, ny_, px, py, r_c, rg, sc_data, sc_true, sig, t2, t_ca, t_sim
     global v_rad, vx, vx_true, vy, vy_true
