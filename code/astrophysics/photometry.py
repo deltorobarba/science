@@ -118,7 +118,7 @@ WHERE i.id = '{SELECTED_GALAXY}'
 
 
 def band_images():
-    """Bilder in sechs Wellenlängenbereichen (Zellen 13 von galaxies_photometry.ipynb)."""
+    """4. Bilder in sechs Wellenlängenbereichen (Zellen 13 von galaxies_photometry.ipynb)."""
     global FOV_FACTOR, PIXELS, SURVEYS, ax, axes, catalog_ellipse, data, extent, fig, fov, half, hdul
     global hdus, images, img, name, ncol, nrow, pix_arcmin, stretch
     SURVEYS = {
@@ -175,7 +175,7 @@ def band_images():
 
 
 def composites():
-    """4. Bilder in sechs Wellenlängenbereichen (Zellen 16 von galaxies_photometry.ipynb)."""
+    """5. Bilder in sechs Wellenlängenbereichen (Zellen 16 von galaxies_photometry.ipynb)."""
     global CHANNELS, HIPS, available, ax, axes, fig, optical, rgb
     HIPS = "CDS/P/DSS2/color"   # Alternativen: "CDS/P/PanSTARRS/DR1/color-z-zg-g" (Dec > -30°), "CDS/P/SDSS9/color"
     optical = hips2fits.query(hips=HIPS, width=PIXELS, height=PIXELS, ra=Angle(info["ra"] * u.deg),
@@ -318,7 +318,7 @@ def sersic_fit():
 
 
 def color_map():
-    """6. Die Farbkarte (Zellen 25 von galaxies_photometry.ipynb)."""
+    """7. Die Farbkarte (Zellen 25 von galaxies_photometry.ipynb)."""
     global axes, c_prof, colour, colour_ok, covered, det, fig, im, in_ring, inner, nuv, nuv_n
     global nuv_sky, outer, w1, w1_n, w1_sky
     colour_ok = "GALEX Near UV" in images and "WISE 3.4" in images

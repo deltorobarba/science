@@ -280,7 +280,7 @@ def load():
 
 
 def images():
-    """16. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
+    """17. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
     global SHOW, ax, axes, bar, cw_by_png, d, fig, h, img, name, png, r
     global rows, size, stretch
     SHOW = [("NGC 7662", "106.5-17.6", 60, "&asinh=True&autoscale=99.99"),   # Name, PNG, Bildgröße [″], Streckung

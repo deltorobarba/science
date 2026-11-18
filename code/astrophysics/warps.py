@@ -25,7 +25,7 @@ from IPython.display import display
 
 
 def load():
-    """8. Daten (Zellen 5, 7 von galaxies_warps.ipynb)."""
+    """9. Daten (Zellen 5, 7 von galaxies_warps.ipynb)."""
     global ASTRODATA, BIN, C_KMS, DEMO, EBENEN, GALAXY, H0, NPIX_MAX, PIXSCALE, REFRESH, R_INNER, SNR_MIN
     global ax, axes, ebene, fig, fn, half, maj, pix, r, s, size_arcsec, titel
     global url
@@ -87,7 +87,7 @@ def load():
 
 
 def image():
-    """9. Bild und Katalogdaten laden (Zellen 10 von galaxies_warps.ipynb)."""
+    """10. Bild und Katalogdaten laden (Zellen 10 von galaxies_warps.ipynb)."""
     global DEMO_CASES, GALAXY, d_hubble, demo_galaxy, ext, hi, img, info, legacy_cutout, lo, load_galaxy, pix
     global simbad_info, wcs
     @lru_cache
@@ -212,7 +212,7 @@ def orientation():
 
 
 def spine_fit():
-    """10. Spine-Fit: Wo ist die Scheibe in jeder Spalte am hellsten? (Zellen 16 von galaxies_warps.ipynb)."""
+    """11. Spine-Fit: Wo ist die Scheibe in jeder Spalte am hellsten? (Zellen 16 von galaxies_warps.ipynb)."""
     global ax, cx, cy, fig, fit_spine, gauss, hi, lo, ok, sc, spine, w
     def gauss(z, A, z0, s, c): return A * np.exp(-0.5 * ((z - z0) / s) ** 2) + c
 

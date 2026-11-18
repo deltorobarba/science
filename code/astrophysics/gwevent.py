@@ -38,7 +38,7 @@ def _steckbrief(event, gps):
 
 
 def load(event="GW150914", detectors=("H1", "L1")):
-    """33. Ein Ereignis wählen: Steckbrief und 32 s Messdaten um das Ereignis (Zellen 5 von gw150914.ipynb)."""
+    """34. Ein Ereignis wählen: Steckbrief und 32 s Messdaten um das Ereignis (Zellen 5 von gw150914.ipynb)."""
     global EREIGNIS, daten, gps, ifo
     plt.rcParams.update(GWPY_STIL)                   # die Daten im Plotstil von gwpy (wie im früheren Notebook)
     EREIGNIS = event
@@ -53,7 +53,7 @@ def load(event="GW150914", detectors=("H1", "L1")):
 
 
 def raw_data():
-    """34. Rohdaten (Zellen 8 von gw150914.ipynb)."""
+    """35. Rohdaten (Zellen 8 von gw150914.ipynb)."""
     global ax, fig, h, ifo
     fig, ax = plt.subplots(figsize=(10, 3.5))
     for ifo in daten:
@@ -84,7 +84,7 @@ def noise_spectrum():
 
 
 def whitened():
-    """35. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
+    """36. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
     global VERSATZ, VORZEICHEN, ax, fig, gefiltert, h1, l1
     gefiltert = {ifo: daten[ifo].whiten(4, 2).bandpass(35, 350) for ifo in daten}
     h1 = gefiltert["H1"].crop(gps - 0.2, gps + 0.05)
@@ -116,7 +116,7 @@ def whitened():
 
 
 def spectrogram():
-    """36. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
+    """37. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
     global ax, plot, qt
     qt = daten["H1"].q_transform(outseg=(gps - 0.3, gps + 0.05), qrange=(4, 64), frange=(20, 500))
 
