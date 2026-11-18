@@ -280,7 +280,7 @@ def load():
 
 
 def images():
-    """21. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
+    """18. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
     global SHOW, ax, axes, bar, cw_by_png, d, fig, h, img, name, png, r
     global rows, size, stretch
     SHOW = [("NGC 7662", "106.5-17.6", 60, "&asinh=True&autoscale=99.99"),   # Name, PNG, Bildgröße [″], Streckung
@@ -314,7 +314,7 @@ def images():
 
 
 def catalogs():
-    """22. Kataloge und Auswahl (Zellen 13 von nebulae_planetary.ipynb)."""
+    """Kataloge und Auswahl (Zellen 13 von nebulae_planetary.ipynb)."""
     global ALL, GAIA, S, _, ax, ax2, cstar, fig, funnel, g, i, in_v84
     global lb, lbg, lines, main, n, s_, saturated, sc, vel
     main = V84["main"][["PNG", "Name"]].copy()

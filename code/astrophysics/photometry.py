@@ -58,7 +58,7 @@ ORDER BY vmag
 
 
 def target(name="M 51"):
-    """3. Eine Galaxie wählen: Eigenschaften und Entfernung. name wie in der Tabelle von `brightest`, z. B. "M 81",
+    """3. Eine Galaxie wählen: Eigenschaften und Entfernung (seit 2026-11-18 ohne Bild der Entfernungen nach Methode). name wie in der Tabelle von `brightest`, z. B. "M 81",
     "M 101", "M 104"; die folgenden Funktionen zeigen diese Galaxie (Zellen 10 von galaxies_photometry.ipynb)."""
     global SELECTED_GALAXY, M_V, a_arcmin, attempt, ax, b_arcmin, coord, d, d_hubble, dist, dist_mpc, e, error
     global fig, info, j, kpc_per_arcmin, m, match, methods, ned, order, pa_deg, rng, size_kpc
@@ -116,27 +116,9 @@ WHERE i.id = '{SELECTED_GALAXY}'
     print(f"\nHubble-Gesetz: v/H0 = {d_hubble:.2f} Mpc gegen die Entfernungsleiter {dist_mpc:.2f} Mpc")
     print(f"Eigenbewegung: v - H0·D = {v_rec - H0 * dist_mpc:+.0f} km/s")
 
-    if len(dist):
-        rng = np.random.default_rng(0)
-        methods = dist["method"].str.strip().str.upper().replace("", "ohne Angabe")
-        order = methods.value_counts().index
-        fig, ax = plt.subplots(figsize=(10, 0.45 * len(order) + 1.6))
-        for j, m in enumerate(order):
-            d = dist.loc[methods == m, "dist_mpc"]
-            ax.scatter(d, j + rng.uniform(-0.15, 0.15, len(d)), s=18, alpha=0.7)
-        ax.axvline(dist_mpc, color="black", ls="--", label=f"Median {dist_mpc:.2f} Mpc")
-        if d_hubble > 0:
-            ax.axvline(d_hubble, color="tab:red", ls=":", label=f"Hubble-Gesetz {d_hubble:.2f} Mpc")
-        ax.set_yticks(range(len(order)), [f"{m} ({(methods == m).sum()})" for m in order])
-        ax.set_xlabel("Entfernung [Mpc]")
-        ax.set_title(f"{SELECTED_GALAXY}: veröffentlichte Entfernungen nach Methode (SIMBAD)")
-        ax.legend(fontsize=8)
-        fig.tight_layout()
-        plt.show()
-
 
 def band_images():
-    """4. Bilder in sechs Wellenlängenbereichen (Zellen 13 von galaxies_photometry.ipynb)."""
+    """Bilder in sechs Wellenlängenbereichen (Zellen 13 von galaxies_photometry.ipynb)."""
     global FOV_FACTOR, PIXELS, SURVEYS, ax, axes, catalog_ellipse, data, extent, fig, fov, half, hdul
     global hdus, images, img, name, ncol, nrow, pix_arcmin, stretch
     SURVEYS = {
@@ -193,7 +175,7 @@ def band_images():
 
 
 def composites():
-    """5. Bilder in sechs Wellenlängenbereichen (Zellen 16 von galaxies_photometry.ipynb)."""
+    """4. Bilder in sechs Wellenlängenbereichen (Zellen 16 von galaxies_photometry.ipynb)."""
     global CHANNELS, HIPS, available, ax, axes, fig, optical, rgb
     HIPS = "CDS/P/DSS2/color"   # Alternativen: "CDS/P/PanSTARRS/DR1/color-z-zg-g" (Dec > -30°), "CDS/P/SDSS9/color"
     optical = hips2fits.query(hips=HIPS, width=PIXELS, height=PIXELS, ra=Angle(info["ra"] * u.deg),
@@ -336,7 +318,7 @@ def sersic_fit():
 
 
 def color_map():
-    """7. Die Farbkarte (Zellen 25 von galaxies_photometry.ipynb)."""
+    """6. Die Farbkarte (Zellen 25 von galaxies_photometry.ipynb)."""
     global axes, c_prof, colour, colour_ok, covered, det, fig, im, in_ring, inner, nuv, nuv_n
     global nuv_sky, outer, w1, w1_n, w1_sky
     colour_ok = "GALEX Near UV" in images and "WISE 3.4" in images

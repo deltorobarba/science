@@ -51,7 +51,7 @@ def ir_composites(name):
 
 
 def wide_bands(name):
-    """6. Die Galaxie vom Röntgen- bis zum Radiobereich."""
+    """5. Die Galaxie vom Röntgen- bis zum Radiobereich."""
     global wide, wide_images
     _select(name)
     wide = min(max(60, 3 * target.size), surveys.MAX_FOV)    # mindestens 1°: viele dieser Karten lösen nur Bogenminuten auf
@@ -60,7 +60,7 @@ def wide_bands(name):
 
 
 def sdss_spectra(name):
-    """8. Spektren aus SDSS: drei Arten von Licht."""
+    """7. Spektren aus SDSS: drei Arten von Licht."""
     global spec_table, specs
     _select(name)
     spec_table, folder = spectra.find(target, CACHE, dv=DV)

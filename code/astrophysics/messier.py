@@ -25,7 +25,7 @@ STRETCHES = {"optisch, wie mit dem Auge": dict(lo=5, hi=99.99, soft=1.0, gamma=1
 
 
 def sky():
-    """13. Die Nebel des Messier-Katalogs am Himmel."""
+    """11. Die Nebel des Messier-Katalogs am Himmel."""
     global messier_objects
     messier_objects = catalog.messier(CACHE)
     catalog.show_messier(messier_objects, kinds=["Nebel"])
@@ -33,7 +33,7 @@ def sky():
 
 
 def target(name="M 42"):
-    """14. Einen Nebel wählen: Steckbrief aus SIMBAD und das Bildfeld der Farbbilder (1.6-mal die Größe, höchstens 1°).
+    """12. Einen Nebel wählen: Steckbrief aus SIMBAD und das Bildfeld der Farbbilder (1.6-mal die Größe, höchstens 1°).
     name: jeder Name, den SIMBAD kennt, z. B. "M 1", "M 57", "Helix Nebula"."""
     global nebula, fov
     nebula = catalog.lookup(name, CACHE)
@@ -42,7 +42,7 @@ def target(name="M 42"):
 
 
 def wide_bands():
-    """15. Der Nebel vom Röntgen- bis zum Radiobereich: neun Durchmusterungen, Feld dreimal so groß wie der Nebel."""
+    """13. Der Nebel vom Röntgen- bis zum Radiobereich: neun Durchmusterungen, Feld dreimal so groß wie der Nebel."""
     global wide, wide_images
     wide = min(max(60, 3 * nebula.size), surveys.MAX_FOV)    # mindestens 1°: viele dieser Karten lösen nur Bogenminuten auf
     wide_images = surveys.images(nebula, WIDE_BANDS, wide, 360, CACHE)
@@ -50,7 +50,7 @@ def wide_bands():
 
 
 def color_images():
-    """16. Farbbilder in drei Wellenlängenbereichen: optisch (DSS2), nahes Infrarot (2MASS), mittleres Infrarot (WISE)."""
+    """Farbbilder in drei Wellenlängenbereichen: optisch (DSS2), nahes Infrarot (2MASS), mittleres Infrarot (WISE)."""
     global images
     bands = sorted({b for channels in COMPOSITES.values() for b in channels})
     images = surveys.images(nebula, bands, fov, PIXELS, CACHE)

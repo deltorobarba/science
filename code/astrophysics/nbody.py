@@ -295,7 +295,7 @@ def initial_spectrum():
 
 
 def cosmic_web():
-    """50. Das kosmische Netz entsteht (Zellen 14 von cosmology_nbody.ipynb)."""
+    """46. Das kosmische Netz entsteht (Zellen 14 von cosmology_nbody.ipynb)."""
     global L, STATS2, a, ax, axs, d, dmax, fig, im, img, m_hi, m_lo
     global n, thick, v_hi, v_lo
     fig, axs = plt.subplots(1, 3, figsize=(17, 6))
