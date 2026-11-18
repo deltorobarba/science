@@ -17,7 +17,7 @@ from gwpy.timeseries import TimeSeries
 
 
 def load():
-    """78. Daten (Zellen 5 von gw_catalog.ipynb)."""
+    """76. Daten (Zellen 5 von gw_catalog.ipynb)."""
     global ASTRODATA, COLS, CONFIDENT, REFRESH, allev, path, raw
     plt.style.use("default")      # gwpy stellt beim Import den Plotstil um; der Katalog zeigt wie früher den Stil von matplotlib
     ASTRODATA = gwdata.DATA
@@ -63,7 +63,7 @@ def selection():
 
 
 def extremes():
-    """79. Die lautesten und extremsten Ereignisse (Zellen 11 von gw_catalog.ipynb)."""
+    """77. Die lautesten und extremsten Ereignisse (Zellen 11 von gw_catalog.ipynb)."""
     global label, row, show
     show = ["name", "katalog", "snr", "m1", "m2", "dl", "z"]
     print("Die zehn lautesten Ereignisse (Netzwerk-SNR):")
@@ -75,7 +75,7 @@ def extremes():
 
 
 def masses():
-    """80. Die Massen (Zellen 14 von gw_catalog.ipynb)."""
+    """Die Massen (Zellen 14 von gw_catalog.ipynb)."""
     global axes, col, cols, fig, lower_gap, s, t, upper_gap
     lower_gap = ev[((ev.m1 > 3) & (ev.m1 < 5)) | ((ev.m2 > 3) & (ev.m2 < 5))]
     upper_gap = ev[(ev.m1 > 65) | (ev.m2 > 65)]

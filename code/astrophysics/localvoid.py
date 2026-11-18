@@ -16,7 +16,7 @@ from scipy import optimize, stats
 
 
 def load():
-    """96. Daten (Zellen 4, 6 von cosmology_localvoid.ipynb)."""
+    """Daten (Zellen 4, 6 von cosmology_localvoid.ipynb)."""
     global AMP, ASTRODATA, BASE, CAL, COV, C_KMS, D_GRID, EDGE_WIDTH, F_GROWTH, H0_PLANCK, H0_SH0ES, KBC
     global K_H, LNK, N, OM, PANTHEON, PLANCK, P_SHAPE, R_GRID, SN, VoidFit, Z_MIN, _sigma_unnorm
     global comoving, download, h_ratio, mean_contrast, sigma_R, subcov, t_eh
@@ -154,7 +154,7 @@ def load():
 
 
 def by_distance():
-    """97. Supernovae nach Entfernung (Zellen 8 von cosmology_localvoid.ipynb)."""
+    """Supernovae nach Entfernung (Zellen 8 von cosmology_localvoid.ipynb)."""
     global ax, bins, fig, g, groups, k, m, r_all, ra, sc, use
     r_all = C_KMS * comoving(SN["zHD"].values) / 70.0
     use = (SN["zHD"].values > Z_MIN) & ~CAL

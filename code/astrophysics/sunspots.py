@@ -142,7 +142,7 @@ def periodogram(s):
     T_total = np.ptp(t[good])
     print(f"Höchster Peak: P = {P_best:.2f} Jahre, Leistung {power.max():.2f}")
     print(f"Halbwertsbreite des Peaks: {fwhm:.2f} Jahre; erwartet etwa P²/T = {P_best ** 2 / T_total:.2f} Jahre")
-    print(f"Mittlere Zykluslänge (Schritt 83): {done.laenge.mean():.2f} Jahre, Streuung ± {done.laenge.std(ddof=1):.2f}")
+    print(f"Mittlere Zykluslänge (aus den Minima): {done.laenge.mean():.2f} Jahre, Streuung ± {done.laenge.std(ddof=1):.2f}")
 
     pk, _ = find_peaks(power, prominence=0.01)          # weitere lokale Maxima
     top = pk[np.argsort(power[pk])[::-1][:6]]

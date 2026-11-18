@@ -108,21 +108,25 @@ def label_ns(lat, lon):
     return f"{'N' if lat >= 0 else 'S'}{abs(lat):02.0f}{'W' if lon >= 0 else 'E'}{abs(lon):02.0f}"
 
 
-def load(year=2024, butterfly_start="2016-01-01"):
-    """Ereignislisten und SRS eines Jahres, dazu jede siebte SRS seit butterfly_start."""
+def load(year=2024, butterfly_start=None):
+    """Ereignislisten und SRS eines Jahres; mit butterfly_start (z. B. "2016-01-01") dazu jede siebte SRS seit diesem Tag
+    für das Schmetterlingsdiagramm (`butterfly`)."""
     days = pd.date_range(f"{year}-01-01", f"{year}-12-31")
     ev_paths, srs_paths = fetch_many("events", days), fetch_many("SRS", days)
     events = pd.DataFrame([r for d, p in zip(days, ev_paths) if p for r in parse_events(p, d)])
     srs = pd.DataFrame([r for d, p in zip(days, srs_paths) if p for r in parse_srs(p, d)])
-    wdays = pd.date_range(butterfly_start, pd.Timestamp.today() - pd.Timedelta(days=2), freq="7D")
-    srs_w = pd.DataFrame([r for d, p in zip(wdays, fetch_many("SRS", wdays)) if p for r in parse_srs(p, d)])
+    srs_w = None
+    if butterfly_start:
+        wdays = pd.date_range(butterfly_start, pd.Timestamp.today() - pd.Timedelta(days=2), freq="7D")
+        srs_w = pd.DataFrame([r for d, p in zip(wdays, fetch_many("SRS", wdays)) if p for r in parse_srs(p, d)])
 
     print(f"{year}: {sum(p is not None for p in ev_paths)} Ereignislisten, {sum(p is not None for p in srs_paths)} SRS "
           f"(von {len(days)} Tagen)")
     print(f"Ereignisse nach Typ: {events.typ.value_counts().head(6).to_dict()}")
     print(f"SRS {year}: {len(srs)} Regionstage, {srs.reg.nunique()} Regionen")
-    print(f"Schmetterlingsdiagramm: {srs_w.tag.nunique()} SRS von {srs_w.tag.min():%Y-%m-%d} bis {srs_w.tag.max():%Y-%m-%d}, "
-          f"{srs_w.reg.nunique()} Regionen")
+    if srs_w is not None:
+        print(f"Schmetterlingsdiagramm: {srs_w.tag.nunique()} SRS von {srs_w.tag.min():%Y-%m-%d} bis {srs_w.tag.max():%Y-%m-%d}, "
+              f"{srs_w.reg.nunique()} Regionen")
     return SimpleNamespace(year=year, events=events, srs=srs, srs_w=srs_w)
 
 

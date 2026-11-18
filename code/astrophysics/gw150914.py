@@ -45,7 +45,7 @@ def raw_data():
 
 
 def noise_spectrum():
-    """74. Rauschspektrum (Zellen 11 von gw150914.ipynb)."""
+    """Rauschspektrum (Zellen 11 von gw150914.ipynb)."""
     global asd, ax, fig, ifo
     fig, ax = plt.subplots(figsize=(9, 4.5))
     for ifo in daten:
@@ -62,7 +62,7 @@ def noise_spectrum():
 
 
 def whitened():
-    """75. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
+    """74. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
     global VERSATZ, ax, fig, gefiltert, h1, l1
     gefiltert = {ifo: daten[ifo].whiten(4, 2).bandpass(35, 350) for ifo in daten}
     VERSATZ = 0.0069        # Sekunden: L1 sah das Signal etwa 7 ms vor H1
@@ -82,7 +82,7 @@ def whitened():
 
 
 def spectrogram():
-    """76. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
+    """75. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
     global ax, plot, qt
     qt = daten["H1"].q_transform(outseg=(gps - 0.3, gps + 0.05), qrange=(4, 64), frange=(20, 500))
 
@@ -97,7 +97,7 @@ def spectrogram():
 
 
 def chirp_mass():
-    """77. Die Chirp-Masse (Zellen 20 von gw150914.ipynb)."""
+    """Die Chirp-Masse (Zellen 20 von gw150914.ipynb)."""
     global G, M_SONNE, M_chirp, S, a, ax1, ax2, b, c, chirp_frequenz, chirp_suche, fig
     global im, massen, t, t_c, tau, zeiten_c
     G, c, M_SONNE = 6.674e-11, 2.998e8, 1.989e30

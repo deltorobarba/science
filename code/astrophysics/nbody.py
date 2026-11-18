@@ -14,8 +14,9 @@ from numba import njit, prange
 from scipy import integrate, stats
 
 
-def load():
-    """98. Daten (Zellen 5, 7, 9 von cosmology_nbody.ipynb)."""
+def load(big=True):
+    """Daten (Zellen 5, 7, 9 von cosmology_nbody.ipynb). big=False lässt den großen Würfel (2000 Mpc/h) weg, den nur die
+    Rechnungen zu Leeren und zum Wachstum brauchen; `cosmic_web` braucht nur den kleinen."""
     global A, AMP, A_BIG, A_SMALL, BIG, E, HASLBAUER_SIGMA, KBC, KH, LNK, LOCALVOID_SIGMA, PLANCK
     global R_HORIZON, R_KBC, SEED, SMALL, S_EH, T_NW, T_W, WU_HUTERER, _, _g, accel, assign
     global cic_window, d, density, dt, f_growth, fft, gather, growth, ifft, in_spheres, initial_conditions, k_nl
@@ -244,11 +245,13 @@ def load():
     A_BIG = np.geomspace(0.02, 1.0, 31)
     A_SMALL = np.concatenate([np.geomspace(0.02, 0.1, 11), np.linspace(0.1, 1.0, 37)[1:]])
     t0 = time.time()
-    BIG = simulate(256, 2000.0, A_BIG)
+    BIG = simulate(256, 2000.0, A_BIG) if big else None
     t1 = time.time()
     SMALL = simulate(256, 250.0, A_SMALL, snapshots=(0.25, 0.5))
     t2 = time.time()
     for lab, s, dt, A in [("großer Würfel", BIG, t1 - t0, A_BIG), ("kleiner Würfel", SMALL, t2 - t1, A_SMALL)]:
+        if s is None:
+            continue
         d = s["delta"]
         print(f"{lab}: L = {s['L']:.0f} Mpc/h, {s['N']}³ Teilchen zu je {s['m_particle']:.2e} M☉/h, {len(A) - 1} Schritte in {dt:.0f} s; "
               f"δ auf dem Gitter: σ = {d.std():.2f}, Maximum {d.max():.0f}, leere Zellen {np.mean(d <= -0.999):.1%}")
@@ -292,7 +295,7 @@ def initial_spectrum():
 
 
 def cosmic_web():
-    """99. Das kosmische Netz entsteht (Zellen 14 von cosmology_nbody.ipynb)."""
+    """88. Das kosmische Netz entsteht (Zellen 14 von cosmology_nbody.ipynb)."""
     global L, STATS2, a, ax, axs, d, dmax, fig, im, img, m_hi, m_lo
     global n, thick, v_hi, v_lo
     fig, axs = plt.subplots(1, 3, figsize=(17, 6))
@@ -316,7 +319,7 @@ def cosmic_web():
 
 
 def growth_check():
-    """100. Wächst die Simulation richtig? (Zellen 17 von cosmology_nbody.ipynb)."""
+    """Wächst die Simulation richtig? (Zellen 17 von cosmology_nbody.ipynb)."""
     global NL, RATIO_BIG, a, ax, ax2, col, fig, k, k0, k0s, k1, keep
     global knl_a, m, p, p0, p0s, p1, r
     fig, (ax, ax2) = plt.subplots(1, 2, figsize=(16, 5.6))

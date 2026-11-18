@@ -20,7 +20,7 @@ from scipy import integrate, ndimage, optimize
 
 
 def load():
-    """101. Daten (Zellen 4, 6 von cosmology_cmbpeaks.ipynb)."""
+    """89. Daten (Zellen 4, 6 von cosmology_cmbpeaks.ipynb)."""
     global ARC_STRETCH, ASTRODATA, BINNED, CMB, C_KMS, DL, DT, EDGES, ERR, FIELDS, FULL, FWHM
     global H0_HD, H0_SH0ES, IRSA, L, LT, MAPS, NEFF_PLANCK, NPIX, OMEGA_G, OMEGA_NU, OM_SN, PEAKS
     global PIX, PIX_HEALPIX, PLANCK, PLANCK_TT, RAW, SIZE, SKYVIEW, THEORY, TROUGHS, WINDOW, _r, acoustic
@@ -232,7 +232,7 @@ def load():
 
 
 def sky_patch():
-    """102. Ein Stück Himmel bei 100 und 143 GHz (Zellen 8 von cosmology_cmbpeaks.ipynb)."""
+    """90. Ein Stück Himmel bei 100 und 143 GHz (Zellen 8 von cosmology_cmbpeaks.ipynb)."""
     global a, ax, axs, b, ext, fig, im, img, m, name, r, title
     ext = [SIZE / 2, -SIZE / 2, -SIZE / 2, SIZE / 2]
     a, b = MAPS["Nordpol"]["143"], MAPS["Nordpol"]["100"]
@@ -256,7 +256,7 @@ def sky_patch():
 
 
 def planck_spectrum():
-    """103. Das Leistungsspektrum von Planck (Zellen 11 von cosmology_cmbpeaks.ipynb)."""
+    """Das Leistungsspektrum von Planck (Zellen 11 von cosmology_cmbpeaks.ipynb)."""
     global ax, ax2, chi2, db, dbm, eb, fig, i, lb
     lb, db, eb, dbm = BINNED[:, 0], BINNED[:, 1], (BINNED[:, 2] + BINNED[:, 3]) / 2, BINNED[:, 4]
     fig, (ax, ax2) = plt.subplots(2, 1, figsize=(14, 8), sharex=True, gridspec_kw=dict(height_ratios=[3, 1]))
@@ -332,7 +332,7 @@ def beam_noise():
 
 
 def point_sources():
-    """104. Punktquellen (Zellen 17 von cosmology_cmbpeaks.ipynb)."""
+    """91. Punktquellen (Zellen 17 von cosmology_cmbpeaks.ipynb)."""
     global CLEAN, SOURCES, _, ax, ax2, field_mean, fig, find_sources, im, inpaint, k, lb
     global m, name, pos, show, snr, target, x, x_clean, x_raw, y
     def find_sources(m, freq, nsig=5.0):

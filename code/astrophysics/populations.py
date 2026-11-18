@@ -67,8 +67,8 @@ def period_radius(s):
     plt.show()
 
 
-def radius_valley(s):
-    """Verteilung der Radien kleiner Planeten, Kerndichteschätzung in log R, Tal und die beiden Maxima."""
+def _valley(s, ax1):
+    """Zeichnet die Radiuslücke in ax1, merkt sich Tal und Maxima in s und gibt die Textzeilen zurück."""
     small = s.small
     logr = np.log10(small["pl_rade"])
     kde = gaussian_kde(logr, bw_method=0.15)
@@ -80,45 +80,42 @@ def radius_valley(s):
     r_peak1 = 10 ** grid[left][np.argmax(dens[left])]
     r_peak2 = 10 ** grid[right][np.argmax(dens[right])]
 
-    fig, ax1 = plt.subplots(figsize=(9, 4.5))
-    ax1.hist(small["pl_rade"], bins=np.logspace(0, np.log10(4), 30), color="tab:blue", alpha=0.4,
-             label=f"{len(small)} Planeten, P < 100 d, Radiusfehler < 10 %")
+    counts, _, _ = ax1.hist(small["pl_rade"], bins=np.logspace(0, np.log10(4), 30), color="tab:blue", alpha=0.4,
+                            label=f"{len(small)} Planeten, P < 100 d, Radiusfehler < 10 %")
+    ax1.set_ylim(0, 1.5 * counts.max())                      # oben Platz für die Legende
     ax1.set_xscale("log")
     ax1.set_xticks([1.0, 1.5, 2.0, 3.0, 4.0], ["1.0", "1.5", "2.0", "3.0", "4.0"])
     ax1.set_xlabel("Radius [R⊕]")
     ax1.set_ylabel("Anzahl Planeten")
     ax2 = ax1.twinx()
     ax2.plot(10 ** grid, dens, c="black", lw=2, label="Kerndichteschätzung in log R")
+    ax2.set_ylim(0, 1.5 * dens.max())
     ax2.set_yticks([])
     ax1.axvline(r_valley, color="tab:red", ls="--", lw=2, label=f"eigenes Tal: {r_valley:.2f} R⊕")
     ax1.axvspan(1.5, 2.0, color="orange", alpha=0.15, label="Fulton et al. (2017): 1.5–2.0 R⊕")
     ax1.set_title("Radiuslücke zwischen Supererden und Sub-Neptunen")
     h1, l1 = ax1.get_legend_handles_labels()
     h2, l2 = ax2.get_legend_handles_labels()
-    ax1.legend(h1 + h2, l1 + l2, loc="upper right", fontsize=8)
-    fig.tight_layout()
-    plt.show()
-
-    print(f"Tal (Minimum der KDE):          {r_valley:.2f} R_Erde")
-    print(f"Maximum der Supererden:         {r_peak1:.2f} R_Erde")
-    print(f"Maximum der Sub-Neptune:        {r_peak2:.2f} R_Erde")
-    print(f"Tiefe des Tals: KDE im Tal / KDE im kleineren Maximum = "
-          f"{kde(np.log10(r_valley))[0] / min(kde(np.log10(r_peak1))[0], kde(np.log10(r_peak2))[0]):.2f}")
+    ax1.legend(h1 + h2, l1 + l2, loc="upper right", fontsize=7)
     s.r_valley, s.r_peak1, s.r_peak2 = r_valley, r_peak1, r_peak2
+    depth = kde(np.log10(r_valley))[0] / min(kde(np.log10(r_peak1))[0], kde(np.log10(r_peak2))[0])
+    return [f"Tal (Minimum der KDE):          {r_valley:.2f} R_Erde",
+            f"Maximum der Supererden:         {r_peak1:.2f} R_Erde",
+            f"Maximum der Sub-Neptune:        {r_peak2:.2f} R_Erde",
+            f"Tiefe des Tals: KDE im Tal / KDE im kleineren Maximum = {depth:.2f}"]
 
 
-def mass_radius(s):
-    """Masse und Radius, gefärbt nach der Einstrahlung, mit den Planeten des Sonnensystems."""
+def _mass(s, ax, fig):
+    """Zeichnet Masse gegen Radius in ax (Farbskala in fig) und gibt die Textzeilen zurück."""
     mr, hl = s.mr, s.hl
-    fig, ax = plt.subplots(figsize=(10, 6))
     sc = ax.scatter(mr["pl_bmasse"], mr["pl_rade"], c=np.log10(mr["pl_insol"].where(mr["pl_insol"] > 0)),
-                    cmap="plasma", s=9, alpha=0.7)
+                    cmap="plasma", s=7, alpha=0.7)
     fig.colorbar(sc, ax=ax).set_label("Einstrahlung log₁₀(S / S⊕)")
     for name, m_e, r_e in SOLAR_SYSTEM:
-        ax.scatter([m_e], [r_e], marker="o", s=70, facecolors="none", edgecolors="black", lw=1.5)
+        ax.scatter([m_e], [r_e], marker="o", s=55, facecolors="none", edgecolors="black", lw=1.5)
         ax.text(m_e * 1.15, r_e * 0.9, name, fontsize=8, weight="bold")
-    ax.scatter([hl["pl_bmasse"]], [hl["pl_rade"]], marker="*", s=250, c="red", edgecolor="black", zorder=5)
-    ax.annotate(s.highlight, (hl["pl_bmasse"], hl["pl_rade"]), xytext=(10, -14), textcoords="offset points", fontsize=9)
+    ax.scatter([hl["pl_bmasse"]], [hl["pl_rade"]], marker="*", s=200, c="red", edgecolor="black", zorder=5)
+    ax.annotate(s.highlight, (hl["pl_bmasse"], hl["pl_rade"]), xytext=(10, -14), textcoords="offset points", fontsize=8)
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlim(0.1, 1e4)
@@ -126,12 +123,36 @@ def mass_radius(s):
     ax.set_xlabel("Masse [M⊕]")
     ax.set_ylabel("Radius [R⊕]")
     ax.set_title(f"Masse und Radius von {len(mr)} Planeten (Fehler < 30 %)")
+    rho_hl = hl["pl_bmasse"] * 5.972e27 / (4 / 3 * np.pi * (hl["pl_rade"] * 6.371e8) ** 3)
+    return [f"{s.highlight}: M = {hl['pl_bmasse']:.0f} M⊕, R = {hl['pl_rade']:.1f} R⊕, mittlere Dichte {rho_hl:.2f} g/cm³ "
+            f"(Saturn 0.69, Jupiter 1.33)"]
+
+
+def radius_valley(s):
+    """Verteilung der Radien kleiner Planeten, Kerndichteschätzung in log R, Tal und die beiden Maxima."""
+    fig, ax = plt.subplots(figsize=(9, 4.5))
+    lines = _valley(s, ax)
     fig.tight_layout()
     plt.show()
+    print("\n".join(lines))
 
-    rho_hl = hl["pl_bmasse"] * 5.972e27 / (4 / 3 * np.pi * (hl["pl_rade"] * 6.371e8) ** 3)
-    print(f"{s.highlight}: M = {hl['pl_bmasse']:.0f} M⊕, R = {hl['pl_rade']:.1f} R⊕, mittlere Dichte {rho_hl:.2f} g/cm³ "
-          f"(Saturn 0.69, Jupiter 1.33)")
+
+def mass_radius(s):
+    """Masse und Radius, gefärbt nach der Einstrahlung, mit den Planeten des Sonnensystems."""
+    fig, ax = plt.subplots(figsize=(10, 6))
+    lines = _mass(s, ax, fig)
+    fig.tight_layout()
+    plt.show()
+    print("\n".join(lines))
+
+
+def valley_and_mass(s):
+    """Radiuslücke (links) und Masse-Radius-Diagramm (rechts) nebeneinander in einem kleineren Bild."""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 4.4), gridspec_kw=dict(width_ratios=[1, 1.1]))
+    lines = _valley(s, ax1) + _mass(s, ax2, fig)
+    fig.tight_layout()
+    plt.show()
+    print("\n".join(lines))
 
 
 def density_curves(s):

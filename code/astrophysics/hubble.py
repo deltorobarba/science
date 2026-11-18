@@ -16,7 +16,7 @@ from scipy import optimize, stats
 
 
 def load():
-    """93. Daten (Zellen 4, 6 von cosmology_hubblediagram.ipynb)."""
+    """86. Daten (Zellen 4, 6 von cosmology_hubblediagram.ipynb)."""
     global ASTRODATA, ASYM, BASE, CAL, COV, C_KMS, HF, LIT, N, OM_FIX, PANTHEON, SN
     global Z_HF, Z_MIN_COSMO, comoving, cov_path, download, gls, hessian, mu_model, offset_chi2, subcov
     ASTRODATA = cosmodata.DATA
@@ -121,7 +121,7 @@ def load():
 
 
 def catalog():
-    """94. Der Katalog (Zellen 8 von cosmology_hubblediagram.ipynb)."""
+    """87. Der Katalog (Zellen 8 von cosmology_hubblediagram.ipynb)."""
     global ax, bins, col, dup, fig, g, grp, ra, sc
     grp = np.where(CAL, "Kalibratoren (Cepheiden)", np.where(HF, "Hubble-Fluss (SH0ES)", "übrige"))
     fig = plt.figure(figsize=(16, 5.5))
@@ -152,7 +152,7 @@ def catalog():
 
 
 def hubble_diagram():
-    """95. Das Hubble-Diagramm (Zellen 11 von cosmology_hubblediagram.ipynb)."""
+    """Das Hubble-Diagramm (Zellen 11 von cosmology_hubblediagram.ipynb)."""
     global H0, M0, Ol, Om, ax, axes, base, col, empty, err, fig, hi
     global idx, lab, m, mb, off, res, sel, z, zb, ze, zhel, zz
     z, zhel, mb = SN["zHD"].values, SN["zHEL"].values, SN["m_b_corr"].values

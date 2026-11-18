@@ -8,18 +8,16 @@ Alexander Del Toro Barba (PhD) $\cdot$  [Google Scholar](https://scholar.google.
 
 <br>
 
-*Machine Leaninng and Quantum Research Engineer at Google Cloud*
+*Machine Learning and Quantum Research Engineer at Google Cloud*
 
 * [Quantum Information](https://github.com/deltorobarba/science/blob/main/experiments/quantum_information.ipynb) 🦋 Born rule, measurement, tomography, entropies and channel capacities.
 * [Quantum Computing](https://github.com/deltorobarba/science/blob/main/experiments/bellstatepreparation.ipynb) 💎 $\vert\Phi^+\rangle$ A Bell state preparation run on noisy quantum hardware.
 * [Mathematics](https://github.com/deltorobarba/science/blob/main/experiments/maths.ipynb) 🌸 Groups, rings, fields and Lie theory, from Rubik's cube to Shor's algorithm.
 * [Astrophysics](https://github.com/deltorobarba/science/blob/main/experiments/astrophysics.ipynb) 🔭 Galaxies, nebulae, exoplanets, gravitational waves, the Sun and cosmology with real data.
 
+<br>
 
-
-## Heisenberg-Weyl  (Quantum Harmonic Oscillator and Quantum Operators)
-
-![Quantum Harmonic Oscillator](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/HarmOsziFunktionen.png/330px-HarmOsziFunktionen.png)
+## Heisenberg-Weyl Algebra
 
 * **Quantum Harmonic Oscillator as Source of All Operators (Physics Basis)**
   * **Analytically:** Every smooth potential near a local minimum approximates a parabola (Taylor expansion $V(x) \approx \frac{1}{2}k x^2$). Consequently, the QHO $\hat H \propto \hat P^2 + \hat Q^2 = \hbar\omega\left(\hat a^\dagger\hat a + \tfrac12\right) = \hbar\omega(\hat n + \tfrac12)$ serves as the universal local model of any bound physical system.
@@ -55,6 +53,7 @@ Alexander Del Toro Barba (PhD) $\cdot$  [Google Scholar](https://scholar.google.
   * **Matrix Representation:** Diagonal matrix composed of complex phase factors.
   * **Conjugation Relation:** While $Z$ physically *represents* position, it *generates* a momentum translation/kick ($D_{0,p} \sim Z^p$).
 
+  ![Quantum Harmonic Oscillator](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/HarmOsziFunktionen.png/330px-HarmOsziFunktionen.png)
 
 The physical and information-theoretic complexity of the gate is determined by the **polynomial degree of the generator $\hat H$ in the phase-space operators $\hat Q, \hat P$**, and the criterion behind the ladder is whether that degree still **closes under the commutator**. Degree 1: displacements (Pauli / Heisenberg-Weyl). Degree 2: Gaussian / Clifford, classically simulable. Degree $\geq 3$: non-Gaussian / non-Clifford, universal, quantum advantage.
 
