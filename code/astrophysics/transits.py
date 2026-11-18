@@ -19,6 +19,28 @@ from lightcurves import lk, fold_phase, running_median, unmask
 G_CGS = 6.674e-8                 # Gravitationskonstante [cm³ g⁻¹ s⁻²]
 
 
+R_EARTH_OVER_R_SUN = 6.371e6 / 6.957e8
+
+
+def top(max_kepmag=14.0, n=15):
+    """Die Datenbank: wie viele Planeten das NASA Exoplanet Archive kennt, und die Kepler-Planeten mit dem tiefsten
+    Transit um Sterne heller als Kepler-Magnitude max_kepmag. Tiefe gemessen (pl_trandep), sonst aus (R_p/R_s)²;
+    die gemessene zuerst, weil streifende Transits viel flacher sind, als die Radien sagen."""
+    allp = archive.query("pscomppars", select="pl_name, discoverymethod, disc_facility")
+    k = archive.query("pscomppars", where="disc_facility='Kepler' and tran_flag=1",
+                      select="pl_name, hostname, disc_year, pl_orbper, pl_rade, st_rad, sy_kepmag, pl_trandep")
+    k["tiefe"] = k["pl_trandep"].fillna(100 * (k["pl_rade"] * R_EARTH_OVER_R_SUN / k["st_rad"]) ** 2)
+    hell = k[k["sy_kepmag"] < max_kepmag].sort_values("tiefe", ascending=False)
+    print(f"Bestätigte Planeten im Archiv: {len(allp)}, davon {(allp['discoverymethod'] == 'Transit').sum()} durch "
+          f"Transits und {(allp['disc_facility'] == 'Kepler').sum()} von Kepler")
+    print(f"Kepler-Planeten mit Transit: {len(k)}, davon {len(hell)} um Sterne mit Kp < {max_kepmag:g}")
+    cols = {"pl_name": "Planet", "pl_orbper": "Periode [d]", "pl_rade": "Radius [R⊕]", "tiefe": "Tiefe [%]",
+            "sy_kepmag": "Kp", "disc_year": "entdeckt"}
+    print(f"\nDie {n} tiefsten Transits:")
+    print(hell.head(n)[list(cols)].rename(columns=cols).round({"Periode [d]": 3, "Radius [R⊕]": 2, "Tiefe [%]": 2,
+                                                                "Kp": 2}).to_string(index=False))
+
+
 def catalog(planet="Kepler-8 b"):
     """Katalogwerte des Planeten; gibt das Zustandsobjekt zurück."""
     cat = archive.query("pscomppars", where=f"pl_name='{planet}'",

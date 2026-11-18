@@ -2,7 +2,7 @@
 
 Für galaxies.ipynb aus galaxies_photometry.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
 Die Funktionen teilen ihre Variablen über Modulvariablen wie die Zellen eines Notebooks und laufen deshalb
-in dieser Reihenfolge: brightest, target, band_images, composites, sky_profile, sersic_fit, color_map, bulge_and_disk, s4g.
+in dieser Reihenfolge: brightest, target(name), band_images, composites, sky_profile, sersic_fit, color_map, bulge_and_disk, s4g.
 Downloads und Cache: data/galaxies/ (`galdata.py`).
 """
 import galdata                                        # zuerst: Cache-Ordner für astropy
@@ -24,18 +24,14 @@ from astroquery.hips2fits import hips2fits
 from astroquery.vizier import Vizier
 
 
-def brightest():
-    """1. Die hellsten Galaxien am Himmel (Zellen 5, 7 von galaxies_photometry.ipynb)."""
-    global ASTRODATA, H0, MAX_VMAG, MIN_SIZE, SELECTED_GALAXY, cols, galaxies, query
+def brightest(max_vmag=10.5, min_size=3.0):
+    """1. Die Datenbank SIMBAD: die hellsten Galaxien am Himmel, heller als V = max_vmag und mit großer Achse ab
+    min_size Bogenminuten (Zellen 5, 7 von galaxies_photometry.ipynb)."""
+    global ASTRODATA, H0, MAX_VMAG, MIN_SIZE, cols, galaxies, query
     ASTRODATA = galdata.DATA
-
-
-    SELECTED_GALAXY = "M 51"   # Name wie in der Tabelle unten, z. B. "M 81", "M 101", "M 104", "M 87"
     H0 = 70.0                  # Hubble-Konstante [km/s/Mpc]
     pd.set_option("display.width", 160)
-
-    MAX_VMAG = 10.5   # nur Galaxien heller als V = 10.5
-    MIN_SIZE = 3.0    # Durchmesser entlang der großen Achse mindestens 3 Bogenminuten
+    MAX_VMAG, MIN_SIZE = max_vmag, min_size
 
     query = f'''
 SELECT b.main_id, d.label AS typ, b.morph_type, b.ra, b.dec,
@@ -61,14 +57,17 @@ ORDER BY vmag
     print(galaxies.head(15)[list(cols)].rename(columns=cols).round(2).to_string(index=False))
 
 
-def target():
-    """3. Die ausgewählte Galaxie und ihre Entfernung (Zellen 10 von galaxies_photometry.ipynb)."""
-    global M_V, a_arcmin, attempt, ax, b_arcmin, coord, d, d_hubble, dist, dist_mpc, e, error
+def target(name="M 51"):
+    """3. Eine Galaxie wählen: Eigenschaften und Entfernung. name wie in der Tabelle von `brightest`, z. B. "M 81",
+    "M 101", "M 104"; die folgenden Funktionen zeigen diese Galaxie (Zellen 10 von galaxies_photometry.ipynb)."""
+    global SELECTED_GALAXY, M_V, a_arcmin, attempt, ax, b_arcmin, coord, d, d_hubble, dist, dist_mpc, e, error
     global fig, info, j, kpc_per_arcmin, m, match, methods, ned, order, pa_deg, rng, size_kpc
     global to_mpc, v_rec
+    SELECTED_GALAXY = " ".join(name.split())
     match = galaxies.loc[galaxies["main_id"] == SELECTED_GALAXY]
     if len(match) == 0:
-        raise ValueError(f"'{SELECTED_GALAXY}' nicht gefunden; Schreibweise prüfen (Leerzeichen in 'M 51').")
+        raise ValueError(f"'{SELECTED_GALAXY}' steht nicht in der Tabelle von `brightest`; Schreibweise prüfen "
+                         "(Leerzeichen in 'M 51') oder die Grenzen dort lockern.")
     info = match.iloc[0]
     coord = SkyCoord(info["ra"], info["dec"], unit="deg")
     a_arcmin = info["galdim_majaxis"]                                          # Durchmesser große Achse [']

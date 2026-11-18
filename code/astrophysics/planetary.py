@@ -39,7 +39,7 @@ def load():
     RUWE_MAX = 1.4         # darüber ist die Astrometrie eines Einzelsterns unzuverlässig
     REL_MIN = 0.8          # Mindestzuverlässigkeit der Zuordnung Gaia-Stern = Zentralstern (Chornay & Walton 2021)
     R_V = 3.1              # Staubgesetz von Cardelli, Clayton & Mathis (1989) mit R_V = A_V / E(B−V) (Funktion reddening)
-    T_NEB = 1.0e4          # Elektronentemperatur der Nebel [K] für die Rekombinationskoeffizienten (Schritt 33)
+    T_NEB = 1.0e4          # Elektronentemperatur der Nebel [K] für die Rekombinationskoeffizienten (Schritt 29)
     LAM_V = 5480.0         # effektive Wellenlänge des V-Filters [Å]
     FNU_V0 = 3.63e-20      # F_ν eines Sterns mit V = 0 [erg s⁻¹ cm⁻² Hz⁻¹] (Bessell et al. 1998)
     Z_TRACKS = 0.016       # Metallizität der Entwicklungswege (Vassiliadis & Wood 1994), etwa solar
@@ -280,7 +280,7 @@ def load():
 
 
 def images():
-    """30. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
+    """26. Vier Nebel im Bild (Zellen 10 von nebulae_planetary.ipynb)."""
     global SHOW, ax, axes, bar, cw_by_png, d, fig, h, img, name, png, r
     global rows, size, stretch
     SHOW = [("NGC 7662", "106.5-17.6", 60, "&asinh=True&autoscale=99.99"),   # Name, PNG, Bildgröße [″], Streckung
@@ -314,7 +314,7 @@ def images():
 
 
 def catalogs():
-    """31. Kataloge und Auswahl (Zellen 13 von nebulae_planetary.ipynb)."""
+    """27. Kataloge und Auswahl (Zellen 13 von nebulae_planetary.ipynb)."""
     global ALL, GAIA, S, _, ax, ax2, cstar, fig, funnel, g, i, in_v84
     global lb, lbg, lines, main, n, s_, saturated, sc, vel
     main = V84["main"][["PNG", "Name"]].copy()
@@ -462,7 +462,7 @@ def reddening():
 
 
 def ages():
-    """32. Größe und kinematisches Alter (Zellen 22 von nebulae_planetary.ipynb)."""
+    """28. Größe und kinematisches Alter (Zellen 22 von nebulae_planetary.ipynb)."""
     global ax, axes, fig, kin, lab, m, name, off, rho, sc, t, v
     S["R_pc"] = S["pnRad"] / 206265 * S["d"]
     S["t_kin"] = S["R_pc"] * PC / (S["ExpVel"] * KM) / YEAR
@@ -507,7 +507,7 @@ def ages():
 
 
 def zanstra_h():
-    """33. Die Zanstra-Temperatur aus Wasserstoff (Zellen 25 von nebulae_planetary.ipynb)."""
+    """29. Die Zanstra-Temperatur aus Wasserstoff (Zellen 25 von nebulae_planetary.ipynb)."""
     global EXAMPLES, S, T, WEID_COLS, ax, axes, fig, i, name, q, row, th
     global usable
     WEID_COLS = ["PNG", "SpType1", "TpTeff", "logTeff", "logL"]
@@ -559,7 +559,7 @@ def zanstra_h():
 
 
 def zanstra_he():
-    """34. Ein zweites Thermometer: He II (Zellen 28 von nebulae_planetary.ipynb)."""
+    """30. Ein zweites Thermometer: He II (Zellen 28 von nebulae_planetary.ipynb)."""
     global _, ax, axes, both, both_r, fig, large, q, rho, row, sc, setter
     global small
     S["T_He"] = np.where(usable, zanstra_T(S["F_He2"] / S["FnuV"], "He"), np.nan)

@@ -78,11 +78,15 @@ def skyview(survey, ra, dec, fov_arcmin, npix, folder):
 def images(target, bands, fov_arcmin, npix, cache_dir):
     """Bilder eines Objekts in mehreren Bändern als dict; Bänder ohne Abdeckung fehlen."""
     folder = Path(cache_dir) / "".join(c if c.isalnum() else "_" for c in target.name.strip())
-    out, missing = {}, []
+    out, missing, failed = {}, [], []
     for band in bands:
         if band in MEAN_BANDS:
             continue
-        img = skyview(band, target.ra, target.dec, fov_arcmin, npix, folder)
+        try:
+            img = skyview(band, target.ra, target.dec, fov_arcmin, npix, folder)
+        except OSError:                              # SkyView liefert gerade nicht (am 2026-11-18 2MASS und WISE)
+            failed.append(band)
+            continue
         if img is None:
             missing.append(band)
         else:
@@ -91,5 +95,6 @@ def images(target, bands, fov_arcmin, npix, cache_dir):
         if band in bands and a in out and b in out:
             out[band] = (out[a] + out[b]) / 2
     print(f"{len(out)} Bilder, {fov_arcmin:.1f}′ mit {npix} Pixeln"
-          + (f"; keine Daten (keine Abdeckung oder Feld zu groß): {', '.join(missing)}" if missing else ""))
+          + (f"; keine Daten (keine Abdeckung oder Feld zu groß): {', '.join(missing)}" if missing else "")
+          + (f"; Download fehlgeschlagen (SkyView, später neu versuchen): {', '.join(failed)}" if failed else ""))
     return out

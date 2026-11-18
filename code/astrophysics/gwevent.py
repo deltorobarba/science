@@ -1,4 +1,5 @@
-"""GW150914, das erste gemessene Gravitationswellen-Signal: LIGO-Rohdaten von H1 und L1 über GWOSC, Rauschspektrum, Whitening und Bandpass, Q-Transformation, Chirp-Masse aus der Zeit-Frequenz-Kurve und Vergleich mit dem Katalog.
+"""Ein Gravitationswellen-Ereignis nach Wahl (bis 2026-11-18 gw150914.py, fest GW150914, das erste gemessene Signal):
+Steckbrief aus dem Katalog von gwtc.py, LIGO-Rohdaten von H1 und L1 über GWOSC, Rauschspektrum, Whitening und Bandpass, Q-Transformation, Chirp-Masse aus der Zeit-Frequenz-Kurve und Vergleich mit dem Katalog.
 
 Für gravitational_waves.ipynb aus gw150914.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
 Die Funktionen teilen ihre Variablen über Modulvariablen wie die Zellen eines Notebooks und laufen deshalb
@@ -11,27 +12,48 @@ import matplotlib.pyplot as plt
 from gwosc.api import fetch_event_json
 from gwosc.datasets import event_gps
 from gwpy.timeseries import TimeSeries
+from astropy.time import Time
 
 GWPY_STIL = {k: v for k, v in plt.rcParams.items() if v != gwdata.RC_VORHER.get(k)}   # was gwpy beim Import umgestellt hat
 plt.rcParams.update(gwdata.RC_VORHER)                # die übrigen Teile von astrophysics.ipynb behalten ihren Plotstil
 
 
-def load():
-    """51. Daten (Zellen 5 von gw150914.ipynb)."""
+def _steckbrief(event, gps):
+    """Werte des Ereignisses aus dem bereinigten Katalog (gwtc.selection), wenn es dort steht."""
+    import gwtc
+    cat = getattr(gwtc, "cat", None)
+    row = None if cat is None else cat[(cat["name"] == event) | cat["name"].str.startswith(event + "_")]
+    if row is None or len(row) == 0:
+        print(f"{event}: nicht im bereinigten Katalog (gwtc.selection); die Daten werden trotzdem geladen")
+        return
+    r = row.iloc[0]
+    print(f"Ereignis:    {r['name']}  (Katalog {r['katalog']}, Kampagne {r['kampagne']}, Typ {r['typ']})")
+    print(f"Zeit:        {Time(float(gps), format='gps').utc.iso[:19]} UTC")
+    if r["typ"] != "ohne Parameter":
+        print(f"Massen:      m1 = {r['m1']:.1f} M☉, m2 = {r['m2']:.1f} M☉ (im Ruhesystem der Quelle); "
+              f"Chirp-Masse {r['mc']:.1f} M☉, Endmasse {r['m_end']:.1f} M☉")
+        print(f"Entfernung:  D_L = {r['dl']:.0f} Mpc, z = {r['z']:.2f}")
+    far = f", Fehlalarmrate {r['far']:.1e} pro Jahr" if np.isfinite(r["far"]) else ""
+    print(f"Signal:      Netzwerk-SNR {r['snr']:.1f}{far}")
+
+
+def load(event="GW150914", detectors=("H1", "L1")):
+    """49. Ein Ereignis wählen: Steckbrief und 32 s Messdaten um das Ereignis (Zellen 5 von gw150914.ipynb)."""
     global EREIGNIS, daten, gps, ifo
-    plt.rcParams.update(GWPY_STIL)                   # GW150914 im Plotstil von gwpy (wie im früheren Notebook)
-    EREIGNIS = "GW150914"
+    plt.rcParams.update(GWPY_STIL)                   # die Daten im Plotstil von gwpy (wie im früheren Notebook)
+    EREIGNIS = event
     gps = event_gps(EREIGNIS)
+    _steckbrief(EREIGNIS, gps)
     print("GPS-Zeit des Ereignisses:", gps)
 
     daten = {}
-    for ifo in ["H1", "L1"]:
+    for ifo in detectors:
         daten[ifo] = TimeSeries.fetch_open_data(ifo, gps - 16, gps + 16, sample_rate=4096, cache=True)
         print(f"{ifo}: {daten[ifo].duration.value:.0f} s, {daten[ifo].sample_rate.value:.0f} Hz")
 
 
 def raw_data():
-    """52. Rohdaten (Zellen 8 von gw150914.ipynb)."""
+    """50. Rohdaten (Zellen 8 von gw150914.ipynb)."""
     global ax, fig, h, ifo
     fig, ax = plt.subplots(figsize=(10, 3.5))
     for ifo in daten:
@@ -39,7 +61,7 @@ def raw_data():
         ax.plot(h.times.value - gps, h.value, lw=0.6, label=ifo)
     ax.set_xlabel("Zeit relativ zum Ereignis [s]")
     ax.set_ylabel("Strain")
-    ax.set_title("GW150914: Rohdaten")
+    ax.set_title(f"{EREIGNIS}: Rohdaten")
     ax.legend()
     plt.show()
 
@@ -55,34 +77,46 @@ def noise_spectrum():
     ax.set_ylim(1e-24, 1e-19)
     ax.set_xlabel("Frequenz [Hz]")
     ax.set_ylabel("Amplitudenspektraldichte [1/√Hz]")
-    ax.set_title("Rauschspektrum um GW150914")
+    ax.set_title(f"Rauschspektrum um {EREIGNIS}")
     ax.grid(True, which="both", alpha=0.3)
     ax.legend()
     plt.show()
 
 
 def whitened():
-    """53. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
-    global VERSATZ, ax, fig, gefiltert, h1, l1
+    """51. Whitening und Bandpass (Zellen 14 von gw150914.ipynb)."""
+    global VERSATZ, VORZEICHEN, ax, fig, gefiltert, h1, l1
     gefiltert = {ifo: daten[ifo].whiten(4, 2).bandpass(35, 350) for ifo in daten}
-    VERSATZ = 0.0069        # Sekunden: L1 sah das Signal etwa 7 ms vor H1
-
     h1 = gefiltert["H1"].crop(gps - 0.2, gps + 0.05)
     l1 = gefiltert["L1"].crop(gps - 0.2, gps + 0.05)
 
+    # Versatz und Vorzeichen aus der Kreuzkorrelation innerhalb der Lichtlaufzeit (10 ms); bis 2026-11-18 fest
+    # 6.9 ms und −1, die veröffentlichten Werte für GW150914
+    fs = h1.sample_rate.value
+    m = int(0.010 * fs)
+    x, y = h1.value, l1.value
+    lags = np.arange(-m, m + 1)
+    norm = np.sqrt(np.dot(x[m:-m], x[m:-m]) * np.dot(y[m:-m], y[m:-m]))
+    cc = np.array([np.dot(x[m:-m], np.roll(y, k)[m:-m]) for k in lags]) / norm
+    best = np.argmax(np.abs(cc))
+    VERSATZ, VORZEICHEN = lags[best] / fs, np.sign(cc[best])
+    print(f"Kreuzkorrelation: L1 um {VERSATZ * 1e3:+.1f} ms verschoben, Vorzeichen {VORZEICHEN:+.0f}, "
+          f"Korrelation {cc[best]:+.2f}")
+
     fig, ax = plt.subplots(figsize=(10, 4))
     ax.plot(h1.times.value - gps, h1.value, label="H1")
-    ax.plot(l1.times.value - gps + VERSATZ, -l1.value, label="L1, um 6.9 ms verschoben und invertiert")
+    ax.plot(l1.times.value - gps + VERSATZ, VORZEICHEN * l1.value,
+            label=f"L1, um {abs(VERSATZ) * 1e3:.1f} ms verschoben" + (" und invertiert" if VORZEICHEN < 0 else ""))
     ax.set_xlim(-0.2, 0.05)
     ax.set_xlabel("Zeit relativ zum Ereignis [s]")
     ax.set_ylabel("Strain, geweißt (Einheiten des Rauschens)")
-    ax.set_title("GW150914 nach Whitening und Bandpass")
+    ax.set_title(f"{EREIGNIS} nach Whitening und Bandpass")
     ax.legend()
     plt.show()
 
 
 def spectrogram():
-    """54. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
+    """52. Zeit-Frequenz-Bild (Zellen 17 von gw150914.ipynb)."""
     global ax, plot, qt
     qt = daten["H1"].q_transform(outseg=(gps - 0.3, gps + 0.05), qrange=(4, 64), frange=(20, 500))
 
@@ -91,9 +125,10 @@ def spectrogram():
     ax.set_xscale("seconds", epoch=gps)
     ax.set_yscale("log")
     ax.set_ylabel("Frequenz [Hz]")
-    ax.set_title("H1: Q-Transformation um GW150914")
+    ax.set_title(f"H1: Q-Transformation um {EREIGNIS}")
     ax.colorbar(label="Normierte Energie", clim=(0, 25))
     plt.show()
+    plt.style.use("default")      # der nächste Teil (Sonne) zeigt wieder den Stil von matplotlib, wie bisher nach gwtc.load
 
 
 def chirp_mass():

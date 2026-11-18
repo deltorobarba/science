@@ -38,7 +38,7 @@ def load():
     CTRL = (241.0, -29.0, 1.0)           # Kontrollfeld mit wenig Staub: Mitte und Radius [°] (Funktion colors)
     R_JHK = {"J": 0.282, "H": 0.175, "K": 0.112}   # A_λ / A_V im nahen Infrarot (Rieke & Lebofsky 1985)
     MIN_STARS = 3                        # mindestens so viele Sterne pro Pixel der Extinktionskarte (Funktion extinction_map)
-    BETA_FIX = 1.6                       # Spektralindex des Staubs, wenn er nicht frei ist (Schritt 23)
+    BETA_FIX = 1.6                       # Spektralindex des Staubs, wenn er nicht frei ist (Funktion dust_temperature)
     K_CMB_TO_MJY = 287.45                # 353 GHz: MJy/sr pro K_CMB (Planck 2013 IX)
     AV_TAU_DIFFUSE = 3.1 * 1.49e4        # A_V / τ353 im diffusen Gas (Planck 2013 XI: E(B−V)/τ353 = 1.49·10⁴)
     NH_PER_AV = 1.87e21                  # Wasserstoffsäule pro A_V [cm⁻² mag⁻¹] (Bohlin et al. 1978, R_V = 3.1)
@@ -435,7 +435,7 @@ def reddening_distance():
 
 
 def dust_temperature():
-    """23. Wie warm ist der Staub? (Zellen 23 von nebulae_dust.ipynb)."""
+    """Wie warm ist der Staub? (Zellen 23 von nebulae_dust.ipynb)."""
     global BETA, EXAMPLES, TAU, TEMP, TEMP_FIX, ax, cmap, col, core, dec, dense, edge
     global fig, hi, hot, i, im, j, k, lab, lo, m, name, nu_plot
     global ox, oy, ra, title, x, y
@@ -787,7 +787,7 @@ def sfd():
     ax.axhline(1, color="k", lw=1)
     ax.axhline(1 / 0.86, color="k", ls=":", label="Nacheichung 0.86 (Schlafly & Finkbeiner)")
     ax.set_yscale("log")
-    ax.set_xlabel("Staubtemperatur aus Schritt 23 [K]")
+    ax.set_xlabel("Staubtemperatur aus dust_temperature [K]")
     ax.set_ylabel("A_V (SFD) / A_V (2MASS)")
     ax.set_title("Verhältnis gegen Temperatur", fontsize=10)
     ax.legend(fontsize=9)
