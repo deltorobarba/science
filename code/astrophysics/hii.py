@@ -24,7 +24,7 @@ from astroquery.sdss import SDSS
 
 
 def regions():
-    """20. Die H-II-Regionen von M 101 (Zellen 12, 13, 14, 16 von nebulae_temperature.ipynb)."""
+    """Die H-II-Regionen von M 101 (Zellen 12, 13, 14, 16 von nebulae_temperature.ipynb)."""
     global AIR, ASTRODATA, Atom, CH, C_CGS, C_KMS, DEC0, D_MPC, FOV, GROUPS, HA_HB, HG_HB
     global H_PLANCK, INC_DEG, K, KPC_PER_R25, K_B, LINES, N2, N_E, N_MC, O2, O3, PA_DEG
     global PYNEB, R25_ARCSEC, RA0, S, S2, S3, SH95, SN_AUR, SN_STRONG, SPEC, VIZIER, V_SYS
@@ -379,7 +379,7 @@ ORDER BY s.snMedian DESC''')
 
 
 def weak_lines():
-    """21. Erster Blick auf die schwachen Linien (Zellen 19 von nebulae_temperature.ipynb)."""
+    """Erster Blick auf die schwachen Linien (Zellen 19 von nebulae_temperature.ipynb)."""
     global I_SHOW, ax, c5471, core, cs, dist, fig, k, lab, lam, lo, m
     global masked, n, n5471, names, peak, sp, title, w0, weak, z_show, zooms
     # Die Faser auf NGC 5471, der hellen, metallarmen Riesen-H-II-Region am Ostrand von M 101

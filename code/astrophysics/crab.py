@@ -151,7 +151,7 @@ def load():
 
 
 def photos():
-    """28. Drei Fotos aus 60 Jahren (Zellen 13, 14, 16 von nebulae_crab.ipynb)."""
+    """Drei Fotos aus 60 Jahren (Zellen 13, 14, 16 von nebulae_crab.ipynb)."""
     global DESC, EPOCH, EXTENT, RAW, ZOOM, astrometry, axes, band, cut, d, de_c, design
     global epoch, fig, find_stars, first, fit_expansion, fit_poly, gaia_at, hdr, hi, im, img, info
     global j, k, last, lo, masked_ncc, measure, name, p, pair, prep, px, py
@@ -418,7 +418,7 @@ def photos():
 
 
 def filaments():
-    """29. Filamente und Synchrotronlicht (Zellen 19 von nebulae_crab.ipynb)."""
+    """Filamente und Synchrotronlicht (Zellen 19 von nebulae_crab.ipynb)."""
     global EBV, G_s, K_LINE, LAM_I, LAM_R, _, alpha, alpha_meas, ax, axes, cmap, de_s
     global ext, fig, frac, gmax, gx, gy, hi, i_img, im, inner, is_, k10
     global line, lo, nx, ny, pcx, pcy, r_img, ra_s, rad, redden, rs, sel
