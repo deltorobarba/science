@@ -22,7 +22,7 @@ from astroquery.hips2fits import hips2fits
 
 
 def sdss_spectra():
-    """11. Die Galaxie und ihre SDSS-Spektren (Zellen 5, 7 von galaxies_hiiregions.ipynb)."""
+    """9. Die Galaxie und ihre SDSS-Spektren (Zellen 5, 7 von galaxies_hiiregions.ipynb)."""
     global ASTRODATA, C_KMS, GROUPS, LABEL, LINES, MAX_SPECTRA, SN_MIN, SPEC_GALAXY, axes, cls, col, dist
     global dx_all, dy_all, fig, first, g, g_a, g_dec, g_dist, g_pa, g_q, g_ra, half_g
     global img_opt, k, kpc_per_arcmin, lab, ln, m, query, r_deg, sdss_query, spec_list, spectra, v_sys

@@ -16,7 +16,7 @@ from scipy import optimize, stats
 
 
 def load():
-    """61. Daten (Zellen 4, 6 von cosmology_hubblediagram.ipynb)."""
+    """55. Daten (Zellen 4, 6 von cosmology_hubblediagram.ipynb)."""
     global ASTRODATA, ASYM, BASE, CAL, COV, C_KMS, HF, LIT, N, OM_FIX, PANTHEON, SN
     global Z_HF, Z_MIN_COSMO, comoving, cov_path, download, gls, hessian, mu_model, offset_chi2, subcov
     ASTRODATA = cosmodata.DATA
@@ -121,7 +121,7 @@ def load():
 
 
 def catalog():
-    """62. Der Katalog (Zellen 8 von cosmology_hubblediagram.ipynb)."""
+    """56. Der Katalog (Zellen 8 von cosmology_hubblediagram.ipynb)."""
     global ax, bins, col, dup, fig, g, grp, ra, sc
     grp = np.where(CAL, "Kalibratoren (Cepheiden)", np.where(HF, "Hubble-Fluss (SH0ES)", "übrige"))
     fig = plt.figure(figsize=(16, 5.5))

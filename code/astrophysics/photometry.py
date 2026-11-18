@@ -219,7 +219,7 @@ def composites():
 
 
 def sky_profile():
-    """8. Himmelshintergrund und radiales Profil (Zellen 19 von galaxies_photometry.ipynb)."""
+    """Himmelshintergrund und radiales Profil (Zellen 19 von galaxies_photometry.ipynb)."""
     global BAND, N_BINS, a_cat, axes, col, dx, dy, edges, f, fig, img, nx
     global ny, pa, prof, q, r_ell, r_mid, raw, ring_median, robust_std, sky, sky_noise, sky_region
     global x_a, x_b, xx, yy
@@ -336,7 +336,7 @@ def sersic_fit():
 
 
 def color_map():
-    """9. Die Farbkarte (Zellen 25 von galaxies_photometry.ipynb)."""
+    """7. Die Farbkarte (Zellen 25 von galaxies_photometry.ipynb)."""
     global axes, c_prof, colour, colour_ok, covered, det, fig, im, in_ring, inner, nuv, nuv_n
     global nuv_sky, outer, w1, w1_n, w1_sky
     colour_ok = "GALEX Near UV" in images and "WISE 3.4" in images

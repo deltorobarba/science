@@ -230,7 +230,7 @@ def load():
 
 
 def bands():
-    """21. Die Wolke in sechs Bändern (Zellen 8 von nebulae_dust.ipynb)."""
+    """18. Die Wolke in sechs Bändern (Zellen 8 von nebulae_dust.ipynb)."""
     global ax, axes, dec, fig, hi, img, lo, name, ra, s, title, v
     global x, y
     fig, axes = plt.subplots(2, 3, figsize=(16, 10.5))
@@ -257,7 +257,7 @@ def bands():
 
 
 def stars():
-    """22. Sterne in Richtung der Wolke (Zellen 11 von nebulae_dust.ipynb)."""
+    """19. Sterne in Richtung der Wolke (Zellen 11 von nebulae_dust.ipynb)."""
     global CTRL2M, I857, N2M, NGA, STARS2M, _, ax, axes, bins, clean_2mass, col, ctrl_area
     global dens_ctrl, fig, hi857, idx, im, lab, m, title, xs, ys
     def clean_2mass(t):
