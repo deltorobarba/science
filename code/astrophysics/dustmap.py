@@ -1,4 +1,4 @@
-"""Die Dunkelwolke ρ Ophiuchi: Bilder in sechs Bändern, Sternfarben, Extinktionskarte, Rötung gegen Entfernung, Staubtemperatur, Extinktionsgesetz, Masse und Entfernung der Wolke.
+"""Sterne und Staub um einen Nebel nach Wahl (bis 2026-11-18 ophiuchus.py, fest die Dunkelwolke ρ Ophiuchi): Bilder in sechs Bändern, Sternfarben, Extinktionskarte, Rötung gegen Entfernung, Staubtemperatur, Extinktionsgesetz, Masse und Entfernung der Wolke.
 
 Für nebulae.ipynb aus nebulae_dust.ipynb übernommen: Jede Funktion ist eine Zelle des alten Notebooks (Code wörtlich).
 Die Funktionen teilen ihre Variablen über Modulvariablen wie die Zellen eines Notebooks und laufen deshalb
@@ -6,7 +6,9 @@ in dieser Reihenfolge: load, bands, stars, colors, extinction_map, reddening_dis
 Downloads und Cache: data/nebulae/ (`nebdata.py`).
 """
 import nebdata                                         # zuerst: Cache-Ordner für astropy
+import catalog
 import io
+import ssl
 import os
 import re
 import time
@@ -22,9 +24,11 @@ from astropy.io import fits
 from astropy.wcs import WCS
 
 
-def load():
-    """Daten (Zellen 4, 6 von nebulae_dust.ipynb)."""
-    global ASTRODATA, AV_CLOUD, AV_TAU_DIFFUSE, BANDS, BETA_FIX, BOX, BOX_WIDE, COLS_2MASS, CTRL, C_CGS, DE0, DE_MAP
+def load(name="M 42", ctrl=(89.70, -19.32, 1.0), size=3.0):
+    """Daten in einem Feld von size Grad um name (Mitte aus SIMBAD) und in einem Vergleichsfeld ctrl = (RA, Dec, Radius)
+    mit wenig Staub, am besten auf ähnlicher galaktischer Breite (Standard: l = 225°, b = −20°, E(B−V) = 0.05, für M 42).
+    Bis 2026-11-18 fest ρ Ophiuchi (247.0°, −24.2°, Vergleichsfeld 241.0°, −29.0°). Zellen 4, 6 von nebulae_dust.ipynb."""
+    global NAME, ASTRODATA, AV_CLOUD, AV_TAU_DIFFUSE, BANDS, BETA_FIX, BOX, BOX_WIDE, COLS_2MASS, CTRL, C_CGS, DE0, DE_MAP
     global DUST, EBV_CTRL, ESA_TAP, EXT_MAP, GAIA, GRID, HD147889, H_PLANCK, IMG, IRSA_TAP, K_B, K_CMB_TO_MJY
     global MIN_STARS, MU_H, M_H, M_SUN, NH_PER_AV, NPIX_IMG, NPIX_MAP, NU, PC, RA0, RA_MAP, R_JHK
     global SED, SED_ERR, SFD, SIZE, STARS, SURVEYS, TM, TM_CTRL, WMAP, XX, YY, at_map
@@ -33,9 +37,11 @@ def load():
     ASTRODATA = nebdata.DATA
 
 
-    RA0, DE0, SIZE = 247.0, -24.2, 3.0   # Mitte und Kantenlänge des Feldes [°]: L1688, L1689 und ρ Oph
+    NAME = name
+    target = catalog.lookup(name, ASTRODATA / "images")
+    RA0, DE0, SIZE = round(target.ra, 4), round(target.dec, 4), size   # Mitte und Kantenlänge des Feldes [°]
     NPIX_MAP, NPIX_IMG = 60, 200         # Pixel des Rechengitters (3′) und der Bilder (0.9′)
-    CTRL = (241.0, -29.0, 1.0)           # Kontrollfeld mit wenig Staub: Mitte und Radius [°] (Funktion colors)
+    CTRL = tuple(ctrl)                   # Kontrollfeld mit wenig Staub: Mitte und Radius [°] (Funktion colors)
     R_JHK = {"J": 0.282, "H": 0.175, "K": 0.112}   # A_λ / A_V im nahen Infrarot (Rieke & Lebofsky 1985)
     MIN_STARS = 3                        # mindestens so viele Sterne pro Pixel der Extinktionskarte (Funktion extinction_map)
     BETA_FIX = 1.6                       # Spektralindex des Staubs, wenn er nicht frei ist (Funktion dust_temperature)
@@ -45,12 +51,18 @@ def load():
     MU_H = 1.37                          # Masse pro Wasserstoffatom in Einheiten von m_H (mit Helium)
     AV_CLOUD = 5.0                       # Sterne in Pixeln mit A_V über diesem Wert gelten als "auf der Wolke" (Funktion reddening_distance)
     HD147889 = (246.3513, -24.4658)      # B2-Stern am Rand von L1688 (Gaia DR3 6049140417677195136)
-    STARS = {"ρ Oph": (246.3963, -23.4473), "HD 147889": HD147889, "22 Sco": (247.5520, -25.1153)}
+    STARS = {name: (RA0, DE0)}           # markiert in den Bildern (für ρ Oph waren es ρ Oph, HD 147889 und 22 Sco)
     rng = np.random.default_rng(42)
     pd.set_option("display.width", 160)
     np.seterr(divide="ignore", invalid="ignore")
     H_PLANCK, K_B, C_CGS, M_H, PC, M_SUN = 6.62607e-27, 1.380649e-16, 2.99792458e10, 1.6726e-24, 3.0857e18, 1.989e33
-    DUST = ASTRODATA / "dust"
+    DUST = ASTRODATA / "dust" / "".join(c if c.isalnum() else "_" for c in name)   # ein Cache je Feld
+    SSL_CTX = None
+    try:                                  # conda base kennt die Root-CA von IRSA (SSL.com 2022) nicht, certifi schon (2026-11-18)
+        import certifi
+        SSL_CTX = ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        pass
 
 
     def download(urls, path, check=None, timeout=120, rounds=3, pause=10):
@@ -63,7 +75,7 @@ def load():
         for k in range(rounds):
             for url in urls:
                 try:
-                    with urllib.request.urlopen(url, timeout=timeout) as r:
+                    with urllib.request.urlopen(url, timeout=timeout, context=SSL_CTX) as r:
                         data = r.read()
                 except OSError:
                     continue
@@ -100,7 +112,7 @@ def load():
     # Bilder: fein für den Blick, grob (3′) für die Rechnungen
     SURVEYS = {"DSS2 Blue": "DSS2 blau (0.45 µm)", "DSS2 Red": "DSS2 rot (0.65 µm)", "WISE 12": "WISE 12 µm (warmer Staub)",
                "IRIS100": "IRIS 100 µm", "Planck 857 I": "Planck 857 GHz (350 µm)", "Planck 353 I": "Planck 353 GHz (850 µm)"}
-    IMG = {s: skyview(s, NPIX_IMG) for s in SURVEYS}
+    IMG = {}                                                             # die Bilder lädt erst bands() (2026-11-18: WISE fehlte bei SkyView)
     BANDS = {"IRIS100": 2.998e12, "Planck 857 I": 857e9, "Planck 545 I": 545e9, "Planck 353 I": 353e9}   # Frequenzen [Hz]
     GRID = {s: skyview(s, NPIX_MAP)[0] for s in BANDS}
     WMAP = skyview("Planck 857 I", NPIX_MAP)[1]                          # WCS des Rechengitters
@@ -126,15 +138,16 @@ def load():
     xml_ctrl = irsa_dust(CTRL[0], CTRL[1], 2 * CTRL[2], "irsa_dust_control.xml")
     EBV_CTRL = float(re.search(r"<meanValueSandF>\s*([0-9.]+)", xml_ctrl).group(1))
     xml_field = irsa_dust(RA0, DE0, SIZE, "irsa_dust_field.xml")
-    sfd_path = DUST / "sfd_field.fits"
-    if not sfd_path.exists():
-        url = re.search(r"(https://\S+?p150Dust\.fits)", xml_field).group(1)   # temporärer Link, gilt nur kurz
-        download([url], sfd_path, fits_ok)
-    SFD = fits.open(sfd_path)[0]
+    sfd_path = DUST / "sfd_field.fits"                                  # nur für die Funktion sfd
+    found = re.search(r"(https://\S+?p\d+Dust\.fits)", xml_field)         # temporärer Link; Name je nach Feldgröße (p150, p170)
+    if not sfd_path.exists() and found:
+        download([found.group(1)], sfd_path, fits_ok)
+    SFD = fits.open(sfd_path)[0] if sfd_path.exists() else None
 
     print(f"2MASS: {len(TM)} Quellen im Feld, {len(TM_CTRL)} im Kontrollfeld (E(B−V) = {EBV_CTRL:.3f} nach Schlafly & Finkbeiner)")
     print(f"Gaia DR3 mit Parallaxe S/N > 5 und A_G: {len(GAIA)} Sterne")
-    print("Bilder:", ", ".join(f"{s} {IMG[s][0].shape[0]}²" for s in IMG), f"| Rechengitter {NPIX_MAP}² zu {SIZE * 60 / NPIX_MAP:.0f}′")
+    print(f"Feld: {SIZE:g}° × {SIZE:g}° um {name} ({RA0:.2f}°, {DE0:+.2f}°), Vergleichsfeld ({CTRL[0]:.2f}°, {CTRL[1]:+.2f}°, Radius {CTRL[2]:g}°)")
+    print(f"Rechengitter {NPIX_MAP}² zu {SIZE * 60 / NPIX_MAP:.0f}′ aus IRIS 100 µm und Planck 857, 545, 353 GHz")
     print("Medianwerte im Feld [MJy/sr]:", ", ".join(f"{s} {np.median(v):.1f}" for s, v in GRID.items()))
 
     YY, XX = np.mgrid[0:NPIX_MAP, 0:NPIX_MAP]
@@ -230,9 +243,12 @@ def load():
 
 
 def bands():
-    """15. Die Wolke in sechs Bändern (Zellen 8 von nebulae_dust.ipynb)."""
+    """Die Wolke in sechs Bändern (Zellen 8 von nebulae_dust.ipynb)."""
     global ax, axes, dec, fig, hi, img, lo, name, ra, s, title, v
     global x, y
+    for s in SURVEYS:
+        if s not in IMG:
+            IMG[s] = skyview(s, NPIX_IMG)
     fig, axes = plt.subplots(2, 3, figsize=(16, 10.5))
     for ax, (s, title) in zip(axes.flat, SURVEYS.items()):
         img = IMG[s][0]
@@ -248,7 +264,7 @@ def bands():
         ax.set_title(title, fontsize=11)
         ax.set_xlabel("Δα cos δ [°] (Osten links)")
         ax.set_ylabel("Δδ [°]")
-    fig.suptitle("L1688 und L1689 in ρ Ophiuchi, 3° × 3°", fontsize=12)
+    fig.suptitle(f"{NAME}, {SIZE:g}° × {SIZE:g}°", fontsize=12)
     plt.tight_layout()
     plt.show()
     for s in SURVEYS:
@@ -257,9 +273,9 @@ def bands():
 
 
 def stars():
-    """16. Sterne in Richtung der Wolke (Zellen 11 von nebulae_dust.ipynb)."""
+    """Sterne in Richtung der Wolke (Zellen 11 von nebulae_dust.ipynb)."""
     global CTRL2M, I857, N2M, NGA, STARS2M, _, ax, axes, bins, clean_2mass, col, ctrl_area
-    global dens_ctrl, fig, hi857, idx, im, lab, m, title, xs, ys
+    global dens_ctrl, fig, hi857, idx, im, lab, level, m, title, xs, ys
     def clean_2mass(t):
         q, c = t["ph_qual"].astype(str), t["cc_flg"].astype(str)
         ok = q.str[1].isin(list("ABC")) & q.str[2].isin(list("ABC")) & (c.str[1:3] == "00")
@@ -276,11 +292,12 @@ def stars():
     ctrl_area = np.pi * CTRL[2] ** 2 * 3600 / 9                        # Pixel von 3′ × 3′ im Kontrollfeld
     dens_ctrl = len(CTRL2M) / ctrl_area
 
+    level = np.nanpercentile(np.log10(GRID["Planck 857 I"]), 90)       # Kontur: die 10 % hellsten Pixel bei 857 GHz
     fig, axes = plt.subplots(1, 3, figsize=(17, 5))
     for ax, (m, title) in zip(axes[:2], [(N2M, f"2MASS: {len(STARS2M)} Sterne"), (NGA, f"Gaia, Parallaxe S/N > 5: {len(GAIA)} Sterne")]):
         im = ax.imshow(m, origin="lower", cmap="viridis", extent=EXT_MAP)
         plt.colorbar(im, ax=ax, label="Sterne pro Pixel (3′ × 3′)")
-        ax.contour(np.log10(GRID["Planck 857 I"]), levels=[2.2], colors="w", linewidths=0.8, extent=EXT_MAP)
+        ax.contour(np.log10(GRID["Planck 857 I"]), levels=[level], colors="w", linewidths=0.8, extent=EXT_MAP)
         ax.set_title(title, fontsize=10)
         ax.set_xlabel("Δα cos δ [°] (Osten links)")
         ax.set_ylabel("Δδ [°]")
@@ -296,7 +313,7 @@ def stars():
     ax.set_xscale("log")
     ax.set_xlabel("Planck 857 GHz [MJy/sr]")
     ax.set_ylabel("Sterne pro Pixel")
-    ax.set_title("Wo der Staub strahlt, fehlen Sterne", fontsize=10)
+    ax.set_title(f"{NAME}: Sterne gegen Staubstrahlung", fontsize=10)
     ax.legend(fontsize=9)
     plt.tight_layout()
     plt.show()

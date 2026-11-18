@@ -20,7 +20,7 @@ from scipy import integrate, ndimage, optimize
 
 
 def load():
-    """47. Daten (Zellen 4, 6 von cosmology_cmbpeaks.ipynb)."""
+    """45. Daten (Zellen 4, 6 von cosmology_cmbpeaks.ipynb)."""
     global ARC_STRETCH, ASTRODATA, BINNED, CMB, C_KMS, DL, DT, EDGES, ERR, FIELDS, FULL, FWHM
     global H0_HD, H0_SH0ES, IRSA, L, LT, MAPS, NEFF_PLANCK, NPIX, OMEGA_G, OMEGA_NU, OM_SN, PEAKS
     global PIX, PIX_HEALPIX, PLANCK, PLANCK_TT, RAW, SIZE, SKYVIEW, THEORY, TROUGHS, WINDOW, _r, acoustic
@@ -232,7 +232,7 @@ def load():
 
 
 def sky_patch():
-    """48. Ein Stück Himmel bei 100 und 143 GHz (Zellen 8 von cosmology_cmbpeaks.ipynb)."""
+    """46. Ein Stück Himmel bei 100 und 143 GHz (Zellen 8 von cosmology_cmbpeaks.ipynb)."""
     global a, ax, axs, b, ext, fig, im, img, m, name, r, title
     ext = [SIZE / 2, -SIZE / 2, -SIZE / 2, SIZE / 2]
     a, b = MAPS["Nordpol"]["143"], MAPS["Nordpol"]["100"]
@@ -332,7 +332,7 @@ def beam_noise():
 
 
 def point_sources():
-    """49. Punktquellen (Zellen 17 von cosmology_cmbpeaks.ipynb)."""
+    """47. Punktquellen (Zellen 17 von cosmology_cmbpeaks.ipynb)."""
     global CLEAN, SOURCES, _, ax, ax2, field_mean, fig, find_sources, im, inpaint, k, lb
     global m, name, pos, show, snr, target, x, x_clean, x_raw, y
     def find_sources(m, freq, nsig=5.0):
