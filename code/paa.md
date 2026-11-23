@@ -1,1396 +1,220 @@
 # Machine Learning: Agents und generative KI
 
-From AI engineer to AI-augmented software engineer: fourteen modules along the development lifecycle, from the development loop to impact measurement, with agent skills and the evaluation of models and agents built in.
+Architecture notes for agentic systems on Google Cloud: low-code agents, coding agents, agents built in code, and how to evaluate, secure and operate them. The software engineering practices that agents depend on are condensed in the last part.
 
 > **"Verification beats model size."**
-> Good code comes from the harness around the model, not from the model alone: linters, type checkers, tests, hooks, CI, review gates, feature flags, monitoring. That harness is classic software engineering; the gap this guide closes is engineering, not AI.
+> An agent is a model plus a harness: instructions, tools, checks, boundaries and gates. Most quality problems are solved in the harness, not by a bigger model.
 
 ## Contents
 
-**Phase 0: The map**
-- [Module 0 · The development loop as a mental frame](#module-0--the-development-loop-as-a-mental-frame)
+**Part 1: Foundations**
+- [Module 1 · Agent anatomy and design patterns](#module-1--agent-anatomy-and-design-patterns)
 
-**Phase 1: The craft**
-- [Module 1 · Version control as a thinking tool](#module-1--version-control-as-a-thinking-tool)
-- [Module 2 · The inner loop: static analysis & hooks](#module-2--the-inner-loop-static-analysis--hooks)
-- [Module 3 · Testing: the language in which you talk to agents about "done"](#module-3--testing-the-language-in-which-you-talk-to-agents-about-done)
-- [Module 4 · Code design & architecture](#module-4--code-design--architecture)
+**Part 2: Low-code agents and enterprise data**
+- [Module 2 · Low-code agents: CX Agent Studio](#module-2--low-code-agents-cx-agent-studio)
+- [Module 3 · Grounding on enterprise data: Agent Search and access control](#module-3--grounding-on-enterprise-data-agent-search-and-access-control)
 
-**Phase 2: From repo to production**
-- [Module 5 · CI/CD & quality gates](#module-5--cicd--quality-gates)
-- [Module 6 · Release engineering](#module-6--release-engineering)
-- [Module 7 · Observability & operations](#module-7--observability--operations)
+**Part 3: Coding agents**
+- [Module 4 · Context engineering & spec-driven development](#module-4--context-engineering--spec-driven-development)
+- [Module 5 · Building the agent harness](#module-5--building-the-agent-harness)
+- [Module 6 · Skills at scale: registries, governance and retrieval](#module-6--skills-at-scale-registries-governance-and-retrieval)
 
-**Phase 3: Building AI in, systematically**
-- [Module 8 · Context engineering & spec-driven development](#module-8--context-engineering--spec-driven-development)
-- [Module 9 · Building the agent harness](#module-9--building-the-agent-harness)
-- [Module 10 · Skills at scale: registries, governance and retrieval](#module-10--skills-at-scale-registries-governance-and-retrieval)
-- [Module 11 · Evaluating models and agents](#module-11--evaluating-models-and-agents)
-- [Module 12 · Reviewing AI code critically: security & verification debt](#module-12--reviewing-ai-code-critically-security--verification-debt)
+**Part 4: Building agents in code**
+- [Module 7 · Choosing and serving models](#module-7--choosing-and-serving-models)
+- [Module 8 · Agents in code with ADK: workflows, callbacks, sessions, memory](#module-8--agents-in-code-with-adk-workflows-callbacks-sessions-memory)
+- [Module 9 · Protocols and identity: MCP, A2A, Agent Identity](#module-9--protocols-and-identity-mcp-a2a-agent-identity)
+
+**Part 5: Evaluate, secure, operate**
+- [Module 10 · Evaluating models and agents](#module-10--evaluating-models-and-agents)
+- [Module 11 · Reviewing AI code critically: security & verification debt](#module-11--reviewing-ai-code-critically-security--verification-debt)
+- [Module 12 · Deploying, scaling and operating agents](#module-12--deploying-scaling-and-operating-agents)
 - [Module 13 · Scaling in the team & measuring impact](#module-13--scaling-in-the-team--measuring-impact)
 
-**Closing**
-- [Capstone · One feature from spec to production](#capstone--one-feature-from-spec-to-production)
+**Part 6: Engineering foundations**
+- [Module 14 · Software engineering essentials for agent work](#module-14--software-engineering-essentials-for-agent-work)
 
 Agent authentication and authorization on Google Cloud (access vs. ID tokens, ADC, Agent Identity, Auth Manager) is in [pca.md, sections 4.16 and 4.17](pca.md#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
 
 ---
 
-## Phase 0 · The map
+## Part 1 · Foundations
 
-### Module 0 · The development loop as a mental frame
+### Module 1 · Agent anatomy and design patterns
 
-Every later term in this guide hangs on this map.
+#### 1. What an agent is
 
-#### The four loops
+An agent is a model in a loop: it reads the context, decides on an action (usually a tool call), observes the result and repeats until it answers or a limit stops it.
 
-Development runs in four nested loops, not in sequence. You pass the inner loop 30–50 times for each pass of the submit loop.
-
-| Loop | Steps | Cycle time | What matters |
-|---|---|---|---|
-| **Design** | Observe → Analyze → Design → Deliberate → Plan | hours to weeks | deciding *what* gets built; artifacts: design docs, RFCs, ADRs, tickets |
-| **Inner** | Think → Code → Build → Test | seconds to minutes | **latency**, not correctness: a 4-minute build breaks the loop because you lose context while waiting |
-| **Submit** | Lint → PreSubmit → Code Review → Submit | minutes to days | the step from *my* code to *our* code; the bottleneck is review latency, not the machine |
-| **Outer** | Postsubmit → Staging → Canary → Production → Measure | hours to weeks | Measure feeds back into Observe, which is why these are loops and not a pipeline |
-
-- **Design loop:** Observe collects signals (bug reports, metrics, support tickets, user feedback). Analyze separates the problem from the symptom. Design lists options with trade-offs. Deliberate validates the decision with others (design review, RFC). Plan breaks it into actionable pieces.
-- **Inner loop:** "Build" exists in Python too: resolving dependencies, building containers, compiling assets.
-- **Submit loop:** PreSubmit means the automated checks that must pass before the merge (on GitHub: required status checks on the PR). Code review is mainly for knowledge distribution, design feedback and shared ownership; machines find defects better.
-- **Outer loop:** Postsubmit means tests that run after the merge to `main`, too slow for the PR but necessary. Then the deployment chain.
-
-```mermaid
-flowchart TB
-    D["Design Loop<br/>What are we even building?"]
-    D --> I["Inner Loop<br/>seconds to minutes<br/>defect cost: low"]
-    D --> S["Submit Loop<br/>minutes to days<br/>defect cost: medium"]
-    D --> O["Outer Loop<br/>hours to weeks<br/>defect cost: high"]
+```
+Agent  =  Model                +  Harness
+          predicts tokens,        instructions, tools, memory, checks,
+          reasons                 boundaries, gates
 ```
 
-*The four development loops and the cost of a defect depending on where it is caught. Every practice pulls one class of defects one stage to the left.*
+The same model behaves very differently in different harnesses (Module 10, section 1). Three consequences for architecture:
 
-#### The fundamental law
+- **Every step can fail.** With a per-step success rate p, a run of n dependent steps succeeds with about pⁿ: 0.95 per step gives 0.95²⁰ ≈ 36% over 20 steps. Fewer steps, checks between steps and bounded loops matter more than a marginally better model.
+- **Instructions are probabilistic, mechanisms are deterministic.** A sentence in a prompt is usually followed; a workflow step, a permission or a gateway is always enforced (Module 5).
+- **Context is a budget.** Tool schemas, history and tool outputs compete for the same window (Module 4).
 
-The cost of a defect grows roughly exponentially with the distance between where it is introduced and where it is found:
+#### 2. Design patterns
 
-- type error in the editor: 2 seconds
-- the same error in the PR: 20 minutes of rework plus a review round
-- the same error in production: an incident, a rollback, a postmortem, lost trust
+| Pattern | Control flow | Use when | ADK building block (Module 8) |
+|---|---|---|---|
+| Single agent | one model, a few tools | one domain, short tasks | `LlmAgent` |
+| Sequential | fixed order of steps | a pipeline whose order never changes | `SequentialAgent` |
+| Parallel | independent steps at once | fan-out research, independent checks | `ParallelAgent` |
+| Loop (generator-critic) | repeat until approved or a limit is hit | drafting against rules, refinement | `LoopAgent` with `max_iterations` |
+| Coordinator / hierarchy | a model routes to specialists | several domains, each with its own tools | `sub_agents`, `AgentTool` |
+| Human in the loop | a person approves a step | irreversible or outward-acting actions | tool confirmation, approval step |
 
-The often-quoted "factor 10 per stage" traces to Barry Boehm (1981) and to an IBM Systems Sciences Institute table that has never been found as a primary source; Laurent Bossavit's *The Leprechauns of Software Engineering* (2015) documents how thin the evidence is. The direction is robust, the multiplier is folklore.
+Two ways to connect agents:
 
-This gives **shift left**: almost every practice in this guide pulls one class of defects one stage earlier. A type checker pulls runtime errors into the editor. A pre-commit hook pulls CI failures onto your machine. A canary shrinks a production outage to 1% of users. A feature flag decouples deployment from release, so a defect does not become visible at deploy time.
+- **Workflow agents** (sequential, parallel, loop) decide the order in code. The order is deterministic and auditable.
+- **Model-driven delegation** lets a model decide which sub-agent or tool runs next. More flexible, less predictable.
 
-The design loop sits above the cost row because its defects behave differently: they do not grow over time, they devalue everything below from the start. Building the wrong thing wastes 100% of the implementation, however clean it is.
+Choose the most deterministic pattern that solves the task. A mandatory order (verify identity, then change the address) belongs in a workflow or a state machine, not in a prompt.
 
-#### Where AI plugs in
+#### 3. Three ways to build
 
-Addy Osmani's overlay marks, per loop, where AI reduces toil:
+| Path | Tool | Fits |
+|---|---|---|
+| Low-code | CX Agent Studio, Agent Designer in Gemini Enterprise (Module 2) | conversational agents for customer service, business teams, fast iteration in a console |
+| Coding agent | Antigravity, Gemini CLI, Claude Code (Modules 4 to 6) | software work in a repository: refactoring, migrations, tests |
+| Code | ADK and other open-source frameworks (Module 8) | custom agents with their own orchestration, tools, memory and deployment |
 
-| Loop | AI entry points |
+Where a coded agent runs decides its identity and scaling: Agent Runtime (managed, sessions and memory built in), Cloud Run (containers, scale to zero) or GKE (full control, GPUs for self-hosted models). The identity each runtime gives an agent is listed in [pca.md, section 4.17](pca.md#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager).
+
+[↑ Back to top](#machine-learning-agents-und-generative-ki)
+
+---
+
+## Part 2 · Low-code agents and enterprise data
+
+### Module 2 · Low-code agents: CX Agent Studio
+
+Customer Experience Agent Studio (CX Agent Studio) builds conversational agents in a console. It combines two ways of steering a conversation: generative agents driven by instructions, and deterministic flows driven by a state machine.
+
+#### 1. Instructions
+
+Instructions are natural language: goal, behavior, persona. They can reference `{variable}` values, other agents (`{@AGENT: name}`) and tools (`{@TOOL: name}`), and contain conditions and loops.
+
+For multi-step tasks, the console's **Restructure instructions** button converts free text into XML:
+
+```xml
+<role>…</role>
+<persona><primary_goal>…</primary_goal></persona>
+<constraints>…</constraints>
+<taskflow>
+  <subtask name="Change address">
+    <step name="Verify identity">
+      <trigger>User asks to change the delivery address</trigger>
+      <action>Ask for the customer number and verify the customer with {@TOOL: verify_customer}</action>
+    </step>
+    <step name="Update">
+      <trigger>Identity is verified</trigger>
+      <action>Call {@TOOL: update_address}</action>
+    </step>
+  </subtask>
+</taskflow>
+<examples>…</examples>
+```
+
+- A `taskflow` with `subtask`, `step`, `trigger` and `action` makes the order of steps explicit. This is the fix when an agent skips an intermediate step on long, multi-sentence requests.
+- **Few-shot examples** go into `<examples>`. The docs advise using them sparingly and trying instructions first.
+- **Global instructions** (advanced application settings) are inherited by every agent and sent on every turn: brand tone, general do's and don'ts, shared variables. They do not order the steps of one workflow.
+- Instructions are soft. For behavior that must always happen, the docs recommend tools or callbacks: chain several API calls inside one Python tool instead of asking the model to call them in order, and use an `after_model_callback` to force mandatory content such as a disclaimer.
+
+#### 2. State-based flows
+
+Flows model a conversation as a state machine (the Dialogflow CX model):
+
+- A **flow** consists of **pages**; exactly one page is current. Each flow has a start page.
+- A page can have a **form** with parameters to collect. Missing required parameters are prompted for; session parameters with the same name pre-fill them.
+- **Transition routes** move to another page or flow. A route fires on an intent, on a condition over parameters (for example "form is complete and plan is enterprise"), or both.
+- **Event handlers** react to events such as no-match or no-input, not to collected parameters.
+
+Routing that depends on collected values is a condition route on the page that collects them. It needs no webhook and no custom code.
+
+#### 3. Testing in the console
+
+| Test case type | What it is |
 |---|---|
-| Design | Chatbot for developers, AI auto-triage |
-| Inner | Code completion & intent-to-code, AI refactorings, automated testing, AI-assisted debug |
-| Submit | AI-assisted code review |
-| Outer | Resource efficiency, AI performance refactorings |
+| Golden | an ideal conversation path, for regression testing; expectations on messages, tool calls and agent handoffs |
+| Scenario | an AI-simulated user pursuing a goal |
+| Simulation | ordered goals with success criteria and a turn limit |
 
-#### The bottleneck moves right
+Metrics include tool correctness, user goal satisfaction, hallucinations (on turns with tool calls), semantic match (golden only) and task completion. The option **Find issues with AI** (Preview, single-agent apps) produces a downloadable loss report with high-level problems; it works best with three or more runs per case. General evaluation methods: Module 10.
 
-AI speeds up the **inner loop** a lot and the submit and outer loops barely: review still needs human attention, test suites run just as long, deployments carry the same risk. A team that produces 5× as many changes with the same review capacity, test runtime and deploy frequency is not 5× faster; the changes pile up in front of the submit loop. This is the structural cause of verification debt (Module 12) and the usual answer to "why does AI help our team less than promised?": typing was not the bottleneck.
+#### 4. Diagnosing wrong answers
 
-The harness (Module 9) exists to automate the right-hand loops too, so they keep pace with the inner loop.
+1. Inspect the raw response of the affected turn: which instructions, variables and tool outputs did the model see?
+2. If the tool output was correct and the answer was not, the model answered from its own knowledge. Tighten the instructions (`<constraints>`: answer only from tool or data store output) and add the case as a golden test.
+3. If the order of actions was wrong, move it from instructions into a taskflow, a Python tool or a flow.
+4. Infrastructure monitoring (HTTP errors, latency) does not find these defects: a hallucinated answer follows a successful tool call.
 
-#### Glossary
+#### 5. Check before relying on it
 
-Inner/Submit/Outer/Design loop · Cycle time · Shift left · Toil · PreSubmit vs. Postsubmit · Design doc · RFC · ADR · Rework · Review latency
+- Agent Designer (the low-code builder inside Gemini Enterprise) is not covered here.
+- The classification scheme of the loss report is not documented.
 
-#### Hands-on (~30 minutes)
+References: [Instructions](https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio/instruction) · [Evaluation](https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio/evaluation) · [Best practices](https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio/best-practices) · [Pages (Dialogflow CX)](https://docs.cloud.google.com/dialogflow/cx/docs/concept/page)
 
-Map a real task from recent weeks onto the loops and estimate how much time went where. Most people underestimate the design loop.
+---
 
-Then note four numbers for your project: build time, test runtime, review latency, deploy time. This is your baseline for measuring impact in Module 13.
+### Module 3 · Grounding on enterprise data: Agent Search and access control
 
-#### Checkpoint
+#### 1. Grounding
 
-1. A pre-commit hook that runs `mypy`: which loop does it sit in, which class of defects does it pull left, and where would the defect otherwise have surfaced?
-2. Why is a test suite that takes 25 minutes a *design* problem and not merely an inconvenience?
-3. A team introduces AI coding tools. PRs per week double; the average time from PR creation to merge rises from 6 to 30 hours. What happened, and in which loop is the problem?
-4. Why does the design loop sit above the other three in the diagram instead of to their left?
+A model answers from its weights unless the answer is put into its context. **Grounding** (retrieval-augmented generation, RAG) retrieves passages from your data first and lets the model answer from them, with citations. It reduces hallucination and keeps answers current without retraining.
+
+```
+Question → Retrieve (search index over the data store) → Top passages into the context → Answer with sources
+```
+
+Two properties decide the quality: whether retrieval finds the right passages (Module 10, section 4.4) and whether each user sees only what they are allowed to see.
+
+#### 2. Data stores
+
+Agent Search indexes data in **data stores**: Cloud Storage, BigQuery, Google Drive and third-party sources via connectors. Data is structured (rows with fields) or unstructured (documents), optionally with metadata. An agent queries a data store through a tool.
+
+#### 3. Access control per document
+
+Search results must respect the permissions of the user who asks. With **data source access control**, each document or row carries its readers, and results are filtered by the user's identity.
+
+- **Enable it at creation.** The data store is created with `"aclEnabled": "true"` (console: "This data store contains access control information"). The setting cannot be turned on or off for an existing data store.
+- **ACL schema**, the same for Cloud Storage metadata and BigQuery tables:
+
+```
+acl_info          RECORD, NULLABLE
+└── readers       RECORD, REPEATED
+    └── principals  RECORD, REPEATED
+        ├── user_id   STRING
+        └── group_id  STRING
+```
+
+```json
+{"id": "doc-1", "jsonData": "…",
+ "acl_info": {"readers": [{"principals": [{"group_id": "finance-emea"}, {"user_id": "ana@example.com"}]}]}}
+```
+
+- **BigQuery** sources use a predefined schema with `id`, `jsonData` and `acl_info` (plus `content` for unstructured data); the import sets `BigQuerySource.dataSchema` to `document`.
+- **Identity provider:** Google Identity, a third-party IdP synced to Google Identity, or Workforce Identity Federation (Microsoft Entra ID, Okta, Ping) when identities are not synced. With federation, `google.subject` must map to the email address.
+- **Limits:** up to 3,000 readers per document (a group counts as one), one identity provider per location. The feature is marked Preview.
+
+The pattern to remember: permissions are part of the indexed data and are applied at query time for the end user. Controls that act on the service account that runs the import (IAM roles on the table, network perimeters) do not filter results per user.
+
+Reference: [Data source access control](https://docs.cloud.google.com/generative-ai-app-builder/docs/data-source-access-control)
 
 [↑ Back to top](#machine-learning-agents-und-generative-ki)
 
 ---
 
-## Phase 1 · The craft
+## Part 3 · Coding agents
 
-### Module 1 · Version control as a thinking tool
+A coding agent works in a repository with a shell. Module 4 covers what goes into its context, Module 5 the harness around it, Module 6 how its know-how is shared across an organization as skills.
 
-Code review, bisect, rollback and agent checkpointing all need a clean history. Learn the data model first; the commands follow from it.
-
-#### 1. What Git really is
-
-Git does not store diffs. Git is a **directed acyclic graph of snapshots**. A commit contains a complete snapshot of the file tree, a pointer to its parent commit (two for a merge) and metadata (author, time, message). `git diff` computes the diff at runtime.
-
-- **A branch is just a pointer to a commit**, a file with a 40-character hash. Branching is therefore free and instant (in SVN a branch was a copy), which made modern PR culture possible.
-- **The history is a graph, not a list.** `git log` shows a linearized view. Merge and rebase are different operations because of the graph.
-- `HEAD` points to the branch you are on. "Detached HEAD" means HEAD points directly at a commit; it is a state, not an error.
-
-#### 2. The three areas
-
-```
-Working Directory  →  Staging Area (Index)  →  Repository
-     (files)              (git add)             (git commit)
-```
-
-The staging area is the tool for cutting clean commits out of mixed work. A bug fix, a tidied function and a new error message in one set of changes: `git add -p` goes through the changes hunk by hunk, and you choose what goes into the next commit. One tangle becomes three atomic commits.
-
-#### 3. The commit as a claim
-
-A commit claims: *"Here is a self-contained, working change, with a justification."*
-
-**Self-contained and working (atomicity).** Every commit on `main` should be runnable and green on its own. `git bisect`, `git revert` and `git cherry-pick` only work under this condition; a "WIP" or "fixes" commit breaks all three.
-
-**With a justification.** The message states **why**, not what (the diff shows what). The why exists nowhere else and cannot be reconstructed six months later.
-
-Bad: `update user service`
-Good: `fix: session timeout on concurrent logins — server rejected the second token because the cache key omitted the device id`
-
-**Conventional Commits** prefixes (`feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `test:`, `perf:`) make history machine-readable: changelogs are generated from them, and Semantic Versioning derives version numbers (`fix:` → patch, `feat:` → minor, `BREAKING CHANGE` → major).
-
-#### 4. Merge vs. rebase
-
-```
-Starting point
-  A ── B ── C          main
-        └── D ── E     feature
-
-After merge
-  A ── B ── C ──────── M    (M has two parents)
-        └── D ── E ───┘
-
-After rebase
-  A ── B ── C ── D' ── E'   (new hashes)
-```
-
-*Merge creates a commit with two parents; rebase creates new commits with new hashes.*
-
-You branched off `main` at B and made D and E; meanwhile C landed on `main`.
-
-- **Merge** creates M with two parents. The history is truthful (it shows parallel work) but branched, and hard to read in large repos.
-- **Rebase** recreates D and E on top of C as D' and E': same content, **new commits with new hashes**. The history is linear but describes a sequence that never happened.
-
-The one hard rule: **never rebase commits that someone else already has.** A colleague who pulled them now holds commits that no longer exist, and the next pull duplicates the history. Rebase your own unshared branch freely; never rebase `main`.
-
-Most GitHub teams use **squash merge**: the whole PR becomes one commit on `main`. You get a linear history with one commit per PR and may commit as you like on your branch. The price: the structure inside the PR is lost, and a 2,000-line PR becomes a 2,000-line commit, which blunts `git bisect`. Hence small PRs.
-
-#### 5. Branching strategies
-
-- **GitFlow** (`develop`, `release/*`, `hotfix/*`, `feature/*`, `main`), from 2010, fits software with versioned releases where several versions are maintained at once (desktop, on-prem). For a web service that deploys twenty times a day it is overkill; its author now says so himself.
-- **Trunk-based development:** everyone works against `main`, branches live hours to at most two days, unfinished features sit behind feature flags on `main`.
-
-The underlying problem is **integration pain**: the chance of a merge conflict grows with branch lifetime and with the number of parallel branches. Two-week-old feature branches in a team of eight produce a merge day.
-
-**Continuous integration is a practice, not a tool:** merging into the main branch at least daily. A team with a perfect pipeline and three-week-old branches does not practice CI.
-
-#### 6. The pull request
-
-The PR is a social artifact; Git has no PRs (GitHub invented them). A good PR is:
-
-- **Small.** Review finds noticeably fewer defects beyond roughly 200–400 changed lines, and big PRs wait for someone with the headspace. A 1,000-line PR gets "LGTM", not a review.
-- **One thing.** Refactoring and feature in one PR cannot be separated by the reviewer. Split them.
-- **With context.** What is the problem? Why this solution? What should the reviewer look at? How did you verify it?
-- **Self-read.** Read your own diff before sending it; you will find a third of the review comments yourself. With AI-generated code this is the most important step.
-
-#### 7. The tools that make your history usable
-
-- **`git bisect`:** binary search over the history. Mark one good and one bad commit, answer good/bad, and after log₂(n) steps you have the culprit (ten steps for 1,000 commits). `git bisect run ./test.sh` runs it automatically. Requires every commit to be runnable.
-- **`git blame`:** the last commit per line. Its value is the chain line → commit → message → PR → discussion.
-- **`git revert` vs. `git reset`:** `revert` creates a *new* commit that undoes a change and keeps history intact; it is the only option on shared branches. `reset` moves the branch pointer and rewrites history; use it only on local, unshared commits.
-- **`git reflog`:** Git logs every movement of HEAD. A commit "lost" after a wrong `reset` is almost always recoverable (default retention 90 days). Git practically never loses anything that was committed.
-- **`git stash`:** parks changes without committing; frequent use means you commit too rarely.
-
-#### 8. Worktrees: the building block for parallel agents
-
-`git worktree add ../feature-x feature-x` creates a **second working directory** for the same repository with its own checked-out branch. Unlike a second clone, both share one object database: no duplicated storage, no syncing, all branches visible in both.
-
-For agentic development this is central: three agents on three tasks need three worktrees on three branches to avoid overwriting each other's files. Coding agents now build this in; Claude Code can run a sub-agent in its own automatically created worktree, removed again if the sub-agent made no changes.
-
-#### 9. What never belongs in the repo
-
-**Secrets.** A secret committed once stays **in the history**, even if the next commit deletes it. Rewriting with `git filter-repo` does not help: everyone who pulled still has it, and in a public repo scrapers find it within minutes. The only fix for a leaked secret is **rotation**: invalidate it and issue a new one. Prevent leaks with `.gitignore` and a secret-scanning pre-commit hook (`gitleaks`, `detect-secrets`; Module 2).
-
-Also not in the repo: build artifacts, `node_modules`, virtual environments, large binaries (use Git LFS), IDE configuration.
-
-#### 10. The AI connection
-
-- **Git is the undo button for agents.** An agent that touches twenty files is only manageable if you can return to a defined state. Checkpointing in coding tools is Git underneath.
-- **Clean working tree before starting an agent.** With your own uncommitted changes in the tree, the diff no longer shows what you changed and what the agent changed. Commit or stash, then start.
-- **Review the diff, not the files.** Finished files look plausible; the diff shows what *changed*: a silently removed error handler, a changed default, a weakened test.
-- **Trunk-based fits agents, GitFlow does not.** Agents produce many small changes quickly; long-lived branches multiply integration pain. More changes on `main` need more feature flags (Module 6).
-- **Dangerous operations.** An agent with shell access that runs `git add -A && git commit` commits everything, including a forgotten `.env`. `git push --force` on a shared branch destroys work. Both belong on the deny list of the agent configuration and in branch protection rules (Module 5).
-- **AI-generated commit messages** get the *what* right (it is in the diff) and the *why* wrong (it is in your head, the ticket, the discussion). Use them as a draft and add the reason.
-
-#### 11. Anti-patterns
-
-- `git commit -m "fix"`: destroys the value of blame and bisect
-- The end-of-day catch-all commit containing eight unrelated changes
-- Branches that grow older than a week
-- `git push --force` on shared branches (instead of `--force-with-lease`, which checks whether someone else pushed)
-- Committing without reading your own diff first
-- Generated files in the repo: the merge conflict in them is always pointless work
-
-#### 12. Glossary
-
-Commit · Snapshot vs. diff · Branch as pointer · HEAD · Detached HEAD · Working directory / staging area (index) / repository · Atomic commit · Conventional Commits · Semantic Versioning · Merge commit · Rebase · Squash merge · Fast-forward · Trunk-based development · GitFlow · Integration pain · Pull request · `git bisect` · `git blame` · `revert` vs. `reset` · reflog · `git stash` · Worktree · `.gitignore` · Git LFS · Secret rotation · `--force-with-lease`
-
-#### 13. Exercises
-
-About 90 minutes in an empty test repo.
-
-**E1: Make the data model visible.** New repo, three commits. Run `git log --graph --oneline --all` and `git cat-file -p HEAD` and look at the commit object: tree hash, parent hash, author, message.
-
-**E2: Cut chaos into atomic commits.** Make three independent changes in one file, then split them with `git add -p` into three commits with proper messages. This is the core exercise.
-
-**E3: Compare merge and rebase.** Rebuild the starting point from the diagram, merge in one copy and rebase in another. Compare `git log --graph --oneline` and the hashes.
-
-**E4: Bisect.** Create fifteen commits, one of which introduces a bug. Write a script that exits 0/1 and let `git bisect run ./check.sh` find the culprit. Count the steps.
-
-**E5: Break it and rescue it.** Run `git reset --hard HEAD~3` and recover the commits via `git reflog`.
-
-**E6: Agent scenario.** Commit your state, let a coding agent (Claude Code, Antigravity) make a small multi-file change, and read *only* `git diff`. Note what the diff shows that reading the files would have missed. Then `git worktree add` a second branch, run a second agent in parallel and check that they do not interfere.
-
----
-
-### Module 2 · The inner loop: static analysis & hooks
-
-What separates a linter from a type checker, and why this chain lets agents work reliably.
-
-#### 1. Static vs. dynamic
-
-Everything in this module is **static analysis**: tools that *read* code without running it. Tests (Module 3) are **dynamic analysis**: they run it and observe. Static analysis finds defects that follow from the *structure* of the code, in every path, including the one that runs every three months. Tests find defects in *behavior*, but only on the paths they enter. The two complement each other.
-
-These tools work on the **AST** (abstract syntax tree), not on text. A linter does not search for the string `except:`; it searches for a try node with an untyped handler. Formatting, comments and line breaks cannot fool it, which is why regex "linting" is unreliable.
-
-#### 2. The tool family
-
-| Tool | What it does | Examples |
-|---|---|---|
-| **Formatter** | changes only layout, never meaning | `black`, `ruff format`, `prettier`, `gofmt` |
-| **Linter** | finds suspicious patterns | `ruff`, `eslint`, `pylint`, `clippy` |
-| **Type checker** | checks type consistency across functions, files, modules | `mypy`, `pyright`, `tsc` |
-| **Security linter / SAST** | linter with security rules | `bandit`, `semgrep`, `CodeQL` |
-| **Secret scanner** | finds API keys, tokens, private keys | `gitleaks`, `detect-secrets`, `trufflehog` |
-| **Dependency scanner (SCA)** | checks dependencies against vulnerability databases | `pip-audit`, `npm audit`, Dependabot, Renovate |
-
-- **Formatters** are deliberately barely configurable (`black` is "uncompromising", `gofmt` has no options). The point is to end the discussion, and to keep diffs free of formatting noise, which speeds up review, especially of AI-generated code.
-- **Linter rules** come in two groups. *Correctness*: unused variable (often a typo), unreachable code, bare `except:` (also swallows `KeyboardInterrupt`), mutable default arguments (`def f(x=[])`), `==` instead of `===` in JavaScript. *Convention*: naming, import order, complexity limits. Linting is mostly defect prevention, not style policing.
-- `ruff` replaces `flake8`, `isort`, `pyupgrade` and `black` in one Rust tool that typically runs two orders of magnitude faster. That speed is what makes running it after *every* file change possible. `biome` does the same for JavaScript.
-- **SAST** finds hard-coded passwords, SQL built by concatenation, insecure deserialization, weak crypto. Advanced tools do **taint analysis**: does data from an untrusted source (HTTP parameter) reach a dangerous sink (SQL query, `eval`) without sanitization?
-- **Secret scanners** belong *before* the commit: a committed secret stays in the history (Module 1).
-- **SCA** is not code analysis but software composition analysis; it belongs here because most of the code in a modern project is other people's.
-
-#### 3. Type checking
-
-Two axes that get confused:
-
-- **statically vs. dynamically typed:** checked before or during execution?
-- **strongly vs. weakly typed:** does the language convert types silently?
-
-Python is dynamic and strong (`"1" + 1` fails at runtime). JavaScript is dynamic and weak (`"1" + 1` yields `"11"`).
-
-**Type hints are inert at runtime.** The interpreter ignores `def add(a: int, b: int) -> int:`; `add("a", "b")` runs. The annotations exist for `mypy`, the IDE and humans. This is **gradual typing**: unannotated code stays unchecked, so you can add types module by module. TypeScript works the same way: `tsc` checks and then strips the types. Its escape hatch `any` disables checking; `unknown` forces an explicit check before use.
-
-A type checker does not find logic errors. This is type-correct and wrong:
-
-```python
-def add(a: int, b: int) -> int:
-    return a - b
-```
-
-Types guarantee the *shape*, tests the *meaning*.
-
-Why types pay off in a dynamic language:
-
-1. A class of defects disappears before runtime: `None` where an object is expected, a dict where a list is expected, a renamed field still used under the old name.
-2. Types are documentation that cannot go stale, because they are checked.
-3. **Types are machine-readable context for agents.** With a signature, a model does not have to guess what `config` contains; with `def process(data):` it guesses the structure and is often wrong.
-
-Adopt module by module, not with a global `--strict`: in `mypy`, enable `disallow_untyped_defs` for new modules first. A `# type: ignore` needs an error code and a reason: `# type: ignore[arg-type]  # lib stubs are wrong, see issue #412`.
-
-#### 4. Configuration belongs in the repo
-
-All tool configuration lives versioned in the repository, not in IDE settings. In Python, `pyproject.toml` holds project metadata, dependencies and the ruff, mypy and pytest configuration; in JavaScript `eslint.config.js`, `tsconfig.json`, `package.json`. Otherwise code is green locally and red in CI, and an agent sees different rules than you. Pin tool versions too: `ruff` 0.4 locally and 0.9 in CI recreates "works on my machine".
-
-#### 5. Git hooks
-
-A Git hook is an executable script in `.git/hooks/` with a fixed name; Git runs it at fixed points and aborts the operation on a non-zero exit code. `.git/hooks/` is not versioned or cloned, so teams use a framework that installs hooks from a versioned config:
-
-- `pre-commit` (language-agnostic): `.pre-commit-config.yaml`, each developer runs `pre-commit install` once
-- `husky` plus `lint-staged` (JavaScript): same pattern
-
-The relevant hooks:
-
-- **pre-commit:** formatter, linter, secret scan
-- **commit-msg:** can reject the message, e.g. to enforce Conventional Commits (`commitlint`)
-- **pre-push:** slower checks such as type check and fast unit tests
-
-**Latency is the design constraint.** A 40-second pre-commit hook teaches everyone `git commit --no-verify`. Good hooks check **only the changed files** (`lint-staged` does this; `pre-commit` does it by default).
-
-**Hooks are a convenience, not enforcement.** They run on the developer's machine and can be skipped with a flag. Enforcement happens in CI with branch protection (Module 5). The hook shows the error in five seconds instead of five minutes.
-
-#### 6. Agent hooks
-
-An agent hook works like a Git hook, but fires on an *agent* event: after a file change, before a tool call, at the end of a response.
-
-```
-Agent edits a file → Hook fires immediately → ruff, mypy check instantly → Exit ≠ 0 with error text
-        ↑                                                                          │
-        └──────────────── the agent reads the error and fixes it itself ───────────┘
-```
-
-*The verification loop: the error text flows back to the agent, which corrects itself.*
-
-In Claude Code, hook events include `PreToolUse`, `PostToolUse`, `UserPromptSubmit`, `Stop`, `SubagentStop`, `SessionStart` and `PreCompact`. They live under a `hooks` key in `.claude/settings.json` (project, versioned), `.claude/settings.local.json` (project, unversioned) or `~/.claude/settings.json` (user). A hook receives the tool call as JSON on stdin (for edits, `tool_input.file_path` names the changed file) and answers with its exit code:
-
-- **0:** nothing happens, the agent continues
-- **2:** blocking error; stderr is fed back to the model (the channel in the diagram)
-- any other non-zero code: shown to the user only
-
-A `PostToolUse` hook on the edit tool that runs `ruff check --fix` and `mypy` on the changed file is the standard construction; a minimal example is in Module 9. Antigravity has its own hook mechanism; check paths and events against its current documentation.
-
-Why it works: an agent reads and writes text. A `mypy` message contains file, line and cause, which is a better signal for a model than almost any human description. Without this channel the agent reports "done" because nothing says otherwise. And it is cheap: a typo costs 20 seconds of model time in the agent loop, but five minutes of CI wait plus your context switch in the pipeline.
-
-#### 7. Exit codes: the shared language
-
-A process signals success with exit code 0 and failure with anything else. Hooks, pipelines and agents communicate this way: `ruff check`, `pytest` and `mypy` each return 0 when everything is fine.
-
-So `make lint && make test` works mechanically: `&&` runs the second command only if the first returned 0, and the whole expression returns 0 only if both did. With `;` both always run and the last exit code wins, a classic silent bug in scripts. "The task is DONE when exit code 0 comes back" (Module 3) is meant literally.
-
-#### 8. The friction ladder: which check runs where?
-
-| Station | Budget | What runs there | Enforcement |
-|---|---|---|---|
-| Editor (LSP) | milliseconds | formatter on save, linter and type checker incrementally | none |
-| Agent hook | 1–10 s | formatter, linter, type check on the changed files | none |
-| Pre-commit | under 5 s | formatter, linter, secret scan; staged files only | bypassable |
-| Pre-push | under 30 s | type check across the project, fast unit tests | bypassable |
-| CI | minutes | everything, whole repo, multiple versions, security scans | binding |
-
-A check belongs at the earliest station whose budget it fits: a type check over 500 files fits pre-push, not pre-commit; a full E2E run belongs only in CI.
-
-#### 9. One entry point for everyone
-
-Define exactly one command per check, and everyone calls it:
-
-```makefile
-lint:
-    ruff format --check .
-    ruff check .
-    mypy src/
-
-test:
-    pytest -q
-```
-
-You, the pre-commit hook and CI all run `make lint`, and `AGENTS.md` says: "Before finishing any task, always run `make lint && make test`." If the agent runs a different command than the pipeline, the two truths drift apart and local green turns into CI red. Agent configuration should name the exact command, not describe code quality in prose.
-
-#### 10. Adoption in existing code
-
-A linter on a grown project reports 3,000 errors that nobody fixes. Four strategies:
-
-- **Commit formatting separately** with the prefix `style:` and add its hash to `.git-blame-ignore-revs`, so `git blame` skips it.
-- **Ratchet / baseline:** freeze the current error count and reject new violations; the count may only go down.
-- **Check only changed lines** (`darker`, `lint-staged`): code improves where work happens anyway.
-- **Arm the rules in stages:** correctness rules first, then conventions, then type-checker strictness.
-
-#### 11. AI-specific points
-
-- **AI code passes linters easily.** Models write stylistically clean code, so a green linter says less about AI code than about human code, where sloppy style often signals sloppy thinking.
-- **Type checkers are especially valuable for AI code.** Typical model mistakes are type errors: a method that does not exist on the object, a library function with last version's signature, a return value that is sometimes a dict and sometimes an object.
-- **Hallucinated dependencies ("slopsquatting").** Models invent package names. A 2025 USENIX Security study ("We Have a Package for You!", Spracklen et al.) found that roughly one fifth of packages recommended by code-generating models in its samples did not exist, and that the same phantom names recurred across runs, so attackers can register them with malicious code. Countermeasure: pin dependencies in a lock file and review every new package.
-- **The cardinal rule:** the agent must never loosen rules to get green: no disabled rules, no scattered `# noqa` or `# type: ignore`, no `any`. This is the same failure as editing tests to pass (Module 3), only less visible. A harness whose rules the examinee may change measures nothing; write these prohibitions into the agent instructions.
-
-#### 12. Anti-patterns
-
-- Disabling a rule instead of fixing the code
-- `# type: ignore` or `# noqa` without an error code and without a justification
-- Formatter and linter with contradictory rules that overwrite each other
-- A pre-commit hook so slow that everyone uses `--no-verify`
-- Tool versions differing between local and CI
-- Linter configuration in IDE settings instead of in the repo
-- Relying on hooks as the enforcement mechanism instead of on CI
-
-#### 13. Glossary
-
-Static vs. dynamic analysis · AST · Formatter · Linter · Type checker · SAST · Taint analysis · SCA · Secret scanner · Gradual typing · statically/dynamically vs. strongly/weakly typed · Type hint · `any` vs. `unknown` · Strictness · Git hook · `pre-commit` / `commit-msg` / `pre-push` · `lint-staged` · `--no-verify` · Agent hook (`PostToolUse`) · Exit code · `&&` chaining · Ratchet/baseline · `.git-blame-ignore-revs` · Lock file · Slopsquatting
-
-#### 14. Exercises
-
-**E1: Tell the three tools apart.** Write a Python file with three defects: one formatting violation, one only the linter finds (e.g. a mutable default argument), one only the type checker finds. Run all three tools and see what each reports, and what none reports.
-
-**E2: Set up the basics.** Configure `ruff` and `mypy` in `pyproject.toml` and create a `Makefile` with `lint` and `test`. Check the exit codes with `echo $?`.
-
-**E3: Install pre-commit.** `.pre-commit-config.yaml` with ruff, mypy and `gitleaks`. Try to commit a file with a fake API key. Measure the hook's runtime; over five seconds is a design flaw.
-
-**E4: Types as context.** Let an agent extend an untyped function of medium complexity. Annotate the function fully, reset, and repeat the same extension. Compare the results.
-
-**E5: Build an agent hook.** Set up a `PostToolUse` hook in Claude Code that runs `ruff check` on each changed file. Give the agent a task that will produce a lint violation and check whether it fixes it without your help.
-
-**E6: Provoke the failure pattern.** Give an agent a task with a genuine type error and phrase it as "make mypy green". Does it fix the error or add `# type: ignore`? This shows what the harness must be hardened against.
-
----
-
-### Module 3 · Testing: the language in which you talk to agents about "done"
-
-An agent can only iterate on its own if there is a machine-checkable statement of whether it is done. The only such statement is a green test suite. When the output itself is non-deterministic (an LLM answer, an agent trajectory), tests become **evals**; Module 11 covers that.
-
-Unit tests, integration tests and smoke or E2E tests are the established terms ("root test" is not one).
-
-#### 1. What a test really is
-
-A test is an **executable specification**: "this concrete behavior is guaranteed and must not break." Its value is what it prevents, not what it covers. A test that can never fail has zero value and non-zero maintenance cost.
-
-The anatomy, under two names:
-
-```
-Arrange  →  Act   →  Assert        (classic)
-Given    →  When  →  Then          (BDD language)
-```
-
-Set up the state, do exactly one thing, check the expectation. Three "act" steps mean three tests.
-
-**A test checks behavior, not implementation:**
-
-```python
-# bad: checks HOW it is done
-def test_discount():
-    calc = PriceCalculator()
-    calc.apply_discount(100, 0.2)
-    assert calc._discount_strategy.was_called   # couples to internals
-
-# good: checks WHAT comes out
-def test_applies_twenty_percent_discount():
-    assert PriceCalculator().apply_discount(100, 0.2) == 80
-```
-
-The first test breaks on every refactoring although the behavior is unchanged: it punishes refactoring instead of protecting it. Suites full of such tests are why teams say "we can't touch the code anymore".
-
-#### 2. The test pyramid, and why "unit" is a fuzzy term
-
-| Level | Count | Runtime | Character |
-|---|---|---|---|
-| E2E | few | minutes | fragile |
-| Integration | moderate number | seconds | |
-| Unit | very many | milliseconds | |
-
-*Upward: more system confidence. Downward: more diagnostic precision.*
-
-**E2E** runs a complete user path through the deployed system (browser, real database, real neighbors). **Integration** checks components together (your code plus database or external API). **Unit** checks one unit in isolation.
-
-"Unit" is poorly defined (function, class, module, behavior?). Two schools:
-
-- **London School** (mockist): a unit is a class; all collaborators are replaced by test doubles. Maximum isolation, but the tests know the code structure and break on refactoring.
-- **Detroit School** (classicist): a unit is a unit of behavior; real collaborators are fine if fast and deterministic. Only slow or uncontrollable parts are replaced.
-
-Detroit has largely won in practice, consistent with "test behavior, not implementation".
-
-Google classifies by **resource usage** instead of scope, which is checkable:
-
-- **Small:** one process; no network, file system, `sleep` or concurrency. Milliseconds, deterministic.
-- **Medium:** may use `localhost` (database in a container, local test server). Seconds.
-- **Large:** everything else (real external services, network, whole environments).
-
-The taxonomy is described in *Software Engineering at Google* (Winters, Manshreck, Wright, 2020), chapter 11, freely readable online, with the rule of thumb of roughly 80% small, 15% medium, 5% large tests.
-
-The pyramid is an **economic argument**, not a law: build much of what is cheap, fast and precise and little of what is expensive, slow and fragile. Two developments shifted it: the Testing Trophy (Kent C. Dodds) argues that integration tests give the best effort-to-confidence ratio, and Testcontainers made a real Postgres for the suite a matter of seconds.
-
-#### 3. Types beyond the pyramid
-
-- **Smoke test:** minimal check after a deployment (health endpoint, DB connection, home page). Five tests, five seconds; proves only that further checks make sense. First gate in the canary (Module 6).
-- **Regression test:** a role, not a type. For every production defect, first write a failing test that reproduces it, then fix. The suite grows where the system is actually brittle.
-- **Contract test:** between services. Consumer tests against a mock that follows the contract; provider tests that it fulfills the contract. Verifies integration without starting everything.
-- **Property-based testing:** state **invariants** and let the framework generate hundreds of inputs to refute them:
-
-```python
-@given(st.lists(st.integers()))
-def test_sort_is_idempotent(xs):
-    assert sorted(sorted(xs)) == sorted(xs)
-```
-
-`hypothesis` (Python), `fast-check` (JS). On failure they *shrink* the counterexample to the minimal case and find edge cases nobody thought of: empty list, Unicode corner case, integer overflow.
-
-- **Snapshot / approval test:** stores the output on the first run and compares later runs against it. Useful for UI and complex structures; the trap is "update snapshot" without looking, after which the test is worthless. Especially risky with AI-generated code, whose output always looks plausible.
-- **Characterization (golden) test:** for legacy code: pin down what the system does today, bugs included, then refactor. Guarantees unchangedness, not correctness.
-
-#### 4. Test doubles
-
-Gerard Meszaros' taxonomy:
-
-| Type | Behavior |
-|---|---|
-| **Dummy** | Only passed to satisfy a signature. Never used. |
-| **Stub** | Returns canned answers. Checks nothing. |
-| **Spy** | A stub that additionally records how it was called. |
-| **Mock** | Expects certain calls in advance and fails if they do not occur. |
-| **Fake** | A working but simplified implementation, e.g., an in-memory database. |
-
-A **mock** checks "X was called with these arguments", i.e. implementation; a **fake** couples to nothing. Rule of thumb:
-
-> **Replace what you do not control. Do not replace what is yours.**
-
-Not yours: external APIs, system clock, randomness, network, payment providers. Having to mock your own modules against each other signals too-tight coupling, a design problem (Module 4).
-
-Time and randomness are the most common cause of unreliable tests. Inject them (`clock`, `rng`) instead of calling `datetime.now()` and `random.random()` directly.
-
-#### 5. What makes a good test
-
-- **Deterministic:** same result in every run, environment and timezone.
-- **Isolated:** order-independent, no shared state.
-- **Fast:** speed determines how often the test runs (friction ladder, Module 2).
-- **Diagnostic on failure:** says *what* was wrong. `assert result == expected` with expressive values beats `assert is_valid`.
-- **One reason to fail:** eight assertions on five things do not tell you what broke.
-- **The name is the guarantee:** `test_rejects_login_after_three_failed_attempts`, not `test_login_2`.
-
-#### 6. Flaky tests
-
-A **flaky test** is sometimes green and sometimes red on unchanged code. Causes: timing or `sleep`, order dependence, shared state, real network calls, unseeded randomness, timezones and daylight saving time, concurrency.
-
-The damage is social: once "just rerun it" is normal, a red build means nothing, and the whole suite loses its value as a signal. CI retry features are a dangerous convenience. Quarantine the test at once (out of the blocking run, with a ticket and a deadline), fix the cause, bring it back.
-
-For agents this is critical: an agent that hits a flaky test sees red on correct code and "repairs" it by weakening the assertion, lengthening a `sleep` or skipping the test.
-
-#### 7. Coverage, and why 100% is an anti-goal
-
-**Line coverage** counts executed lines; **branch coverage** counts branches taken both ways and says more. Coverage measures execution, not verification. This gives 100% and guarantees nothing:
-
-```python
-def test_process():
-    process(sample_input)   # no assertion
-```
-
-Coverage reliably shows what is **not** tested, nothing more. As a target it triggers Goodhart's Law: a 90% mandate produces assertion-free tests for getters and setters.
-
-**Mutation testing** is the honest measure: the tool alters production code (`>` to `>=`, `+` to `-`, removes a call) and checks whether a test fails. A surviving mutant marks covered but unguarded code. Tools: `mutmut`, `cosmic-ray` (Python), `Stryker` (JS). It is slow and does not belong in the inner loop, but it matters more now, because generated tests tend to have high coverage and assertions that merely restate what the code does.
-
-#### 8. TDD
-
-**Red** (write a failing test) → **Green** (implement minimally until it passes) → **Refactor** (clean up, tests stay green).
-
-TDD's real benefit is **design pressure**: the interface is fixed before the implementation, and hard-to-test code is usually badly cut code. It does not fit exploration, prototyping or UI tuning, where the desired behavior is not yet known.
-
-In the agent era TDD is more useful: "make this failing test pass" has an unambiguous termination criterion that the agent cannot negotiate away.
-
-#### 9. Tests as the definition of done for agents
-
-The rule: *the task is DONE when exit code 0 comes back; on failure the model reads the stack trace and tries the next fix.* This needs three properties of the suite:
-
-1. **Fast enough for many iterations.** A 20-minute suite cannot sustain 30 agent passes; run `pytest -m "not slow"` in the agent loop and everything in CI.
-2. **Meaningful enough that green means correct.** An agent optimizes very efficiently against a broken signal.
-3. **Diagnostic on failure.** The stack trace is the agent's only channel.
-
-The four evasive maneuvers, from obvious to subtle:
-
-- Adapting the test to the implementation instead of fixing the code
-- Weakening the assertion (`assert x == 42` becomes `assert x is not None`)
-- Skipping the test or marking it `xfail`
-- Mocking until the test no longer exercises anything real
-
-All four return exit code 0, and all four are solutions from the agent's point of view. A rule like "*do not ignore warnings and do not adapt any test just to make it pass*" is necessary but not sufficient.
-
-**Circular reasoning:** if the same agent writes test *and* implementation, both come from the same understanding of the task. If that understanding is wrong, the test confirms the bug. Green then proves only self-consistency, the same weakness as a model grading its own answer (LLM-as-judge, Module 11). Countermeasures:
-
-- **Read the test diff first in the PR.** Changes to existing tests are the most important warning signal in AI-assisted development.
-- **Specification outside the agent:** you, or a separately tasked model, write the failing test; the agent makes it pass.
-- **Tests in separate commits**, so the diff shows whether tests moved with the implementation.
-- **Mutation testing periodically** as a spot check.
-
-#### 10. Practical pytest
-
-- **Fixtures** provide preconditions and clean up, with `scope` from `function` to `session`; shared fixtures live in `conftest.py` and are found automatically.
-- **`@pytest.mark.parametrize`** generates cases from a table, the systematic way to cover edge cases.
-- **Markers** (`@pytest.mark.slow`) split the fast suite from the full one.
-- **Factories** (`factory_boy`) scale better for test data than a growing set of fixtures.
-- **Databases:** run each test in a transaction rolled back at the end, orders of magnitude faster than a fresh database per test.
-
-#### 11. Anti-patterns
-
-- Tests that check implementation details
-- Assertion-free tests that only generate coverage
-- Retry as the way of dealing with flakiness
-- Coverage as a target
-- A test that depends on another test having run
-- `sleep()` as a synchronization mechanism
-- Mocking everything until only the mocks are being tested
-- Updating a snapshot without reading the diff
-- Test and implementation in the same commit from the same agent
-
-#### 12. Glossary
-
-Executable specification · Arrange-Act-Assert / Given-When-Then · Unit / integration / E2E · Small / Medium / Large · London vs. Detroit School · Testing Trophy · Testcontainers · Smoke test · Regression test · Contract test · Property-based testing · Shrinking · Invariant · Snapshot/approval test · Characterization test · Dummy / stub / spy / mock / fake · Flaky test · Quarantine · Line vs. branch coverage · Goodhart's Law · Mutation testing · Red-Green-Refactor · Fixture · Scope · `conftest.py` · `parametrize` · Marker · `xfail`
-
-#### 13. Exercises
-
-**E1: Behavior vs. implementation.** Write two tests for one function, one checking internals and one only the output. Refactor without changing behavior and see which breaks.
-
-**E2: The pyramid.** One test per level for your project: unit for a pure function, integration against a real database (Testcontainers), E2E via the HTTP endpoint. Measure and compare the runtimes.
-
-**E3: Create and remove flakiness.** Write three flaky tests (time-dependent, order-dependent, unseeded randomness), run the suite twenty times, then fix all three through injection instead of retry.
-
-**E4: Demystify coverage.** Write an assertion-free suite with 100% line coverage, run `mutmut` and count the surviving mutants.
-
-**E5: Property-based testing.** Pick a function with tricky edge cases (parser, sorting, rounding, currency) and state two invariants in `hypothesis`.
-
-**E6: Circular reasoning.** Let an agent write test *and* implementation for a subtle requirement (e.g. commercial rounding of negative amounts) and check whether the test understood the requirement. Repeat with you writing the test and the agent implementing.
-
-**E7: Provoke the evasive maneuver.** Give an agent a real bug with the deliberately bad assignment "make the test suite green". Note which maneuver it picks, write the rule that would have prevented it, and test again.
-
----
-
-### Module 4 · Code design & architecture
-
-Git, linters and tests mostly have right answers; design has trade-offs. It is the least automatable part of the work.
-
-#### 1. What architecture is about
-
-Software's value over hardware is that it can change, and requirements always change. The guiding question:
-
-> **What does it cost to change this in six months, and how sure am I that this is exactly what will change?**
-
-Every design decision is a **bet on the future**: making one thing easy to change makes another harder. Treating it as a question of quality instead of a bet produces systems that are flexible in every direction and usable in none.
-
-#### 2. Coupling and cohesion
-
-- **Cohesion:** how strongly the parts *inside* a unit belong together. High is good. A `user.py` with password hashing, invoicing and PDF export has low cohesion.
-- **Coupling:** how strongly units depend *on each other*. Low is good.
-
-The practical test:
-
-> **If I change A, do I have to touch B?**
-
-If yes, A and B are coupled, whatever the documentation, repo boundaries or interfaces say.
-
-Degrees of coupling, from harmless to bad:
-
-- **Data coupling:** B receives exactly the values it needs. Normal and fine.
-- **Stamp coupling:** B receives a whole object but needs two fields, so it depends on the object's structure.
-- **Control coupling:** A passes a flag that switches B's behavior (`render(data, is_pdf=True)`); usually two functions in disguise.
-- **Common coupling:** both access global state; the dependency is invisible.
-- **Content coupling:** A reaches into B's internals.
-
-**Connascence** makes this precise by naming *what* connects two places: a name, a type, a meaning, an order, a timing. The further apart two places are, the weaker their connection must be: two lines in one function may depend on execution order, two services on two continents may not.
-
-#### 3. Coupling versus duplication
-
-**DRY** reads: *every piece of knowledge must have a single, unambiguous, authoritative representation within a system.* It is about **knowledge**, not text. VAT and a commission may both be `amount * rate` today; merging them couples two things that change independently, and a flag parameter follows within months, then two, then a branch.
-
-> **Duplication is far cheaper than the wrong abstraction.** (Sandi Metz)
-
-Duplication costs linearly and is easy to undo. A wrong abstraction costs twice (itself plus the workarounds) and is hard to undo once seven places depend on it. **Rule of Three:** write it once, duplicate it the second time, abstract only the third time, when the pattern is clear.
-
-Whether two pieces of code are the same knowledge or only look alike is a domain question an agent cannot answer: it sees syntactic similarity, not the business domain.
-
-#### 4. Abstraction and its costs
-
-Every abstraction moves complexity; it makes one case easier and the others harder.
-
-- **YAGNI** (You Aren't Gonna Need It): do not build flexibility for imagined cases. Most anticipated extension points are never used, and the change that comes does not fit them.
-- **Law of leaky abstractions** (Joel Spolsky): every non-trivial abstraction leaks. An ORM hides SQL until a query is slow; TCP hides unreliable networks until they are very unreliable. You still need to understand the layer below; abstractions save typing, not knowledge.
-
-#### 5. Layers and the direction of dependencies
-
-```
-Inbound adapters  ──▶  Domain  ◀──  Outbound adapters
- HTTP, CLI, Events     Business logic     DB, external APIs
-```
-
-*Ports and adapters: both sides depend on the domain, never the other way around.*
-
-The left arrow is intuitive: the HTTP controller calls the business logic. The right arrow is **dependency inversion**: instead of "my code depends on Postgres", Postgres code depends on the domain.
-
-> **The interface belongs to the caller, not to the implementer.**
-
-The domain defines what it needs (`UserRepository` with `get(id)` and `save(user)`); the infrastructure implements it.
-
-```python
-# domain/ports.py — the domain defines its needs
-class UserRepository(Protocol):
-    def get(self, user_id: UserId) -> User | None: ...
-    def save(self, user: User) -> None: ...
-
-# domain/service.py — knows neither SQL nor HTTP
-class Registration:
-    def __init__(self, users: UserRepository) -> None:
-        self._users = users
-
-# infrastructure/postgres.py — depends on the domain
-class PostgresUserRepository:
-    def get(self, user_id: UserId) -> User | None: ...
-```
-
-Hexagonal architecture, ports and adapters and clean architecture are names for the same principle. Two check questions for any codebase:
-
-1. **Can I test the business logic without starting an HTTP server or a database?**
-2. **If I `grep` for `import psycopg`: does it show up in files containing business logic?**
-
-**Hard-to-test code is almost always badly cut code.** Six mocks for one unit test mean the unit has six dependencies. Test pain is a design signal, which is why TDD is a design tool (Module 3).
-
-#### 6. Dependency injection
-
-Dependency injection means: **pass dependencies in instead of creating them.**
-
-```python
-# without DI — the dependency is set in concrete
-class Registration:
-    def __init__(self):
-        self._users = PostgresUserRepository()   # not swappable
-
-# with DI — a constructor parameter, nothing more
-class Registration:
-    def __init__(self, users: UserRepository):
-        self._users = users
-```
-
-Python needs no container framework: a constructor parameter and one place that wires everything (the "composition root", usually `main.py`) suffice. In tests you pass a fake instead of a database, without patching module paths.
-
-#### 7. SOLID, assessed
-
-- **S, Single Responsibility:** not "a class does one thing" but *one reason to change*, where a reason is an **actor** (stakeholder group). If accounting and HR can both trigger changes to one class, that is the violation. At its core a statement about cohesion.
-- **O, Open/Closed:** extensible without modification; today via composition and strategies rather than inheritance. More ideal than rule.
-- **L, Liskov Substitution:** wherever the supertype is expected, every subtype must work unnoticed. Classic violation: a square inheriting from a rectangle cannot support independent `setWidth` and `setHeight`.
-- **I, Interface Segregation:** many narrow interfaces instead of one wide one; less relevant with duck typing.
-- **D, Dependency Inversion:** section 5; the most important of the five.
-
-SOLID comes from object-oriented design around 2000. LSP and DIP are timeless; the rest has partly been overtaken by language evolution. Use it as a reading checklist, not as doctrine: dogmatic SOLID produces fifteen interfaces with one implementation each. Coupling, cohesion, good names and explicit data flow matter more.
-
-#### 8. State, side effects, idempotency
-
-A **pure function** returns the same output for the same input and changes nothing outside itself. A **side effect** is everything else: writing, reading, logging, network, time, randomness. Pure functions are trivially testable, understandable, parallelizable and cacheable.
-
-**Functional core, imperative shell:** decisions and computations in pure functions, I/O at the edges. Read, then compute, then write, instead of interleaving them.
-
-**Idempotency:** running an operation several times gives the same result as running it once. `set_status("paid")` is idempotent; `increment_counter()` is not. In distributed systems you never know whether the request or only the response was lost, so requests are retried; without idempotency the customer is charged twice. The standard fix is an idempotency key sent by the caller so the server can deduplicate. Every retry logic, message queue and "at least once" delivery presupposes idempotency (Module 6).
-
-#### 9. Error handling is a design decision
-
-**Catch an error where you can do something meaningful about it**, not where it arises; in most layers that means letting it through. AI-generated code often contains:
-
-```python
-try:
-    result = risky_operation()
-except Exception:
-    pass          # the error is now invisible
-```
-
-The error does not disappear; it resurfaces three layers later as an inexplicable `None`. `except Exception:` with a generic fallback value is almost as bad.
-
-**Result types** are the alternative to exceptions: the return value is explicitly success or failure, and the caller must handle both (Rust, Go, custom types in Python/TS). They make failure visible in the signature at the cost of noise. Pick one model per system.
-
-**Fail fast:** invalid state fails immediately and loudly where it arises. Validate at the system boundary; inside, the domain may assume correct data.
-
-#### 10. Names
-
-A name is read a thousand times and written once. **Ubiquitous language** (domain-driven design): code uses exactly the domain's terms. If the business says "policy" and the code says `Contract`, every conversation, ticket and onboarding pays a translation fee, and eventually someone translates wrongly.
-
-Models infer meaning from names. `data`, `result`, `handle`, `process`, `manager` tell a model almost nothing; precise names are context engineering, like type annotations.
-
-#### 11. Refactoring as its own discipline
-
-**Refactoring changes internal structure without changing external behavior** (Fowler); otherwise it is a change. Kent Beck's **two hats**:
-
-> You wear either the refactoring hat or the feature hat. Never both at once.
-
-A diff mixing renames and new logic is not reviewable: the reviewer cannot find the two real lines among 400 lines of movement. If it breaks, you do not know which part caused it. Separate commits, ideally separate PRs, refactoring first.
-
-**Code smells** for diagnosis; two form the counterpart to section 2:
-
-- **Shotgun surgery:** one business change requires small edits in twelve places. Coupling too high, knowledge scattered.
-- **Divergent change:** one module changes for five unrelated reasons. Cohesion too low.
-
-Others: long method, feature envy (a method uses another object's data more than its own), primitive obsession (everything is `str` and `dict` instead of a type such as `EmailAddress`), data clumps (the same three parameters always travel together; usually a missing object).
-
-#### 12. Technical debt
-
-Ward Cunningham's metaphor originally meant deliberately shipping an unfinished structure to learn earlier, then cleaning up, like a loan taken on purpose and repaid. Martin Fowler's quadrant adds two axes, *deliberate/inadvertent* and *prudent/reckless*:
-
-- Deliberate and prudent: "We ship without a cache now, the ticket is filed, the deadline is set." Real, legitimate debt.
-- Inadvertent and reckless: "What is a layered architecture?" Not debt, a knowledge gap.
-- Inadvertent and prudent: "Now that it is finished, we see how it should have looked." Normal learning.
-
-The interest is real: every later change in that area costs more. Make debt visible as tickets.
-
-With AI, taking on debt has become much cheaper and paying it off has not: an afternoon can produce code that takes weeks to clean up.
-
-#### 13. Design docs and ADRs
-
-Writing is the thinking tool of the design loop: many bad architecture decisions fall apart when someone tries to justify them in three paragraphs.
-
-An **ADR** (architecture decision record) is one page with four sections:
-
-- **Context:** situation and constraints
-- **Decision:** what is done
-- **Consequences:** what becomes easier and what harder (listing only advantages signals unfinished thinking)
-- **Alternatives and why rejected**
-
-The last section is the valuable one: in two years someone asks "why didn't we do X?", and the answer is there, with the constraint that may have disappeared since. ADRs live versioned under `docs/adr/`.
-
-Larger undertakings start with a **design doc** or **RFC**: problem, goals and non-goals, approaches considered, approach chosen, risks, open questions. This is the "Deliberate" step from Module 0, where mistakes are far cheaper than in the implementation.
-
-#### 14. The AI connection
-
-**An agent optimizes locally.** It solves the task with the context it has and does not see:
-
-- that a third similar function signals a missing abstraction
-- that two similar functions do *not* belong together in business terms
-- that the helper it needs already exists outside its context window
-- that its approach violates a convention established elsewhere
-
-The result is a recognizable profile: locally clean, globally inconsistent. Duplication, because every session is isolated; over-abstraction when asked for it (a factory for two cases, a strategy pattern for one `if`); defensive `try/except` where nothing can fail; convention drift, because each session brings its own preferences.
-
-**Architecture is context.** An agent that reads a consistent layered structure, in which domain code imports no infrastructure, produces better code because the pattern it reads is consistent. Precise types, expressive names, consistent structure and explicit design rules in `AGENTS.md` (Module 8) act directly on the output; the investment pays off for humans and models alike.
-
-**Division of labor.** In an orchestrator-worker setup a large model plans and a fast one implements, which is economically right. The real orchestrator is you: whether an abstraction is the right bet, whether two things belong together, what a flexibility costs are judgment questions no model can own, because it does not know the future of your domain.
-
-AI is mechanically excellent at refactoring: renaming, extracting, changing signatures, carrying a pattern through forty files, with the tests from Module 3 as a safety net. Deciding *whether* and *where to* refactor stays with you.
-
-#### 15. Anti-patterns
-
-- Abstracting at the second occurrence instead of the third
-- Flag parameters that switch a function's behavior
-- Business logic that knows SQL, HTTP, or file paths
-- Interfaces with exactly one implementation that will never get a second
-- Silently swallowing errors
-- Refactoring and feature in the same commit
-- Design decisions whose justification exists only in one person's head
-- Anemic domain: classes without behavior, mere data holders, with all the logic in "service" classes
-- An agent being allowed to restructure at scale without a human having fixed the target structure
-
-#### 16. Glossary
-
-Coupling (data, stamp, control, common, content) · Cohesion · Connascence · DRY · Rule of Three · The wrong abstraction · YAGNI · Leaky abstraction · Layered architecture · Ports and adapters / hexagonal / clean architecture · Dependency inversion · Dependency injection · Composition root · SOLID (SRP, OCP, LSP, ISP, DIP) · Pure function · Side effect · Functional core, imperative shell · Idempotency · Idempotency key · Fail fast · Result type · Ubiquitous language · Refactoring · Two hats · Code smell (shotgun surgery, divergent change, feature envy, primitive obsession, data clumps) · Technical debt · Fowler quadrant · ADR · Design doc / RFC
-
-#### 17. Exercises
-
-**E1: Measure coupling.** For one module, answer for each dependency: if it changes, do I have to touch this module? Name the coupling form (section 2). Find a flag parameter and split it into two functions.
-
-**E2: Unwind the wrong abstraction.** Find a shared function with more than two flag or mode parameters and split it. Is the code longer but clearer?
-
-**E3: Check dependency direction.** Ask the two questions from section 5. For a hit on question 2, put that dependency behind a Protocol, inject it, and write a business-logic test without a database.
-
-**E4: Functional core.** Split a function that mixes reading, computing and writing into a pure function and a thin shell. Compare the test code needed before and after.
-
-**E5: Write an ADR** for a real decision, one page, with at least two rejected alternatives and honest disadvantages of the chosen option.
-
-**E6: Recognize the AI profile.** Let an agent build three related features in three separate sessions without conventions. Look for the patterns from section 14 (duplication, ignored helpers, convention drift, needless defensive code) and turn them into the first design rules for your `AGENTS.md`.
-
-**E7: Architecture as context.** Repeat E6 with a clear layered structure, full type annotations and three explicit design rules in the context, and compare.
-
-[↑ Back to top](#machine-learning-agents-und-generative-ki)
-
----
-
-## Phase 2 · From repo to production
-
-### Module 5 · CI/CD & quality gates
-
-Up to here everything ran on your machine and could be bypassed. From here on, mechanisms are **binding** because they run on the server.
-
-#### 1. Three terms everyone confuses
-
-**Continuous integration** is first a *practice* (Module 1): integrate into the main branch at least daily and verify each integration automatically, so `main` is always green. The pipeline is the tool, not the thing.
-
-```
-Continuous Integration:   Commit → Build & Test → green main
-Continuous Delivery:      Commit → Build & Test → Approval by a human → Production
-Continuous Deployment:    Commit → Build & Test → Production
-```
-
-- **Continuous delivery:** every green commit on `main` is *deployable*; a human presses the button. Whether to ship becomes a business decision.
-- **Continuous deployment:** every green commit goes to production automatically.
-
-Continuous deployment is not "better"; it is a maturity level with hard prerequisites: feature flags, canary rollout, robust monitoring and automatic rollback (Modules 6 and 7). Without them you have only removed the safety net. In regulated domains the manual approval is often a compliance requirement. Asked "do you have CD?", the right answer is: *which one?*
-
-#### 2. Anatomy of a pipeline
-
-Using GitHub Actions as the example:
-
-- **Workflow / pipeline:** the whole definition, versioned in the repo (`.github/workflows/*.yml`)
-- **Trigger / event:** what starts it: `push`, `pull_request`, `schedule` (nightly), `workflow_dispatch` (manual), tags
-- **Job:** runs on a runner in a fresh, isolated environment; jobs run in parallel unless `needs` orders them
-- **Step:** one command or reusable action within a job
-- **Runner:** the machine; hosted (billed per minute) or self-hosted (more control, more responsibility)
-- **Artifact:** files that survive a job and are passed on
-- **Cache:** reused state between runs, usually dependencies
-- **Matrix:** one job across dimensions, e.g. Python 3.11/3.12/3.13 × Linux/macOS
-- **Environment:** named target with its own secrets and optional approval rules
-- **Concurrency:** stops five runs of the same PR from running at once, typically by cancelling the predecessor
-
-**Every job starts in a fresh environment**; what one job writes is gone for the next unless passed as an artifact. That freshness is what rules out "works on my machine".
-
-#### 3. Designing the pipeline
-
-- **Cheap first, fail fast:** format check and lint (ten seconds) before type check, unit, integration and E2E (eight minutes).
-- **Parallelize where possible:** the metric is human waiting time, not compute time. Lint, type check and security scan are independent.
-
-Target for the PR pipeline: **under ten minutes**. Beyond about fifteen, people switch to other work and lose context, the slow-build problem from Module 0 one stage further right.
-
-| When | What | Budget |
-|---|---|---|
-| On every PR | lint, type check, unit, fast integration, security scan | under 10 min |
-| After the merge to `main` (postsubmit) | full integration, E2E, building the artifact | up to 30 min |
-| At night (nightly) | matrix across all versions, load and performance tests, mutation testing | unbounded |
-
-#### 4. Build once, deploy many
-
-> **The artifact is built exactly once and then pushed unchanged through all environments.**
-
-Rebuilding for production means production runs something other than what staging tested. Hence **configuration comes from outside**: database URL, API keys and feature switches arrive at runtime from environment variables or a secret store (twelve-factor: "strict separation of config from code").
-
-Tag the artifact with the commit SHA and treat it as immutable: `myapp:a3f9c21`, not `myapp:latest`. You always know which code runs in production, and a rollback switches to an existing older image instead of rebuilding.
-
-#### 5. Reproducibility
-
-The same commit should yield the same artifact later and after staff changes. The first 90% is cheap:
-
-- **Lock files** for all dependencies (`uv.lock`, `poetry.lock`, `package-lock.json`) in the repo; CI installs strictly from them (`npm ci`, not `npm install`).
-- **Pin tool versions:** the same `ruff` and `mypy` locally and in CI (Module 2).
-- **Base images by digest**, not tag: `python:3.12-slim` points to a different image every few months.
-- **`latest` is always a mistake.**
-
-#### 6. Quality gates: where it becomes binding
-
-Hooks are a convenience; **branch protection is the mechanism**, enforced on the server. Usual rules on `main`:
-
-- **Required status checks:** certain jobs must be green or the merge button stays disabled
-- **Required reviews:** at least one approval, often with "dismiss stale reviews when new commits arrive"
-- **CODEOWNERS:** certain paths need approval from certain people or teams
-- **No direct push, no force push** to `main`
-- **Linear history**, if you rely on squash merge
-
-**Merge queue** solves the **semantic merge conflict**: PR A renames a function, PR B adds a call to the old name. Both are green, Git sees no conflict (the lines do not overlap), both merge, and `main` is red. A merge queue tests PRs serially in merge order *against the combined state* before they land. Overkill for three people; from about ten active developers, or with agents producing many parallel PRs, it decides between a green and a chronically red `main`. GitHub's merge queue is generally available (configured in a branch protection rule or ruleset); GitLab calls it "merge trains".
-
-The same gates apply beyond code: agent skills go through a three-stage pipeline with scans and admin activation (Module 10), and eval suites act as gates for prompt, model and harness changes (Module 11).
-
-#### 7. Security in and around the pipeline
-
-**Security *through* the pipeline:** the Module 2 tools, now binding: SAST (`semgrep`, CodeQL), dependency scanning (`pip-audit`, Dependabot), secret scanning with push protection, container image scanning (`trivy`). Plus an **SBOM** (software bill of materials), a machine-readable list of all components, which answers "are we affected by this vulnerability?" in minutes.
-
-**Security *of* the pipeline:** CI holds production credentials and may deploy, which makes it a high-value target reached through third-party code:
-
-- **Pin actions to commit SHAs**, not tags. `actions/checkout@v4` is a moving target; whoever controls the tag controls your pipeline.
-- **Minimal permissions:** `permissions: contents: read` by default, more only where needed.
-- **No secrets in workflows that run on fork PRs.** `pull_request_target` runs with write rights and secrets of the target repo; combined with checking out the PR code, it executes foreign code with your keys.
-- **OIDC instead of long-lived credentials:** the pipeline gets a short-lived token from the cloud provider per run.
-
-Real incidents: in March 2025 the `tj-actions/changed-files` action was compromised (CVE-2025-30066). Its version tags were repointed to a malicious commit that dumped runner secrets into build logs, affecting tens of thousands of repositories that referenced it by tag; repositories pinned to a SHA were unaffected. In September 2025 a phished npm maintainer account published malicious versions of `chalk`, `debug` and other packages with billions of weekly downloads, followed by the self-propagating "Shai-Hulud" worm that harvested tokens from CI environments. Cheap defense against both: lock files plus a delay before adopting new versions (Renovate's `minimumReleaseAge` or equivalent).
-
-#### 8. The pipeline as a reviewer gate for agents
-
-When the pipeline fails, the job log can be fed back to the agent as a new prompt, without a human debugging it. This is the agent hook from Module 2 (exit code plus error text) one friction level further: slower, more complete, binding. Technically: a workflow that starts an agent with the job log on `failure()`.
-
-Four conditions:
-
-1. **The pipeline must be reliable.** With a flaky test the agent "repairs" correct code until it is broken (Module 3, section 6).
-2. **A hard iteration limit.** Otherwise the loop burns tokens and CI minutes and accumulates random changes. Three attempts, then a human.
-3. **The agent must not change the pipeline definition.** Otherwise the easiest path to green is deleting the job, and it hides well in a large diff. `.github/` belongs in CODEOWNERS and on the deny list.
-4. **The agent must not bypass branch protection.** Its token needs the same restrictions as a human's.
-
-#### 9. AI code review as a gate
-
-PR bots (CodeRabbit and others) are good at mechanical checks: consistency with the codebase, obvious mistakes, missing error handling, missing tests for new behavior, known security patterns, and they do not tire. They are weak at the Module 4 questions: is the abstraction the right bet, does the logic match what the business meant, should this be built at all.
-
-**Review theater:** a PR with fourteen AI comments *feels* thoroughly checked, so the human reads more superficially. More visible effort, less real verification. AI review supplements human review; the human still reads the test diff first (Module 3).
-
-#### 10. Cost and scaling
-
-CI minutes cost money. If AI quintuples the number of PRs, CI load quintuples too: the bottleneck from Module 0 shows up on the bill first. Levers:
-
-- **Caching** of dependencies and build intermediates (usually the biggest single win)
-- **Test impact analysis:** run only affected tests (Nx or Bazel in monorepos; `pytest-testmon` for small projects)
-- **Concurrency with cancellation** of outdated runs
-- **Tiering** per section 3
-- **Merge queue**, so PRs are not retested individually against a moving `main`
-
-#### 11. Anti-patterns
-
-- Manual steps inside the pipeline ("then somebody copies the file over")
-- Rebuilding per environment instead of passing one artifact along
-- `latest` as a tag, unpinned actions, no lockfile
-- Papering over flaky tests with automatic retry
-- Secrets that end up in the log (every `echo` line is a potential leak)
-- One single giant job instead of sensibly split, parallelizable jobs
-- Branch protection that does not include administrators
-- A bot token with more rights than a human
-- Treating the pipeline as a pure formality while red builds are tolerated
-
-#### 12. Glossary
-
-Continuous integration / delivery / deployment · Workflow · Trigger · Job · Step · Runner (hosted/self-hosted) · `needs` · Artifact · Cache · Matrix build · Environment · Concurrency · Postsubmit · Nightly · Build once, deploy many · Twelve-factor configuration · Immutable artifact · SHA tagging · Lock file · Digest pinning · Branch protection · Required status check · CODEOWNERS · Semantic merge conflict · Merge queue · SAST · SCA · Push protection · SBOM · OIDC · `pull_request_target` · Test impact analysis · Review theater
-
-#### 13. Exercises
-
-**E1: Base pipeline.** GitHub Actions workflow: lint, type check and security scan in parallel, then unit tests, then integration. Measure total runtime and time to first failure.
-
-**E2: Fail fast.** Introduce a formatting error and time the abort. Reverse the order (tests first) and time again.
-
-**E3: Cache.** Measure the install step without and with a dependency cache (expect a factor of two to five).
-
-**E4: Arm the gate.** Branch protection on `main` (required checks, no direct push, one approval). Try a direct push and read the error.
-
-**E5: Semantic merge conflict.** One branch renames a function, another adds a call to the old name; both green. Merge both and watch `main` turn red without a Git conflict.
-
-**E6: Build once, deploy many.** Build an image tagged with the commit SHA, run it with two configurations from environment variables, and confirm with `docker inspect` that it is the same image.
-
-**E7: Harden the pipeline.** Pin all actions to SHAs, set a minimal `permissions` block, check for `pull_request_target`. Keep the notes for Module 12.
-
-**E8: Reviewer gate with an agent.** Hand the job log to an agent on failure, limited to three iterations. Provoke a case where removing the test or job would be easiest and check that the safeguards from section 8 hold.
-
----
-
-### Module 6 · Release engineering
-
-#### 1. Deployment is not release
-
-> **Deployment** means: the code runs on the infrastructure. **Release** means: users see the new behavior.
-
-Treated as one event, every deployment is a risk, so deployments become rare, large and dangerous, and fear of deploying fulfills itself. Decoupled, code can sit in production unnoticed, deployment becomes a technical procedure without an audience, and release becomes a decision reversible in seconds. The goal is **boredom**: a deployment should be a non-event. Canary, feature flags and progressive delivery are techniques for this decoupling.
-
-#### 2. Environments, and why staging always lies
-
-The usual chain: **Local → Dev/Test → Staging → Production.** Staging never fully matches production, for structural reasons: data volume, data distribution (real data has edge cases no test set has), load, neighboring systems, scaling, network topology, user behavior. "It worked on staging" is not proof: staging rules out gross errors, not a query that times out at 40 million rows after being fast at 40,000.
-
-So part of the verification moves into production, with a net and a limited blast radius. "Testing in production" without a net is reckless; with one it is the honest option.
-
-- **Environment parity** (twelve-factor): keep differences small, e.g. the same database version, not SQLite locally and Postgres in production.
-- **Ephemeral environments:** a complete short-lived environment per pull request, removed on merge. Realistic with container orchestration and valuable when agents produce many parallel PRs.
-
-#### 3. The four deployment strategies
-
-- **Recreate:** stop old, start new; a window without service. Fine for internal tools and night windows, and two versions never run at once, which simplifies migrations (section 6).
-- **Rolling:** replace instances in small groups; no downtime, no extra resources; the Kubernetes default. **Both versions run simultaneously**, and rollback is as slow as rollout.
-- **Blue-green:** two complete environments; the new one is loaded and verified, then the load balancer switches. Rollback means switching back, in seconds. Costs double infrastructure temporarily, and shared state (database, sessions, caches) must fit both versions.
-- **Canary:** section 4.
-
-Three details for stateful variants:
-
-- **Connection draining:** an instance being shut down receives `SIGTERM`, accepts no new requests, finishes running ones, then exits.
-- **Session affinity:** users pinned to instances change how a rollout behaves.
-- **Warm-up:** fresh instances have cold caches, empty connection pools and (in JVM languages) unoptimized code; they are slower for a few minutes.
-
-#### 4. Canary in practice
-
-A small share of real users hits the new version first, and their experience is the signal.
-
-```
-1 %  ──▶  5 %  ──▶  25 %  ──▶  100 %
-errors,    errors,    business    release
-latency    latency    KPIs       done
-
-◀── if any metric deviates from the baseline, it rolls back automatically
-```
-
-**Step 1, routing:** the load balancer, ingress or service mesh sends a share of traffic to the new version, by percentage, header, user cohort or region.
-
-**Step 2, automated canary analysis:** compare against a **baseline**, not absolute thresholds. "Error rate below 0.5%" is useless because error rates vary with time of day, load and neighboring systems. Compare the canary with the old version running in parallel, in the same window, under the same load. **Deploy the baseline fresh too**: against a production instance warmed up for three weeks you mostly measure cold versus warm (caches, connection pools, unoptimized code). Netflix's Kayenta popularized this setup.
-
-**Step 3, metrics**, in the order they become relevant:
-
-- **Error rate:** HTTP 5xx, exception rate, failed jobs. Reacts fastest.
-- **Latency as percentiles**, not mean. If 1% of requests take ten seconds and the rest 50 ms, the mean looks harmless while 1% of users leave. Use p50, p95, p99; at high volume p99 is the most honest.
-- **Saturation:** CPU, memory, pool connections, queue depth. Catches resource leaks before they cause errors.
-- **Business metrics:** conversion, orders, sign-ups. The only category that catches "technically green, but the buy button is gone". They need more traffic, so they matter at later stages.
-
-**Step 4, observation window:** at 1% traffic two minutes is noise, in both directions. Size windows by event counts, not minutes: with a normal error rate of 0.1% you need many requests to detect even a doubling.
-
-**Step 5, approval or rollback:** within thresholds, increase the share; outside, back to zero automatically. Automation removes the human reaction time that is missing at 3 a.m.
-
-Where canary does not work:
-
-- **Batch jobs and asynchronous processing:** no traffic to split.
-- **Rare code paths:** 1% of traffic for twenty minutes never hits the year-end report.
-- **Slowly emerging failures:** a memory leak after four hours. Canary catches acute regressions, not creeping ones.
-- **Database changes:** section 6.
-- **Small systems:** at 200 requests per hour 1% says nothing; use blue-green with fast rollback.
-
-#### 5. Feature flags
-
-A feature flag is a branch in the code controlled from outside: deployed, but off.
-
-| Type | Purpose | Lifetime |
-|---|---|---|
-| **Release toggle** | gradual rollout of a new feature | days to weeks, then gone |
-| **Experiment toggle** | A/B test, measuring variants against each other | duration of the experiment |
-| **Ops toggle** | emergency switch, load shedding, circuit breaker | permanent |
-| **Permission toggle** | feature only for certain customers or plans | permanent, business-driven |
-
-Only the first two are temporary. Every flag doubles the state space: ten active flags give 1,024 combinations, of which you test a handful. Flags are deliberate, prudent technical debt with a repayment plan (Module 4, section 12). Hygiene: an owner and an expiry date per flag, a cleanup ticket filed at once, regular review. A release toggle fixed at "on" for eight months is dead code plus a switch someone can flip by accident. Test the state that will be production next, not all combinations.
-
-- **Progressive delivery:** flags plus cohorts instead of percentages (internal staff → beta users → 5% → everyone); early cohorts give feedback, not only metrics.
-- **Dark launch / shadow traffic:** the new path runs alongside, its output is discarded or compared with the old one, never delivered. Best tool for risky migrations (a new recommendation model, search implementation or calculation core): real production load, no user affected.
-
-The same patterns apply to model upgrades and skill revisions: pin the version, roll out to a cohort, compare against the baseline with evals, keep the old version for rollback (Modules 10 and 11).
-
-#### 6. Database migrations
-
-**Code can be rolled back; data cannot.** With rolling and canary deployments, **old and new code run against the same database at the same time**, so the schema must fit both. A migration that breaks the old version makes rollback impossible exactly when you need it.
-
-**Expand–migrate–contract** (parallel change) splits each schema change into several backward-compatible deployments. Renaming `name` to `full_name` with a direct `ALTER TABLE ... RENAME COLUMN` breaks every still-running old instance. Instead, five deployments:
-
-1. **Expand:** add `full_name`, nullable. Old code ignores it.
-2. **Double-write:** new code writes both columns, still reads `name`.
-3. **Backfill:** fill existing rows in batches, not in one transaction over ten million rows.
-4. **Switch:** read from `full_name`, still write both.
-5. **Contract:** stop writing `name`, then drop it, once no running code needs it.
-
-Every step can be rolled back safely. Further rules:
-
-- **Never add a column directly as `NOT NULL`** (it breaks every old `INSERT`): add it nullable, fill it, then tighten the constraint.
-- **Beware of locks:** an `ALTER TABLE` on a large table can lock for minutes and halt the service. In Postgres some operations need `CONCURRENTLY`; index creation always does.
-
-The same applies to everything versioned at system boundaries (API responses, queue message formats, event schemas): extend additively, switch, then remove old fields.
-
-#### 7. Rollback or roll-forward
-
-- **Rollback:** back to the previous version. Fast and predictable, but only if no irreversible state change happened (hence section 6).
-- **Roll-forward:** fix forward and redeploy, when rollback is impossible. Needs a fast pipeline.
-
-Design for reversibility: for every change ask whether and how fast it can be taken back. **Rollback is a capability, not a configuration:** an unpracticed rollback fails in an emergency because the artifact is gone, the migration is not backward-compatible, nobody has the permission or nothing is documented. Practice it on a Tuesday morning.
-
-#### 8. Health checks
-
-- **Liveness:** "Is the process alive?" On failure: **restart**.
-- **Readiness:** "Can it take requests now?" On failure: **remove from the load balancer**, do not restart.
-
-An instance warming its cache or waiting on an overloaded database is *not ready* but *alive*. If the liveness check probes the database, a database problem makes the orchestrator restart all instances at once and turns an incident into a total outage. This misconfiguration is common.
-
-This completes the outer loop from Module 0: postsubmit → staging → canary → production (experiment, flag flip, release) → measure, which leads back to observe.
-
-#### 9. The AI connection
-
-- **The question shifts** from "can we build fast?" to "can we roll out fast and safely?". This module's safety net makes a high rate of change usable; without it more throughput is more risk per week. Module 13 puts a number on it: deployment frequency without change failure rate is meaningless.
-- **Feature flags become a necessity.** Trunk-based development with agents pushing many changes to `main` only works if unfinished work can be deployed inactive.
-- **Migrations are the most dangerous AI-generated code.** Unprompted, an agent writes the direct `RENAME COLUMN`, because it is the obvious answer to "rename the column". It looks harmless in review (one line, correct syntax) and means downtime and no rollback in production. Put expand–migrate–contract into the agent instructions and require human review of migrations via CODEOWNERS.
-- **Flag sprawl:** agents create flags and never clean them up. Expiry dates and regular review keep the state space in check.
-- **Where AI helps:** anomaly detection in canary analysis, summarizing deployment diffs for approval, spotting risky migration patterns in PRs. Thresholds and approval criteria stay with you: a model that decides when a rollout proceeds controls the blast radius.
-
-#### 10. Anti-patterns
-
-- Treating deployment and release as the same event
-- Checking the canary against absolute thresholds instead of a baseline
-- Comparing the canary against a long warmed-up baseline
-- Watching latency as a mean instead of as percentiles
-- Observation windows too short for statistical meaning
-- Schema changes that break the previous code version
-- `NOT NULL` on a new column in one step
-- Release toggles without expiry dates
-- Rollback never practiced
-- A liveness check that also probes external dependencies
-- Deploying on Friday at 5 p.m. without anyone watching the metrics
-
-#### 11. Glossary
-
-Deployment vs. release · Environment parity · Ephemeral / preview environment · Recreate / rolling / blue-green / canary · Connection draining · Graceful shutdown · Session affinity · Warm-up · Automated canary analysis · Baseline · Percentiles (p50/p95/p99) · Saturation · Observation window · Blast radius · Feature flag · Release / experiment / ops / permission toggle · Kill switch · Circuit breaker · Progressive delivery · Cohort · Dark launch · Shadow traffic · Expand–migrate–contract / parallel change · Backfill · Backward compatibility · `CONCURRENTLY` · Rollback vs. roll-forward · Liveness vs. readiness
-
-#### 12. Exercises
-
-**E1: Decoupling.** Add a feature flag controlled by an environment variable. Deploy a feature switched off, verify users see nothing, switch it on without a new deployment.
-
-**E2: Rolling deployment.** Replace three instances one by one while a script sends a request every second; log which version answered and see both live at once.
-
-**E3: Percentiles.** Generate 1,000 latency values, ten of them at ten seconds, and compute mean, p50, p95 and p99.
-
-**E4: Canary gate.** One page: metrics, thresholds relative to the baseline, observation window per stage, rollback triggers.
-
-**E5: Expand–migrate–contract.** Rename a column in five deployments; after each, verify that the *previous* code version still works.
-
-**E6: Practice rollback.** Deploy a deliberately broken version, roll back, time it from detection to recovery, and note where it snagged.
-
-**E7: Separate health checks.** Implement `/healthz` (process only) and `/readyz` (dependencies), simulate a database outage, and check that the instance leaves the load balancer without restarting.
-
-**E8: Migration test for agents.** Ask an agent to rename a column without guidance, inspect the result, write the rule that prevents the direct rename, and repeat. The wording goes into your `AGENTS.md`.
-
----
-
-### Module 7 · Observability & operations
-
-From *building* software to *operating* it: working with signals from a system you do not fully see, under time pressure, with incomplete evidence. Canary analysis (Module 6) depends on this.
-
-#### 1. Monitoring vs. observability
-
-- **Monitoring** answers questions you knew in advance: dashboard, threshold, warning.
-- **Observability** answers new questions: "Why have requests from Android users in Frankfurt been slow since 2:20 p.m., but only with feature flag X on?"
-
-The difference is **cardinality and context**. Monitoring aggregates in advance (a million requests become one number; breakdown dimensions are fixed beforehand). Observability keeps events with many attributes and allows any breakdown afterwards. Monitoring covers *known unknowns*, observability *unknown unknowns*. The test:
-
-> **Can you answer a new question about your system without changing code and redeploying?**
-
-If not, you have monitoring, which is often enough, but decides whether an unexpected incident takes five minutes or five hours to understand.
-
-#### 2. The three pillars, and why the metaphor misleads
-
-- **Logs:** discrete events with context; most detail, most expensive storage.
-- **Metrics:** numeric aggregates over time; cheap, context-poor.
-- **Traces:** the path of one request through a distributed system.
-
-"Three pillars" suggests three systems, tools and bills, and many companies built it that way. The value lies in **correlation**: alert → metric → affected trace → log lines of that request. Without shared identifiers you do this by hand across three tools and lose the decisive minutes. **OpenTelemetry** is the vendor-neutral instrumentation standard that produces logs, metrics and traces with shared context; you instrument once and can switch backends without code changes.
-
-#### 3. Logs done right
-
-**Structured, not free text:**
-
-```python
-# bad: only searchable with regex
-logger.info(f"Login failed for {email} from {ip}")
-
-# good: queryable as fields
-logger.info("login_failed", extra={"user_id": uid, "reason": "bad_password", "ip": ip})
-```
-
-`grep` works on a thousand lines and fails on millions; fields can be filtered, grouped and aggregated.
-
-**Log levels** (if everything is ERROR, ERROR means nothing):
-
-- `DEBUG`: development only, off in production
-- `INFO`: normal business events you want to trace later
-- `WARNING`: something unusual that was handled (retry, fallback)
-- `ERROR`: an operation failed, a user is affected
-- `CRITICAL`: the system as a whole is in danger
-
-**Correlation IDs** are the most important measure: each incoming request gets an ID passed through all services, log lines and queue messages. Finding the lines of one request becomes a filter query.
-
-**Never log** passwords, tokens, session keys, full card numbers, or personal data without a legal basis. Logs are data processing under the GDPR, usually sent to a third-party provider, often into a third country, with a retention period someone must define. Log user IDs instead of email addresses.
-
-**Cost:** logging is often the biggest item on the observability bill. Sample high-frequency, low-information events.
-
-#### 4. Metrics done right
-
-- **Counter:** only increases (requests, errors)
-- **Gauge:** goes up and down (active connections, memory)
-- **Histogram:** distribution in buckets (latencies)
-
-Latency must be a histogram because percentiles need the distribution. **Percentiles cannot be averaged:** the mean of ten instances' p99 is meaningless; aggregate the histogram buckets and compute the percentile from them.
-
-**Cardinality:** every combination of label values is its own time series. `http_requests{method, status, endpoint}` gives perhaps 200 series; adding `user_id` gives millions, and the metrics system and the bill explode. High cardinality belongs in logs and traces.
-
-What to measure:
-
-- **RED** for services: Rate, Errors, Duration (Tom Wilkie, Weaveworks, 2015)
-- **USE** for resources: Utilization, Saturation, Errors (Brendan Gregg, 2012)
-- **Four Golden Signals:** Latency, Traffic, Errors, Saturation (Google SRE book, 2016, chapter 6, freely readable online)
-
-They overlap heavily. For an HTTP service RED is the pragmatic start: three metrics per endpoint cover most of what you need in an emergency.
-
-#### 5. Tracing
-
-A **trace** is the complete path of a request; a **span** is a section of it (service call, database query, computation). Spans nest; the context travels in HTTP headers (standard: `traceparent`).
-
-```
-POST /checkout      ████████████████████████████████████████████  420 ms
-  auth.verify        ██
-  db.get_cart          ██
-  pricing.calc            ██████████████████████████████  315 ms
-    db.get_discount        ████  ████  ████  ████  ████     ← five identical queries
-  db.save_order                                          ██
-```
-
-*Trace waterfall: five identical queries. The N+1 pattern becomes visible.*
-
-"Checkout takes 420 ms" is not actionable; the trace shows five identical queries in sequence instead of one batched query. This is the **N+1 problem**, the most common performance defect with an ORM: an operational symptom of a design decision (Module 4).
-
-**Sampling** is unavoidable at high volume:
-
-- **Head-based:** decided at the start of the request; cheap, but loses interesting cases as often as boring ones.
-- **Tail-based:** decided after the trace completes; keeps everything erroneous or slow; more valuable, but traces must be buffered until the decision.
-
-#### 6. SLI, SLO, SLA, and the error budget
-
-- **SLI** (service level indicator): a measured quantity from the user's view, e.g. *the share of requests answered in under 300 ms with a status below 500.*
-- **SLO** (service level objective): a target for the SLI over a window, e.g. *99.9% over 30 rolling days.* An internal promise.
-- **SLA** (service level agreement): a contract with consequences (credits, penalties). Always laxer than the SLO, as a buffer.
-- **Error budget:** the remainder to 100%. An SLO of 99.9% over 30 days leaves **43 minutes** outside the target.
-
-> These 43 minutes are not failure. They are a **budget** you are allowed to spend.
-
-The conflict between shipping fast and staying stable becomes one agreed number. Budget left: faster, riskier rollouts are fine (shorter canary windows, continuous deployment). Budget used up: feature stop until reliability recovers.
-
-Why 100% availability is the wrong target:
-
-1. **Costs grow exponentially:** each additional nine costs a multiple of the previous one; 99.9% → 99.99% means multi-region and elaborate failover.
-2. **Users do not notice:** their mobile network, Wi-Fi and browser are less reliable than your service.
-3. **100% means never changing**, and an unchanged system is a dying one.
-
-Some unreliability buys speed; the error budget makes the trade explicit. Good SLOs are formulated from the **user's perspective** ("CPU below 80%" is not an SLO) and are **achievable** (an SLO breached for four months is ignored).
-
-#### 7. Alerting
-
-> **Alert on symptoms, not on causes.**
-
-"Error rate for users elevated" is an alert; "CPU at 91%" is not (it may be normal, a batch job may be running). Cause alerts create noise, while outages with unexpected causes slip through.
-
-Every alert must be **urgent** (cannot wait until tomorrow), **actionable** (there is something to do) and **for a human** (not automatically fixable). Otherwise it belongs on a dashboard or in a ticket. **Alert fatigue:** if four of five night alerts mean nothing, the fifth, real one is ignored. Review every alert that fired without leading to action.
-
-**Burn-rate alerts** tie alerting to how fast the error budget is consumed: very fast (the monthly budget gone in an hour) wakes someone up; slow creates a ticket for the next business day. Every alert links to a **runbook**: what it means, what to check first, usual causes, how to mitigate.
-
-#### 8. Incident response
-
-- **Separate roles.** The **incident commander** coordinates and decides and does *not* debug; alongside, one person for communication (status page, stakeholders) and one for the technical work.
-- **Mitigation before root-causing.** Stop the bleeding first (roll back, switch off the flag, redirect traffic, shed load), understand later. A rollback whose cause was never clarified is a successful incident.
-- **Metrics:** MTTD (time to detection), MTTR (time to recovery), MTBF (time between failures). In complex systems MTTR is usually the better lever: preventing all outages is unaffordable, fixing them in three minutes instead of thirty is achievable.
-- **Blameless postmortem:** assume everyone acted reasonably with the information they had. With blame in the room you stop hearing the truth and stop learning. **"Human error" is a starting point, not a cause:** why was the wrong action possible, why was it the obvious one, why did nothing catch it? If one command could delete production, that is the finding.
-- **Five Whys** suggests one linear causal chain; complex systems fail through several contributing factors that are each harmless alone. Look for several.
-- **Actions with an owner and a deadline**, or the incident returns.
-- **On-call:** *you build it, you run it.* Being woken by your own code is the strongest quality feedback loop there is.
-
-#### 9. The AI connection
-
-- **Production signals are debug context for agents.** "The endpoint is slow" is useless to a model; a trace with five identical sequential queries leads almost directly to the fix. This is the "Measure" node from Module 0 and Addy Osmani's *resource efficiency* and *AI performance refactorings*.
-- **AI in incidents:** useful for correlating many signals, summarizing the timeline, generating hypotheses. Dangerous as decision-maker: a convincingly named wrong cause costs the minutes mitigation needed, and mitigation needs no root cause anyway. Generated postmortems are good for the timeline and worthless for the insight, which comes from the participants' discussion.
-- **LLM observability:** AI systems need the same toolbox with different signals: traces across agent steps and tool calls, tokens and cost per request, latency per model call, retrieval hit rates, eval results on production traffic (online evaluation, Module 11). OpenTelemetry has *Generative AI semantic conventions* for this (`gen_ai.*` attributes for model, token counts, tool calls, agent spans). They are still marked as in development and change between releases: pin the semantic-conventions version you emit and read the changelog before upgrading.
-- **Agents in production are not deterministic.** A retry gives a different result. Error rates of AI components are distributions, not yes/no; SLIs must reflect that, and alerts must not fire on every deviating answer.
-
-#### 10. Anti-patterns
-
-- Alerting on causes instead of user symptoms
-- Alerts nobody takes seriously anymore because they fire too often without action
-- Free-text logs without structure and without a correlation ID
-- High-cardinality labels in metrics
-- Latency as a mean
-- Dashboards nobody looks at, instead of SLOs somebody holds to
-- SLOs that have been breached for months and still stand unchanged
-- Root-causing during the ongoing incident instead of mitigation
-- Postmortems without actions carrying an owner and a deadline
-- Personal data in logs at a third-party provider
-- An incident commander who debugs personally
-
-#### 11. Glossary
-
-Monitoring vs. observability · Known/unknown unknowns · Cardinality · OpenTelemetry · Structured logging · Log level · Correlation ID · Sampling · Counter / gauge / histogram · RED · USE · Four Golden Signals · Trace · Span · Context propagation · `traceparent` · Head- vs. tail-based sampling · N+1 problem · SLI · SLO · SLA · Error budget · Burn rate · Runbook · Alert fatigue · Incident commander · Severity · Mitigation · MTTD / MTTR / MTBF · Blameless postmortem · Contributing factors · On-call · You build it, you run it · LLM observability
-
-#### 12. Exercises
-
-**E1: Structured logging.** Switch to JSON logs with a correlation ID passed from the incoming request through all calls. Then pull all log lines of one failed request.
-
-**E2: RED metrics.** Instrument one endpoint with rate, error rate and a latency histogram; under load, compare p50, p95 and p99 with the mean.
-
-**E3: Blow up cardinality.** Add a request ID as a metric label, count the resulting time series, remove it.
-
-**E4: Tracing.** Instrument with OpenTelemetry, build in an N+1 problem, find it in the waterfall, fix it, and measure before and after.
-
-**E5: SLO.** Define a user-facing SLI, an SLO over 30 days and the error budget in minutes, plus what happens at 50%, 90% and 100% consumption.
-
-**E6: Alert.** Write a burn-rate alert on the SLO and its runbook; check it against the three criteria in section 7.
-
-**E7: Simulate an incident.** Stop the database, raise latency or deploy a faulty version. Time detection and recovery, then write a postmortem with a timeline, at least three contributing factors, and actions with owners.
-
-**E8: Trace an agent.** Instrument an agent run with traces across steps and tool calls, plus cost and tokens per step. Then sketch an SLI for a non-deterministic component; Module 11 gives the eval tools.
-
-[↑ Back to top](#machine-learning-agents-und-generative-ki)
-
----
-
-## Phase 3 · Building AI in, systematically
-
-Phase 3 assumes AI basics and focuses on the mechanics behind the practices and how they interlock with Phases 1 and 2. Modules 8 and 9 cover one agent in one repository. Module 10 scales its know-how across an organization as skills, Module 11 measures models and agents, Module 12 covers what no signal catches, and Module 13 measures the effect on the team.
-
-### Module 8 · Context engineering & spec-driven development
+### Module 4 · Context engineering & spec-driven development
 
 #### 1. From prompt engineering to context engineering
 
@@ -1433,24 +257,24 @@ Reliability with which information in the context is used
 
 Tool outputs are the largest uncurated source: a `cat` on a 4,000-line file, a test run full of stack traces, a `grep` with 800 hits. They are the usual reason an agent forgets obvious things after twenty minutes. Build tools with *terse* output: `pytest -q --tb=short`, `ruff check --output-format=concise`, a script that returns relevant lines instead of whole files.
 
-**Too many tools degrade tool selection:** each costs context, and the hit rate drops with thirty similar-sounding options. Fewer, clearly delineated tools win. The same holds for skills (Module 10).
+**Too many tools degrade tool selection:** each costs context, and the hit rate drops with thirty similar-sounding options. Fewer, clearly delineated tools win. The same holds for skills (Module 6).
 
 #### 4. Techniques of context management
 
-- **Progressive disclosure / just-in-time:** give the agent tools to load what it needs instead of loading everything up front. A directory tree plus a search tool beats the embedded repository. Skills apply this to know-how: only name and description sit in the context, the body loads when needed (Module 10).
+- **Progressive disclosure / just-in-time:** give the agent tools to load what it needs instead of loading everything up front. A directory tree plus a search tool beats the embedded repository. Skills apply this to know-how: only name and description sit in the context, the body loads when needed (Module 6).
 - **Compaction:** summarize and replace a long history. Lossy; what survives is a design decision (decisions and their reasons yes, tool outputs no).
 - **Externalization:** state belongs in files: the plan in `PLAN.md`, intermediate results in files, open items in a list. The file system is long-term memory, and a context loss does not destroy the work.
-- **Sub-agents:** a sub-agent with its own window handles a delimited task and returns only the result; 40,000 tokens of research never reach the main context (Module 9).
+- **Sub-agents:** a sub-agent with its own window handles a delimited task and returns only the result; 40,000 tokens of research never reach the main context (Module 5).
 - **Context hygiene:** start a new session when the topic changes. Remnants of a failed debugging session pull the next task in the same direction.
 
 #### 5. Engineering is context
 
 > **Well-structured code is compressed context.**
 
-- **Type annotations (Module 2):** `def process(orders: list[Order]) -> Invoice` answers in one line what `def process(data)` forces the model to read the whole file for.
-- **Precise names and ubiquitous language (Module 4):** `manager`, `handle`, `result` carry almost no information.
-- **Layered structure (Module 4):** consistent patterns in what is read produce consistent patterns in what is written, without a rule.
-- **Tests (Module 3):** the only specification that checks itself.
+- **Type annotations (Module 14):** `def process(orders: list[Order]) -> Invoice` answers in one line what `def process(data)` forces the model to read the whole file for.
+- **Precise names and ubiquitous language (Module 14):** `manager`, `handle`, `result` carry almost no information.
+- **Layered structure (Module 14):** consistent patterns in what is read produce consistent patterns in what is written, without a rule.
+- **Tests (Module 14):** the only specification that checks itself.
 - **Small, cohesive modules:** fit into the window; a 3,000-line module forces either completeness or guessing.
 - **Conventions and a clean `AGENTS.md`:** reduce the freedom in which a model can drift.
 
@@ -1470,22 +294,22 @@ A good spec contains:
 - **Constraints:** existing patterns, libraries to use, performance requirements, what must *not* be touched
 - **Open questions:** explicit, so they get answered instead of guessed
 
-It does not contain implementation details you leave to the agent; a spec that describes the code in prose gives away the advantage. A spec is a design doc (Module 4) addressed to a machine, which does not complain about unclear passages but invents something plausible.
+It does not contain implementation details you leave to the agent; a spec that describes the code in prose gives away the advantage. A spec is a design doc (Module 14) addressed to a machine, which does not complain about unclear passages but invents something plausible.
 
 #### 7. The working cycle: Explore → Plan → Implement → Verify
 
 > **Plan first, code second.**
 
-A misunderstanding costs 200 tokens to correct in planning and 2,000 lines plus a review round afterwards (Module 0).
+A misunderstanding costs 200 tokens to correct in planning and 2,000 lines plus a review round afterwards (Module 14).
 
 - **Explore:** have it read, not write: "Read these four files and explain how the order process works." You check the *understanding*, where misunderstandings cost a paragraph to fix.
 - **Plan:** the plan as a visible artifact. Models usually propose something too complicated (one abstraction layer too many, a pattern where a function suffices, configuration for one case); simplifying is your most valuable intervention. In Claude Code this is *plan mode* (Shift+Tab, or `claude --permission-mode plan`): the agent can read and search but not edit until you approve. Sub-agents can be told to plan only, and the plan can be written to a file (externalization).
-- **Implement:** small steps, each verified; the harness from Modules 2 and 3 runs throughout.
+- **Implement:** small steps, each verified; the harness from Module 14 runs throughout.
 - **Verify:** check against the acceptance criteria of the spec, not only "tests green".
 
 #### 8. Task sizing
 
-The right size for an agent task is **what you can still seriously review in one pull request**, not what the agent can manage. Larger tasks get disproportionately worse: error probability multiplies across steps, the context fills during the work, and beyond a certain diff size review stops happening (Module 1, section 6).
+The right size for an agent task is **what you can still seriously review in one pull request**, not what the agent can manage. Larger tasks get disproportionately worse: error probability multiplies across steps, the context fills during the work, and beyond a certain diff size review stops happening (Module 14).
 
 **Cut vertically, not horizontally.** A thin end-to-end slice (API to database, with a test) is runnable, testable and individually rollbackable; "all data models first, then all services" is only verifiable at the end.
 
@@ -1533,27 +357,27 @@ Context engineering vs. prompt engineering · Context window as working memory �
 
 ---
 
-### Module 9 · Building the agent harness
+### Module 5 · Building the agent harness
 
-The synthesis of Phases 1 and 2, and the justification of "*verification beats model size*".
+The synthesis of the engineering practices in Module 14, and the justification of "*verification beats model size*".
 
 #### 1. What a harness is
 
 A *test harness* is the environment in which a subject under test runs, is driven and is observed. An **agent harness** is the set of instructions, tools, checks, boundaries and gates within which an agent works.
 
-Technically it is a **control loop**. Without feedback the agent runs open-loop: it acts and never learns whether it worked. With feedback it runs closed-loop: every action produces a measurable signal that corrects the next. The harness sets the **strength and speed of the coupling between action and consequence**. A strong model in an open loop guesses well; a weaker model in a closed loop iterates, and iteration with feedback beats one-shot guessing. Model quality matters, but without feedback it optimizes the wrong degree of freedom. Module 11 shows the same in benchmarks: the harness changes scores as much as the model.
+Technically it is a **control loop**. Without feedback the agent runs open-loop: it acts and never learns whether it worked. With feedback it runs closed-loop: every action produces a measurable signal that corrects the next. The harness sets the **strength and speed of the coupling between action and consequence**. A strong model in an open loop guesses well; a weaker model in a closed loop iterates, and iteration with feedback beats one-shot guessing. Model quality matters, but without feedback it optimizes the wrong degree of freedom. Module 10 shows the same in benchmarks: the harness changes scores as much as the model.
 
 #### 2. The five layers
 
 | Layer | Answers | Building blocks | From module |
 |---|---|---|---|
 | **Instructions** | What applies here? | `AGENTS.md`, conventions | new |
-| **Tools** | What can it do? | MCP, Makefile, scripts | 2, 8 |
-| **Verification** | What gets checked? | hooks, lint, type check, tests | 2, 3 |
-| **Boundaries** | What may it not do? | permissions, sandbox, deny list | 1, 5, 6 |
-| **Gates** | What is binding? | CI, branch protection, review | 5 |
+| **Tools** | What can it do? | MCP, Makefile, scripts | 4, 14 |
+| **Verification** | What gets checked? | hooks, lint, type check, tests | 14 |
+| **Boundaries** | What may it not do? | permissions, sandbox, deny list | 12, 14 |
+| **Gates** | What is binding? | CI, branch protection, review | 14 |
 
-Instructions act **probabilistically**: they are mostly followed. Boundaries and gates act **deterministically**: they cannot be bypassed. This difference runs through the module. Skills (Module 10) add a sixth building block between instructions and tools: know-how loaded on demand.
+Instructions act **probabilistically**: they are mostly followed. Boundaries and gates act **deterministically**: they cannot be bypassed. This difference runs through the module. Skills (Module 6) add a sixth building block between instructions and tools: know-how loaded on demand.
 
 #### 3. Writing `AGENTS.md`
 
@@ -1585,7 +409,7 @@ Not in it:
 - Generic quality prose: "write clean, maintainable code" changes nothing measurable.
 - Knowledge that goes stale: an unmaintained line becomes a false statement that actively harms.
 
-**`AGENTS.md` is expensive:** it sits in *every* context of *every* session. A 400-line file competes with the working context (signal dilution, Module 8). Keep it small; growth signals that rules should become checks (section 9) or skills (Module 10).
+**`AGENTS.md` is expensive:** it sits in *every* context of *every* session. A 400-line file competes with the working context (signal dilution, Module 4). Keep it small; growth signals that rules should become checks (section 9) or skills (Module 6).
 
 - In monorepos use a **hierarchy**: a root file for shared rules, a small file per package.
 - **`AGENTS.md` is code:** versioned, reviewed, in CODEOWNERS. A rule the agent may add itself is not a rule.
@@ -1593,13 +417,13 @@ Not in it:
 
 #### 4. Tools
 
-**MCP** (Model Context Protocol) is the standard for connecting tools and data sources, an adapter protocol in the sense of ports and adapters (Module 4): the agent knows the interface, not the implementation. Design rules from Module 8:
+**MCP** (Model Context Protocol) is the standard for connecting tools and data sources, an adapter protocol in the sense of ports and adapters (Module 14): the agent knows the interface, not the implementation. Design rules from Module 4:
 
 - **Terse outputs.** A tool returning 3,000 lines destroys the context.
 - **Few, clearly delineated tools.** Selection quality drops with similar-sounding options.
 - **A script often beats a server.** `make check-migrations` is deterministic, versioned, runs locally and is identical for human and agent.
 
-An MCP server is foreign code with access to your data and tools; choosing one is a supply chain decision (Module 12). Authenticating agents to MCP servers, other agents and external APIs on Google Cloud (ID vs. access tokens, Agent Identity, Auth Manager) is covered in [pca.md, sections 4.16 and 4.17](pca.md#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
+An MCP server is foreign code with access to your data and tools; choosing one is a supply chain decision (Module 11). Authenticating agents to MCP servers, other agents and external APIs on Google Cloud (ID vs. access tokens, Agent Identity, Auth Manager) is covered in [pca.md, sections 4.16 and 4.17](pca.md#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
 
 #### 5. Verification
 
@@ -1611,7 +435,7 @@ An MCP server is foreign code with access to your data and tools; choosing one i
 | CI pipeline | minutes | everything, complete | **binding** |
 | Review | hours | design, business logic, test diff | **binding** |
 
-One command for everyone (Module 2): `make lint && make test`, called by you, the hook, the agent and CI. Speed matters more than with humans: a human runs the suite five times a day, an agent thirty times a session. Two minutes of test runtime are a coffee break for you and an hour for the agent.
+One command for everyone (Module 14): `make lint && make test`, called by you, the hook, the agent and CI. Speed matters more than with humans: a human runs the suite five times a day, an agent thirty times a session. Two minutes of test runtime are a coffee break for you and an hour for the agent.
 
 #### 6. Boundaries: the underrated layer
 
@@ -1619,12 +443,12 @@ Each deny-list entry is an evasive maneuver that is a solution from the agent's 
 
 | Prohibition | Why | Module |
 |---|---|---|
-| Adapting tests to make them pass | destroys the termination criterion | 3 |
-| Loosening lint rules, scattering `noqa` | destroys the signal | 2 |
-| Changing `.github/` or `Makefile` | deletes the gate itself | 5 |
-| `git add -A`, `--no-verify`, `--force` | commits secrets, bypasses checks | 1 |
-| Migration without expand-migrate-contract | prevents rollback, creates downtime | 6 |
-| Creating flags without expiry dates | state space grows silently | 6 |
+| Adapting tests to make them pass | destroys the termination criterion | 14 |
+| Loosening lint rules, scattering `noqa` | destroys the signal | 14 |
+| Changing `.github/` or `Makefile` | deletes the gate itself | 14 |
+| `git add -A`, `--no-verify`, `--force` | commits secrets, bypasses checks | 14 |
+| Migration without expand-migrate-contract | prevents rollback, creates downtime | 12 |
+| Creating flags without expiry dates | state space grows silently | 12 |
 
 **These prohibitions belong in mechanisms, not only in `AGENTS.md`.** An instruction competes with the agent's goal: if the task is "make the tests green" and the honest path is hard, adapting the test is rewarded by the stated goal. Under enough pressure an agent bypasses every rule that is only a rule.
 
@@ -1664,7 +488,7 @@ The `deny` entries are deterministic (layer 4): the call is refused before it ru
 
 #### 7. Sub-agents and the orchestrator-worker pattern
 
-The orchestrator plans *within* a frame a human sets: specification, non-goals, constraints (Module 8) and sign-off. Without this frame it plans plausibly in the wrong direction, because the design-loop decisions (Module 4) need knowledge of the domain's future.
+The orchestrator plans *within* a frame a human sets: specification, non-goals, constraints (Module 4) and sign-off. Without this frame it plans plausibly in the wrong direction, because the design-loop decisions (Module 14) need knowledge of the domain's future.
 
 ```mermaid
 flowchart TB
@@ -1679,23 +503,23 @@ flowchart TB
 
 *Orchestrator-worker with the human at the top and the harness as the verification stage. Failures go back to the responsible worker, not to the human.*
 
-- **The main benefit is context isolation:** 40,000 tokens of research return as three paragraphs (Module 8).
+- **The main benefit is context isolation:** 40,000 tokens of research return as three paragraphs (Module 4).
 - **The handover is lossy:** the sub-agent does not know what the main agent knows. "Continue from there" fails; write the task completely, as for a new colleague, to the standard of a spec.
-- **Parallelism has follow-on costs:** three agents in three worktrees do not collide on files, but semantic merge conflicts (Module 5) become more frequent; a merge queue becomes necessary.
+- **Parallelism has follow-on costs:** three agents in three worktrees do not collide on files, but semantic merge conflicts (Module 14) become more frequent; a merge queue becomes necessary.
 
-Claude Code defines sub-agents as Markdown files with frontmatter in `.claude/agents/` (project) or `~/.claude/agents/` (user), each with its own tool allowlist, model and system prompt. A "reviewer" sub-agent can get read-only tools and a "security" sub-agent a fresh context without the implementation history, the separation Module 12, section 6 asks for. Domain sub-agents with their own skill sets are the scaling pattern in Module 10.
+Claude Code defines sub-agents as Markdown files with frontmatter in `.claude/agents/` (project) or `~/.claude/agents/` (user), each with its own tool allowlist, model and system prompt. A "reviewer" sub-agent can get read-only tools and a "security" sub-agent a fresh context without the implementation history, the separation Module 11, section 6 asks for. Domain sub-agents with their own skill sets are the scaling pattern in Module 6.
 
 #### 8. Multi-model routing and tokenomics
 
 **The metric is cost per successfully completed task, not cost per token.** A cheap model that needs five iterations and still fails review costs more than an expensive one that delivers in one pass.
 
-- **A large model pays off** for planning, architecture decisions, hard bugs with unclear causes, and code review: few tokens, high cost of error (the left side of the loops in Module 0).
+- **A large model pays off** for planning, architecture decisions, hard bugs with unclear causes, and code review: few tokens, high cost of error (the left side of the loops in Module 14).
 - **A small model suffices** for mechanical implementation against a clear spec, boilerplate, tests from a template, formatting and migrations across many files: many tokens, immediately verifiable.
 - **In the inner loop latency counts more than cost:** a model that takes 40 seconds for a small change breaks the loop like a slow build.
 - **Provisioned throughput** (reserved capacity at a fixed price) fits the steady, high volume of the worker model in the implement-test-debug loop: cost control and stable latency. The planning model is called selectively; per-token billing suffices.
-- **Prefix caching** (Module 8) is the cheapest lever: static content first, variable content last.
+- **Prefix caching** (Module 4) is the cheapest lever: static content first, variable content last.
 
-Which model to route where is an eval question (Module 11), not a leaderboard lookup.
+Which model to route where is an eval question (Module 10), not a leaderboard lookup.
 
 #### 9. The feedback loop on the harness itself
 
@@ -1713,7 +537,7 @@ Design conventions often remain rules. But a rule violated three times needs a c
 
 #### 10. When the harness is too much
 
-A harness costs maintenance, latency in every loop, context and onboarding effort. A prototype, throwaway script or exploratory analysis does not need it. The question from Module 0: **how often does this loop run, and what does a failure cost?** A one-off script whose output you check needs no gate; a service with users needs all five layers.
+A harness costs maintenance, latency in every loop, context and onboarding effort. A prototype, throwaway script or exploratory analysis does not need it. The question from Module 14: **how often does this loop run, and what does a failure cost?** A one-off script whose output you check needs no gate; a service with users needs all five layers.
 
 On-ramp from zero: formatter and linter in the hook → fast test suite with one entry command → `AGENTS.md` with check commands and a deny list → CI with branch protection → the rest as needed. The first three steps deliver most of the effect.
 
@@ -1739,7 +563,7 @@ Agent harness · Open vs. closed control loop · `AGENTS.md` / `CLAUDE.md` / `GE
 
 **E1: Minimal `AGENTS.md`.** At most 40 lines: check commands, structure in three lines, deny list, nothing visible in the code. Count the tokens.
 
-**E2: Rules from observation.** From what you observed in Module 4 (E6, E7) and Module 3 (E7), write three rules, each traced to an observed failure. Could each be a check?
+**E2: Rules from observation.** Write three rules, each traced to a failure you observed an agent make in your project. Could each be a check?
 
 **E3: From rule to check.** Turn one rule into an automatic check (lint plugin, test, Makefile script), remove the rule from `AGENTS.md`, and verify the failure is still caught.
 
@@ -1755,9 +579,9 @@ Agent harness · Open vs. closed control loop · `AGENTS.md` / `CLAUDE.md` / `GE
 
 ---
 
-### Module 10 · Skills at scale: registries, governance and retrieval
+### Module 6 · Skills at scale: registries, governance and retrieval
 
-How an engineering organization keeps agent skills from sprawling, and how an agent finds the right skill among hundreds without flooding its context window. Module 9 built the harness for one repository; this module shares its know-how across teams.
+How an engineering organization keeps agent skills from sprawling, and how an agent finds the right skill among hundreds without flooding its context window. Module 5 built the harness for one repository; this module shares its know-how across teams.
 
 > **"Skills guide, hooks enforce."**
 > A skill changes what the model is *likely* to do. Only hooks, sandboxes and gateways change what it *can* do. Almost every design decision below follows from keeping these two apart.
@@ -1783,7 +607,7 @@ Teams adopt local coding agents (Antigravity, Gemini CLI, Claude Code) and build
 
 1. **Token cost:** every turn pays for every schema, used or not.
 2. **Latency:** a longer prompt means a later first token (TTFT).
-3. **Selection accuracy:** with many similar schemas the model picks the wrong tool or invents parameters (Module 8, section 3).
+3. **Selection accuracy:** with many similar schemas the model picks the wrong tool or invents parameters (Module 4, section 3).
 
 Chaining tools sequentially does not shorten the schemas, and a bigger thinking budget adds thinking tokens on top of a bloated prompt. The fix is changing *what is in the prompt* (sections 3 to 6).
 
@@ -1830,7 +654,7 @@ Because the spec requires `metadata` to be a flat string map (Agent Registry sto
 
 #### 3. The four primitives
 
-Most skill sprawl, and almost every accidental safety incident with agents, starts with something put into `SKILL.md` or the global prompt that belongs in another layer. This maps onto the five harness layers of Module 9: rules are instructions, MCP servers are tools, hooks/sandbox/gateway are boundaries.
+Most skill sprawl, and almost every accidental safety incident with agents, starts with something put into `SKILL.md` or the global prompt that belongs in another layer. This maps onto the five harness layers of Module 5: rules are instructions, MCP servers are tools, hooks/sandbox/gateway are boundaries.
 
 ```mermaid
 flowchart LR
@@ -1863,7 +687,7 @@ flowchart LR
 1. **Rules** load into every session in the repository; reserve them for short, universally valid conventions. Antigravity truncates a single rule file above 24,000 bytes (after `@`-includes are expanded); global and `always_on` rules share a budget of 20,000 tokens, above which the largest files are replaced by pointers. Besides `GEMINI.md` and `AGENTS.md`, Antigravity reads `.agents/rules/*.md` with a `trigger` in the frontmatter: `always_on`, `model_decision` (only path and description up front, the full rule when the task matches), `glob` (when matching files are touched) or `manual` (only when `@`-mentioned). A `model_decision` rule is progressive disclosure for rules, close to a skill. A missing or invalid trigger silently discards the rule.
 2. **Skills** hold task-specific procedures loaded on demand. They steer the model *probabilistically* and are never a hard security boundary.
 3. **MCP servers** give live, authenticated access to databases, Cloud Logging, issue trackers and wikis (Jira, Confluence) or ERP systems. Instead of copying wrapper scripts across skills, register vetted MCP servers centrally in Agent Registry, control access with IAM (`roles/mcp.toolUser` for Google Cloud MCP servers) or Agent Gateway authorization policies (for third-party and custom servers), and default to **read-only modes** for analysis and triage. See [mcp.ipynb](mcp.ipynb) and [gateway.ipynb](gateway.ipynb).
-4. **Hooks, sandbox and gateway** run outside the model, which cannot talk its way around them: block `DELETE` calls or space and table drops in Confluence and databases, screen prompts and responses for secrets and PII (Model Armor), run the linter after every edit (`PostToolUse`). Locally in Antigravity: the OS-level terminal sandbox plus hooks in `.agents/hooks.json` (workspace) or `~/.gemini/config/hooks.json` (global), with the events `SessionStart`, `PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop`; a `PreToolUse` hook blocks a call by printing JSON with `"decision": "deny"` on stdout. Claude Code blocks with exit code 2 instead ([Module 2](#module-2--the-inner-loop-static-analysis--hooks)). Centrally, for all MCP and agent traffic: Agent Gateway with Model Armor.
+4. **Hooks, sandbox and gateway** run outside the model, which cannot talk its way around them: block `DELETE` calls or space and table drops in Confluence and databases, screen prompts and responses for secrets and PII (Model Armor), run the linter after every edit (`PostToolUse`). Locally in Antigravity: the OS-level terminal sandbox plus hooks in `.agents/hooks.json` (workspace) or `~/.gemini/config/hooks.json` (global), with the events `SessionStart`, `PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop`; a `PreToolUse` hook blocks a call by printing JSON with `"decision": "deny"` on stdout. Claude Code blocks with exit code 2 instead ([Module 14](#module-14--software-engineering-essentials-for-agent-work)). Centrally, for all MCP and agent traffic: Agent Gateway with Model Armor.
 
 ##### Semantic governance: protecting tainted sessions
 
@@ -1877,7 +701,7 @@ flowchart LR
     Q -- "no" --> OK["Allowed"]
 ```
 
-The policy intercepts the ADK skill tools (`list_skills`, `load_skill`, `load_skill_resource`, `run_skill_script`) and checks each call against constraints written in natural language. This applies the lethal-trifecta defense from [Module 12](#module-12--reviewing-ai-code-critically-security--verification-debt): cut the outward-acting leg once untrusted content is in the context. An LLM evaluates the policy, and the docs say its verdicts "may not be accurate"; it is a probabilistic layer that adds to hooks and gateways but does not replace them.
+The policy intercepts the ADK skill tools (`list_skills`, `load_skill`, `load_skill_resource`, `run_skill_script`) and checks each call against constraints written in natural language. This applies the lethal-trifecta defense from [Module 11](#module-11--reviewing-ai-code-critically-security--verification-debt): cut the outward-acting leg once untrusted content is in the context. An LLM evaluates the policy, and the docs say its verdicts "may not be accurate"; it is a probabilistic layer that adds to hooks and gateways but does not replace them.
 
 #### 4. Where skills live: two registries
 
@@ -1907,7 +731,7 @@ The organization policy `constraints/gcp.resourceLocations` is enforced when you
 
 #### 5. Governance: the three-stage pipeline
 
-Experimentation stays fast while unreviewed skills cannot spread; each stage adds a gate. This is CI/CD (Module 5) and release engineering (Module 6) applied to skills.
+Experimentation stays fast while unreviewed skills cannot spread; each stage adds a gate. This is CI/CD (Module 14) and release engineering (Module 12) applied to skills.
 
 ```mermaid
 flowchart LR
@@ -1949,7 +773,7 @@ A useful skill goes into the repository through a pull request. Engineering stan
 Tech Leads review via CODEOWNERS: duplicate of an existing skill? Clear boundaries in the description? Safe scripts? CI adds two gates before the merge:
 
 1. **Schema and security lint:** valid frontmatter (`skills-ref validate ./my-skill` checks the spec), size limits, static analysis of `scripts/`.
-2. **Trajectory evaluation:** a short eval set (`trajectory.evalset.json`) checks that the agent calls `load_skill` for the right skill on target prompts, ignores it on neighbouring prompts, and that nothing regressed. In `adk eval` the metric is `tool_trajectory_avg_score`; the Gen AI Evaluation Service has an equivalent tool-use metric. Evaluation methods in general: Module 11.
+2. **Trajectory evaluation:** a short eval set (`trajectory.evalset.json`) checks that the agent calls `load_skill` for the right skill on target prompts, ignores it on neighbouring prompts, and that nothing regressed. In `adk eval` the metric is `tool_trajectory_avg_score`; the Gen AI Evaluation Service has an equivalent tool-use metric. Evaluation methods in general: Module 10.
 
 Run these evals against a model endpoint that satisfies your residency requirement; Gemini 3.x models were served only on `global` (see [a2a.ipynb](a2a.ipynb)), so check the model's location table first (section 6.2).
 
@@ -2068,7 +892,7 @@ flowchart TD
 
 ##### 6.1 Tier A (up to ~30 skills): progressive disclosure
 
-Antigravity and ADK never inject full skill files up front. They disclose in three levels (Module 8, section 4):
+Antigravity and ADK never inject full skill files up front. They disclose in three levels (Module 4, section 4):
 
 ```mermaid
 flowchart LR
@@ -2090,7 +914,7 @@ flowchart LR
 
 From about 50 tools, or with hundreds of skills across the organization, even the Level 1 list no longer belongs in the system prompt. The pattern is **RAG for skills and tools**: before the reasoning loop, match the request against an index, take the top 3 to 5 skills or tools, and bind only those for the turn. Token use and latency stay small and predictable, and all capabilities remain reachable.
 
-**ADK with Agent Registry (works in `europe-west3`).** `SkillToolset` plus `GCPSkillRegistry` puts **no** registry skill into the base prompt, so the prompt prefix stays stable and the prefix cache keeps working (Module 8, section 2). The agent calls `search_skills` (backed by Agent Registry's `skills:search`), loads only what it needs, and old skills are evicted:
+**ADK with Agent Registry (works in `europe-west3`).** `SkillToolset` plus `GCPSkillRegistry` puts **no** registry skill into the base prompt, so the prompt prefix stays stable and the prefix cache keeps working (Module 4, section 2). The agent calls `search_skills` (backed by Agent Registry's `skills:search`), loads only what it needs, and old skills are evicted:
 
 ```mermaid
 sequenceDiagram
@@ -2198,7 +1022,7 @@ flowchart TD
 ```
 
 - **Small search space:** each subagent searches only its own 5–15 skills, so selection is precise.
-- **Context isolation:** long logs, tool traces and loaded `SKILL.md` bodies stay in the subagent's disposable context; the coordinator gets a short structured summary (Module 9, section 7).
+- **Context isolation:** long logs, tool traces and loaded `SKILL.md` bodies stay in the subagent's disposable context; the coordinator gets a short structured summary (Module 5, section 7).
 - **Least privilege per agent:** each subagent runs under its own identity (SPIFFE-based Agent Identity, see [identity.ipynb](identity.ipynb) and [pca.md, section 4.17](pca.md#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager)) with IAM grants only for its domain's skills and MCP servers.
 
 In ADK, subagents are `LlmAgent`s with `include_contents="none"`, wired via `sub_agents=[...]` or wrapped in `AgentTool`. In Antigravity, subagents start without the parent's conversation history and run asynchronously in the background; the parent chooses the workspace when it calls `invoke_subagent`: `inherit` (the parent's workspace), `branch` (an isolated Git worktree, for concurrent code edits) or `share` (shared directory storage).
@@ -2230,7 +1054,7 @@ Skill sprawl · Agent Skills specification · `SKILL.md` · Frontmatter · Trigg
 
 **E4: Lifecycle in a sandbox project.** In a throwaway project: create a skill, upload two revisions, pin the first and set it `ACTIVE`, pin the second, roll back to the first, then deprecate. Do not decommission anything you still need; it is irreversible.
 
-**E5: A hook that says no.** Write an Antigravity `PreToolUse` hook that denies `rm -rf` and any `DELETE` request to an API, test it, and compare with the Claude Code variant from [Module 2](#module-2--the-inner-loop-static-analysis--hooks).
+**E5: A hook that says no.** Write an Antigravity `PreToolUse` hook that denies `rm -rf` and any `DELETE` request to an API, test it, and compare with the Claude Code variant from [Module 14](#module-14--software-engineering-essentials-for-agent-work).
 
 #### 10. Checkpoint
 
@@ -2282,15 +1106,238 @@ Skill sprawl · Agent Skills specification · `SKILL.md` · Frontmatter · Trigg
 
 **In this repo:** [mcp.ipynb](mcp.ipynb) (MCP server, Agent Registry) · [identity.ipynb](identity.ipynb) (Agent Identity) · [gateway.ipynb](gateway.ipynb) (Agent Gateway, Model Armor) · [a2a.ipynb](a2a.ipynb) (A2A, Agent Card)
 
+[↑ Back to top](#machine-learning-agents-und-generative-ki)
+
 ---
 
-### Module 11 · Evaluating models and agents
+## Part 4 · Building agents in code
 
-Module 3 made "done" machine-checkable for deterministic code. Model output and agent trajectories vary from run to run, so tests become **evals**: the same idea (an executable specification, deterministic where possible) plus statistics. This module covers reading public leaderboards and building your own evaluation.
+### Module 7 · Choosing and serving models
+
+Model choice is an architecture decision per subtask, not one choice per system. Four questions decide it: how hard is the subtask, how often does it run, where may the data go, and how predictable is the load.
+
+#### 1. Tier models by subtask
+
+A typical agent system mixes cheap high-frequency steps (intent classification, JSON extraction, routing, safety checks) with rare hard steps (multi-step planning, tool orchestration, analysis).
+
+| Subtask | Model tier | Why |
+|---|---|---|
+| classify, extract, format, route | small and fast (Flash-Lite class, or a small open model) | runs on every turn; latency and cost per call dominate |
+| plan, orchestrate tools, reason over long context | large (Pro class) | few calls, high cost of an error |
+
+One frontier model for everything pays the highest price and latency on the simplest steps. One small model for everything fails on the hard steps. A router or a fixed assignment per sub-agent sends each subtask to its tier; the hard cases escalate to the large model.
+
+Raising the **thinking level** of a small model does not turn it into a large one: it adds thinking tokens, so latency and cost rise.
+
+The metric is cost per successfully completed task, not cost per token (Module 5, section 8); which model is good enough for a subtask is an eval question (Module 10).
+
+#### 2. Small models: tune or distill
+
+A small language model (SLM) with a few billion parameters is fast and cheap but weaker out of the box. Two ways to close the gap on a narrow task:
+
+- **Fine-tuning:** train the small model on labeled examples of the task. Parameter-efficient tuning (adapters such as LoRA) trains a small set of extra weights instead of the whole model. For Gemini, the platform documents supervised fine-tuning, preference tuning and reinforcement-learning fine-tuning.
+- **Distillation:** a large *teacher* model labels many inputs (for example your production logs), and a small *student* model is trained on those outputs. The student approaches the teacher's quality on that task at the student's serving cost.
+
+LoRA on the large model keeps accuracy but also keeps the large model's serving cost and latency. To make serving cheaper, the served model must get smaller.
+
+#### 3. Managed API or self-hosted
+
+| | Managed API (Gemini, partner models as a service) | Self-hosted open model (e.g. Gemma) |
+|---|---|---|
+| Cost structure | per token, nothing when idle | per GPU hour, whether used or not |
+| Fits | bursty or unpredictable load, frontier capability, multimodal, long context | steady high volume around the clock, small models |
+| Data path | request leaves your network to the provider's endpoint (within Google Cloud for Gemini) | stays in your VPC |
+| Operations | none | model server, GPUs, scaling, upgrades |
+
+- **Steady 24/7 volume on a simple task:** a self-hosted small model has a fixed cost that per-token billing would exceed.
+- **Intermittent, complex workload:** a managed API costs nothing between bursts and offers capability a small open model lacks. Dedicated GPUs would sit idle.
+- **Strict data perimeter:** keep the high-volume sensitive steps on a model inside the perimeter (private endpoint or GKE, VPC Service Controls) and send only the steps that need it to a managed model. A zero-data-retention agreement with an external API does not change the fact that data crosses the boundary.
+- **Shared model-as-a-service endpoints** are multi-tenant: under peak load requests can queue. A dedicated endpoint isolates the traffic; client-side retries only add latency.
+- **Hosting options for Gemma** in the docs: the Agent Platform (Model Garden deployment to an endpoint), GKE with vLLM, TGI, Triton with TensorRT-LLM or JetStream, and Dataflow for pipelines. A function-as-a-service runtime without GPUs is not a model server: cold starts and timeouts follow.
+
+#### 4. Capacity: Provisioned Throughput and pay-as-you-go
+
+**Provisioned Throughput (PT)** reserves model capacity for a fixed fee. **Pay-as-you-go (PayGo)** bills per token on shared capacity without assured throughput; a 429 there signals temporary contention.
+
+By default a request that exceeds the remaining PT quota is processed as PayGo ("spillover"). Two request headers control this:
+
+| Header | Value | Effect |
+|---|---|---|
+| `X-Vertex-AI-LLM-Request-Type` | `dedicated` | PT only; requests above the order fail with 429 |
+| | `shared` | bypass PT, go straight to PayGo |
+| | (absent) | PT first, spillover to Standard PayGo |
+| `X-Vertex-AI-LLM-Shared-Request-Type` | `priority` | PayGo traffic uses **Priority PayGo**: more consistent performance than Standard PayGo, at a higher per-token rate |
+
+Typical setup with one latency-sensitive agent and one batch agent on the same model:
+
+- The interactive agent keeps the default PT-first behavior and adds the `priority` header, so overflow goes to Priority PayGo instead of Standard PayGo.
+- The batch agent sends `X-Vertex-AI-LLM-Request-Type: shared` without the priority header, so it never consumes the reserved capacity and pays the standard rate.
+- `dedicated` on a customer-facing agent turns every overflow into an error.
+
+Priority PayGo has org-level token-per-minute limits; above them traffic is served at priority when capacity exists and otherwise as Standard PayGo. The response field `trafficType` shows what was used (`ON_DEMAND_PRIORITY`, `ON_DEMAND`).
+
+#### 5. Check before relying on it
+
+- Distillation for open models as a managed tuning method: the concept is standard, the documentation page for it was not found.
+- The price premium of Priority PayGo and the exact 429 message.
+- Which Gemini models are served in a given region (Module 6, section 6.2).
+
+References: [Use Provisioned Throughput](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput/use-provisioned-throughput) · [Priority PayGo](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/priority-paygo) · [Standard PayGo](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/standard-paygo) · [Tune models](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/tune-models) · [Use Gemma open models](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/open-models/use-gemma) · [models.ipynb](models.ipynb) (Gemini, open and partner models, latency benchmark)
+
+---
+
+### Module 8 · Agents in code with ADK: workflows, callbacks, sessions, memory
+
+The Agent Development Kit (ADK) is Google's open-source framework for agents in code. Names below were checked against google-adk 2.13.0. A deployed example is in [agents.ipynb](agents.ipynb).
+
+#### 1. Agent types
+
+| Class | Control flow |
+|---|---|
+| `LlmAgent` (alias `Agent`) | a model decides: which tool, which sub-agent, when to answer |
+| `SequentialAgent` | runs its sub-agents once, in order |
+| `ParallelAgent` | runs its sub-agents concurrently |
+| `LoopAgent` | repeats its sub-agents until one escalates or `max_iterations` is reached |
+
+Agents pass data through **session state**: `output_key="draft"` stores an agent's answer under `state["draft"]`, and another agent's instruction reads it as `{draft}`.
+
+Two ways to use another agent:
+
+- `sub_agents=[…]`: the parent hands the conversation over (delegation).
+- `AgentTool(agent=…)`: the parent calls the agent like a function and gets the result back.
+
+#### 2. Generator, critic, refiner
+
+A draft is reviewed against rules and revised until the critic approves or a limit stops the loop:
+
+```python
+from google.adk.agents import LlmAgent, LoopAgent, SequentialAgent
+from google.adk.tools import exit_loop
+
+generator = LlmAgent(name="generator", model="gemini-3.5-flash",
+                     instruction="Modernize the code in the request.", output_key="draft")
+
+critic = LlmAgent(name="critic", model="gemini-3.5-flash",
+                  instruction="Check {draft} against the security rules. "
+                              "If it passes, call exit_loop. Otherwise list the violations.",
+                  tools=[exit_loop], output_key="review")
+
+refiner = LlmAgent(name="refiner", model="gemini-3.5-flash",
+                   instruction="Revise {draft} to fix: {review}", output_key="draft")
+
+review_loop = LoopAgent(name="review_loop", sub_agents=[critic, refiner], max_iterations=5)
+pipeline = SequentialAgent(name="refactor", sub_agents=[generator, review_loop])
+```
+
+- `exit_loop` is a built-in tool; calling it ends the loop. `max_iterations` bounds the loop when the critic never approves.
+- A `SequentialAgent` runs once and cannot repeat. A `ParallelAgent` cannot express "refine depends on the review". Retry options on the model handle transient API errors, not workflow iterations.
+- ADK 2.13 marks `SequentialAgent` and `LoopAgent` as deprecated in favor of `Workflow` (a graph of nodes); they still work, and a `Workflow` cannot yet be a sub-agent of an `LlmAgent`.
+
+#### 3. Callbacks
+
+Callbacks are functions that run at fixed points and can observe or replace a step:
+
+| Callback | Runs | Typical use |
+|---|---|---|
+| `before_agent_callback` / `after_agent_callback` | around an agent's turn | setup, skip an agent, logging |
+| `before_model_callback` / `after_model_callback` | around each model call | input guardrail, cached answer, forcing mandatory output |
+| `before_tool_callback` / `after_tool_callback` | around each tool call | argument validation, authorization, result filtering |
+| `on_model_error_callback` / `on_tool_error_callback` | on failure | fallback |
+
+A callback that returns a value replaces the step; returning `None` lets it proceed. Callbacks are deterministic, so they are the place for rules that must always hold. They run on every call: heavy logic in `before_model_callback` adds latency to every turn.
+
+#### 4. Sessions, state and memory
+
+| | Scope | ADK service |
+|---|---|---|
+| **Session** | one conversation: its events and temporary `state` (short-term memory) | `InMemorySessionService`, `DatabaseSessionService`, `VertexAiSessionService` |
+| **Memory** | knowledge that persists across sessions (long-term) | `InMemoryMemoryService`, `VertexAiMemoryBankService`, `VertexAiRagMemoryService` |
+
+The agent reads memory through tools: `load_memory` retrieves when the model decides to, `preload_memory` retrieves on every turn.
+
+**Memory Bank** (Agent Platform) extracts facts from conversations, consolidates them with existing memories (add, update, delete) and retrieves them by similarity search. Each memory belongs to a scope such as `{"user_id": "123"}`.
+
+Memories are generated in two ways:
+
+- **Explicit:** `GenerateMemories` runs immediately, typically at the end of a session.
+- **Automatic:** `IngestEvents` buffers events and generates when a trigger in `generation_trigger_config` fires.
+
+| Field of the generation rule | Trigger |
+|---|---|
+| `event_count` | after this many buffered events |
+| `idle_duration` | after this much inactivity (e.g. `"300s"`) |
+| `fixed_interval` | on a fixed schedule |
+| `overlap_event_count` | not a trigger: carries the last N processed events into the next window for continuity |
+
+Constraints: `idle_duration` and `fixed_interval` are mutually exclusive and each a multiple of 60 seconds; `event_count` can be combined with one of them, and the first condition met fires; `overlap_event_count` must be smaller than `event_count`. Pending events flush automatically 24 hours after the last event.
+
+Generating on every turn (`event_count` of 1) costs tokens on every turn and stores facts before the conversation has settled. The usual configuration combines `idle_duration` (generate when the conversation pauses) with a larger `event_count` (generate anyway when many events have accumulated).
+
+#### 5. Many tools
+
+Binding dozens of tool schemas to one agent raises token cost and latency and lowers selection accuracy. The fix is retrieval: match the request against an index of tool descriptions, bind only the top few for the turn (Module 6, section 6.2), or split the tools across domain sub-agents (Module 6, section 6.3).
+
+References: [ADK agents](https://adk.dev/agents/) · [ADK memory](https://adk.dev/sessions/memory/) · [Memory Bank](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank) · [Generate memories](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/generate-memories)
+
+---
+
+### Module 9 · Protocols and identity: MCP, A2A, Agent Identity
+
+Two open protocols connect agents to the outside: MCP connects an agent to tools and data, A2A connects an agent to another agent. MCP means "use a tool" (run this query); A2A means "delegate a task" (find out how healthy this repository is), and the other agent decides how.
+
+#### 1. MCP
+
+The Model Context Protocol is a client-server protocol. The application that runs the model (the host) opens one client connection per MCP server; servers never talk to each other or to the model directly, so every exchange passes through the host, where it can be approved, logged and limited.
+
+| Side | Feature | Purpose |
+|---|---|---|
+| Server | **tools** | functions the model can call |
+| Server | **resources** | data the application can read |
+| Server | **prompts** | reusable prompt templates |
+| Client | **elicitation** (`elicitation/create`) | the server asks the user for input through the client |
+| Client | **sampling** (`sampling/createMessage`) | the server asks the client for a model completion; the client chooses the model and a human should be able to deny the request |
+| Client | **roots** (`roots/list`) | the client tells the server which directories or files are relevant |
+
+- **Transports:** `stdio` for a local server started as a subprocess of the client, and Streamable HTTP for remote servers. `stdio` cannot reach a remote server.
+- **Sampling** keeps model access with the host: a server that needs a completion (for example to draft a SQL query) does not get its own model credentials.
+- **Roots are guidance, not access control.** A server is expected to stay inside them, but enforcement needs a sandbox or file permissions.
+- The specification revision of 2026-07-28 marks sampling and roots as deprecated; elicitation remains. Check the current revision before designing on them.
+
+In practice: register vetted servers centrally, prefer read-only modes, filter tools (`tool_filter`), and treat server output as untrusted content (Module 11). A server on Cloud Run with OIDC and the Agent Registry is built in [mcp.ipynb](mcp.ipynb).
+
+#### 2. A2A
+
+The Agent2Agent protocol lets agents on different frameworks and runtimes work together. An agent publishes an **Agent Card** (`/.well-known/agent-card.json`) with its skills and endpoint; a client agent resolves the card and sends a task as a JSON-RPC message. In ADK the client side is `RemoteA2aAgent`.
+
+Authentication is not part of the protocol; it depends on where the target runs (access token for Agent Runtime, ID token for private Cloud Run). A worked example with two engines is in [a2a.ipynb](a2a.ipynb), the credential rules in [pca.md, section 4.17](pca.md#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager).
+
+#### 3. Agent Identity and least privilege
+
+In a multi-agent system each agent should act under its own identity, so that permissions are minimal and every action is attributable.
+
+- A shared service account gives all agents the same rights and one audit trail.
+- **Agent Identity** gives each agent on Agent Runtime its own SPIFFE-based principal (`principal://agents.global.org-…`). IAM roles are granted to that principal, the Agent Registry shows which agent runs as whom, and logs name the agent.
+- API keys in the agent's environment or credentials kept in session state are not identity: they are shared secrets that anyone holding them can use.
+- External credentials (API keys, OAuth client secrets) belong in the Auth Manager, which releases them to an agent identity at call time.
+- **Agent Gateway** adds a control point in the data path: which agent may call which target, with Model Armor screening.
+
+Worked through in [identity.ipynb](identity.ipynb) and [gateway.ipynb](gateway.ipynb); details in [pca.md, sections 4.16 and 4.17](pca.md#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
+
+References: [MCP specification](https://modelcontextprotocol.io/specification/latest) · [sampling](https://modelcontextprotocol.io/specification/latest/client/sampling) · [roots](https://modelcontextprotocol.io/specification/latest/client/roots) · [transports](https://modelcontextprotocol.io/specification/latest/basic/transports)
+
+[↑ Back to top](#machine-learning-agents-und-generative-ki)
+
+---
+
+## Part 5 · Evaluate, secure, operate
+
+### Module 10 · Evaluating models and agents
+
+Module 14 made "done" machine-checkable for deterministic code. Model output and agent trajectories vary from run to run, so tests become **evals**: the same idea (an executable specification, deterministic where possible) plus statistics. This module covers reading public leaderboards and building your own evaluation.
 
 #### 1. Agent = model + harness
 
-The **model** is the trained network: it predicts tokens and reasons. The **harness** (Module 9) is everything that steers the model and connects it to the outside world.
+The **model** is the trained network: it predicts tokens and reasons. The **harness** (Module 5) is everything that steers the model and connects it to the outside world.
 
 ```
 Agent  =  Model                           +  Harness
@@ -2330,7 +1377,7 @@ Example with p = 0.75 and k = 3:
 
 pass@k matters for research and best-of-n; pass^k for agents in production.
 
-**3. What does it cost?** Compare cost, latency and step count only over **successful** runs (cost per solved task, as in Module 9). Otherwise an agent that gives up after one second looks cheap and fast. A higher thinking level does not always pay off; the cost-performance plot (Pareto front) shows where it does.
+**3. What does it cost?** Compare cost, latency and step count only over **successful** runs (cost per solved task, as in Module 5). Otherwise an agent that gives up after one second looks cheap and fast. A higher thinking level does not always pay off; the cost-performance plot (Pareto front) shows where it does.
 
 **4. Is the difference larger than the noise?** The standard error of a success rate p over n tasks is `√(p·(1−p)/n)`; the 95% interval spans about ±1.96 standard errors (pp = percentage points):
 
@@ -2350,7 +1397,7 @@ Leaderboards say how good a model is in general. Whether it fits your case only 
 
 ##### 4.1 Grading in three stages
 
-1. **Deterministic first.** Check the result, not the path, wherever possible: do the unit tests pass, is the JSON or SQL valid, is the right record in the database, was no forbidden endpoint called? Such checks are free, fast, reproducible, and do not punish an agent for finding a smarter path than expected. This is Module 3 applied to agents.
+1. **Deterministic first.** Check the result, not the path, wherever possible: do the unit tests pass, is the JSON or SQL valid, is the right record in the database, was no forbidden endpoint called? Such checks are free, fast, reproducible, and do not punish an agent for finding a smarter path than expected. This is Module 14 applied to agents.
 2. **Tool trajectory.** For runs with mandatory steps, check the sequence of tool calls. In ADK, `tool_trajectory_avg_score` has three modes:
    - `EXACT` (default): exactly these calls in exactly this order, nothing extra. Fits mandatory protocols such as preview → human approval → delete.
    - `IN_ORDER`: the expected calls in this order, others allowed in between (e.g. extra search and read). The best default for real workflows.
@@ -2366,7 +1413,7 @@ Example: an agent is correct in 95% of cases. A lazy judge that always says PASS
 - **TNR** (specificity) = TN / (TN + FP): what share of the faulty runs does it mark FAIL? The most important number for safety and regression tests.
 - **Cohen's κ** = (pₒ − pₑ) / (1 − pₑ): agreement with the human, corrected for chance (pₒ = observed, pₑ = chance-expected agreement). In the example pₒ = 0.95 and pₑ = 0.95·1 + 0.05·0 = 0.95, so κ = 0: the 95% accuracy is worthless. Rule of thumb: usable from κ ≈ 0.6, good from 0.8.
 
-Every judge prompt needs three outcomes: `PASS if …`, `FAIL if …` and `INSUFFICIENT` when the evidence for a verdict is missing. A judge from the same model family grading its own output repeats the circular reasoning of Module 3, section 9; calibration against humans is what breaks it.
+Every judge prompt needs three outcomes: `PASS if …`, `FAIL if …` and `INSUFFICIENT` when the evidence for a verdict is missing. A judge from the same model family grading its own output repeats the circular reasoning of Module 14; calibration against humans is what breaks it.
 
 ##### 4.3 Applied to models.ipynb
 
@@ -2383,16 +1430,37 @@ In [models.ipynb](models.ipynb) the cells "Model Benchmark" (speed and LLM-as-a-
 
 Docs: [Gen AI Evaluation Service](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview), [ADK Evaluation](https://adk.dev/evaluate/) and [ADK criteria](https://adk.dev/evaluate/criteria/).
 
+##### 4.4 Evaluating retrieval (RAG)
+
+A grounded agent (Module 3) can fail in two places, and they need separate metrics. The test set is a **golden dataset**: questions with the reference documents and reference answers.
+
+| Stage | Metric | Question |
+|---|---|---|
+| Retrieval | **context precision** | what share of the retrieved passages is relevant? |
+| Retrieval | **context recall** | what share of the relevant passages was retrieved? |
+| Generation | **faithfulness / groundedness** | is every claim in the answer supported by the retrieved context? |
+| Generation | **answer relevance** | does the answer address the question? |
+
+Low recall means the answer cannot be right however good the model is; low faithfulness with good retrieval means the model answered from its weights. Lexical overlap (BLEU, ROUGE) and raw embedding similarity between answer and reference measure neither: a fluent, similar-sounding answer can be unsupported.
+
+What the tools offer by name:
+
+- **ADK:** `hallucinations_v1` (LLM-judged groundedness of the answer against the context), `final_response_match_v2` (LLM-judged semantic match with the reference answer), `response_match_score` (ROUGE-1) and the trajectory and rubric criteria; no built-in metric is called context precision, context recall or faithfulness.
+- **Gen AI Evaluation Service:** the rubric `GROUNDING`, plus agent metrics such as `hallucination`, `final_response_quality` and `tool_use_quality`.
+- **CX Agent Studio:** a hallucinations metric on turns with tool calls (Module 2, section 3).
+
+Retrieval precision and recall are computed from the retrieved document IDs against the golden dataset, a deterministic check in the sense of 4.1.
+
 #### 5. Evals across the lifecycle
 
 | Where | What the eval does | Module |
 | --- | --- | --- |
-| Inner loop | a small, fast eval set run by the agent or developer after a prompt, tool or skill change | 2, 3 |
-| CI gate | the eval suite as a required check for changes to prompts, tool schemas, skills and model IDs; a regression blocks the merge | 5 |
-| Release | a new model version or skill revision rolls out like code: shadow traffic or canary, compared with the baseline on the same eval set, old version kept for rollback | 6 |
-| Production | online evaluation on sampled traffic, eval scores as SLIs with distributions instead of yes/no | 7 |
-| Harness work | level-3 ablations: change one harness part, keep the model fixed, measure | 9 |
-| Skills | trajectory evals check that the right skill loads on target prompts and none on neighbouring prompts | 10 |
+| Inner loop | a small, fast eval set run by the agent or developer after a prompt, tool or skill change | 14 |
+| CI gate | the eval suite as a required check for changes to prompts, tool schemas, skills and model IDs; a regression blocks the merge | 14 |
+| Release | a new model version or skill revision rolls out like code: shadow traffic or canary, compared with the baseline on the same eval set, old version kept for rollback | 12 |
+| Production | online evaluation on sampled traffic, eval scores as SLIs with distributions instead of yes/no | 12 |
+| Harness work | level-3 ablations: change one harness part, keep the model fixed, measure | 5 |
+| Skills | trajectory evals check that the right skill loads on target prompts and none on neighbouring prompts | 6 |
 | Team | eval results next to DORA and rework rate when judging whether AI helps | 13 |
 
 #### 6. Map of the comparison sites
@@ -2524,7 +1592,7 @@ Timings are estimates.
 | 3. Scheduled agent | a scheduled AI agent (e.g. a Claude Code routine or an ADK agent as a Cloud Run job) reads the primary pages with a browser, compares with the snapshot and proposes changes and new benchmarks as a pull request | about a day | covers dynamic pages and new benchmarks | can confuse or invent numbers, hence rules: every number with source and date, unconfirmed values marked, merge only after review |
 | 4. Automatic own evaluation | detect a new model in Model Garden (query the model list via API), run the evaluation from models.ipynb as a job, results in BigQuery, comparison with the previous month | several days | answers the real question: does it fit my case? | cost per run, maintenance |
 
-For stage 3: fetched web pages are data, not instructions (prompt injection, Module 12). The agent gets read-only web access and may only create a branch with a pull request, never write to `main` directly.
+For stage 3: fetched web pages are data, not instructions (prompt injection, Module 11). The agent gets read-only web access and may only create a branch with a pull request, never write to `main` directly.
 
 **Recommendation (own assessment):** start with stage 1 and checklist 9.1. If that becomes tedious, stage 2 for the machine-readable sources; stage 3 only with review before every merge. Stage 4 pays off once there is a fixed set of your own tasks.
 
@@ -2581,7 +1649,7 @@ Secondary sources, only for the marked values in section 8:
 
 ---
 
-### Module 12 · Reviewing AI code critically: security & verification debt
+### Module 11 · Reviewing AI code critically: security & verification debt
 
 A control loop reacts only to signals it measures. This module covers the defects that **produce no red signal**, which is why it follows the harness.
 
@@ -2634,16 +1702,16 @@ These **negative tests** turn an absence into a presence the harness can check. 
 - **Cryptography:** outdated password hashes, home-built encryption, insecure modes; models reproduce ten-year-old tutorials.
 - **Server-side request forgery (SSRF):** fetching a user-supplied URL without restricting the target.
 
-All are absences, which is why SAST (Module 5) belongs in the pipeline as a binding step: it checks patterns no functional test covers.
+All are absences, which is why SAST (Module 14) belongs in the pipeline as a binding step: it checks patterns no functional test covers.
 
 ##### c) Supply chain
 
-- **Hallucinated package names (slopsquatting):** models invent packages reproducibly, so attackers can register the names with malicious code (Module 2).
+- **Hallucinated package names (slopsquatting):** models invent packages reproducibly, so attackers can register the names with malicious code (Module 14).
 - **Typosquatting:** swapped letters.
 - **Transitive dependencies:** one vetted package pulls twelve, which pull forty; the attack surface is the whole tree.
 - **Install scripts** that run at installation time.
 
-**A new dependency is a decision, not an implementation detail.** Put it on the deny list (Module 9) and behind human approval via CODEOWNERS on `pyproject.toml` and `package.json`, plus lock files, dependency review as a PR gate, and an SBOM (Module 5). The same applies to skills and MCP servers from outside your organization: they are code and instructions that run with the agent's rights (Module 10).
+**A new dependency is a decision, not an implementation detail.** Put it on the deny list (Module 5) and behind human approval via CODEOWNERS on `pyproject.toml` and `package.json`, plus lock files, dependency review as a PR gate, and an SBOM (Module 14). The same applies to skills and MCP servers from outside your organization: they are code and instructions that run with the agent's rights (Module 6).
 
 ##### d) Prompt injection in agentic workflows
 
@@ -2663,14 +1731,14 @@ A CI workflow that starts an agent on an externally created issue, gives it repo
 
 - **Separate the factors:** an agent that processes untrusted content gets no write rights; an agent with write rights reads only curated inputs.
 - **Human confirmation at points with outward effect:** push, network access, irreversible operations.
-- **Minimal permissions** (Module 5) and sandboxing (Module 9).
+- **Minimal permissions** (Module 14) and sandboxing (Module 5).
 - **MCP servers are a trust decision:** their output lands unfiltered in the context.
 
 The OWASP *Top 10 for LLM Applications* (2025) lists prompt injection as LLM01, with "excessive agency" and "supply chain" covering the rest of this module; it is the reference for "is this a recognized risk class?". Acting outward does not require pushing code: rendering a Markdown image whose URL contains a secret, or fetching an attacker-controlled URL, already exfiltrates. Any tool that can make an outbound request counts.
 
 ##### e) Verification debt
 
-**Verification debt** is the growing gap between code produced and code actually verified. Producing code has become much cheaper; verifying it has not (Module 0). Like the security gaps it **produces no signal**: a PR waved through with "LGTM" looks the same in every statistic as one examined carefully.
+**Verification debt** is the growing gap between code produced and code actually verified. Producing code has become much cheaper; verifying it has not (Module 14). Like the security gaps it **produces no signal**: a PR waved through with "LGTM" looks the same in every statistic as one examined carefully.
 
 Symptoms:
 
@@ -2679,14 +1747,14 @@ Symptoms:
 - Approvals without a single comment accumulate
 - Production defects rise while test coverage stays constant
 
-If the tests are generated too, verification checks itself (Module 3), and the numbers keep looking good.
+If the tests are generated too, verification checks itself (Module 14), and the numbers keep looking good.
 
 Countermeasures (all slow the pace, which is why they are often skipped):
 
 - **Cap PR size**, hard; the most effective single measure.
 - **Plan review capacity as the bottleneck**, not as an unbounded resource.
 - **Mutation testing** periodically.
-- **Separate test writer and implementer** (Module 3, section 9).
+- **Separate test writer and implementer** (Module 14).
 
 > A team's throughput is bounded by its **verification capacity**, not by its generation capacity. Ignoring this does not increase speed; it moves defects into production.
 
@@ -2694,18 +1762,34 @@ Countermeasures (all slow the pace, which is why they are often skipped):
 
 Training corpora contain code under various licenses; larger adopted blocks, especially very specific algorithms, carry a residual risk. The legal situation is in flux. Operationally: a license scanner in the pipeline, a documented policy, and the legal department when in doubt. Not a formality for regulated or product-adjacent code.
 
+##### g) Runtime guardrails: prompt, safety filters, Model Armor
+
+Three layers are often confused. They protect against different things:
+
+| Layer | Protects against | Limits |
+|---|---|---|
+| System instructions, role boundaries, few-shot refusals | ordinary off-topic or out-of-policy requests | soft: they sit in the same context as the user's text and can be overridden by a determined prompt; they cannot keep the prompt itself secret |
+| Model safety filters | harmful content in four categories: hate speech, harassment, sexually explicit, dangerous content (thresholds from `BLOCK_LOW_AND_ABOVE` to `OFF`; console: block few, some, most) | no business rules and no prompt injection: a polite request for a discount the agent may not grant passes every threshold |
+| **Model Armor** | prompt injection and jailbreaks, sensitive data (via Sensitive Data Protection), malicious URLs, the responsible-AI categories; screens prompts and responses separately, outside the model, for models on Google Cloud or elsewhere | documented limits: single-turn only, no audio or video, no decoding of Base64, hex or URL-encoded content |
+
+Model Armor is configured with **templates** (a set of filters with confidence thresholds; separate templates for input and output are recommended) and **floor settings** (an organization-level minimum that every project template must meet). It can inspect only (log) or inspect and block. In the data path it sits in Agent Gateway ([gateway.ipynb](gateway.ipynb)).
+
+None of the three enforces a workflow: a mandatory order of steps belongs in a taskflow, a tool or a state machine (Module 2), and what an agent may do at all belongs in permissions (Module 5, section 6).
+
+References: [Model Armor overview](https://docs.cloud.google.com/model-armor/overview) · [Safety filters](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/multimodal/configure-safety-filters)
+
 #### 5. The review procedure for AI code
 
-1. **Test diff first.** Were existing tests changed, weakened or skipped? (Module 3)
+1. **Test diff first.** Were existing tests changed, weakened or skipped? (Module 14)
 2. **Search for absences.** Authorization check, rate limiting, negative tests, input validation?
-3. **Read the diff, not the files** (Module 1): the diff shows the silently removed error handling.
+3. **Read the diff, not the files** (Module 14): the diff shows the silently removed error handling.
 4. **Vet new dependencies.** Does the package exist, is it maintained, do we need it?
-5. **Check the business logic against the spec** (Module 8): does it do the right thing?
-6. **Review migrations and configuration separately:** harmless-looking, largest consequences (Module 6).
+5. **Check the business logic against the spec** (Module 4): does it do the right thing?
+6. **Review migrations and configuration separately:** harmless-looking, largest consequences (Module 12).
 
 #### 6. AI as a defender
 
-Models recognize known security patterns well *when asked specifically*. Use a **separate review pass with an explicit security role**, in its own session without the implementation context: *Check this diff for missing authorization, missing input validation, missing rate limiting, and insecure defaults. List what is missing, not what is there.* The missing implementation context partly breaks the circular reasoning. In Claude Code this is a sub-agent with read-only tools (Module 9).
+Models recognize known security patterns well *when asked specifically*. Use a **separate review pass with an explicit security role**, in its own session without the implementation context: *Check this diff for missing authorization, missing input validation, missing rate limiting, and insecure defaults. List what is missing, not what is there.* The missing implementation context partly breaks the circular reasoning. In Claude Code this is a sub-agent with read-only tools (Module 5).
 
 The limit: it finds known patterns, not domain rules such as "a case worker of the North region must not see cases of the South region", which exist only in heads and specs.
 
@@ -2720,7 +1804,7 @@ The limit: it finds known patterns, not domain rules such as "a case worker of t
 - Leaving PR size uncapped because agents deliver fast
 - Counting generated tests as evidence of verified code
 - Security review in the same context as the implementation
-- "Fixing" a leaked secret by deletion instead of rotation (Module 1)
+- "Fixing" a leaked secret by deletion instead of rotation (Module 14)
 
 #### 8. Glossary
 
@@ -2746,9 +1830,55 @@ Absence defect · Automation bias · OWASP Top 10 · Authentication vs. authoriz
 
 ---
 
+### Module 12 · Deploying, scaling and operating agents
+
+#### 1. Deployment is not release
+
+**Deployment** means the new version runs on the infrastructure; **release** means users get its behavior. Keeping the two apart makes a rollout reversible in seconds. For agents, "version" covers more than code: the model ID, the system instructions, tool schemas and skill revisions all change behavior.
+
+- **Pin everything:** a fixed model version instead of an alias, a pinned skill revision (Module 6, section 5), container images tagged with the commit SHA. Build once and move the same artifact through all environments; configuration comes from outside.
+- **Canary:** send a small share of traffic to the new version and compare it with the old one **in the same time window**, not against absolute thresholds. Watch error rate, latency as percentiles (p50, p95, p99; a mean hides the slow 1%), saturation, and for agents the eval scores on sampled traffic (Module 10, section 5). Size the observation window by event count, not minutes. Roll back automatically when a metric deviates.
+- **Shadow traffic:** the new model or prompt runs alongside on real requests, its output is compared but never delivered. The safest way to test a model upgrade.
+- **Feature flags** switch behavior without a deployment; each flag needs an owner and an expiry date.
+- **Rollback is a capability:** practice it. A skill or prompt rollback is a pointer move; a database migration needs expand–migrate–contract (add the new column, write both, backfill, switch reads, remove the old one) so that the previous version keeps working.
+- **Health checks:** liveness ("is the process alive?" → restart) and readiness ("can it take requests?" → remove from the load balancer) are different questions. A liveness check that probes a dependency restarts every instance when that dependency is slow.
+
+#### 2. Capacity and cost
+
+- Reserve capacity for the latency-sensitive path and keep batch work off it (Provisioned Throughput and PayGo tiers: Module 7, section 4).
+- Tier models per subtask (Module 7, section 1) and keep the prompt prefix stable for caching (Module 4, section 2).
+- Compare cost and latency only over successful runs (Module 10, section 3).
+
+#### 3. Observability for agents
+
+- **Traces** are the primary signal: one span per model call and tool call, with tokens, cost and latency. OpenTelemetry defines *Generative AI semantic conventions* (`gen_ai.*` attributes); they are still in development, so pin the version you emit.
+- **Logs** are structured and carry a correlation ID per request; no secrets or personal data in them.
+- **Metrics** per agent: request rate, error rate, latency histogram (RED), plus tokens and tool-call counts. No high-cardinality labels such as user IDs.
+- **SLOs:** define the indicator from the user's view and accept an error budget; 100% is the wrong target. An agent is not deterministic: its quality indicators are distributions (share of grounded answers, task success rate), and alerts fire on the rate, not on a single deviating answer.
+- **Alert on symptoms** users feel, not on causes; link each alert to a runbook. In an incident, mitigate first (roll back, switch off the flag) and look for the cause afterwards.
+
+#### 4. Troubleshooting
+
+| Symptom | Likely cause | Where to look, what to change |
+|---|---|---|
+| Agent loops or never finishes | no exit condition, critic never satisfied | trace of the run; `max_iterations`, an explicit exit tool (Module 8, section 2), a step budget |
+| Wrong tool or invented parameters | too many similar tool schemas, vague descriptions | bind fewer tools per turn, sharpen descriptions (Module 6, sections 2 and 6) |
+| Latency spikes at peak | shared capacity, spillover to Standard PayGo, queueing on a shared endpoint | `trafficType` in responses; Priority PayGo, dedicated endpoint, smaller model for simple steps (Module 7) |
+| 429 errors | `dedicated` traffic above the PT order, or PayGo contention | request-type headers (Module 7, section 4), backoff |
+| Answer not supported by the data | model answered from its weights, retrieval missed, tool output ignored | raw response of the turn; grounding constraint in the instructions, hallucination metric, retrieval check (Module 10, section 4.4) |
+| Quality drifts over weeks | model alias moved, data changed, prompt edits | pinned versions, online evaluation, golden tests in CI (Module 10, section 5) |
+| Works locally, 403 after deploy | the deployed agent runs under a different identity | grant the role to the runtime identity ([pca.md, section 4.17](pca.md#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager)) |
+| Each step succeeds, the result is wrong | defect of absence or of logic | review procedure and negative tests (Module 11) |
+
+Infrastructure monitoring (HTTP status, CPU) does not see semantic failures: a hallucinated answer follows a successful call. Those need evals and traces.
+
+[↑ Back to top](#machine-learning-agents-und-generative-ki)
+
+---
+
 ### Module 13 · Scaling in the team & measuring impact
 
-The earlier modules were about your repo and your work; this one is about the organization and the question "**is AI actually getting us anywhere?**". Enthusiasts answer with adoption numbers, skeptics with anecdotes; both are worthless. Organization-wide skills (Module 10) are one half of scaling; measurement is the other.
+The earlier modules were about your repo and your work; this one is about the organization and the question "**is AI actually getting us anywhere?**". Enthusiasts answer with adoption numbers, skeptics with anecdotes; both are worthless. Organization-wide skills (Module 6) are one half of scaling; measurement is the other.
 
 #### 1. DORA: the four metrics
 
@@ -2761,7 +1891,7 @@ The earlier modules were about your repo and your work; this one is about the or
 
 Two throughput and two stability metrics; only together do they say anything. The key finding of the DORA research (now at Google): **throughput and stability correlate positively.** Teams that deploy more often have fewer outages, because frequent deploys force small changes and the ability to deploy often comes from the same practices that produce stability (automated tests, trunk-based development, fast rollback, observability). "Fast or stable, pick one" is empirically wrong; the real trade-off is between both and the effort of building the practices. All four can be collected from Git and CI without asking anybody.
 
-DORA has measured AI directly. The 2024 report found higher AI adoption associated with *lower* delivery throughput and stability (roughly −1.5% throughput and −7% stability per 25% increase in adoption), while individual flow and documentation quality improved. The 2025 report ("State of AI-assisted Software Development") describes AI as an amplifier: it improves outcomes where strong version control, small batches, fast feedback and platform capabilities exist, and worsens them where they are missing. Its seven-item "AI Capabilities Model" reads like a summary of Modules 1, 5, 8 and 13. Cite these when someone presents adoption rate as success; check the reports for exact figures before quoting them.
+DORA has measured AI directly. The 2024 report found higher AI adoption associated with *lower* delivery throughput and stability (roughly −1.5% throughput and −7% stability per 25% increase in adoption), while individual flow and documentation quality improved. The 2025 report ("State of AI-assisted Software Development") describes AI as an amplifier: it improves outcomes where strong version control, small batches, fast feedback and platform capabilities exist, and worsens them where they are missing. Its seven-item "AI Capabilities Model" reads like a summary of Modules 4, 13 and 14. Cite these when someone presents adoption rate as success; check the reports for exact figures before quoting them.
 
 #### 2. What AI actually shifts
 
@@ -2798,11 +1928,11 @@ METR, *Measuring the Impact of Early-2025 AI on Experienced Open-Source Develope
 
 Complementing DORA:
 
-- **The four baseline numbers from Module 0:** build time, test runtime, review latency, deploy time; the most direct measure of friction.
+- **The four baseline numbers from Module 14:** build time, test runtime, review latency, deploy time; the most direct measure of friction.
 - **Rework rate / code churn:** share of code changed again within two to three weeks. Captures quickly produced code that turns out wrong; churn rising with output volume means speed was traded for rework.
-- **Review thoroughness:** comments per changed line, share of approvals without comment; the measure of verification debt (Module 12).
-- **Onboarding time:** time to a newcomer's first productive PR; an honest indicator of codebase and documentation quality, and the same quantity that matters for models (Module 8).
-- **Eval results** for AI features and agent workflows, tracked like any quality metric (Module 11).
+- **Review thoroughness:** comments per changed line, share of approvals without comment; the measure of verification debt (Module 11).
+- **Onboarding time:** time to a newcomer's first productive PR; an honest indicator of codebase and documentation quality, and the same quantity that matters for models (Module 4).
+- **Eval results** for AI features and agent workflows, tracked like any quality metric (Module 10).
 
 #### 5. A measurement design that cannot be gamed
 
@@ -2818,13 +1948,13 @@ What works for you must be reproducible in the team without you. A **golden path
 
 > **Make the right way the easiest way.**
 
-Governance through a friction gradient instead of prohibitions needs no enforcement. Concretely: a template repository with a ready-made harness (hooks, `make lint`, `make test`, pipeline, branch protection), shared `AGENTS.md` building blocks, uniform check commands, and a governed skill catalog (Module 10). A new project gets Modules 2, 3, 5 and 9 for free.
+Governance through a friction gradient instead of prohibitions needs no enforcement. Concretely: a template repository with a ready-made harness (hooks, `make lint`, `make test`, pipeline, branch protection), shared `AGENTS.md` building blocks, uniform check commands, and a governed skill catalog (Module 6). A new project gets Modules 5 and 14 for free.
 
 **Platform engineering** builds the internal platform as a *product* with developers as customers. Built as coercion, it gets bypassed when the golden path is less convenient than the detour, and you get governance theater.
 
 #### 7. Standards and responsibility
 
-Extend the **definition of done** explicitly: tests green including negative tests for new endpoints (Module 12); test diff read in review; no new dependencies without approval; migrations per expand–migrate–contract; flags with expiry dates; eval suite passed for AI features (Module 11).
+Extend the **definition of done** explicitly: tests green including negative tests for new endpoints (Module 11); test diff read in review; no new dependencies without approval; migrations per expand–migrate–contract; flags with expiry dates; eval suite passed for AI features (Module 10).
 
 > **Responsible for AI-generated code is the human who opens the pull request.**
 
@@ -2876,9 +2006,9 @@ DORA metrics · Deployment frequency · Lead time for changes · Change failure 
 
 **E5: Measurement concept** for a team of eight following section 5, two pages: what, how collected, at what cadence, which pair against which.
 
-**E6: Golden path.** A template repository containing your Module 9 harness; have someone start a project with it alone and time the first green PR.
+**E6: Golden path.** A template repository containing your Module 5 harness; have someone start a project with it alone and time the first green PR.
 
-**E7: Definition of done** for AI-assisted development, each line traced to a module; for each line: rule, check or boundary (Module 9, section 9)?
+**E7: Definition of done** for AI-assisted development, each line traced to a module; for each line: rule, check or boundary (Module 5, section 9)?
 
 **E8: Rehearse the answer** to "is AI actually getting us anywhere?" following section 9, for a context you know, with real or plausibly estimated numbers. Five minutes of speaking time.
 
@@ -2886,28 +2016,71 @@ DORA metrics · Deployment frequency · Lead time for changes · Change failure 
 
 ---
 
-## Closing
+## Part 6 · Engineering foundations
 
-### Capstone · One feature from spec to production
+### Module 14 · Software engineering essentials for agent work
 
-Carry one feature all the way through on your own, with the full harness:
+Agents multiply whatever engineering discipline exists. This module condenses the practices the earlier modules rely on.
+
+#### 1. The development loops
+
+| Loop | Steps | Cycle time |
+|---|---|---|
+| Design | observe, analyze, design, deliberate, plan | hours to weeks |
+| Inner | think, code, build, test | seconds to minutes |
+| Submit | lint, pre-submit checks, code review, merge | minutes to days |
+| Outer | post-submit tests, staging, canary, production, measure | hours to weeks |
+
+- **Shift left:** the later a defect is found, the more it costs. A type error costs seconds in the editor, a review round in the pull request, an incident in production. Most practices below move one class of defects one stage earlier.
+- **Baseline:** note build time, test runtime, review latency and deploy time before changing anything; they are the direct measure of friction.
+- **The bottleneck moves right.** AI speeds up the inner loop; review, test runtime and deployment stay as they were. A team that produces five times as many changes with the same review capacity is not five times faster.
+
+#### 2. Version control
+
+- A commit is a self-contained, working change with a reason. Small atomic commits keep `git bisect`, `git revert` and review usable.
+- Trunk-based development (short-lived branches, feature flags for unfinished work) fits agents; long-lived branches multiply merge conflicts.
+- Start an agent only on a clean working tree, and review its **diff**, not the finished files: the diff shows a removed error handler or a weakened test.
+- `git worktree` gives each parallel agent its own working directory on the same repository.
+- A committed secret stays in the history; the only fix is rotation. `git add -A`, `--no-verify` and `git push --force` belong on the agent's deny list.
+
+#### 3. Static analysis and hooks
+
+- Formatter, linter and type checker read code without running it. Type annotations are checked documentation and machine-readable context for a model.
+- Configuration and tool versions live in the repository, so the editor, the agent and CI apply the same rules. One command per check (`make lint`, `make test`) is called by everyone.
+- **Git hooks** (pre-commit, pre-push) are a convenience: they run locally and can be skipped. Enforcement happens in CI.
+- **Agent hooks** fire on agent events. In Claude Code they live under `hooks` in `.claude/settings.json`; events include `PreToolUse`, `PostToolUse`, `UserPromptSubmit`, `Stop`, `SubagentStop`, `SessionStart` and `PreCompact`. A hook receives the tool call as JSON on stdin and answers with its exit code: 0 lets the agent continue, **2 blocks and feeds stderr back to the model**, any other code is shown to the user only. A `PostToolUse` hook that runs the linter and type checker on each changed file closes the loop: the agent reads the error and fixes it.
+- The agent must never loosen rules to get green (disabled rules, `# noqa`, `# type: ignore`).
 
 ```
-SPEC.md → Plan → Agent implements → Hooks + tests green
-   → PR with AI review → CI gates → Staging → Canary with metric gate
-   → Feature flag → Measure → Retro on AGENTS.md
+Agent edits a file → hook runs lint and type check → exit code 2 with the error text
+        ↑                                                      │
+        └──────── the agent reads the error and fixes it ──────┘
 ```
 
-1. **Write the SPEC.md** (Module 8): intent, behavior, non-goals, testable acceptance criteria.
-2. **Demand the plan and simplify it** (Module 8): the most valuable intervention is usually deleting.
-3. **Agent implements inside the harness** (Modules 2, 3, 9, 10): clean worktree, hooks active, relevant skills available on demand, `make lint && make test` as definition of done.
-4. **Open the PR, keep the review order** (Modules 1, 12): test diff first, search for absences, vet dependencies.
-5. **Pass the CI gates** (Module 5): branch protection, no bypassing; for AI features the eval suite is one of the gates (Module 11).
-6. **Staging, then canary with a metric gate** (Modules 6, 7): error rate and latency percentiles against the baseline, automatic rollback defined.
-7. **Feature flag with an expiry date** (Module 6): deployment and release decoupled.
-8. **Measure** (Modules 7, 11, 13): look at the metrics and eval results defined beforehand.
-9. **Retro on `AGENTS.md`** (Modules 9, 10): every rule from an observed failure of this run goes in; every rule that can become a check becomes one; repeated know-how becomes a skill and goes through the governance pipeline.
+#### 4. Tests as the definition of done
 
-Work through the module exercises before the capstone; they build on each other. The biggest immediate effect comes from Modules 2 (hooks and static analysis), 3 (testing) and 6 (release and canary); Module 3 is the main lever of the whole guide.
+- A test is an executable specification of behavior, not of implementation. Fast, deterministic tests are what lets an agent iterate on its own: the task is done when the suite returns exit code 0.
+- Four evasive maneuvers all end in exit code 0: adapting the test to the code, weakening the assertion, skipping the test, mocking until nothing real runs. Read the **test diff first** in every review.
+- If the same agent writes test and implementation, a green test proves only self-consistency. Write the failing test yourself or with a separately tasked model.
+- Coverage shows what is not tested, nothing more. Mutation testing checks whether tests would notice a change.
+- A flaky test makes an agent "repair" correct code; quarantine and fix it.
+
+#### 5. Design
+
+- Low coupling and high cohesion: if changing A forces a change in B, they are coupled.
+- Duplication is cheaper than the wrong abstraction; abstract at the third occurrence.
+- Business logic depends on interfaces it defines; databases and APIs are adapters. Pure functions at the core, I/O at the edges.
+- Operations that may be retried must be idempotent.
+- An agent optimizes locally: duplicated helpers, drifting conventions, defensive `try/except`. **Architecture is context:** consistent structure, precise names and types make the agent's output consistent too. Decisions that are bets on the future of the domain stay with a human; record them as short architecture decision records.
+
+#### 6. CI/CD and quality gates
+
+- The pull-request pipeline runs cheap checks first and stays under ten minutes; slow suites run after the merge or nightly.
+- Branch protection makes checks binding: required status checks, reviews, CODEOWNERS on `tests/`, `.github/` and migrations, no direct or force push. A merge queue tests pull requests against the combined state, which matters when agents open many at once.
+- Pipeline security: pin third-party actions to commit SHAs, minimal token permissions, no secrets on fork pull requests, short-lived OIDC credentials instead of stored keys, lock files plus a delay before adopting new dependency versions.
+- An agent may fix a failing pipeline from its log if the pipeline is reliable, the number of attempts is capped, and the agent can change neither the pipeline definition nor branch protection.
+- AI code review finds mechanical problems; it does not replace a human reading the diff.
+
+Release patterns and observability: Module 12. Review of AI-generated code: Module 11.
 
 [↑ Back to top](#machine-learning-agents-und-generative-ki)

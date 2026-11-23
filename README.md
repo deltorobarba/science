@@ -12,7 +12,7 @@ Alexander Del Toro Barba (PhD) $\cdot$  [Google Scholar](https://scholar.google.
 
 **Study**
 * [Google Cloud Architecture](https://github.com/deltorobarba/science/blob/main/code/pca.md): GKE, Networking, Security, Data
-* [Google Agent Architecture](https://github.com/deltorobarba/science/blob/main/code/paa.md): Agents und generative KI
+* [Google Agent Architecture](https://github.com/deltorobarba/science/blob/main/code/paa.md): Low-code agents, ADK, model choice, skills, evaluation, operations
 
 **Google Cloud**
 * [Agent](https://github.com/deltorobarba/science/blob/main/code/agents.ipynb): Pipeline with ADK workflow graph, Memory Bank, Agent Engine deployment
