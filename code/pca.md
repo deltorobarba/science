@@ -22,25 +22,6 @@ Serverless-Dienste (Cloud Run, Cloud Run Functions, App Engine). GKE hat ein eig
 
 ---
 
-### Inhalt
-
-- [1.0 Das Bild zuerst: Wo läuft mein Code?](#10-das-bild-zuerst-wo-läuft-mein-code)
-- [1.1 Eine VM besteht aus vier Teilen](#11-eine-vm-besteht-aus-vier-teilen)
-- [1.2 Images, Instanzvorlagen und Skripte](#12-images-instanzvorlagen-und-skripte)
-- [1.3 Managed Instance Groups](#13-managed-instance-groups)
-- [1.4 Spot-VMs](#14-spot-vms)
-- [1.5 Sole-Tenant Nodes](#15-sole-tenant-nodes)
-- [1.6 Platten an der VM](#16-platten-an-der-vm)
-- [1.7 VMs betreiben: Agent, Patches, Zugang](#17-vms-betreiben-agent-patches-zugang)
-- [1.8 GPUs und TPUs](#18-gpus-und-tpus)
-- [1.9 Serverless: Cloud Run, Functions, App Engine](#19-serverless-cloud-run-functions-app-engine)
-- [1.10 Kosten](#110-kosten)
-- [1.11 Prüfungssignale: Spickzettel](#111-prüfungssignale-spickzettel)
-- [1.12 Alte und neue Namen](#112-alte-und-neue-namen)
-- [1.13 Quellen](#113-quellen)
-
----
-
 ### 1.0 Das Bild zuerst: Wo läuft mein Code?
 
 Ein ML-Team betreibt fünf sehr verschiedene Dinge, und jedes landet auf einer anderen Plattform:
@@ -436,25 +417,6 @@ Beispiel und endet mit einem Spickzettel typischer Fragemuster.
 
 *Prüfungsfragen benutzen oft alte Namen (Google Container Engine, Stackdriver, Container Registry,
 Anthos, kubemci); die heutigen Namen stehen in [Abschnitt 2.11](#211-alte-namen-in-den-fragen).*
-
----
-
-### Inhalt
-
-- [2.0 Das Bild zuerst: eine ML-Plattform auf GKE](#20-das-bild-zuerst-eine-ml-plattform-auf-gke)
-- [2.1 Architektur: Control Plane, Nodes, Pods](#21-architektur-control-plane-nodes-pods)
-- [2.2 Workloads: welches Objekt wofür](#22-workloads-welches-objekt-wofür)
-- [2.3 Netzwerk: Services, Ingress, private Nodes](#23-netzwerk-services-ingress-private-nodes)
-- [2.4 Skalierung: zwei Ebenen](#24-skalierung-zwei-ebenen)
-- [2.5 Rollouts und Zuverlässigkeit](#25-rollouts-und-zuverlässigkeit)
-- [2.6 Sicherheit und Supply Chain](#26-sicherheit-und-supply-chain)
-- [2.7 CI/CD für Container](#27-cicd-für-container)
-- [2.8 Betrieb und Observability](#28-betrieb-und-observability)
-- [2.9 Viele Cluster: Fleet und GKE Enterprise](#29-viele-cluster-fleet-und-gke-enterprise)
-- [2.10 Kosten](#210-kosten)
-- [2.11 Alte Namen in den Fragen](#211-alte-namen-in-den-fragen)
-- [2.12 Prüfungssignale: Spickzettel](#212-prüfungssignale-spickzettel)
-- [2.13 Quellen](#213-quellen)
 
 ---
 
@@ -949,42 +911,6 @@ mit dem Schichtenmodell (L3, L4, L7), weil es erklärt, was Firewall, Load Balan
 können. Danach folgen das VPC-Netz mit Firewall, privaten Zugängen und hybriden Verbindungen (Teil 1) und Load
 Balancing mit CDN und Cloud Armor (Teil 2). Das Netzwerk innerhalb von GKE (Services, Ingress, private Nodes) steht
 in [2. GKE: Google Kubernetes Engine](#2-gke-google-kubernetes-engine).
-
----
-
-### Inhalt
-
-**Grundlagen**
-
-- [3.0 Das Bild zuerst: eine ML-Plattform mit Rechenzentrum](#30-das-bild-zuerst-eine-ml-plattform-mit-rechenzentrum)
-- [3.1 Schichtenmodell: L3, L4 und L7](#31-schichtenmodell-l3-l4-und-l7)
-
-**Teil 1: Das Netz**
-
-- [3.2 Das Grundmodell: globales Netz, regionale Subnetze](#32-das-grundmodell-globales-netz-regionale-subnetze)
-- [3.3 Firewall: wer darf mit wem sprechen](#33-firewall-wer-darf-mit-wem-sprechen)
-- [3.4 Mehrere Netze verbinden: Shared VPC, Peering und mehr](#34-mehrere-netze-verbinden-shared-vpc-peering-und-mehr)
-- [3.5 Private Wege zu Google und zu Diensten](#35-private-wege-zu-google-und-zu-diensten)
-- [3.6 Hybride Verbindungen: VPN und Interconnect](#36-hybride-verbindungen-vpn-und-interconnect)
-- [3.7 Leitplanken für die ganze Organisation](#37-leitplanken-für-die-ganze-organisation)
-
-**Teil 2: Load Balancing**
-
-- [3.8 Load Balancing, das Bild zuerst: eine globale Bild-Generierungs-App](#38-load-balancing-das-bild-zuerst-eine-globale-bild-generierungs-app)
-- [3.9 Die Bausteine eines Load Balancers](#39-die-bausteine-eines-load-balancers)
-- [3.10 Welcher Load Balancer: die drei Familien](#310-welcher-load-balancer-die-drei-familien)
-- [3.11 Health Checks und Autohealing](#311-health-checks-und-autohealing)
-- [3.12 Routing: Pfade, Regionen, Failover](#312-routing-pfade-regionen-failover)
-- [3.13 Statische Inhalte und Cloud CDN](#313-statische-inhalte-und-cloud-cdn)
-- [3.14 Sicherheit: TLS, Cloud Armor, IAP](#314-sicherheit-tls-cloud-armor-iap)
-- [3.15 Backends: Instanzgruppen, NEGs, Cloud Run, GKE](#315-backends-instanzgruppen-negs-cloud-run-gke)
-
-**Zum Nachschlagen**
-
-- [3.16 Kosten](#316-kosten)
-- [3.17 Prüfungssignale: Spickzettel](#317-prüfungssignale-spickzettel)
-- [3.18 Alte und neue Namen](#318-alte-und-neue-namen)
-- [3.19 Quellen](#319-quellen)
 
 ---
 
@@ -1877,28 +1803,6 @@ fünf Fragen: Wer bist du? Wo liegt was? Was darfst du? Wie sind die Daten gesch
 
 ---
 
-### Inhalt
-
-- [4.0 Das Bild zuerst: ein Unternehmen mit drei Abteilungen](#40-das-bild-zuerst-ein-unternehmen-mit-drei-abteilungen)
-- [4.1 Zwei Fragen: Wer bist du, und was darfst du?](#41-zwei-fragen-wer-bist-du-und-was-darfst-du)
-- [4.2 Identitäten: Menschen und Gruppen](#42-identitäten-menschen-und-gruppen)
-- [4.3 Ressourcenhierarchie und Vererbung](#43-ressourcenhierarchie-und-vererbung)
-- [4.4 Rollen, Bindungen und Bedingungen](#44-rollen-bindungen-und-bedingungen)
-- [4.5 Service Accounts: Identitäten für Programme](#45-service-accounts-identitäten-für-programme)
-- [4.6 Organization Policies: was überhaupt erlaubt ist](#46-organization-policies-was-überhaupt-erlaubt-ist)
-- [4.7 Verschlüsselung und Schlüssel](#47-verschlüsselung-und-schlüssel)
-- [4.8 Secrets](#48-secrets)
-- [4.9 Sensible Daten schützen](#49-sensible-daten-schützen)
-- [4.10 Erkennen und nachweisen: Audit Logs und Security Command Center](#410-erkennen-und-nachweisen-audit-logs-und-security-command-center)
-- [4.11 Compliance und Souveränität](#411-compliance-und-souveränität)
-- [4.12 Kosten](#412-kosten)
-- [4.13 Prüfungssignale: Spickzettel](#413-prüfungssignale-spickzettel)
-- [4.14 Alte und neue Namen](#414-alte-und-neue-namen)
-- [4.15 Quellen](#415-quellen)
-- [4.16 Authentifizierung für Agents: Bausteine, OIDC und Google-managed OAuth](#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth)
-
----
-
 ### 4.0 Das Bild zuerst: ein Unternehmen mit drei Abteilungen
 
 Ein Unternehmen zieht nach Google Cloud. Es hat drei Abteilungen: **Finance**, **Marketing** und **Forschung** (mit
@@ -2452,12 +2356,10 @@ Je nach Art meldet sich der Agent anders an.
 | | Use Case | Was du lernst | Neue Bausteine | Stand |
 |---|---|---|---|---|
 | **UC1** | **Deployter Agent mit eigenem MCP-Tool:** dein BigQuery-Analyst läuft auf Agent Runtime statt im Notebook und ruft deinen Cloud-Run-MCP auf | was sich ändert, wenn der Agent nicht mehr *du* ist: ID-Token mit genauer Audience, `run.invoker` für die Agent-Identität, ein Toolset, das sich deployen (pickeln) lässt | Runtime + MCP | erledigt (`mcp.ipynb`, 2026-10-25) |
-| **UC2** | **Agent mit Fremd-MCP (GitHub):** ein Agent liest Issues und Repositories über GitHubs MCP-Server | Umgang mit fremden Geheimnissen, Rechte auf Tool-Ebene (`tool_filter`), Prompt Injection durch fremde Inhalte | Fremd-MCP, Secret Manager, später Auth Manager | offen (`github.ipynb`: bisher nur der Plan) |
+| **UC2** | **Agent mit Fremd-MCP (GitHub):** ein Agent liest Issues und Repositories über GitHubs MCP-Server | Umgang mit fremden Geheimnissen, Rechte auf Tool-Ebene (`tool_filter`), Prompt Injection durch fremde Inhalte | Fremd-MCP, Secret Manager, später Auth Manager | offen (noch kein Notebook) |
 | **UC3** | **Agent beauftragt Agent (A2A):** zwei Agents auf zwei Engines, z. B. ein Rechercheur, der deinen BigQuery-Analysten als Kollegen fragt | Agent Card, A2A-Server und -Client, Anmeldung zwischen Agents | A2A | erledigt (`a2a.ipynb`, 2026-10-26) |
 | **UC4** | **Jeder Agent mit eigener Identität:** Agent Identity statt geteiltem Service Agent, Rechte nur für genau diesen Agent (Least Privilege) | SPIFFE-ID, IAM auf den Principal, Registry zeigt, wer als wer läuft | Agent Identity | erledigt (`identity.ipynb`, 2026-10-26) |
 | **UC5** | **Zentrale Kontrolle:** Aufrufe an einen Agent laufen über ein Agent Gateway | Gateway anlegen, binden, Regeln | Agent Gateway | erledigt für den Eingang (`gateway.ipynb`, 2026-10-27); Ausgang nicht umgesetzt |
-
-`claude.ipynb` war im Kern UC1 bis UC4 auf einmal. Deshalb war es so umfangreich und schwer zu durchschauen.
 
 **Meine Empfehlung (Oktober 2026, bis auf UC2 umgesetzt):** zuerst **UC1**. Es baut direkt auf `mcp.ipynb` auf, funktioniert schon jetzt, und es ist die Voraussetzung für alles andere: UC2 bis UC5 setzen deployte Agents voraus. Danach **UC3**, ebenfalls ohne Wartezeit. Nach dem Wechsel weg von der Organisation folgt **UC4**, dann **UC2** mit Auth Manager und zuletzt **UC5**.
 
@@ -2645,40 +2547,6 @@ Lernnotiz zur Prüfung Professional Cloud Architect (PCA). Die häufigste Datenf
 Varianten: **Welcher Speicher passt zu diesen Daten?** Diese Notiz beginnt deshalb mit einem Entscheidungsbaum und geht
 dann durch die drei Bereiche: Speicher (Cloud Storage, Platten, Filestore, Datentransfer), Datenbanken (Cloud SQL,
 AlloyDB, Spanner, Bigtable, Firestore, Memorystore) und Analytics (BigQuery, Pub/Sub, Dataflow, Dataproc).
-
----
-
-### Inhalt
-
-**Grundlagen**
-
-- [5.0 Das Bild zuerst: die Daten eines Empfehlungssystems](#50-das-bild-zuerst-die-daten-eines-empfehlungssystems)
-- [5.1 Welcher Speicher wofür](#51-welcher-speicher-wofür)
-
-**Teil 1: Speicher**
-
-- [5.2 Cloud Storage](#52-cloud-storage)
-- [5.3 Daten nach Google Cloud bringen](#53-daten-nach-google-cloud-bringen)
-- [5.4 Platten und Dateifreigaben](#54-platten-und-dateifreigaben)
-
-**Teil 2: Datenbanken**
-
-- [5.5 Relational: Cloud SQL, AlloyDB, Spanner](#55-relational-cloud-sql-alloydb-spanner)
-- [5.6 NoSQL: Bigtable und Firestore](#56-nosql-bigtable-und-firestore)
-- [5.7 Cache: Memorystore](#57-cache-memorystore)
-
-**Teil 3: Analytics**
-
-- [5.8 BigQuery](#58-bigquery)
-- [5.9 Datenpipelines: Pub/Sub, Dataflow, Dataproc](#59-datenpipelines-pubsub-dataflow-dataproc)
-
-**Zum Nachschlagen**
-
-- [5.10 Kosten](#510-kosten)
-- [5.11 Prüfungssignale: Spickzettel](#511-prüfungssignale-spickzettel)
-- [5.12 Alte und neue Namen](#512-alte-und-neue-namen)
-- [5.13 Ein Rechenbeispiel zum Datentransfer](#513-ein-rechenbeispiel-zum-datentransfer)
-- [5.14 Quellen](#514-quellen)
 
 ---
 
@@ -3213,42 +3081,6 @@ Lebenslauf einer Anwendung: Sie wird **migriert**, mit einer Pipeline **ausgelie
 gegen Ausfälle **abgesichert**. Viele Prüfungsfragen testen genau diese Abläufe („Was tust du zuerst?“).
 
 *Die Rechenbeispiele zu Error Budget und RPO sind eigene Rechnungen.*
-
----
-
-### Inhalt
-
-**Grundlagen**
-
-- [6.0 Das Bild zuerst: der Lebenslauf einer Anwendung](#60-das-bild-zuerst-der-lebenslauf-einer-anwendung)
-
-**Teil 1: Delivery**
-
-- [6.1 CI/CD-Pipeline](#61-cicd-pipeline)
-- [6.2 Release-Strategien](#62-release-strategien)
-- [6.3 Infrastructure as Code](#63-infrastructure-as-code)
-
-**Teil 2: Betrieb**
-
-- [6.4 Observability: Metriken, Logs, Traces, Profile](#64-observability-metriken-logs-traces-profile)
-- [6.5 SRE: SLIs, SLOs und Error Budgets](#65-sre-slis-slos-und-error-budgets)
-- [6.6 Vorfälle und Resilienztests](#66-vorfälle-und-resilienztests)
-
-**Teil 3: Ausfallsicherheit**
-
-- [6.7 RPO, RTO und DR-Muster](#67-rpo-rto-und-dr-muster)
-- [6.8 Werkzeuge für Backup und Wiederherstellung](#68-werkzeuge-für-backup-und-wiederherstellung)
-
-**Teil 4: Migration**
-
-- [6.9 Migration: Phasen, Strategien, Werkzeuge](#69-migration-phasen-strategien-werkzeuge)
-
-**Zum Nachschlagen**
-
-- [6.10 Kosten](#610-kosten)
-- [6.11 Prüfungssignale: Spickzettel](#611-prüfungssignale-spickzettel)
-- [6.12 Alte und neue Namen](#612-alte-und-neue-namen)
-- [6.13 Quellen](#613-quellen)
 
 ---
 

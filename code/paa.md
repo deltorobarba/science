@@ -3304,24 +3304,6 @@ Changes made during the conversion from the PDF (September 2026). Everything not
 
 ---
 
-### Contents
-
-- [Quick reference](#quick-reference)
-- [1. The two problems](#1-the-two-problems)
-- [2. What a skill is](#2-what-a-skill-is)
-- [3. Where skills live: two registries](#3-where-skills-live-two-registries)
-- [4. Governance: the three-stage pipeline](#4-governance-the-three-stage-pipeline)
-- [5. The four primitives](#5-the-four-primitives)
-- [6. Runtime: finding the right skill among hundreds](#6-runtime-finding-the-right-skill-among-hundreds)
-- [7. Chat-first SaaS vs. GitOps plus registry](#7-chat-first-saas-vs-gitops-plus-registry)
-- [8. Core terms for your glossary](#8-core-terms-for-your-glossary)
-- [9. Hands-on](#9-hands-on)
-- [10. Checkpoint](#10-checkpoint)
-- [11. References](#11-references)
-- [Editor's notes: corrections and checks](#editors-notes-corrections-and-checks)
-
----
-
 ### Quick reference
 
 **Against skill sprawl: three stages.**
@@ -3934,14 +3916,6 @@ Changes made while turning the customer guide into this note (2026-11-15). The f
 Stand: 2026-11-02. Diese Notiz sammelt die wichtigsten öffentlichen Vergleichsseiten (Leaderboards) für Sprachmodelle
 und Agents, erklärt, wie man ihre Zahlen liest, und wie man selbst evaluiert. Die Zahlen stehen gesammelt in Abschnitt 5
 als datierte Momentaufnahme; alles andere ändert sich langsam.
-
-1. [Leaderboards richtig lesen](#1-leaderboards-richtig-lesen)
-2. [Landkarte der Vergleichsseiten](#2-landkarte-der-vergleichsseiten)
-3. [Welche Seite für welche Frage?](#3-welche-seite-für-welche-frage)
-4. [Eigene Evaluation](#4-eigene-evaluation)
-5. [Momentaufnahme (Stand 2026-11-02)](#5-momentaufnahme-stand-2026-11-02)
-6. [Quellen](#6-quellen)
-7. [Notiz: Auf dem Stand bleiben, wenn neue Modelle erscheinen](#notiz-auf-dem-stand-bleiben-wenn-neue-modelle-erscheinen)
 
 ---
 
