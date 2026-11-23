@@ -122,6 +122,7 @@ For multi-step tasks, the console's **Restructure instructions** button converts
 
 - A `taskflow` with `subtask`, `step`, `trigger` and `action` makes the order of steps explicit. This is the fix when an agent skips an intermediate step on long, multi-sentence requests.
 - **Few-shot examples** go into `<examples>`. The docs advise using them sparingly and trying instructions first.
+- **Chain-of-thought plus few-shot** fixes responses that drop required parts: tell the model to plan the parts before writing (for example affirmation, hint, follow-up question) and show two or three examples of the complete structure. Setting temperature and top-p to zero would also make the wording identical on every attempt; splitting the parts across pages produces several turns instead of one response.
 - **Global instructions** (advanced application settings) are inherited by every agent and sent on every turn: brand tone, general do's and don'ts, shared variables. They do not order the steps of one workflow.
 - Instructions are soft. For behavior that must always happen, the docs recommend tools or callbacks: chain several API calls inside one Python tool instead of asking the model to call them in order, and use an `after_model_callback` to force mandatory content such as a disclaimer.
 
@@ -153,12 +154,18 @@ Metrics include tool correctness, user goal satisfaction, hallucinations (on tur
 3. If the order of actions was wrong, move it from instructions into a taskflow, a Python tool or a flow.
 4. Infrastructure monitoring (HTTP errors, latency) does not find these defects: a hallucinated answer follows a successful tool call.
 
-#### 5. Check before relying on it
+#### 5. Workflow Builder
 
-- Agent Designer (the low-code builder inside Gemini Enterprise) is not covered here.
+Workflow Builder (formerly Agent Designer) is the no-code, low-code builder inside the Gemini Enterprise web app for chat agents and workflows. An agent is created from a natural-language prompt or in a visual editor; a workflow consists of triggers, steps and actions and can run on a schedule. Agents can only use the data connectors, tools and permissions that the Gemini Enterprise administrator has provisioned.
+
+Use it for employee-facing assistants on connected enterprise data; use CX Agent Studio for customer-facing conversations with flows and telephony, and ADK when the orchestration needs code.
+
+#### 6. Check before relying on it
+
+- Node types, sub-agents and quotas of Workflow Builder are not documented on the overview page.
 - The classification scheme of the loss report is not documented.
 
-References: [Instructions](https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio/instruction) · [Evaluation](https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio/evaluation) · [Best practices](https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio/best-practices) · [Pages (Dialogflow CX)](https://docs.cloud.google.com/dialogflow/cx/docs/concept/page)
+References: [Instructions](https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio/instruction) · [Evaluation](https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio/evaluation) · [Best practices](https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio/best-practices) · [Pages (Dialogflow CX)](https://docs.cloud.google.com/dialogflow/cx/docs/concept/page) · [Workflow Builder](https://docs.cloud.google.com/gemini/enterprise/docs/agent-designer/overview)
 
 ---
 
@@ -178,7 +185,32 @@ Two properties decide the quality: whether retrieval finds the right passages (M
 
 Agent Search indexes data in **data stores**: Cloud Storage, BigQuery, Google Drive and third-party sources via connectors. Data is structured (rows with fields) or unstructured (documents), optionally with metadata. An agent queries a data store through a tool.
 
-#### 3. Access control per document
+In the Gemini API the data store is attached as a retrieval tool; the model then retrieves and grounds its answer without custom code:
+
+```python
+from google.genai import types
+
+tool = types.Tool(retrieval=types.Retrieval(vertex_ai_search=types.VertexAISearch(
+    datastore="projects/PROJECT/locations/LOCATION/collections/default_collection/dataStores/DATA_STORE")))
+```
+
+- `google_search` grounds on the public web, not on private data.
+- Pasting whole manuals into the system instructions fills the context window, raises cost on every call and does not scale with the corpus.
+- A hand-written function tool that queries a database works, but repeats what the managed retrieval already does (ranking, chunk selection, citations).
+
+#### 3. Parsing documents: tables, images, scans
+
+Retrieval can only find what the parser extracted. The parser is set when the data store is created (`documentProcessingConfig.defaultParsingConfig`); a later change applies only to new documents.
+
+| Parser | Extracts | Use for |
+|---|---|---|
+| **Digital parser** | machine-readable text only; no tables, lists or headings | plain text documents; fallback for unsupported file types |
+| **OCR parser** | text from scanned PDFs and from images inside PDFs (first 500 pages) | scans |
+| **Layout parser** | paragraphs, tables, lists, titles, headings and images, with the document hierarchy | table-heavy reports, slides, structured documents (PDF, HTML, DOCX, PPTX, XLSX) |
+
+The layout parser enables layout-aware chunking (chunks of 100 to 500 tokens, optionally with their ancestor headings) and can annotate images and tables, so a chunk carries a description of the figure it contains. Chunking cannot be switched on or off after the data store is created. Flattening documents to plain OCR text loses the relation between rows and columns; a custom Document AI extractor into BigQuery bypasses the managed search and adds a pipeline to operate.
+
+#### 4. Access control per document
 
 Search results must respect the permissions of the user who asks. With **data source access control**, each document or row carries its readers, and results are filtered by the user's identity.
 
@@ -204,7 +236,30 @@ acl_info          RECORD, NULLABLE
 
 The pattern to remember: permissions are part of the indexed data and are applied at query time for the end user. Controls that act on the service account that runs the import (IAM roles on the table, network perimeters) do not filter results per user.
 
-Reference: [Data source access control](https://docs.cloud.google.com/generative-ai-app-builder/docs/data-source-access-control)
+#### 5. Building the retrieval yourself: RAG Engine and Vector Search
+
+Agent Search is the managed path. When you need control over chunking, embeddings or the index, you assemble the pipeline:
+
+```
+Ingest → Transform (chunk) → Embed → Index (corpus) → Retrieve → Generate
+```
+
+| Step | Decision |
+|---|---|
+| **Chunking** | chunk size and overlap: small chunks retrieve precisely but lose context, large chunks the reverse |
+| **Embedding model** | maps text (or images) to vectors; the query and the documents must use the same model, and changing it means re-embedding the corpus |
+| **Similarity** | nearest neighbours by a distance between vectors (cosine, dot product or Euclidean distance) |
+| **Hybrid search** | dense embeddings find meaning, sparse embeddings find exact keywords (product codes, names); combining both covers each one's blind spot |
+| **Filtering** | restrict the search by numeric or text attributes (tenant, language, date) |
+| **Reranking** | retrieve generously (for example 50 candidates), then let a stronger ranking model order them and keep the best few for the prompt |
+
+- **RAG Engine** runs these steps as a managed service around a corpus; it supports VPC Service Controls and CMEK.
+- **Vector Search** is the vector database, built on ScaNN, with hybrid search and filtering ("restricts").
+- Operational stores in scope for agents: Cloud SQL and Firestore for application data and custom session stores (ADK `DatabaseSessionService`), Memorystore for Redis as a cache, BigQuery for analytics and as a data store source.
+
+How to measure retrieval and generation separately: Module 10, section 4.4.
+
+References: [Data source access control](https://docs.cloud.google.com/generative-ai-app-builder/docs/data-source-access-control) · [Parse and chunk documents](https://docs.cloud.google.com/gemini/enterprise/docs/parse-chunk-documents) · [Grounding](https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/models/grounding) · [RAG Engine](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview) · [Vector Search](https://docs.cloud.google.com/vertex-ai/docs/vector-search/overview)
 
 [↑ Back to top](#machine-learning-agents-und-generative-ki)
 
@@ -453,6 +508,17 @@ Each deny-list entry is an evasive maneuver that is a solution from the agent's 
 **These prohibitions belong in mechanisms, not only in `AGENTS.md`.** An instruction competes with the agent's goal: if the task is "make the tests green" and the honest path is hard, adapting the test is rewarded by the stated goal. Under enough pressure an agent bypasses every rule that is only a rule.
 
 Enforcement: CODEOWNERS on `tests/`, `.github/` and migration directories; branch protection that also binds bot tokens; tool permissions that do not offer certain commands; and for autonomous runs **sandboxing** (containers with limited file system access, a dedicated worktree, restricted network). *The more autonomy you grant, the more isolation you must build.*
+
+Where the agent runs decides what it can damage:
+
+| Sandbox | Isolates | Managed by |
+|---|---|---|
+| OS-level terminal sandbox of the coding agent (Antigravity) | the agent's shell commands from the rest of the machine | each developer |
+| Local container on the laptop | file system, partly | each developer; no central control |
+| **Cloud Workstations** | the whole development environment: it runs on a VM in your project and VPC, from a container image and configuration the administrators define | centrally (workstation configurations, IAM) |
+| Code execution sandbox (Agent Platform) | code an agent generates at runtime: limited file system, no network access | the platform |
+
+A coding agent that reads credentials from the home directory or changes host files is contained by moving the environment off the laptop, not by a non-privileged local user or a prompt.
 
 In Claude Code, tool permissions and hooks live in the same file. A minimal project `.claude/settings.json` (check the current documentation for exact rule syntax before copying):
 
@@ -1233,6 +1299,23 @@ pipeline = SequentialAgent(name="refactor", sub_agents=[generator, review_loop])
 - A `SequentialAgent` runs once and cannot repeat. A `ParallelAgent` cannot express "refine depends on the review". Retry options on the model handle transient API errors, not workflow iterations.
 - ADK 2.13 marks `SequentialAgent` and `LoopAgent` as deprecated in favor of `Workflow` (a graph of nodes); they still work, and a `Workflow` cannot yet be a sub-agent of an `LlmAgent`.
 
+**Graph workflow.** The same deterministic control flow as a graph: edges from `START` fan out, a `JoinNode` waits for all its predecessors, and the next node runs on the combined result.
+
+```python
+from google.adk.agents import LlmAgent
+from google.adk.workflow import START, JoinNode, Workflow
+
+prices = LlmAgent(name="prices", model="gemini-3.5-flash", instruction="Collect price data.", output_key="prices")
+news = LlmAgent(name="news", model="gemini-3.5-flash", instruction="Collect market news.", output_key="news")
+join = JoinNode(name="join")
+synthesis = LlmAgent(name="synthesis", model="gemini-3.5-flash", instruction="Summarize {prices} and {news}.")
+
+research = Workflow(name="market_research",
+                    edges=[(START, prices), (START, news), (prices, join), (news, join), (join, synthesis)])
+```
+
+Exposing the three agents as `AgentTool`s of a root `LlmAgent` would leave it to the model whether and when each one runs. A graph fixes the order; `output_key` on the research agents writes their results to session state for the synthesis step.
+
 #### 3. Callbacks
 
 Callbacks are functions that run at fixed points and can observe or replace a step:
@@ -1254,6 +1337,16 @@ A callback that returns a value replaces the step; returning `None` lets it proc
 | **Memory** | knowledge that persists across sessions (long-term) | `InMemoryMemoryService`, `VertexAiMemoryBankService`, `VertexAiRagMemoryService` |
 
 The agent reads memory through tools: `load_memory` retrieves when the model decides to, `preload_memory` retrieves on every turn.
+
+**Sessions in production.** `InMemorySessionService` keeps events and state in the RAM of one process. Behind a load balancer with several instances, the next request lands on another instance and the conversation is gone. Session affinity only hides this until an instance restarts or scales down. The fix is a shared session service:
+
+```python
+from google.adk.sessions import VertexAiSessionService
+
+session_service = VertexAiSessionService(project="PROJECT_ID", location="LOCATION", agent_engine_id="AGENT_ENGINE_ID")
+```
+
+Managed Sessions belong to an Agent Runtime instance (the ID is in `GOOGLE_CLOUD_AGENT_ENGINE_ID` for deployed agents); sessions expire after a TTL, 365 days by default. `DatabaseSessionService` is the self-managed alternative; a hand-written Redis session service adds infrastructure and code to maintain. Memory tools do not replace the session: they recall facts from earlier conversations, not the turns of the current one.
 
 **Memory Bank** (Agent Platform) extracts facts from conversations, consolidates them with existing memories (add, update, delete) and retrieves them by similarity search. Each memory belongs to a scope such as `{"user_id": "123"}`.
 
@@ -1277,13 +1370,21 @@ Generating on every turn (`event_count` of 1) costs tokens on every turn and sto
 
 Binding dozens of tool schemas to one agent raises token cost and latency and lowers selection accuracy. The fix is retrieval: match the request against an index of tool descriptions, bind only the top few for the turn (Module 6, section 6.2), or split the tools across domain sub-agents (Module 6, section 6.3).
 
-References: [ADK agents](https://adk.dev/agents/) · [ADK memory](https://adk.dev/sessions/memory/) · [Memory Bank](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank) · [Generate memories](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/generate-memories)
+#### 6. Agents CLI
+
+`agents-cli` is a command-line tool and a set of skills for building, evaluating and deploying agents on Google Cloud; it works with any coding agent (Antigravity, Claude Code and others). `agents-cli setup` installs the CLI and its skills for the detected coding agents, globally by default or into the project with `--workspace`; `--interactive` enables prompts for human use. `agents-cli run --url <service-url> --mode a2a "prompt"` tests a deployed agent.
+
+A coding agent drives the same commands a human would; commands that deploy or delete should keep their confirmation prompts instead of auto-approve flags, so a person approves the step.
+
+Check before relying on it: the documentation pages read for this note do not describe an "agent mode" and a "human mode" by those names.
+
+References: [ADK agents](https://adk.dev/agents/) · [ADK workflows](https://adk.dev/workflows/) · [Managed Sessions with ADK](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions/manage-with-adk) · [agents-cli](https://github.com/google/agents-cli) · [ADK memory](https://adk.dev/sessions/memory/) · [Memory Bank](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank) · [Generate memories](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/generate-memories)
 
 ---
 
 ### Module 9 · Protocols and identity: MCP, A2A, Agent Identity
 
-Two open protocols connect agents to the outside: MCP connects an agent to tools and data, A2A connects an agent to another agent. MCP means "use a tool" (run this query); A2A means "delegate a task" (find out how healthy this repository is), and the other agent decides how.
+Two open protocols connect agents to the outside: MCP connects an agent to tools and data, A2A connects an agent to another agent. MCP means "use a tool" (run this query); A2A means "delegate a task" (find out how healthy this repository is), and the other agent decides how. In a layered design A2A is the horizontal protocol between agents, MCP the vertical one from an agent down to tools and data; using MCP for delegation between agents or wrapping a database in A2A inverts the two.
 
 #### 1. MCP
 
@@ -1321,9 +1422,28 @@ In a multi-agent system each agent should act under its own identity, so that pe
 - External credentials (API keys, OAuth client secrets) belong in the Auth Manager, which releases them to an agent identity at call time.
 - **Agent Gateway** adds a control point in the data path: which agent may call which target, with Model Armor screening.
 
+- A **Principal Access Boundary (PAB)** policy limits which resources a principal is *eligible* to access, whatever roles it has been granted. It is attached to a principal set, not to a resource, and cannot grant access itself. Agent identities are a supported principal set (`//agents.global.org-ORGANIZATION_ID.system.id.goog/attribute.container/projects/PROJECT_NUMBER`), so one policy can fence in all agents of a project; it is evaluated on their outbound calls.
+
+#### 4. Agent Gateway
+
+Agent Gateway is the governance and enforcement layer for agent traffic. It understands MCP (including the tool name inside the JSON-RPC message), A2A, REST and gRPC, which a load balancer, a web application firewall or a network proxy does not.
+
+| Mode (`governedAccessPath`) | Governs |
+|---|---|
+| `CLIENT_TO_AGENT` (ingress) | clients reaching agents or MCP tools |
+| `AGENT_TO_ANYWHERE` (agent egress) | outbound calls from agents to tools, MCP servers, SaaS APIs and other agents |
+
+- Each gateway is associated with the regional **Agent Registry** of its project; agents, MCP servers and endpoints are registered there. The registry is the catalog (what exists, who may use it); the gateway is in the data path (what actually happens). Audit logs on the registry show catalog lookups, not request traffic.
+- **Egress is default-deny:** an `AGENT_TO_ANYWHERE` gateway without an authorization policy blocks all outbound traffic. Access is authorized through IAP for the agent's identity (permission `iap.resources.egressViaIAP`).
+- **Dry run first:** `iamEnforcementMode: "DRY_RUN"` on the authorization extension (console: Audit-only) evaluates the policy and logs what would be denied without blocking. Review the logs, then enforce. Starting with strict enforcement breaks agents whose calls nobody listed.
+- **Model Armor** templates can be attached for requests and responses; they also cover tool payloads.
+- **Monitoring:** request logs with the allow or deny decision and fields for the MCP call and the registry resource (`gateway_requests`), IAP audit logs, latency metrics, and Cloud Trace through a telemetry policy that honors incoming `traceparent` headers, so a multi-hop call through the gateway becomes one trace without changing the tools.
+
+A fleet of agents built by different teams on different runtimes gets uniform telemetry and identity-based tracking by routing through the gateway, not by asking every team to instrument its code the same way.
+
 Worked through in [identity.ipynb](identity.ipynb) and [gateway.ipynb](gateway.ipynb); details in [pca.md, sections 4.16 and 4.17](pca.md#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
 
-References: [MCP specification](https://modelcontextprotocol.io/specification/latest) · [sampling](https://modelcontextprotocol.io/specification/latest/client/sampling) · [roots](https://modelcontextprotocol.io/specification/latest/client/roots) · [transports](https://modelcontextprotocol.io/specification/latest/basic/transports)
+References: [Agent Gateway overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview) · [Set up Agent Gateway](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/set-up-agent-gateway) · [Principal access boundary policies](https://docs.cloud.google.com/iam/docs/principal-access-boundary-policies) · [MCP specification](https://modelcontextprotocol.io/specification/latest) · [sampling](https://modelcontextprotocol.io/specification/latest/client/sampling) · [roots](https://modelcontextprotocol.io/specification/latest/client/roots) · [transports](https://modelcontextprotocol.io/specification/latest/basic/transports)
 
 [↑ Back to top](#machine-learning-agents-und-generative-ki)
 
@@ -1450,6 +1570,27 @@ What the tools offer by name:
 - **CX Agent Studio:** a hallucinations metric on turns with tool calls (Module 2, section 3).
 
 Retrieval precision and recall are computed from the retrieved document IDs against the golden dataset, a deterministic check in the sense of 4.1.
+
+##### 4.5 Test sets and tooling
+
+A test set needs more than the common questions:
+
+| Source | Gives | Misses |
+|---|---|---|
+| Hand-written golden cases | the behavior you care about, with reference answers and expected tool calls | breadth |
+| Production logs | what users really ask | edge cases, adversarial and out-of-domain input, because users rarely send them |
+| Synthetic generation | many consistent examples from a prompt template, including ambiguous, adversarial and out-of-domain cases | realism; review a sample by hand |
+
+Raw document chunks are not test prompts: they do not look like user questions and have no expected answer.
+
+| Tool | Use for |
+|---|---|
+| **ADK evaluation** (`adk eval`, eval sets) | agent behavior in development and CI: tool trajectory, response match, rubric and hallucination criteria (4.1, 4.4) |
+| **Gen AI evaluation service** | model and agent output at scale: adaptive rubrics (`GENERAL_QUALITY`, `INSTRUCTION_FOLLOWING`), static rubrics (`GROUNDING`, `SAFETY`), computation-based metrics (`rouge_1`, `bleu`, `exact_match`), agent metrics (`tool_use_quality`, `hallucination`), synthetic data generation |
+| **Custom LLM metric** (your own rubric as a judge prompt, `types.LLMMetric`) | criteria only you can define, such as a brand voice; calibrate it like any judge (4.2) |
+| **Custom function metric** | anything computable in code |
+
+Prebuilt rubrics score general qualities; lexical overlap scores wording. Neither knows a proprietary style guide, and deterministic assertions cannot grade free text.
 
 #### 5. Evals across the lifecycle
 
@@ -1772,7 +1913,9 @@ Three layers are often confused. They protect against different things:
 | Model safety filters | harmful content in four categories: hate speech, harassment, sexually explicit, dangerous content (thresholds from `BLOCK_LOW_AND_ABOVE` to `OFF`; console: block few, some, most) | no business rules and no prompt injection: a polite request for a discount the agent may not grant passes every threshold |
 | **Model Armor** | prompt injection and jailbreaks, sensitive data (via Sensitive Data Protection), malicious URLs, the responsible-AI categories; screens prompts and responses separately, outside the model, for models on Google Cloud or elsewhere | documented limits: single-turn only, no audio or video, no decoding of Base64, hex or URL-encoded content |
 
-Model Armor is configured with **templates** (a set of filters with confidence thresholds; separate templates for input and output are recommended) and **floor settings** (an organization-level minimum that every project template must meet). It can inspect only (log) or inspect and block. In the data path it sits in Agent Gateway ([gateway.ipynb](gateway.ipynb)).
+Model Armor is configured with **templates** (a set of filters with confidence thresholds; separate templates for input and output are recommended) and **floor settings** (an organization-level minimum that every project template must meet). It can inspect only (log) or inspect and block. In the data path it sits in Agent Gateway ([gateway.ipynb](gateway.ipynb)). Because it is attached as a policy, it adds a guardrail such as PII filtering of responses without a change to the agent's code; a regex in a custom webhook is brittle, and a network perimeter does not read payloads.
+
+**Indirect prompt injection** arrives in data the agent reads (logs with user comments, tickets, web pages), not in the user's prompt. Two controls belong together: screen the incoming content with Model Armor, and require **human approval (human in the loop)** before high-impact tools run. Approval after the tool has executed is too late, and an instruction to "ignore commands in the data" is the soft layer again.
 
 None of the three enforces a workflow: a mandatory order of steps belongs in a taskflow, a tool or a state machine (Module 2), and what an agent may do at all belongs in permissions (Module 5, section 6).
 
@@ -1843,25 +1986,36 @@ Absence defect · Automation bias · OWASP Top 10 · Authentication vs. authoriz
 - **Rollback is a capability:** practice it. A skill or prompt rollback is a pointer move; a database migration needs expand–migrate–contract (add the new column, write both, backfill, switch reads, remove the old one) so that the previous version keeps working.
 - **Health checks:** liveness ("is the process alive?" → restart) and readiness ("can it take requests?" → remove from the load balancer) are different questions. A liveness check that probes a dependency restarts every instance when that dependency is slow.
 
-#### 2. Capacity and cost
+#### 2. Choosing the runtime
+
+| | Agent Runtime | Cloud Run | GKE |
+|---|---|---|---|
+| What it is | fully managed runtime for agents | serverless containers | Kubernetes |
+| You manage | the agent code | a container image | cluster, nodes, scaling |
+| Sessions and memory | managed Sessions and Memory Bank without a database of your own | bring your own store, or call the managed services | bring your own store |
+| Fits | fastest path from ADK code to production; also LangGraph, LangChain, LlamaIndex, custom frameworks | custom containers, any language, scale to zero, existing Cloud Run estate | GPUs and self-hosted models, service mesh, full control |
+
+Pick the most managed runtime that meets the requirements. Managed sessions and memory with minimal plumbing point to Agent Runtime; a self-hosted model next to the agent points to GKE.
+
+#### 3. Capacity and cost
 
 - Reserve capacity for the latency-sensitive path and keep batch work off it (Provisioned Throughput and PayGo tiers: Module 7, section 4).
 - Tier models per subtask (Module 7, section 1) and keep the prompt prefix stable for caching (Module 4, section 2).
 - Compare cost and latency only over successful runs (Module 10, section 3).
 
-#### 3. Observability for agents
+#### 4. Observability for agents
 
-- **Traces** are the primary signal: one span per model call and tool call, with tokens, cost and latency. OpenTelemetry defines *Generative AI semantic conventions* (`gen_ai.*` attributes); they are still in development, so pin the version you emit.
+- **Traces** are the primary signal: one span per model call and tool call, with tokens, cost and latency. OpenTelemetry defines *Generative AI semantic conventions* (`gen_ai.*` attributes); they are still in development, so pin the version you emit. On Agent Runtime, ADK tracing is switched on with environment variables at deploy time (`GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true`) and viewed per session or per span in Cloud Trace; separate spans for model calls and tool calls show whether latency comes from reasoning or from a tool.
 - **Logs** are structured and carry a correlation ID per request; no secrets or personal data in them.
 - **Metrics** per agent: request rate, error rate, latency histogram (RED), plus tokens and tool-call counts. No high-cardinality labels such as user IDs.
 - **SLOs:** define the indicator from the user's view and accept an error budget; 100% is the wrong target. An agent is not deterministic: its quality indicators are distributions (share of grounded answers, task success rate), and alerts fire on the rate, not on a single deviating answer.
 - **Alert on symptoms** users feel, not on causes; link each alert to a runbook. In an incident, mitigate first (roll back, switch off the flag) and look for the cause afterwards.
 
-#### 4. Troubleshooting
+#### 5. Troubleshooting
 
 | Symptom | Likely cause | Where to look, what to change |
 |---|---|---|
-| Agent loops or never finishes | no exit condition, critic never satisfied | trace of the run; `max_iterations`, an explicit exit tool (Module 8, section 2), a step budget |
+| Agent loops or never finishes | no exit condition, critic never satisfied | trace of the run; `max_iterations`, an explicit exit tool (Module 8, section 2), a cap on model calls per run (ADK `RunConfig.max_llm_calls`). An alert or a retry does not stop a loop |
 | Wrong tool or invented parameters | too many similar tool schemas, vague descriptions | bind fewer tools per turn, sharpen descriptions (Module 6, sections 2 and 6) |
 | Latency spikes at peak | shared capacity, spillover to Standard PayGo, queueing on a shared endpoint | `trafficType` in responses; Priority PayGo, dedicated endpoint, smaller model for simple steps (Module 7) |
 | 429 errors | `dedicated` traffic above the PT order, or PayGo contention | request-type headers (Module 7, section 4), backoff |
