@@ -7,7 +7,7 @@ Ein Thema pro Teil. Kosten (Abrechnung, Rabatte, Spot, Datenverkehr) bekommen in
 - [1. Compute und Serverless](#1-compute-und-serverless): Wo läuft mein Code (Entscheidungsbaum), Maschinenfamilien, eigene Images und Instanzvorlagen, Managed Instance Groups (Autoscaling, Autohealing, Rolling Updates), Spot-VMs, Sole-Tenant-Nodes, VM Manager, GPUs, Cloud Run vs. Cloud Run Functions vs. App Engine
 - [2. GKE: Google Kubernetes Engine](#2-gke-google-kubernetes-engine): Control Plane und Node Pools, Standard vs. Autopilot, Deployment vs. StatefulSet, Services und Ingress, private Nodes, HPA und Cluster Autoscaler, Rollouts und Probes, Workload Identity, Binary Authorization, Fleet
 - [3. Networking: VPC, Verbindungen und Load Balancing](#3-networking-vpc-verbindungen-und-load-balancing): L3/L4/L7-Schichtenmodell, globales VPC und regionale Subnetze, Firewall-Regeln (Prioritäten, Tags vs. Service Accounts), Shared VPC vs. Peering, Private Google Access, Cloud NAT, Private Services Access vs. Private Service Connect, VPC Service Controls, HA VPN, Dedicated und Partner Interconnect, Application vs. Proxy vs. Passthrough Network LB, URL Maps, Health Checks, Cloud CDN, Cloud Armor
-- [4. IAM und Security](#4-iam-und-security): Ressourcenhierarchie, IAM-Rollen, Service Accounts, Organization Policies, Cloud KMS und CMEK, Secret Manager, Sensitive Data Protection, Compliance; dazu Authentification: Bausteine (Agent, Runtime, MCP, A2A, Identity), OIDC vs. Access-Token, Registry header_provider, Fehlerbilder 401/403, Google-managed OAuth; Agent-Authentifizierung in der Praxis: Credential-Typen, gcloud vs. ADC, Identität je Runtime, A2A, Auth Manager (API-Key, 2LO, 3LO), Service Agents als Aufrufer, Least Privilege
+- [4. IAM und Security](#4-iam-und-security): Ressourcenhierarchie, IAM-Rollen, Service Accounts, Organization Policies, Cloud KMS und CMEK, Secret Manager, Sensitive Data Protection, Compliance; dazu Authentification: Bausteine (Agent, Runtime, MCP, A2A, Identity), OIDC vs. Access-Token, Registry header_provider, Fehlerbilder 401/403, Google-managed OAuth; Agent-Authentifizierung in der Praxis: Credential-Typen, gcloud vs. ADC, Identität je Runtime, A2A, Auth Manager (API-Key, 2LO, 3LO), Service Agents als Aufrufer, Least Privilege; OAuth 2.0 im Namen eines Nutzers: Rollen, Authorization Code Flow, Consent und Client in der Console, Refresh-Token, Scopes gegen IAM, PKCE, Code-Beispiele
 - [5. Data: Speicher, Datenbanken und Analytics](#5-data-speicher-datenbanken-und-analytics): welcher Speicher wofür (Entscheidungsbaum), Cloud-Storage-Klassen und Lifecycle, Medien mit Cloud CDN ausliefern, Persistent Disk und Filestore, Datentransfer, Cloud SQL, AlloyDB, Spanner, Bigtable (Row Keys), Firestore, Memorystore, BigQuery, Pub/Sub, Dataflow, Dataproc
 - [6. Operations: Delivery, Betrieb, Ausfallsicherheit und Migration](#6-operations-delivery-betrieb-ausfallsicherheit-und-migration): Cloud Build, Cloud Deploy, Release-Strategien, Terraform, Cloud Monitoring und Logging, Trace und Profiler, SLOs und Error Budgets, RPO und RTO, DR-Muster, Backup and DR Service, Migration Center, Migrate to VMs, Database Migration Service
 
@@ -3300,12 +3300,377 @@ Was ein Cloud-Run-Agent im Kurs *wirklich* braucht: `roles/aiplatform.user`, `ro
 - **Service Account / Service Agent** – von dir angelegte bzw. Google-verwaltete nicht-menschliche Identität.
 - **SPIFFE / SVID** – Standard für Workload-Identitäten (X.509- oder JWT-SVIDs); Basis von Agent Identity.
 - **STS / Workload Identity Federation** – Token-Exchange, mit dem eine externe/Workload-Identität gegen ein Google-Token getauscht wird (`sts.googleapis.com`).
-- **2LO / 3LO** – 2-legged (Client Credentials, app-only) vs. 3-legged (Authorization Code, im Namen eines Nutzers) OAuth.
+- **2LO / 3LO** – 2-legged (Client Credentials, app-only) vs. 3-legged (Authorization Code, im Namen eines Nutzers) OAuth. Den 3-legged-Ablauf erklärt [4.18](#418-oauth-20-im-namen-eines-nutzers-der-authorization-code-flow) Schritt für Schritt.
 - **PAT** – Personal Access Token (GitHub); technisch ein statisches Bearer-Secret.
 - **Auth Provider** – Ressource im Agent Identity Auth Manager, die ein API-Key-/2LO-/3LO-Credential kapselt; Zugriff per `roles/agentidentity.user`.
 - **A2A** – Agent2Agent-Protokoll (Agent Card + JSON-RPC); Auth ist nicht Teil des Protokolls, sondern der Transportebene/des Ziels.
 - **IAP** – Identity-Aware Proxy; setzt Google-Login vor einen Dienst.
 - **DPoP** – Demonstrating Proof of Possession; bindet ein Token an einen Client-Schlüssel.
+
+---
+
+### 4.18 OAuth 2.0 im Namen eines Nutzers: der Authorization Code Flow
+
+[4.17](#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager) erklärt, wie sich Programme ausweisen: Service Account, Agent Identity, Client Credentials. Dieser Abschnitt erklärt den anderen Fall: Ein Mensch erlaubt einer Anwendung, in seinem Namen zu handeln. Dieser Ablauf steckt hinter jedem „Verbinden“-Knopf, zum Beispiel wenn ein Agent in Gemini Enterprise einen MCP-Server mit den Rechten der angemeldeten Person aufruft.
+
+#### Das Bild zuerst: Ana und der Agent
+
+Ana arbeitet im Einkauf. Ein Agent soll für sie Dateien aus Cloud Storage lesen. Es gibt drei Wege, dem Agent Zugriff zu geben:
+
+| Weg | Folge |
+|---|---|
+| Ana gibt dem Agent ihr Passwort | Der Agent kann alles, was Ana kann, und zwar dauerhaft. Zurücknehmen lässt sich das nur, indem Ana ihr Passwort ändert. |
+| Der Agent bekommt ein Dienstkonto für alle Nutzer | Der Agent sieht für jeden dasselbe, auch Dateien, die Ana gar nicht sehen darf. Rechte pro Person gehen verloren. |
+| **OAuth 2.0** | Ana meldet sich bei Google an, nicht beim Agent. Google zeigt ihr, was der Agent möchte („Dateien in Cloud Storage lesen“). Stimmt sie zu, bekommt der Agent ein Token: befristet, auf diesen Umfang begrenzt und jederzeit widerrufbar. Anas Passwort sieht der Agent nie. |
+
+OAuth 2.0 (RFC 6749) regelt also **delegierte Autorisierung**. Das Protokoll kennt vier Rollen:
+
+| Rolle | Im Beispiel | Aufgabe |
+|---|---|---|
+| **Resource Owner** | Ana | besitzt die Rechte und entscheidet über die Freigabe |
+| **Client** | die Anwendung hinter dem Agent, bei Google als OAuth-Client registriert | will in Anas Namen zugreifen |
+| **Authorization Server** | Google (`accounts.google.com`, `oauth2.googleapis.com`) | meldet Ana an, holt ihre Zustimmung ein und stellt Tokens aus |
+| **Resource Server** | die Cloud-Storage-API oder der Cloud-Storage-MCP-Server | prüft bei jedem Aufruf das Token |
+
+#### Der Ablauf
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Ana as Ana (Browser)
+    participant App as Anwendung (Server)
+    participant G as Google<br/>Authorization Server
+    participant API as Cloud Storage<br/>Resource Server
+    Ana->>App: klickt „Verbinden“
+    App-->>Ana: Weiterleitung mit client_id, redirect_uri,<br/>scope, state, code_challenge
+    Ana->>G: meldet sich an und stimmt zu
+    G-->>Ana: Weiterleitung zur redirect_uri<br/>mit code und state
+    Ana->>App: Browser liefert code und state ab
+    App->>G: code, Client Secret, code_verifier<br/>(direkt von Server zu Server)
+    G-->>App: Access-Token, Refresh-Token, ID-Token
+    App->>API: Aufruf mit Authorization: Bearer
+    API-->>App: Daten, soweit Scope und IAM es erlauben
+```
+
+- **Schritte 1 und 2, Start:** Die Anwendung erzeugt einen Zufallswert `state`, merkt ihn sich und schickt Anas Browser zu Googles Autorisierungs-Adresse.
+- **Schritt 3, Zustimmung:** Ana meldet sich bei Google an und sieht, welche Anwendung welchen Umfang (Scopes) möchte.
+- **Schritte 4 und 5, Rücksprung:** Google schickt den Browser an die `redirect_uri` der Anwendung, mit einem einmaligen `code` und dem unveränderten `state`. Die Anwendung vergleicht `state` mit dem gemerkten Wert und verwirft die Antwort, wenn er nicht passt.
+- **Schritte 6 und 7, Tausch:** Der Server der Anwendung schickt den `code` zusammen mit seinem Client Secret direkt an Googles Token-Adresse und bekommt die Tokens.
+- **Schritte 8 und 9, Aufruf:** Jeder API-Aufruf trägt das Access-Token im Header.
+
+Der Ablauf hat zwei Stufen, weil die beiden Wege verschieden sicher sind. Die Schritte 1 bis 5 laufen über den Browser (**Front-Channel**): Adressen landen dort im Verlauf, in Logs und bei Erweiterungen. Deshalb reist über diesen Weg nur der Einmal-Code. Die Schritte 6 und 7 laufen direkt zwischen zwei Servern (**Back-Channel**): Nur dort tauchen das Client Secret und die Tokens auf.
+
+| Sicherung | Was sie verhindert |
+|---|---|
+| `state` | dass ein Angreifer dem Opfer einen fremden Rücksprung unterschiebt (Cross-Site Request Forgery) |
+| genau registrierte `redirect_uri` | dass der Code an eine Adresse des Angreifers geht. Schema, Groß- und Kleinschreibung und der Schrägstrich am Ende müssen übereinstimmen, sonst antwortet Google mit `redirect_uri_mismatch`. |
+| Client Secret beim Tausch | dass jemand mit einem abgefangenen Code Tokens holt |
+| PKCE (siehe unten) | dasselbe, auch für Anwendungen, die kein Geheimnis verbergen können |
+
+#### Vier Dinge, die unterwegs sind
+
+| | Lebensdauer | Weg | Wozu |
+|---|---|---|---|
+| **Authorization Code** | einmalig und kurz | über den Browser | wird gegen Tokens getauscht |
+| **Access-Token** | kurz; `expires_in` in der Antwort nennt die Sekunden, typisch etwa eine Stunde | Server → API, im Header `Authorization: Bearer …` | Zugriff im freigegebenen Umfang |
+| **Refresh-Token** | lange | bleibt auf dem Server | holt neue Access-Tokens, ohne dass Ana erneut zustimmen muss |
+| **ID-Token** (JWT) | kurz | bleibt auf dem Server | sagt, wer zugestimmt hat (`sub`, `email`). Google stellt es nur aus, wenn der Scope `openid` angefragt wird. |
+
+Access-Token und ID-Token haben verschiedene Empfänger: Das Access-Token ist für die API bestimmt, das ID-Token für die Anwendung selbst (siehe [4.16](#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth)). Im ID-Token ist `sub` der stabile Schlüssel für einen Nutzer; `email` kann sich ändern.
+
+#### Was man in der Console anlegt
+
+Unter **Google Auth Platform** legt man zwei Dinge an.
+
+**1. Audience** (wer die Anwendung autorisieren darf):
+
+| Audience | Wer | Besonderheiten |
+|---|---|---|
+| **Internal** | nur Nutzer der eigenen Google-Cloud-Organisation; alle anderen bekommen den Fehler `org_internal` | keine Verifizierung durch Google nötig. Setzt eine Organisation voraus. |
+| **External**, Status *Testing* | höchstens 100 eingetragene Testnutzer | Zustimmungen und Refresh-Tokens verfallen nach **7 Tagen**. Ausnahme: Die Anwendung fragt nur Name, E-Mail und Profil an. |
+| **External**, Status *In production* | jedes Google-Konto | Je nach Scopes verlangt Google eine Verifizierung; bis dahin sehen Nutzer eine Warnung. |
+
+**2. Client:**
+
+- **Typ.** *Web application* ist für Anwendungen mit eigenem Server. Sie können ein Geheimnis verbergen (**Confidential Client**). *Desktop*, *Android* und *iOS* sind für installierte Anwendungen; dort lässt sich ein Geheimnis nicht verbergen (**Public Client**).
+- **Client ID:** die öffentliche Kennung der Anwendung. Sie steht in jeder Autorisierungs-Adresse.
+- **Client Secret:** das Passwort der Anwendung für den Tausch am Token-Endpunkt. Google speichert es nur als Hash und zeigt es einmal bei der Erstellung. Zwei Secrets gleichzeitig sind möglich, damit man rotieren kann. Es gehört in Secret Manager, nicht in Code oder Notebooks.
+- **Authorized redirect URIs:** die Adressen des eigenen Servers, an die Google antworten darf.
+- **Authorized JavaScript origins:** nur für Code, der im Browser selbst Google-APIs aufruft. Tauscht ein Server den Code, bleibt das Feld leer.
+- **„Use this client for an AI-powered agent“:** eine Selbstauskunft, die keine zusätzlichen Rechte gibt. Google empfiehlt für Agent- und MCP-Abläufe einen eigenen Client, getrennt von gewöhnlichen Web-Anwendungen.
+
+#### Die Parameter der Autorisierungs-Adresse
+
+`https://accounts.google.com/o/oauth2/v2/auth?…`
+
+| Parameter | Pflicht? | Bedeutung |
+|---|---|---|
+| `client_id` | ja | welche Anwendung fragt |
+| `redirect_uri` | ja | wohin Google antwortet; muss registriert sein |
+| `response_type=code` | ja | es soll ein Code zurückkommen, kein Token |
+| `scope` | ja | der gewünschte Umfang, mehrere Werte durch Leerzeichen getrennt. Der Parameter darf nur einmal vorkommen. |
+| `state` | empfohlen | Zufallswert gegen Cross-Site Request Forgery |
+| `access_type=offline` | empfohlen | Google gibt beim ersten Tausch zusätzlich ein Refresh-Token zurück. Der Standard `online` liefert keins. |
+| `prompt=consent` | wahlweise | zeigt den Zustimmungsdialog erneut. Ohne den Parameter fragt Google nur beim ersten Mal. |
+| `include_granted_scopes=true` | wahlweise | das neue Token umfasst auch früher freigegebene Scopes (schrittweise Freigabe) |
+| `login_hint` | wahlweise | füllt das Konto im Anmeldedialog vor |
+| `code_challenge`, `code_challenge_method=S256` | wahlweise | PKCE (siehe unten) |
+
+**Die Falle mit dem Refresh-Token.** Google gibt ein Refresh-Token nur bei der ersten Autorisierung zurück. Verbindet Ana die Anwendung später erneut, kommt ohne neuen Dialog nur ein Access-Token; nach dessen Ablauf bricht die Verbindung ab. Deshalb setzt man `access_type=offline` zusammen mit `prompt=consent`. Die Doku zum Custom-MCP-Connector von Gemini Enterprise nennt genau diese beiden Parameter, um von einem Google-MCP-Server ein Refresh-Token zu bekommen.
+
+**Wann ein Refresh-Token nicht mehr gilt:**
+
+- Ana widerruft den Zugriff.
+- Das Token wurde sechs Monate nicht benutzt.
+- Für dasselbe Konto und denselben Client gibt es mehr als 100 Refresh-Tokens; Google macht dann das älteste ohne Meldung ungültig.
+- Die Anwendung ist *External* im Status *Testing* (7 Tage).
+- Ein Administrator schränkt den Dienst ein, oder die Sitzungsdauer der Organisation läuft ab.
+
+Die Anwendung muss deshalb damit rechnen, dass das Erneuern mit `invalid_grant` scheitert, und Ana dann neu verbinden lassen.
+
+**Doppelter Parameter.** Steht `scope` zweimal in der Adresse, zum Beispiel einmal im Feld für Scopes und noch einmal in zusätzlichen Parametern, lehnt Google die Anfrage mit HTTP 400 ab.
+
+#### Scopes und IAM: beide müssen zustimmen
+
+Scopes und IAM-Rollen werden oft verwechselt. Sie beantworten verschiedene Fragen:
+
+- **IAM-Rollen** sagen, was Ana in einem Projekt darf.
+- **Scopes** sagen, welchen Teil davon Ana dieser einen Anwendung überlässt.
+
+Ein Aufruf gelingt nur, wenn beide ihn erlauben. Beispiel: Die Anwendung will die Buckets eines Projekts auflisten.
+
+| | Ana hat die IAM-Rolle | Ana hat sie nicht |
+|---|---|---|
+| **Token enthält einen Storage-Scope** | erlaubt | 403: Ana fehlt die Berechtigung |
+| **Token enthält nur `openid email`** | 403: der Scope reicht nicht | 403 |
+
+```
+erlaubt  =  (Aktion liegt im Scope des Tokens)  UND  (Aktion liegt in Anas IAM-Rechten)
+```
+
+Daraus folgt zweierlei:
+
+- Auch der breite Scope `https://www.googleapis.com/auth/cloud-platform` gibt der Anwendung nie mehr, als Ana selbst darf.
+- Ein schmaler Scope begrenzt trotzdem den Schaden, falls ein Token abhandenkommt. Für reines Lesen in Cloud Storage reicht `https://www.googleapis.com/auth/devstorage.read_only`.
+
+**Dritte Prüfung bei Googles MCP-Servern.** Die Remote-MCP-Server von Google Cloud verlangen vom Aufrufer zusätzlich die Berechtigung `mcp.tools.call` auf dem Projekt (Rolle `roles/mcp.toolUser`). Sie ersetzt die Rechte auf den Daten nicht, sie kommt dazu. Für den Cloud-Storage-MCP-Server (`https://storage.googleapis.com/storage/mcp`):
+
+| Aktion | Rolle zusätzlich zu `roles/mcp.toolUser` |
+|---|---|
+| Objekte auflisten, lesen, Metadaten ansehen | `roles/storage.objectViewer` |
+| Objekte schreiben | `roles/storage.objectCreator` |
+| Objekte löschen | `roles/storage.objectUser` oder `roles/storage.objectAdmin` |
+| Buckets anlegen, auflisten, löschen | `roles/storage.admin` |
+
+Als Scopes nennt die Doku `devstorage.read_only` und `devstorage.read_write`. Die Werkzeugliste (`tools/list`) gibt der Server ohne Anmeldung heraus; ein Werkzeug aufrufen (`tools/call`) geht nur mit Bearer-Token, ohne Token antwortet er mit 401.
+
+#### PKCE zum Nachrechnen
+
+PKCE (Proof Key for Code Exchange, RFC 7636) schützt den Code auf dem Weg durch den Browser. Die Idee an einem Beispiel:
+
+1. Die Anwendung denkt sich für diese eine Anmeldung ein Geheimnis aus, den `code_verifier`.
+2. In die Autorisierungs-Adresse schreibt sie nur dessen Hash, die `code_challenge`.
+3. Beim Tausch schickt sie den `code_verifier` selbst mit.
+4. Google rechnet den Hash nach und gibt Tokens nur heraus, wenn er zur `code_challenge` aus Schritt 2 passt.
+
+Wer unterwegs nur den Code abfängt, kennt den `code_verifier` nicht und kann den Code nicht einlösen.
+
+```
+code_challenge = BASE64URL( SHA256( code_verifier ) )      ohne „=“ am Ende
+```
+
+Testwerte aus RFC 7636, Anhang B (der Code unten rechnet sie nach):
+
+```
+code_verifier  = dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+code_challenge = E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+```
+
+- **Wer es braucht:** Nach RFC 9700 müssen Public Clients PKCE verwenden; für Confidential Clients ist es empfohlen. Google unterstützt die Methode `S256`.
+- **PKCE und Client Secret schließen sich nicht aus.** Das Secret beweist, *welche Anwendung* tauscht. PKCE beweist, dass es *dieselbe Anmeldung* ist, die den Ablauf begonnen hat.
+- **Wie das Secret beim Tausch mitgeht:** entweder im Header `Authorization: Basic base64(client_id:client_secret)` (`client_secret_basic`) oder als Feld im Body (`client_secret_post`). Googles Token-Endpunkt nimmt beides an.
+
+#### Der Ablauf im Custom-MCP-Connector von Gemini Enterprise
+
+Die Felder des Connectors sind die Bausteine von oben:
+
+| Feld im Connector | Entspricht |
+|---|---|
+| MCP Server URL | dem Resource Server (nur Streamable HTTP) |
+| Authorization URL | `https://accounts.google.com/o/oauth2/v2/auth`, ohne Parameter. `client_id`, `redirect_uri` und `scope` hängt Gemini Enterprise selbst an. |
+| Authorization URL Parameters | zusätzlichen Parametern, z. B. `&access_type=offline&prompt=consent` |
+| Token URL | `https://oauth2.googleapis.com/token` |
+| Client ID, Client Secret | dem Web-Client aus der Console |
+| Scopes | durch Leerzeichen getrennt |
+| Enable PKCE Support | sendet `code_challenge` und `code_verifier` |
+| Use HTTP Basic Authentication | `client_secret_basic` statt `client_secret_post`; standardmäßig an |
+
+Am OAuth-Client muss als Redirect-URI `https://vertexaisearch.cloud.google.com/oauth-redirect` eingetragen sein, denn dorthin schickt Google den Code. Wie sich die Nutzer bei Gemini Enterprise selbst anmelden (Google-Konten oder ein externer Identity Provider über Workforce Identity Federation), steht in [4.2](#42-identitäten-menschen-und-gruppen).
+
+#### Code: der Ablauf von Hand
+
+Die Beispiele führen den Ablauf Schritt für Schritt mit `requests` aus, damit jedes Token sichtbar wird. Voraussetzungen:
+
+- ein OAuth-Client vom Typ *Web application* mit der Redirect-URI `http://localhost:8080/callback`,
+- Client ID und Client Secret als Umgebungsvariablen,
+- bei einem Projekt ohne Organisation die Audience *External* im Status *Testing*, mit dem eigenen Konto als Testnutzer.
+
+**1. Autorisierungs-Adresse bauen**
+
+```python
+import base64, hashlib, json, os, secrets, urllib.parse
+import requests
+
+CLIENT_ID = os.environ["OAUTH_CLIENT_ID"]            # öffentlich, endet auf .apps.googleusercontent.com
+CLIENT_SECRET = os.environ["OAUTH_CLIENT_SECRET"]    # geheim: nie in Code oder Notebook schreiben
+REDIRECT_URI = "http://localhost:8080/callback"      # genau so am Client registriert
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+SCOPES = ["openid", "email", "https://www.googleapis.com/auth/devstorage.read_only"]
+
+state = secrets.token_urlsafe(32)                    # kommt unverändert zurück
+code_verifier = secrets.token_urlsafe(64)            # PKCE: bleibt bei der Anwendung
+code_challenge = base64.urlsafe_b64encode(
+    hashlib.sha256(code_verifier.encode()).digest()).rstrip(b"=").decode()
+
+auth_url = "https://accounts.google.com/o/oauth2/v2/auth?" + urllib.parse.urlencode({
+    "client_id": CLIENT_ID,
+    "redirect_uri": REDIRECT_URI,
+    "response_type": "code",
+    "scope": " ".join(SCOPES),                       # ein Parameter, Werte durch Leerzeichen getrennt
+    "state": state,
+    "access_type": "offline",                        # Refresh-Token anfordern
+    "prompt": "consent",                             # Dialog erneut zeigen, damit es auch beim zweiten Mal kommt
+    "code_challenge": code_challenge,
+    "code_challenge_method": "S256",
+})
+print(auth_url)                                      # im Browser öffnen, anmelden, zustimmen
+```
+
+Nach der Zustimmung leitet Google den Browser auf `http://localhost:8080/callback?state=…&code=…` um. Dort lauscht nichts, der Browser zeigt also eine Fehlerseite. Die Adresse in der Adresszeile enthält trotzdem alles Nötige.
+
+**2. Rücksprung prüfen und den Code tauschen**
+
+```python
+ruecksprung = input("Adresse aus der Adresszeile: ")
+antwort = urllib.parse.parse_qs(urllib.parse.urlparse(ruecksprung).query)
+assert antwort["state"][0] == state, "state passt nicht: Antwort verwerfen"
+
+r = requests.post(
+    "https://oauth2.googleapis.com/token",
+    auth=(CLIENT_ID, CLIENT_SECRET),                 # client_secret_basic: Header „Authorization: Basic …“
+    data={
+        "grant_type": "authorization_code",
+        "code": antwort["code"][0],                  # einmalig: ein zweiter Tausch schlägt fehl
+        "redirect_uri": REDIRECT_URI,                # muss dieselbe sein wie in Schritt 1
+        "code_verifier": code_verifier,              # Google rechnet den Hash nach
+    },
+    timeout=30,
+)
+r.raise_for_status()
+tokens = r.json()
+print(sorted(tokens))   # access_token, expires_in, id_token, refresh_token, scope, token_type
+```
+
+**3. Das ID-Token prüfen: wer hat zugestimmt?**
+
+```python
+from google.auth.transport.requests import Request
+from google.oauth2 import id_token
+
+claims = id_token.verify_oauth2_token(tokens["id_token"], Request(), audience=CLIENT_ID)
+print(claims["sub"], claims.get("email"), claims["aud"] == CLIENT_ID)
+```
+
+`verify_oauth2_token` prüft die Signatur mit Googles öffentlichen Schlüsseln, den Aussteller, den Empfänger (`aud`) und das Ablaufdatum. Nur zum Ansehen lässt sich der mittlere Teil eines JWT auch ohne Prüfung lesen; als Nachweis taugt das nicht:
+
+```python
+def ansehen(jwt: str) -> dict:
+    teil = jwt.split(".")[1]
+    return json.loads(base64.urlsafe_b64decode(teil + "=" * (-len(teil) % 4)))
+
+print(ansehen(tokens["id_token"]))
+```
+
+**4. Eine API in Anas Namen aufrufen**
+
+```python
+r = requests.get(
+    "https://storage.googleapis.com/storage/v1/b",
+    params={"project": PROJECT_ID},
+    headers={"Authorization": f"Bearer {tokens['access_token']}"},
+    timeout=30,
+)
+print(r.status_code, [b["name"] for b in r.json().get("items", [])])
+```
+
+Welche Scopes ein Access-Token trägt, zeigt Googles Auskunfts-Endpunkt. Er ist zum Nachsehen gedacht, nicht als Prüfung im Betrieb:
+
+```python
+info = requests.get("https://oauth2.googleapis.com/tokeninfo",
+                    params={"access_token": tokens["access_token"]}, timeout=30).json()
+print(info["scope"], info["expires_in"])
+```
+
+**5. Das Access-Token erneuern**
+
+```python
+r = requests.post(
+    "https://oauth2.googleapis.com/token",
+    auth=(CLIENT_ID, CLIENT_SECRET),
+    data={"grant_type": "refresh_token", "refresh_token": tokens["refresh_token"]},
+    timeout=30,
+)
+if r.status_code == 400 and r.json().get("error") == "invalid_grant":
+    print("Refresh-Token gilt nicht mehr: neu verbinden")
+else:
+    tokens["access_token"] = r.json()["access_token"]   # ein neues Refresh-Token kommt dabei nicht
+```
+
+**6. Scope oder IAM? Zwei Versuche**
+
+| Versuch | Erwartung |
+|---|---|
+| In Schritt 1 `SCOPES = ["openid", "email"]` setzen und Schritt 4 wiederholen | 403: Das Token hat keinen Storage-Scope, obwohl Ana die Rolle hat. |
+| Die Scopes aus Schritt 1 lassen, aber mit einem Konto ohne Storage-Rolle zustimmen | 403: Der Scope ist da, aber dem Konto fehlt die Berechtigung. |
+
+Beide Male antwortet die API mit 403. Die Fehlermeldung nennt im ersten Fall den unzureichenden Scope, im zweiten die fehlende Berechtigung.
+
+**7. Dasselbe Token am MCP-Server**
+
+```python
+mcp = "https://storage.googleapis.com/storage/mcp"
+kopf = {"Accept": "application/json, text/event-stream"}
+
+# Werkzeugliste: geht ohne Anmeldung
+r = requests.post(mcp, headers=kopf, json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"}, timeout=30)
+print(r.status_code)
+
+# Werkzeug aufrufen: nur mit Anas Token. Hier prüft der Server Scope, mcp.tools.call und die Storage-Rolle.
+r = requests.post(
+    mcp,
+    headers={**kopf, "Authorization": f"Bearer {tokens['access_token']}"},
+    json={"jsonrpc": "2.0", "id": 2, "method": "tools/call",
+          "params": {"name": "list_buckets", "arguments": {"projectId": PROJECT_ID}}},
+    timeout=30,
+)
+print(r.status_code, r.text[:300])
+```
+
+**8. Aufräumen: den Zugriff widerrufen**
+
+```python
+requests.post("https://oauth2.googleapis.com/revoke", data={"token": tokens["refresh_token"]}, timeout=30)
+```
+
+Damit sind das Refresh-Token und die daraus erzeugten Access-Tokens ungültig. Ana kann dasselbe jederzeit selbst in ihrem Google-Konto unter den Drittanbieter-Zugriffen tun.
+
+#### Noch zu prüfen
+
+- Dass `prompt=consent` ein neues Refresh-Token auslöst, steht in der OAuth-Doku nicht wörtlich; belegt ist die Kombination mit `access_type=offline` in der Connector-Doku.
+- Die Schritte 2 bis 8 brauchen einen eigenen OAuth-Client und eine Zustimmung im Browser. Geprüft sind die Adressen, die Parameter, der PKCE-Testwert, die Werkzeugliste und die Fehlerantworten ohne gültige Zugangsdaten.
+- Wo Gemini Enterprise das Client Secret des Connectors ablegt, nennt die öffentliche Doku nicht.
+
+Quellen: [OAuth 2.0 für Web-Server-Anwendungen](https://developers.google.com/identity/protocols/oauth2/web-server) · [OAuth 2.0 bei Google, Ablauf von Refresh-Tokens](https://developers.google.com/identity/protocols/oauth2) · [OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect) · [Discovery-Dokument](https://accounts.google.com/.well-known/openid-configuration) · [App Audience](https://support.google.com/cloud/answer/15549945) · [OAuth-Clients verwalten](https://support.google.com/cloud/answer/15549257) · [RFC 7636 (PKCE)](https://datatracker.ietf.org/doc/html/rfc7636) · [RFC 9700 (Security Best Current Practice)](https://datatracker.ietf.org/doc/html/rfc9700) · [MCP-Nutzung mit IAM steuern](https://docs.cloud.google.com/mcp/control-mcp-use-iam) · [Cloud-Storage-MCP-Server](https://docs.cloud.google.com/storage/docs/use-cloud-storage-mcp) · [Custom-MCP-Server in Gemini Enterprise](https://docs.cloud.google.com/gemini/enterprise/docs/connectors/custom-mcp-server/set-up-custom-mcp-server)
 
 [↑ Back to top](#google-cloud-architecture-professional-cloud-architect)
 
