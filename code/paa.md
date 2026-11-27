@@ -33,7 +33,7 @@ Architecture notes for agentic systems on Google Cloud: low-code agents, coding 
 **Part 6: Engineering foundations**
 - [Module 14 · Software engineering essentials for agent work](#module-14--software-engineering-essentials-for-agent-work)
 
-Agent authentication and authorization on Google Cloud (access vs. ID tokens, ADC, Agent Identity, Auth Manager) is in [pca.md, sections 4.16 and 4.17](pca.md#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
+Agent authentication and authorization on Google Cloud (access vs. ID tokens, ADC, Agent Identity, Auth Manager) is in [pca.md, sections 1.16 and 1.17](pca.md#116-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
 
 ---
 
@@ -83,7 +83,7 @@ Choose the most deterministic pattern that solves the task. A mandatory order (v
 | Coding agent | Antigravity, Gemini CLI, Claude Code (Modules 4 to 6) | software work in a repository: refactoring, migrations, tests |
 | Code | ADK and other open-source frameworks (Module 8) | custom agents with their own orchestration, tools, memory and deployment |
 
-Where a coded agent runs decides its identity and scaling: Agent Runtime (managed, sessions and memory built in), Cloud Run (containers, scale to zero) or GKE (full control, GPUs for self-hosted models). The identity each runtime gives an agent is listed in [pca.md, section 4.17](pca.md#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager).
+Where a coded agent runs decides its identity and scaling: Agent Runtime (managed, sessions and memory built in), Cloud Run (containers, scale to zero) or GKE (full control, GPUs for self-hosted models). The identity each runtime gives an agent is listed in [pca.md, section 1.17](pca.md#117-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager).
 
 [↑ Back to top](#machine-learning-agents-und-generative-ki)
 
@@ -478,7 +478,7 @@ Not in it:
 - **Few, clearly delineated tools.** Selection quality drops with similar-sounding options.
 - **A script often beats a server.** `make check-migrations` is deterministic, versioned, runs locally and is identical for human and agent.
 
-An MCP server is foreign code with access to your data and tools; choosing one is a supply chain decision (Module 11). Authenticating agents to MCP servers, other agents and external APIs on Google Cloud (ID vs. access tokens, Agent Identity, Auth Manager) is covered in [pca.md, sections 4.16 and 4.17](pca.md#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
+An MCP server is foreign code with access to your data and tools; choosing one is a supply chain decision (Module 11). Authenticating agents to MCP servers, other agents and external APIs on Google Cloud (ID vs. access tokens, Agent Identity, Auth Manager) is covered in [pca.md, sections 1.16 and 1.17](pca.md#116-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
 
 #### 5. Verification
 
@@ -1089,7 +1089,7 @@ flowchart TD
 
 - **Small search space:** each subagent searches only its own 5–15 skills, so selection is precise.
 - **Context isolation:** long logs, tool traces and loaded `SKILL.md` bodies stay in the subagent's disposable context; the coordinator gets a short structured summary (Module 5, section 7).
-- **Least privilege per agent:** each subagent runs under its own identity (SPIFFE-based Agent Identity, see [identity.ipynb](identity.ipynb) and [pca.md, section 4.17](pca.md#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager)) with IAM grants only for its domain's skills and MCP servers.
+- **Least privilege per agent:** each subagent runs under its own identity (SPIFFE-based Agent Identity, see [identity.ipynb](identity.ipynb) and [pca.md, section 1.17](pca.md#117-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager)) with IAM grants only for its domain's skills and MCP servers.
 
 In ADK, subagents are `LlmAgent`s with `include_contents="none"`, wired via `sub_agents=[...]` or wrapped in `AgentTool`. In Antigravity, subagents start without the parent's conversation history and run asynchronously in the background; the parent chooses the workspace when it calls `invoke_subagent`: `inherit` (the parent's workspace), `branch` (an isolated Git worktree, for concurrent code edits) or `share` (shared directory storage).
 
@@ -1410,7 +1410,7 @@ In practice: register vetted servers centrally, prefer read-only modes, filter t
 
 The Agent2Agent protocol lets agents on different frameworks and runtimes work together. An agent publishes an **Agent Card** (`/.well-known/agent-card.json`) with its skills and endpoint; a client agent resolves the card and sends a task as a JSON-RPC message. In ADK the client side is `RemoteA2aAgent`.
 
-Authentication is not part of the protocol; it depends on where the target runs (access token for Agent Runtime, ID token for private Cloud Run). A worked example with two engines is in [a2a.ipynb](a2a.ipynb), the credential rules in [pca.md, section 4.17](pca.md#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager).
+Authentication is not part of the protocol; it depends on where the target runs (access token for Agent Runtime, ID token for private Cloud Run). A worked example with two engines is in [a2a.ipynb](a2a.ipynb), the credential rules in [pca.md, section 1.17](pca.md#117-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager).
 
 #### 3. Agent Identity and least privilege
 
@@ -1441,7 +1441,7 @@ Agent Gateway is the governance and enforcement layer for agent traffic. It unde
 
 A fleet of agents built by different teams on different runtimes gets uniform telemetry and identity-based tracking by routing through the gateway, not by asking every team to instrument its code the same way.
 
-Worked through in [identity.ipynb](identity.ipynb) and [gateway.ipynb](gateway.ipynb); details in [pca.md, sections 4.16 and 4.17](pca.md#416-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
+Worked through in [identity.ipynb](identity.ipynb) and [gateway.ipynb](gateway.ipynb); details in [pca.md, sections 1.16 and 1.17](pca.md#116-authentifizierung-für-agents-bausteine-oidc-und-google-managed-oauth).
 
 References: [Agent Gateway overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview) · [Set up Agent Gateway](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/set-up-agent-gateway) · [Principal access boundary policies](https://docs.cloud.google.com/iam/docs/principal-access-boundary-policies) · [MCP specification](https://modelcontextprotocol.io/specification/latest) · [sampling](https://modelcontextprotocol.io/specification/latest/client/sampling) · [roots](https://modelcontextprotocol.io/specification/latest/client/roots) · [transports](https://modelcontextprotocol.io/specification/latest/basic/transports)
 
@@ -2021,7 +2021,7 @@ Pick the most managed runtime that meets the requirements. Managed sessions and 
 | 429 errors | `dedicated` traffic above the PT order, or PayGo contention | request-type headers (Module 7, section 4), backoff |
 | Answer not supported by the data | model answered from its weights, retrieval missed, tool output ignored | raw response of the turn; grounding constraint in the instructions, hallucination metric, retrieval check (Module 10, section 4.4) |
 | Quality drifts over weeks | model alias moved, data changed, prompt edits | pinned versions, online evaluation, golden tests in CI (Module 10, section 5) |
-| Works locally, 403 after deploy | the deployed agent runs under a different identity | grant the role to the runtime identity ([pca.md, section 4.17](pca.md#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager)) |
+| Works locally, 403 after deploy | the deployed agent runs under a different identity | grant the role to the runtime identity ([pca.md, section 1.17](pca.md#117-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager)) |
 | Each step succeeds, the result is wrong | defect of absence or of logic | review procedure and negative tests (Module 11) |
 
 Infrastructure monitoring (HTTP status, CPU) does not see semantic failures: a hallucinated answer follows a successful call. Those need evals and traces.

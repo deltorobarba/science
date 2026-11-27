@@ -17,7 +17,7 @@ Alexander Del Toro Barba (PhD) $\cdot$  [Google Scholar](https://scholar.google.
 **Google Cloud**
 * [Agent](https://github.com/deltorobarba/science/blob/main/code/agents.ipynb): Pipeline with ADK workflow graph, Memory Bank, Agent Engine deployment
 * [MCP](https://github.com/deltorobarba/science/blob/main/code/mcp.ipynb): on Cloud Run & Agent Platform. BigQuery MCP server, OIDC, ADK MCPToolset
-* [Models](https://github.com/deltorobarba/science/blob/main/code/models.ipynb): Gemini, GenAI SDK, OpenAI SDK, latency benchmark (TTFT, P50–P99)
+* [Models](https://github.com/deltorobarba/science/blob/main/code/models.ipynb): Gemini 4, GenAI SDK, Interactions API, OpenAI SDK, latency benchmark (TTFT, P50–P99)
 * [Identity](https://github.com/deltorobarba/science/blob/main/code/identity.ipynb): SPIFFE-based Agent Identity, Agent Registry, IAM, Agent Runtime
 * [Gateway](https://github.com/deltorobarba/science/blob/main/code/gateway.ipynb): Agent Gateway, ingress vs. egress, Model Armor, IAP, binding
 * [A2A](https://github.com/deltorobarba/science/blob/main/code/a2a.ipynb): Agent-to-Agent 1.0, Agent Card, A2aAgent, Agent Identity, mTLS
