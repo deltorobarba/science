@@ -7,7 +7,7 @@ Ein Thema pro Teil. Kosten (Abrechnung, Rabatte, Spot, Datenverkehr) bekommen in
 - [1. Compute und Serverless](#1-compute-und-serverless): Wo läuft mein Code (Entscheidungsbaum), Maschinenfamilien, eigene Images und Instanzvorlagen, Managed Instance Groups (Autoscaling, Autohealing, Rolling Updates), Spot-VMs, Sole-Tenant-Nodes, VM Manager, GPUs, Cloud Run vs. Cloud Run Functions vs. App Engine
 - [2. GKE: Google Kubernetes Engine](#2-gke-google-kubernetes-engine): Control Plane und Node Pools, Standard vs. Autopilot, Deployment vs. StatefulSet, Services und Ingress, private Nodes, HPA und Cluster Autoscaler, Rollouts und Probes, Workload Identity, Binary Authorization, Fleet
 - [3. Networking: VPC, Verbindungen und Load Balancing](#3-networking-vpc-verbindungen-und-load-balancing): L3/L4/L7-Schichtenmodell, globales VPC und regionale Subnetze, Firewall-Regeln (Prioritäten, Tags vs. Service Accounts), Shared VPC vs. Peering, Private Google Access, Cloud NAT, Private Services Access vs. Private Service Connect, VPC Service Controls, HA VPN, Dedicated und Partner Interconnect, Application vs. Proxy vs. Passthrough Network LB, URL Maps, Health Checks, Cloud CDN, Cloud Armor
-- [4. IAM und Security](#4-iam-und-security): Ressourcenhierarchie, IAM-Rollen, Service Accounts, Organization Policies, Cloud KMS und CMEK, Secret Manager, Sensitive Data Protection, Compliance; dazu Authentification: Bausteine (Agent, Runtime, MCP, A2A, Identity), OIDC vs. Access-Token, Registry header_provider, Fehlerbilder 401/403, Google-managed OAuth; Agent-Authentifizierung in der Praxis: Credential-Typen, gcloud vs. ADC, Identität je Runtime, A2A, Auth Manager (API-Key, 2LO, 3LO), Service Agents als Aufrufer, Least Privilege; OAuth 2.0 im Namen eines Nutzers: Rollen, Authorization Code Flow, Consent und Client in der Console, Refresh-Token, Scopes gegen IAM, PKCE, Code-Beispiele
+- [4. IAM und Security](#4-iam-und-security): Ressourcenhierarchie, IAM-Rollen, Service Accounts, Organization Policies, Cloud KMS und CMEK, Secret Manager, Sensitive Data Protection, Compliance; dazu Authentification: Bausteine (Agent, Runtime, MCP, A2A, Identity), OIDC vs. Access-Token, Registry header_provider, Fehlerbilder 401/403, Google-managed OAuth; Agent-Authentifizierung in der Praxis: Credential-Typen, gcloud vs. ADC, Identität je Runtime, A2A, Auth Manager (API-Key, 2LO, 3LO), Service Agents als Aufrufer, Least Privilege; OAuth 2.0 im Namen eines Nutzers: Rollen, Authorization Code Flow, Consent und Client in der Console, Refresh-Token, Scopes gegen IAM, PKCE, Code-Beispiele; VPC Service Controls bei einem Agent als SaaS: VPC gegen VPC-SC, Perimeter über zwei Organisationen, Stellvertreter-Projekt, Gateway als einziger Ausgang, Fragen eines CISO
 - [5. Data: Speicher, Datenbanken und Analytics](#5-data-speicher-datenbanken-und-analytics): welcher Speicher wofür (Entscheidungsbaum), Cloud-Storage-Klassen und Lifecycle, Medien mit Cloud CDN ausliefern, Persistent Disk und Filestore, Datentransfer, Cloud SQL, AlloyDB, Spanner, Bigtable (Row Keys), Firestore, Memorystore, BigQuery, Pub/Sub, Dataflow, Dataproc
 - [6. Operations: Delivery, Betrieb, Ausfallsicherheit und Migration](#6-operations-delivery-betrieb-ausfallsicherheit-und-migration): Cloud Build, Cloud Deploy, Release-Strategien, Terraform, Cloud Monitoring und Logging, Trace und Profiler, SLOs und Error Budgets, RPO und RTO, DR-Muster, Backup and DR Service, Migration Center, Migrate to VMs, Database Migration Service
 
@@ -1246,6 +1246,8 @@ von wo aus Google-APIs wie BigQuery oder Cloud Storage benutzt werden dürfen. Z
 **Datenabfluss**: Selbst ein gestohlenes Token kann Daten nicht in ein Projekt außerhalb des Perimeters kopieren.
 Prüfungsmuster: „BigQuery-Daten dürfen nur aus dem Rechenzentrum über das VPN erreichbar sein“ heißt
 **VPC Service Controls plus Private Google Access für On-Prem-Hosts** (über `restricted.googleapis.com`).
+Perimeter, Ausnahmen und der Fall eines Agents als SaaS stehen in
+[4.19](#419-vpc-service-controls-und-ein-agent-als-saas-cmle).
 
 > **Anknüpfung an ML-Praxis.** Trainings-VMs und GKE-Nodes ohne externe IP lesen ihre Daten über Private Google
 > Access aus Cloud Storage und laden Pakete über Cloud NAT. Ein Vertex-AI-Endpunkt lässt sich per Private Service
@@ -2184,7 +2186,8 @@ flowchart LR
 - **Access Transparency** protokolliert, wenn Google-Mitarbeitende auf deine Inhalte zugreifen (z. B. bei einem
   Support-Fall); **Access Approval** verlangt vorher deine Zustimmung.
 - **VPC Service Controls** gegen Datenabfluss über Google-APIs: siehe
-  [3.5 Private Wege zu Google und zu Diensten](#35-private-wege-zu-google-und-zu-diensten).
+  [3.5 Private Wege zu Google und zu Diensten](#35-private-wege-zu-google-und-zu-diensten) und
+  [4.19](#419-vpc-service-controls-und-ein-agent-als-saas-cmle).
 
 ---
 
@@ -3671,6 +3674,182 @@ Damit sind das Refresh-Token und die daraus erzeugten Access-Tokens ungültig. A
 - Wo Gemini Enterprise das Client Secret des Connectors ablegt, nennt die öffentliche Doku nicht.
 
 Quellen: [OAuth 2.0 für Web-Server-Anwendungen](https://developers.google.com/identity/protocols/oauth2/web-server) · [OAuth 2.0 bei Google, Ablauf von Refresh-Tokens](https://developers.google.com/identity/protocols/oauth2) · [OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect) · [Discovery-Dokument](https://accounts.google.com/.well-known/openid-configuration) · [App Audience](https://support.google.com/cloud/answer/15549945) · [OAuth-Clients verwalten](https://support.google.com/cloud/answer/15549257) · [RFC 7636 (PKCE)](https://datatracker.ietf.org/doc/html/rfc7636) · [RFC 9700 (Security Best Current Practice)](https://datatracker.ietf.org/doc/html/rfc9700) · [MCP-Nutzung mit IAM steuern](https://docs.cloud.google.com/mcp/control-mcp-use-iam) · [Cloud-Storage-MCP-Server](https://docs.cloud.google.com/storage/docs/use-cloud-storage-mcp) · [Custom-MCP-Server in Gemini Enterprise](https://docs.cloud.google.com/gemini/enterprise/docs/connectors/custom-mcp-server/set-up-custom-mcp-server)
+
+---
+
+### 4.19 VPC Service Controls und ein Agent als SaaS (CMLE)
+
+[3.5](#35-private-wege-zu-google-und-zu-diensten) führt VPC Service Controls kurz ein. Dieser Abschnitt behandelt einen Fall, an dem das Modell an seine Grenze stößt: Ein Agent-Dienst läuft als SaaS in der Organisation des Anbieters, die Daten liegen in der Organisation des Kunden hinter einem Perimeter. Der Dienst heißt hier **CMLE**. Dazu kommen die übrigen Fragen, die Sicherheitsverantwortliche (CISO) an einen solchen Dienst stellen.
+
+#### Wer das verlangt
+
+| Kundengruppe | Üblicher Sicherheitsstandard | Rolle von VPC Service Controls |
+|---|---|---|
+| **Stark regulierte Unternehmen:** Banken, Versicherungen, öffentlicher Sektor, Verteidigung, Pharma | VPC Service Controls, eigene Schlüssel (CMEK oder EKM), Access Transparency mit Access Approval und Datenresidenz in der EU sind Voraussetzung für die Freigabe in Produktion, zum Beispiel wegen der Finanzaufsicht oder DORA | Pflicht: die Grenze gegen Datenabfluss über Cloud-APIs |
+| **Digitale Unternehmen:** Software- und Handelsfirmen, Start-ups | IAM, OAuth-Scopes, Audit-Logs, Model Armor, Sensitive Data Protection | nur für einzelne Projekte (Finanzen, personenbezogene Daten) oder gar nicht, weil der Betrieb streng und aufwendig ist |
+
+#### VPC und VPC Service Controls: zwei verschiedene Zäune
+
+| | Schützt | Mittel |
+|---|---|---|
+| **VPC** | die Netzwerkebene: VMs, GKE-Cluster, private IP-Bereiche | Subnetze, Firewall-Regeln, Routen |
+| **VPC Service Controls** | die API-Ebene: von Google betriebene Dienste wie BigQuery, Cloud Storage oder Vertex AI | ein Perimeter um Projekte |
+
+Das Risiko an einem Beispiel: Die APIs von BigQuery und Cloud Storage sind über HTTPS von überall erreichbar. Ein gekapertes Nutzerkonto oder ein Agent, den eine Prompt Injection umgelenkt hat, kopiert Daten aus dem BigQuery-Projekt einer Bank in einen fremden Bucket. IAM lässt das zu, denn die Rechte des Kontos sind gültig. VPC Service Controls blockiert den Aufruf trotzdem, weil das Ziel außerhalb des Perimeters liegt.
+
+- **IAM** fragt: *Wer* darf *was*?
+- **VPC Service Controls** fragt: *Von wo* kommt der Aufruf, und *wohin* gehen die Daten?
+
+Die Doku nennt drei Risiken, gegen die der Perimeter schützt: Zugriff aus fremden Netzen mit gestohlenen Zugangsdaten, Datenabfluss durch Innentäter oder kompromittierten Code, und versehentlich öffentlich gemachte Daten durch falsch gesetzte IAM-Richtlinien. Der Schutz wirkt unabhängig von IAM; empfohlen ist beides zusammen.
+
+Was man zum Perimeter wissen muss:
+
+- **Perimeter:** Er umschließt Projekte. Ein Projekt gehört zu höchstens einem Perimeter. Verwaltet wird er in der Access Policy der Organisation.
+- **Blockierter Aufruf:** Die API antwortet mit HTTP 403, auch wenn IAM den Aufruf erlauben würde. Der Verstoß steht im Log `cloudaudit.googleapis.com%2Fpolicy` mit der Meldung „Request is prohibited by organization's policy“ und einem Grund wie `NO_MATCHING_ACCESS_LEVEL` (von außen hinein) oder `RESOURCES_NOT_IN_SAME_SERVICE_PERIMETER` (über die Grenze hinweg).
+- **Ausnahmen:** *Ingress-Regeln* lassen bestimmte Aufrufer von außen an bestimmte Ressourcen und Methoden, *Egress-Regeln* erlauben bestimmte Wege hinaus. *Access Levels* beschreiben Bedingungen an den Aufrufer, zum Beispiel das Firmennetz oder ein verwaltetes Gerät.
+- **Dry-Run:** Der Perimeter protokolliert Verstöße, ohne zu blockieren. So sammelt man zuerst die nötigen Ausnahmen und schaltet danach scharf.
+- **Grenze des Schutzes:** Der Perimeter gilt nur für unterstützte Google-Dienste. Aufrufe an Dienste Dritter im Internet blockiert er nicht.
+
+#### Der Konflikt: Daten beim Kunden, Dienst beim Anbieter
+
+Bei CMLE als SaaS treffen zwei Organisationen aufeinander:
+
+- Die Daten (BigQuery, Cloud Storage) liegen in der **Organisation des Kunden**, in dessen scharf geschaltetem Perimeter.
+- Die CMLE-Instanz läuft in einer **Organisation des Anbieters**. Dort stehen die Oberfläche, die Sandbox des Agents mit Gedächtnis und Skills und das Gateway für ausgehende Aufrufe.
+
+Ein Perimeter gehört zur Access Policy einer Organisation und umschließt deren Projekte. Die SaaS-Instanz lässt sich deshalb nicht einfach als weiteres Projekt in den Perimeter des Kunden aufnehmen.
+
+```mermaid
+flowchart LR
+    U["Nutzerin<br/>angemeldet über den<br/>Identity Provider"]
+    subgraph ANB["Organisation des Anbieters (außerhalb des Perimeters)"]
+        direction TB
+        FE["CMLE<br/>Oberfläche und API"]
+        SB["Sandbox des Agents<br/>mit Gedächtnis und Skills"]
+        GW["Agent Gateway<br/>ausgehende Aufrufe"]
+        FE --> SB --> GW
+    end
+    subgraph KUN["Organisation des Kunden"]
+        subgraph PER["VPC-SC-Perimeter"]
+            BQ["BigQuery"]
+            GCS["Cloud Storage"]
+        end
+    end
+    EXT["Projekt oder Dienst<br/>außerhalb"]
+    U -->|"HTTPS mit Nutzer-Token"| FE
+    GW -.->|"blockiert: HTTP 403,<br/>der Aufrufer liegt außerhalb"| PER
+    GW -.->|"keine Grenze:<br/>der Dienst steht nicht im Perimeter"| EXT
+```
+
+Daraus folgen zwei Probleme, und sie sind nicht dasselbe:
+
+1. **Der Weg hinein ist zu.** Ruft der Agent geschützte Daten des Kunden auf, blockiert der Perimeter mit HTTP 403.
+2. **Der Weg hinaus hat keine Grenze.** Öffnet der Kunde den Weg hinein mit einer Ingress-Regel, kommen die Daten beim Agent an. Dessen Sandbox, Gedächtnis und Konnektoren laufen aber weiter außerhalb des Perimeters. Was dort mit den Daten geschieht, kontrolliert der Perimeter des Kunden nicht.
+
+Eine Ausnahme-Regel löst also nur das erste Problem. Der eigentliche Zweck des Perimeters, die Grenze gegen Abfluss, fehlt weiter.
+
+#### Die Auflösung: ein Stellvertreter im Perimeter des Kunden
+
+Der Konflikt löst sich, wenn die SaaS-Instanz in der Organisation des Kunden sichtbar wird und jeder ihrer Aufrufe dieser Sichtbarkeit zugeordnet werden kann.
+
+```mermaid
+flowchart LR
+    U["Berechtigte Nutzerin<br/>(Access Level erfüllt)"]
+    subgraph ANB["Organisation des Anbieters"]
+        direction TB
+        API["CMLE-Instanz<br/>(API)"]
+        SB["Sandbox des Agents"]
+        GW["Agent Gateway<br/>hängt einen signierten<br/>Herkunftsnachweis an"]
+        API --> SB --> GW
+    end
+    subgraph KUN["Organisation des Kunden"]
+        subgraph PER["VPC-SC-Perimeter des Kunden"]
+            ST["Stellvertreter-Projekt<br/>steht für die CMLE-Instanz"]
+            BQ["BigQuery"]
+            GCS["Cloud Storage"]
+            LOG["Audit-Logs<br/>beim Kunden"]
+        end
+    end
+    EXT["Ziel außerhalb<br/>des Perimeters"]
+    U -->|"Schritt 1: Aufruf, geprüft<br/>gegen den Perimeter"| API
+    API <-->|"Kopplung"| ST
+    GW -->|"Schritt 2: Aufruf mit<br/>Herkunftsnachweis"| BQ
+    GW -->|"Schritt 2: ebenso"| GCS
+    GW -.->|"Schritt 3: blockiert"| EXT
+    ST --> LOG
+```
+
+- **Steuerungsebene:** In der Organisation des Kunden gibt es ein gewöhnliches Projekt, das die CMLE-Instanz vertritt und mit ihr gekoppelt ist. Der Kunde nimmt dieses Stellvertreter-Projekt wie jedes andere in seinen Perimeter auf. Regeln und Logs bleiben dort, wo sein Sicherheitsteam sie erwartet.
+- **Weg hinein:** Aufrufe an die API von CMLE werden gegen den Perimeter des Stellvertreter-Projekts geprüft. Wer das Access Level des Kunden nicht erfüllt, erreicht den Dienst nicht.
+- **Weg hinaus:** Das Gateway versieht jeden Aufruf an eine Google-API mit einem kryptografisch signierten Herkunftsnachweis. Er ordnet den Aufruf dem Stellvertreter-Projekt zu: Für BigQuery und Cloud Storage zählt der Aufruf so, als käme er aus diesem Projekt. Beide Dienste wenden dadurch den Perimeter des Kunden an: Ziele im Perimeter sind erreichbar, jedes Ziel außerhalb wird blockiert. Fehlt der Nachweis, wird ebenfalls blockiert (fail-closed).
+
+Damit greifen beide Hälften: Der Kunde kontrolliert, wer den Dienst benutzt, und der Dienst kann Daten nicht über die Grenze des Kunden tragen.
+
+#### Weitere Fragen eines CISO
+
+Neben dem Perimeter gehören vier Bausteine zur Prüfung:
+
+| Baustein | Frage | Antwort | Mehr |
+|---|---|---|---|
+| **Eigene Schlüssel** (CMEK, EKM, Key Access Justifications) | Wer kontrolliert die Schlüssel für die Daten des Agents, sein Gedächtnis und seine Sandbox? | Der Kunde hält den Schlüssel in Cloud KMS oder bei einem externen Key Manager und kann ihn rotieren oder sperren. Mit Key Access Justifications trägt jede Verwendung des Schlüssels einen Begründungscode, und der Kunde kann Anfragen je nach Begründung ablehnen. | [4.7](#47-verschlüsselung-und-schlüssel) |
+| **Zugriffe des Anbieters** (Access Transparency, Access Approval) | Sehe ich, wenn Personal des Anbieters auf meine Daten zugreift, und kann ich es verhindern? | Access Transparency protokolliert solche Zugriffe mit Grund und Zeitpunkt. Access Approval verlangt vorher die ausdrückliche Zustimmung des Kunden. | [4.10](#410-erkennen-und-nachweisen-audit-logs-und-security-command-center) |
+| **Datenresidenz** | Bleiben Daten und Verarbeitung in der EU? | Die Instanz wird in einer EU-Region oder der Multi-Region `eu` angelegt. Der Ort einer Ressource lässt sich bei Google Cloud in der Regel nachträglich nicht ändern; er wird also am Anfang entschieden. | [4.11](#411-compliance-und-souveränität) |
+| **Kontrollpunkt für ausgehende Aufrufe** | Was kann der Agent erreichen, und wer sieht es? | Alles läuft über ein Gateway, siehe unten. | [4.17](#417-agent-authentifizierung-in-der-praxis-identitäten-tokens-auth-manager), [paa.md, Module 9](paa.md#module-9--protocols-and-identity-mcp-a2a-agent-identity) |
+
+#### Der Weg eines Aufrufs: Sandbox, Gateway, Ziel
+
+```mermaid
+flowchart TB
+    U["Nutzerin"] -->|"Anmeldung über den Identity Provider"| FE["CMLE-Oberfläche"]
+    FE -->|"Skill hochladen"| SCAN["Prüfung vor der Freigabe:<br/>Datenabfluss, Geheimnisse,<br/>Prompt Injection"]
+    FE -->|"Aufgabe starten"| SB["Isolierte Sandbox<br/>ohne Zugangsdaten,<br/>ohne direkten Internetzugang"]
+    SB -->|"jeder ausgehende Aufruf"| GW["Agent Gateway (fail-closed)<br/>Ziel freigegeben?<br/>Nutzerin, Agent, Werkzeug erlaubt?<br/>Schreiben: Freigabe durch Menschen<br/>Zugangsdaten erst hier"]
+    GW -->|"bleibt im Google-Netz,<br/>VPC-SC greift"| G["Google-APIs<br/>BigQuery, Cloud Storage"]
+    GW -->|"privates Routing<br/>(Private Service Connect)"| P["Private Server<br/>im VPC des Kunden"]
+    GW -->|"nach der Policy-Prüfung<br/>über das Internet"| O["Öffentliche Dienste<br/>und MCP-Server"]
+    GW -->|"Metadaten, Entscheidungen, Traces"| L["Cloud Logging, Cloud Trace,<br/>weiter an das SIEM"]
+    K["Schlüssel des Kunden,<br/>Access Transparency,<br/>Datenresidenz"] -.-> SB
+    K -.-> GW
+```
+
+- **Sandbox ohne Zugangsdaten:** Jede Aufgabe läuft in einer eigenen, isolierten Sandbox. Dort liegen keine Tokens oder Schlüssel, und es gibt keinen direkten Weg ins Internet. Ein Agent, den eine Prompt Injection umlenkt, findet in der Sandbox also nichts, was er mitnehmen könnte.
+- **Gateway als einziger Ausgang:** Der gesamte ausgehende Verkehr wird durch das Gateway gezwungen. Es lässt nur durch, was ausdrücklich erlaubt ist (default-deny), und blockiert, wenn eine Prüfung nicht möglich ist (fail-closed).
+- **Schnittmenge der Rechte:** Ein Aufruf geht nur durch, wenn die Nutzerin ihn darf, der Agent ihn darf und das Werkzeug freigegeben ist. Das ist dasselbe Prinzip wie bei Scopes und IAM in [4.18](#418-oauth-20-im-namen-eines-nutzers-der-authorization-code-flow):
+
+```
+erlaubt  =  Nutzerin  UND  Agent  UND  Werkzeug
+```
+
+- **Zugangsdaten erst am Ausgang:** Das Gateway setzt das Token für das Ziel erst beim Aufruf ein. Schreibende Aktionen können zusätzlich die Freigabe durch einen Menschen verlangen.
+- **Skills vor der Freigabe prüfen:** Hochgeladene Skills (Anweisungen und Skripte) werden auf Datenabfluss, offene Geheimnisse und Prompt Injection untersucht, bevor ein Agent sie laden kann ([paa.md, Module 6](paa.md#module-6--skills-at-scale-registries-governance-and-retrieval)).
+
+Der Weg hinter dem Gateway hängt vom Ziel ab, und damit auch, welche Kontrolle greift:
+
+| Ziel | Weg | Welche Kontrolle greift |
+|---|---|---|
+| Google-APIs (BigQuery, Cloud Storage) | bleibt im Netz von Google | VPC Service Controls und die Policy des Gateways |
+| Private Server im VPC des Kunden | privates Routing über ein Private-Service-Connect-Interface: Der Dienst baut die Verbindung über ein Network Attachment in das VPC des Kunden auf | Firewall-Regeln des Kunden und die Policy des Gateways |
+| Öffentliche Dienste und MCP-Server Dritter | nach der Prüfung über das Internet | nur die Policy des Gateways. VPC Service Controls blockiert Dienste Dritter nicht. |
+
+Die letzte Zeile ist der Grund, warum der Perimeter allein nicht reicht: Für Ziele außerhalb von Google ist das Gateway die einzige Grenze.
+
+**Was das SIEM sieht.** Das Gateway schreibt Zugriffs-Logs und Traces: welches Ziel, welches Werkzeug, welche Entscheidung, welche Freigabe. Über Log-Senken gehen sie nach BigQuery, Pub/Sub oder in das SIEM des Kunden ([4.10](#410-erkennen-und-nachweisen-audit-logs-und-security-command-center)). Protokolliert werden Metadaten und Entscheidungen. Ob auch die vollständigen Inhalte von Anfragen und Antworten im Log stehen, ist eine eigene Frage an den Dienst; für Nachweise genügen meist die Metadaten, für die Aufklärung eines Vorfalls nicht immer.
+
+#### Fünf Fragen, fünf kurze Antworten
+
+1. **Warum reicht IAM bei einer Bank nicht?** IAM regelt, wer zugreifen darf. Es verhindert nicht, dass gültige Zugangsdaten Daten in ein fremdes Projekt kopieren. Diese Grenze zieht erst der Perimeter auf API-Ebene.
+2. **Was ist der Kernkonflikt bei einem Agent als SaaS?** Die Daten liegen in der Organisation des Kunden im Perimeter, der Dienst läuft in der Organisation des Anbieters außerhalb. Ein Perimeter umschließt nur Projekte seiner eigenen Organisation.
+3. **Was löst eine Ingress-Regel, und was nicht?** Sie öffnet den Weg hinein. Die Grenze gegen Abfluss stellt sie nicht her, weil der Dienst weiter außerhalb steht. Dafür braucht es den Stellvertreter im Perimeter und den Herkunftsnachweis an jedem ausgehenden Aufruf.
+4. **Wie erreicht der Agent private und öffentliche Ziele?** Private Server im VPC des Kunden über privates Routing, öffentliche Dienste nach der Prüfung am Gateway über das Internet. Für öffentliche Ziele ist das Gateway die einzige Kontrolle.
+5. **Was sieht das SIEM, und was nicht?** Ziele, Werkzeuge, Entscheidungen, Freigaben und Traces. Vollständige Inhalte sind gesondert zu klären.
+
+#### Noch zu prüfen
+
+- Dass ein Perimeter keine Projekte einer fremden Organisation aufnehmen kann, folgt aus der Zuordnung zur Access Policy einer Organisation; als eigener Satz steht es in den gelesenen Doku-Seiten nicht.
+- Das Muster mit Stellvertreter-Projekt und signiertem Herkunftsnachweis ist hier als Entwurfsmuster beschrieben. Ob und wie ein konkreter Dienst es umsetzt, steht in dessen Dokumentation.
+- Ebenso sind die Schnittmenge aus Nutzerin, Agent und Werkzeug, die Sandbox ohne Zugangsdaten und der Umfang der Gateway-Logs je Dienst zu belegen.
+
+Quellen: [VPC Service Controls, Überblick](https://docs.cloud.google.com/vpc-service-controls/docs/overview) · [Service-Perimeter](https://docs.cloud.google.com/vpc-service-controls/docs/service-perimeters) · [Ingress- und Egress-Regeln](https://docs.cloud.google.com/vpc-service-controls/docs/ingress-egress-rules) · [Fehlersuche](https://docs.cloud.google.com/vpc-service-controls/docs/troubleshooting) · [Key Access Justifications](https://docs.cloud.google.com/assured-workloads/key-access-justifications/docs/overview) · [Access Transparency](https://docs.cloud.google.com/assured-workloads/access-transparency/docs/overview) · [Access Approval](https://docs.cloud.google.com/assured-workloads/access-approval/docs/overview) · [Private-Service-Connect-Interfaces](https://docs.cloud.google.com/vpc/docs/about-private-service-connect-interfaces) · [Agent Gateway](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview)
 
 [↑ Back to top](#google-cloud-architecture-professional-cloud-architect)
 
